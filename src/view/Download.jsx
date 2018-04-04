@@ -27,7 +27,7 @@ class Download extends Base {
   }
 
   navGroup () {
-    return 'download'
+    return 'file'
   }
 
   menuName () {

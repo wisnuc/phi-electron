@@ -1,14 +1,31 @@
 import i18n from 'i18n'
 import React from 'react'
-import { Snackbar } from 'material-ui'
+import { IconButton, Snackbar } from 'material-ui'
+import ListIcon from 'material-ui/svg-icons/action/list'
+import GridIcon from 'material-ui/svg-icons/action/view-module'
+import RefreshIcon from 'material-ui/svg-icons/navigation/refresh'
+import FileCreateNewFolder from 'material-ui/svg-icons/file/create-new-folder'
+import BackwardIcon from 'material-ui/svg-icons/navigation/arrow-back'
+import ForwardIcon from 'material-ui/svg-icons/navigation/arrow-forward'
+
 import { ipcRenderer } from 'electron'
 import { teal600 } from 'material-ui/styles/colors'
 import FileIcon from 'material-ui/svg-icons/file/folder'
 
-import Files from '../view/Home'
-import Trans from '../view/Transmission'
+import FileMenu from './FileMenu'
+import Search from './Search'
+
+import Home from '../view/Home'
+import Share from '../view/Share'
+import Media from '../view/Media'
+import Public from '../view/Public'
+import Account from '../view/Account'
+import Download from '../view/Download'
 import Settings from '../view/Settings'
+import Transmission from '../view/Transmission'
+
 import Fruitmix from '../common/fruitmix'
+import FlatButton from '../common/FlatButton'
 
 const HEADER_HEIGHT = 160
 
@@ -24,7 +41,14 @@ class NavViews extends React.Component {
     this.views = {}
 
     this.install([
-      { name: 'files', View: Files }
+      { name: 'home', View: Home },
+      { name: 'media', View: Media },
+      { name: 'public', View: Public },
+      { name: 'share', View: Share },
+      { name: 'download', View: Download },
+      { name: 'account', View: Account },
+      { name: 'transmission', View: Transmission },
+      { name: 'settings', View: Settings }
     ])
 
     this.navTo = (nav, target) => {
@@ -37,8 +61,26 @@ class NavViews extends React.Component {
       }
     }
 
+    this.navGroup = (group) => {
+      if (!this.state.nav || this.views[this.state.nav].navGroup() !== group) {
+        switch (group) {
+          case 'file':
+            this.navTo('home')
+            break
+          case 'transmission':
+            this.navTo('transmission')
+            break
+          case 'settings':
+            this.navTo('settings')
+            break
+          default:
+            break
+        }
+      }
+    }
+
     this.init = () => {
-      this.navTo('files')
+      this.navTo('home')
     }
 
     this.openSnackBar = (message) => {
@@ -89,17 +131,17 @@ class NavViews extends React.Component {
       {
         Icon: FileIcon,
         text: i18n.__('Files Menu Name'),
-        fn: () => this.navTo('files')
+        fn: () => this.navGroup('file')
       },
       {
         Icon: FileIcon,
         text: i18n.__('Transmission Menu Name'),
-        fn: () => this.navTo('trans')
+        fn: () => this.navGroup('transmission')
       },
       {
         Icon: FileIcon,
         text: i18n.__('Settings Menu Name'),
-        fn: () => this.navTo('settings')
+        fn: () => this.navGroup('settings')
       }
     ]
     return (
@@ -114,7 +156,8 @@ class NavViews extends React.Component {
                 width: 180,
                 height: 120,
                 padding: 48,
-                color: '#FFFFFF',
+                color: teal600,
+                cursor: 'point',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -122,7 +165,7 @@ class NavViews extends React.Component {
               }}
               onClick={fn}
             >
-              <Icon style={{ width: 72, height: 72 }} color="#FFFFFF" />
+              <Icon style={{ width: 64, height: 64 }} color={teal600} />
               <div>
                 { text }
               </div>
@@ -133,35 +176,108 @@ class NavViews extends React.Component {
     )
   }
 
+  renderView () {
+    return this.views[this.state.nav].render({
+      navTo: this.navTo,
+      openSnackBar: this.openSnackBar,
+      getDetailStatus: () => false
+    })
+  }
+
+  renderFileGroup () {
+    const color = 'rgba(0,0,0,.54)'
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', height: '100%', width: '100%' }}>
+        <div style={{ height: '100%', width: 180 }}>
+          <FileMenu
+            views={this.views}
+            nav={this.state.nav}
+            navTo={this.navTo}
+          />
+        </div>
+
+        <div style={{ height: '100%', width: 'calc(100% - 180px)', position: 'relative' }}>
+          {/* Toolbar */}
+          <div style={{ height: 64, width: '100%', display: 'flex', alignItems: 'center' }}>
+            <div style={{ width: 48 }} />
+            <IconButton onTouchTap={() => this.refresh()} tooltip={i18n.__('Refresh')} >
+              <BackwardIcon color={color} />
+            </IconButton>
+            <IconButton onTouchTap={() => this.refresh()} tooltip={i18n.__('Refresh')} >
+              <ForwardIcon color={color} />
+            </IconButton>
+            <IconButton onTouchTap={() => this.refresh()} tooltip={i18n.__('Refresh')} >
+              <RefreshIcon color={color} />
+            </IconButton>
+            <FlatButton
+              onTouchTap={() => this.toggleDialog('gridView')}
+              label={i18n.__('Upload')}
+              icon={<GridIcon color={color} />}
+            />
+            <FlatButton
+              onTouchTap={() => this.toggleDialog('gridView')}
+              label={i18n.__('Dowload')}
+              icon={<GridIcon color={color} />}
+            />
+            <FlatButton
+              onTouchTap={() => this.toggleDialog('gridView')}
+              label={i18n.__('Delete')}
+              icon={<ListIcon color={color} />}
+            />
+            <FlatButton
+              onTouchTap={() => this.toggleDialog('gridView')}
+              label={this.state.gridView ? i18n.__('List View') : i18n.__('Grid View')}
+              icon={this.state.gridView ? <ListIcon color={color} /> : <GridIcon color={color} />}
+            />
+            <FlatButton
+              label={i18n.__('Create New Folder')}
+              onTouchTap={() => this.toggleDialog('createNewFolder')}
+              icon={<FileCreateNewFolder color={color} />}
+            />
+            <Search fire={() => {}} />
+          </div>
+
+          {/* File Content */}
+          <div style={{ height: 'calc(100% - 64px)', width: '100%' }}>
+            { this.renderView() }
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   render () {
+    if (!this.state.nav) return null
     let view = null
-    const props = Object.assign({}, this.props, this.state)
-
-    switch (this.state.view) {
-      case 'files':
-        view = <Files {...props} />
+    switch (this.views[this.state.nav].navGroup()) {
+      case 'file':
+        view = this.renderFileGroup()
         break
-
-      case 'trans':
-        view = <Trans {...props} />
+      case 'transmission':
+        view = this.renderView()
         break
-
       case 'settings':
-        view = <Settings {...props} />
+        view = this.renderView()
         break
       default:
         break
     }
-
     return (
       <div style={{ width: '100%', height: '100%', overflow: 'hidden' }} >
         {/* Navs */}
-        <div style={{ height: HEADER_HEIGHT, width: '100%', position: 'relative', backgroundColor: teal600 }}>
+        <div
+          style={{
+            height: HEADER_HEIGHT,
+            width: '100%',
+            position: 'relative',
+            backgroundColor: '#F5F5F5'
+          }}
+        >
           { this.renderHeader() }
         </div>
 
         {/* Views */}
-        <div style={{ height: 'calc(100% - 160px)', position: 'relative' }}>
+        <div style={{ height: 'calc(100% - 160px)', position: 'relative', display: 'flex' }}>
           { view }
         </div>
 

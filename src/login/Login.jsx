@@ -1,6 +1,5 @@
 import i18n from 'i18n'
 import React from 'react'
-import { ipcRenderer } from 'electron'
 
 import { WISNUC } from '../common/Svg'
 import LocalLogin from './LocalLogin'

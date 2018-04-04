@@ -11,7 +11,7 @@ class Transmission extends Base {
   }
 
   navGroup () {
-    return 'file'
+    return 'transmission'
   }
 
   menuName () {

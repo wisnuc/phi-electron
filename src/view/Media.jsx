@@ -222,7 +222,7 @@ class Media extends Base {
   }
 
   navGroup () {
-    return 'media'
+    return 'file'
   }
 
   menuName () {

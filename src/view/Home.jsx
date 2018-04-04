@@ -24,7 +24,6 @@ import MoveDialog from '../file/MoveDialog'
 import FileContent from '../file/FileContent'
 import RenameDialog from '../file/RenameDialog'
 import NewFolderDialog from '../file/NewFolderDialog'
-import FileUploadButton from '../file/FileUploadButton'
 import ContextMenu from '../common/ContextMenu'
 import DialogOverlay from '../common/DialogOverlay'
 import FlatButton from '../common/FlatButton'
@@ -932,9 +931,6 @@ class Home extends Base {
   renderContent ({ toggleDetail, openSnackBar, navTo, getDetailStatus }) {
     return (
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-
-        <FileUploadButton upload={this.upload} />
-
         <FileContent
           {...this.state}
           listNavBySelect={this.listNavBySelect}
