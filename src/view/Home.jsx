@@ -16,6 +16,8 @@ import CopyIcon from 'material-ui/svg-icons/content/content-copy'
 import MoveIcon from 'material-ui/svg-icons/content/forward'
 import ShareIcon from 'material-ui/svg-icons/social/person-add'
 import EditIcon from 'material-ui/svg-icons/editor/border-color'
+import BackwardIcon from 'material-ui/svg-icons/navigation/arrow-back'
+import ForwardIcon from 'material-ui/svg-icons/navigation/arrow-forward'
 
 import Base from './Base'
 import FileDetail from '../file/FileDetail'
@@ -33,6 +35,12 @@ import { BreadCrumbItem, BreadCrumbSeparator } from '../common/BreadCrumb'
 import { UploadFile, UploadFold } from '../common/Svg'
 import renderFileIcon from '../common/renderFileIcon'
 import { xcopyMsg } from '../common/msg'
+import Search from '../common/Search'
+import History from '../common/history'
+
+/* Drag Item's Coordinate */
+const DRAGLEFT = 180
+const DRAGTOP = 280
 
 class Home extends Base {
   constructor (ctx) {
@@ -183,7 +191,13 @@ class Home extends Base {
       }
     }
 
+    this.history = new History()
+
     /* actions */
+    this.enter = (pos, cb) => {
+      this.ctx.props.apis.request('listNavDir', pos, cb)
+    }
+
     this.listNavBySelect = () => {
       if (!window.navigator.onLine) this.ctx.openSnackBar(i18n.__('Offline Text'))
       else {
@@ -195,12 +209,21 @@ class Home extends Base {
 
         const entry = this.state.entries[selected[0]]
         if (entry.type === 'directory') {
-          this.ctx.props.apis.request('listNavDir', {
-            driveUUID: this.state.path[0].uuid,
-            dirUUID: entry.uuid
-          })
+          const pos = { driveUUID: this.state.path[0].uuid, dirUUID: entry.uuid }
+          this.enter(pos, err => err && console.error('listNavBySelect error', err))
+          this.history.add(pos)
         }
       }
+    }
+
+    this.back = () => {
+      const pos = this.history.back()
+      this.enter(pos, err => err && console.error('back error', err))
+    }
+
+    this.forward = () => {
+      const pos = this.history.forward()
+      this.enter(pos, err => err && console.error('forward error', err))
     }
 
     /* op: scrollTo file */
@@ -334,11 +357,11 @@ class Home extends Base {
         s.width = '180px'
         s.opacity = 1
 
-        const RDTop = `${this.RDSI * 48 + 176 - (this.scrollTop || 0)}px`
+        const RDTop = `${this.RDSI * 48 + DRAGTOP - (this.scrollTop || 0)}px`
         if (!s.top || s.top === RDTop) s.top = `${e.clientY + 2}px`
         else s.marginTop = `${e.clientY + 2 - parseInt(s.top, 10)}px`
 
-        if (!s.left || s.left === '75px') s.left = `${e.clientX + 2}px`
+        if (!s.left || s.left === `${DRAGLEFT}px`) s.left = `${e.clientX + 2}px`
         else s.marginLeft = `${e.clientX + 2 - parseInt(s.left, 10)}px`
       }
       if (!this.entry.type) this.forceUpdate()
@@ -382,8 +405,8 @@ class Home extends Base {
         s.left = `${left}px`
         s.width = '180px'
       } else {
-        s.top = `${this.RDSI * 48 + 176 - (this.scrollTop || 0)}px`
-        s.left = '75px'
+        s.top = `${this.RDSI * 48 + DRAGTOP - (this.scrollTop || 0)}px`
+        s.left = `${DRAGLEFT}px`
         s.width = '100%'
       }
       s.marginTop = '0px'
@@ -411,8 +434,8 @@ class Home extends Base {
 
       /* show drag item */
       // console.log('this.scrollTop', this.scrollTop)
-      this.refDragedItems.style.top = `${this.RDSI * 48 + 176 - (this.scrollTop || 0)}px`
-      this.refDragedItems.style.left = '75px'
+      this.refDragedItems.style.top = `${this.RDSI * 48 + DRAGTOP - (this.scrollTop || 0)}px`
+      this.refDragedItems.style.left = `${DRAGLEFT}px`
 
       document.addEventListener('mousemove', this.dragRow)
       document.addEventListener('mouseup', this.dragEnd, true)
@@ -479,6 +502,10 @@ class Home extends Base {
     if (Array.isArray(path) && path[0]) path[0].type = this.type
 
     this.force = false
+
+    const pos = { driveUUID: path[0].uuid, dirUUID: path[0].uuid }
+    if (this.history.get().curr === -1) this.history.add(pos)
+
     /* sort entries, reset select, stop loading */
     this.setState({
       path, select, loading: false, entries: [...entries].sort((a, b) => sortByType(a, b, this.state.sortType)), counter
@@ -547,7 +574,7 @@ class Home extends Base {
       <div
         ref={ref => (this.refDragedItems = ref)}
         style={{
-          position: 'absolute',
+          position: 'fixed',
           zIndex: 1000,
           top: 0,
           left: 0,
@@ -678,20 +705,48 @@ class Home extends Base {
   }
 
   renderToolBar ({ style }) {
+    const color = 'rgba(0,0,0,.54)'
+    const { curr, queue } = this.history.get()
+    const noBack = curr < 1
+    const noForward = curr > queue.length - 2
     return (
       <div style={style}>
+        <div style={{ width: 48 }} />
+        <IconButton onTouchTap={this.back} tooltip={i18n.__('Refresh')} disabled={noBack}>
+          <BackwardIcon color={color} />
+        </IconButton>
+        <IconButton onTouchTap={this.forward} tooltip={i18n.__('Refresh')} disabled={noForward}>
+          <ForwardIcon color={color} />
+        </IconButton>
         <IconButton onTouchTap={() => this.refresh()} tooltip={i18n.__('Refresh')} >
-          <RefreshIcon color="#FFF" />
+          <RefreshIcon color={color} />
         </IconButton>
-        <IconButton
+        <FlatButton
           onTouchTap={() => this.toggleDialog('gridView')}
-          tooltip={this.state.gridView ? i18n.__('List View') : i18n.__('Grid View')}
-        >
-          { this.state.gridView ? <ListIcon color="#FFF" /> : <GridIcon color="#FFF" /> }
-        </IconButton>
-        <IconButton onTouchTap={() => this.toggleDialog('createNewFolder')} tooltip={i18n.__('Create New Folder')}>
-          <FileCreateNewFolder color="#FFF" />
-        </IconButton>
+          label={i18n.__('Upload')}
+          icon={<GridIcon color={color} />}
+        />
+        <FlatButton
+          onTouchTap={() => this.toggleDialog('gridView')}
+          label={i18n.__('Dowload')}
+          icon={<GridIcon color={color} />}
+        />
+        <FlatButton
+          onTouchTap={() => this.toggleDialog('gridView')}
+          label={i18n.__('Delete')}
+          icon={<ListIcon color={color} />}
+        />
+        <FlatButton
+          onTouchTap={() => this.toggleDialog('gridView')}
+          label={this.state.gridView ? i18n.__('List View') : i18n.__('Grid View')}
+          icon={this.state.gridView ? <ListIcon color={color} /> : <GridIcon color={color} />}
+        />
+        <FlatButton
+          label={i18n.__('Create New Folder')}
+          onTouchTap={() => this.toggleDialog('createNewFolder')}
+          icon={<FileCreateNewFolder color={color} />}
+        />
+        <Search fire={() => {}} />
       </div>
     )
   }

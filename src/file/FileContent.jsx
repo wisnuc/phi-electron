@@ -8,6 +8,10 @@ import ContainerOverlay from './ContainerOverlay'
 import RenderListByRow from './RenderListByRow'
 import GridView from './GridView'
 
+/* Draw Select Box */
+const TOP = 232
+const LEFT = 184
+
 class FileContent extends React.Component {
   constructor (props) {
     super(props)
@@ -127,8 +131,8 @@ class FileContent extends React.Component {
         /* show draw box */
         const s = this.refSelectBox.style
         s.display = ''
-        s.top = `${event.clientY - 140}px`
-        s.left = `${event.clientX - 80}px`
+        s.top = `${event.clientY - TOP}px`
+        s.left = `${event.clientX - LEFT}px`
         this.selectBox = { x: event.clientX, y: event.clientY, session: (new Date()).getTime() }
         this.preScrollTop = scrollTop || this.preScrollTop
         document.addEventListener('mousemove', this.exSelect)
@@ -160,20 +164,20 @@ class FileContent extends React.Component {
       else this.up = false
 
       if (dx > 0) s.width = `${dx}px`
-      else if (event.clientX - 75 > 0) {
+      else if (event.clientX - LEFT > 0) {
         s.width = `${-dx}px`
-        s.left = `${event.clientX - 75}px`
+        s.left = `${event.clientX - LEFT}px`
       } else {
-        s.width = `${this.selectBox.x - 75}px`
+        s.width = `${this.selectBox.x - LEFT}px`
         s.left = '0px'
       }
 
       if (dy > 0) s.height = `${dy}px`
-      else if (event.clientY - 136 > 48) {
+      else if (event.clientY - TOP > 48) {
         s.height = `${-dy}px`
-        s.top = `${event.clientY - 136}px`
+        s.top = `${event.clientY - TOP}px`
       } else {
-        s.height = `${this.selectBox.y - 184}px`
+        s.height = `${this.selectBox.y - TOP - 48}px`
         s.top = '48px'
       }
     }

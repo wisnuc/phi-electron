@@ -121,7 +121,7 @@ class PhotoApp extends React.Component {
                 selectedItems={this.props.selectedItems}
                 getHoverPhoto={this.props.getHoverPhoto}
                 shiftStatus={this.props.shiftStatus}
-                headerHeight={66}
+                headerHeight={224}
               />
               )
               : this.renderNoMedia()

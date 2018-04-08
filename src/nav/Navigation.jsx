@@ -1,19 +1,12 @@
 import i18n from 'i18n'
 import React from 'react'
-import { IconButton, Snackbar } from 'material-ui'
-import ListIcon from 'material-ui/svg-icons/action/list'
-import GridIcon from 'material-ui/svg-icons/action/view-module'
-import RefreshIcon from 'material-ui/svg-icons/navigation/refresh'
-import FileCreateNewFolder from 'material-ui/svg-icons/file/create-new-folder'
-import BackwardIcon from 'material-ui/svg-icons/navigation/arrow-back'
-import ForwardIcon from 'material-ui/svg-icons/navigation/arrow-forward'
+import { Snackbar } from 'material-ui'
 
 import { ipcRenderer } from 'electron'
 import { teal600 } from 'material-ui/styles/colors'
 import FileIcon from 'material-ui/svg-icons/file/folder'
 
 import FileMenu from './FileMenu'
-import Search from './Search'
 
 import Home from '../view/Home'
 import Share from '../view/Share'
@@ -25,7 +18,6 @@ import Settings from '../view/Settings'
 import Transmission from '../view/Transmission'
 
 import Fruitmix from '../common/fruitmix'
-import FlatButton from '../common/FlatButton'
 
 const HEADER_HEIGHT = 160
 
@@ -149,15 +141,16 @@ class NavViews extends React.Component {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 34, width: 180 }}>
           { 'NAS' }
         </div>
+        <div style={{ flexGrow: 1 }} />
         {
-          navs.map(({ Icon, text, fn }) => (
+          navs.map(({ Icon, text, fn }) => ([
             <div
+              key={text}
               style={{
                 width: 180,
                 height: 120,
-                padding: 48,
                 color: teal600,
-                cursor: 'point',
+                cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -169,8 +162,9 @@ class NavViews extends React.Component {
               <div>
                 { text }
               </div>
-            </div>
-          ))
+            </div>,
+            <div style={{ flexGrow: 1 }} />
+          ]))
         }
       </div>
     )
@@ -185,9 +179,9 @@ class NavViews extends React.Component {
   }
 
   renderFileGroup () {
-    const color = 'rgba(0,0,0,.54)'
+    const toolBarStyle = { height: 64, width: '100%', display: 'flex', alignItems: 'center' }
     return (
-      <div style={{ display: 'flex', alignItems: 'center', height: '100%', width: '100%' }}>
+      <div style={{ display: 'flex', alignItems: 'center', height: '100%', width: '100%', position: 'relative' }}>
         <div style={{ height: '100%', width: 180 }}>
           <FileMenu
             views={this.views}
@@ -198,50 +192,16 @@ class NavViews extends React.Component {
 
         <div style={{ height: '100%', width: 'calc(100% - 180px)', position: 'relative' }}>
           {/* Toolbar */}
-          <div style={{ height: 64, width: '100%', display: 'flex', alignItems: 'center' }}>
-            <div style={{ width: 48 }} />
-            <IconButton onTouchTap={() => this.refresh()} tooltip={i18n.__('Refresh')} >
-              <BackwardIcon color={color} />
-            </IconButton>
-            <IconButton onTouchTap={() => this.refresh()} tooltip={i18n.__('Refresh')} >
-              <ForwardIcon color={color} />
-            </IconButton>
-            <IconButton onTouchTap={() => this.refresh()} tooltip={i18n.__('Refresh')} >
-              <RefreshIcon color={color} />
-            </IconButton>
-            <FlatButton
-              onTouchTap={() => this.toggleDialog('gridView')}
-              label={i18n.__('Upload')}
-              icon={<GridIcon color={color} />}
-            />
-            <FlatButton
-              onTouchTap={() => this.toggleDialog('gridView')}
-              label={i18n.__('Dowload')}
-              icon={<GridIcon color={color} />}
-            />
-            <FlatButton
-              onTouchTap={() => this.toggleDialog('gridView')}
-              label={i18n.__('Delete')}
-              icon={<ListIcon color={color} />}
-            />
-            <FlatButton
-              onTouchTap={() => this.toggleDialog('gridView')}
-              label={this.state.gridView ? i18n.__('List View') : i18n.__('Grid View')}
-              icon={this.state.gridView ? <ListIcon color={color} /> : <GridIcon color={color} />}
-            />
-            <FlatButton
-              label={i18n.__('Create New Folder')}
-              onTouchTap={() => this.toggleDialog('createNewFolder')}
-              icon={<FileCreateNewFolder color={color} />}
-            />
-            <Search fire={() => {}} />
-          </div>
+          { this.views[this.state.nav].renderToolBar({ style: toolBarStyle }) }
 
           {/* File Content */}
           <div style={{ height: 'calc(100% - 64px)', width: '100%' }}>
             { this.renderView() }
           </div>
         </div>
+
+        {/* drag item */}
+        { this.views[this.state.nav].renderDragItems() }
       </div>
     )
   }
