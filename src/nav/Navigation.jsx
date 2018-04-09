@@ -180,6 +180,7 @@ class NavViews extends React.Component {
 
   renderFileGroup () {
     const toolBarStyle = { height: 64, width: '100%', display: 'flex', alignItems: 'center' }
+    const breadCrumbStyle = { height: 64, width: '100%', display: 'flex', alignItems: 'center', color: 'red' }
     return (
       <div style={{ display: 'flex', alignItems: 'center', height: '100%', width: '100%', position: 'relative' }}>
         <div style={{ height: '100%', width: 180 }}>
@@ -193,6 +194,9 @@ class NavViews extends React.Component {
         <div style={{ height: '100%', width: 'calc(100% - 180px)', position: 'relative' }}>
           {/* Toolbar */}
           { this.views[this.state.nav].renderToolBar({ style: toolBarStyle }) }
+
+          {/* Toolbar */}
+          { this.state.nav === 'home' && this.views[this.state.nav].renderBreadCrumbItem({ style: breadCrumbStyle }) }
 
           {/* File Content */}
           <div style={{ height: 'calc(100% - 64px)', width: '100%' }}>

@@ -55,7 +55,7 @@ class MenuItem extends React.PureComponent {
 @Radium
 class NavDrawer extends React.Component {
   render () {
-    // console.log(' NavDrawer render', this.props)
+    console.log(' NavDrawer render', this.props)
     const { views, nav, navTo } = this.props
     const primaryColor = views[nav].primaryColor()
 
@@ -65,9 +65,9 @@ class NavDrawer extends React.Component {
 
         <MenuItem
           icon={views.home.menuIcon()}
-          text={i18n.__('Files')}
+          text={i18n.__('All Files')}
           primaryColor={primaryColor}
-          selected={views[nav].navGroup() === 'file'}
+          selected={nav === 'home'}
           onTouchTap={() => navTo('home')}
         />
 
@@ -75,32 +75,32 @@ class NavDrawer extends React.Component {
           icon={views.media.menuIcon()}
           text={i18n.__('Photos')}
           primaryColor={primaryColor}
-          selected={views[nav].navGroup() === 'media'}
+          selected={nav === 'media'}
           onTouchTap={() => navTo('media')}
         />
 
         <MenuItem
           icon={views.media.menuIcon()}
-          text={i18n.__('Photos')}
+          text={i18n.__('Audio')}
           primaryColor={primaryColor}
-          selected={views[nav].navGroup() === 'media'}
-          onTouchTap={() => navTo('media')}
+          selected={nav === 'audio'}
+          onTouchTap={() => navTo('audio')}
         />
 
         <MenuItem
           icon={views.media.menuIcon()}
-          text={i18n.__('Photos')}
+          text={i18n.__('Docs')}
           primaryColor={primaryColor}
-          selected={views[nav].navGroup() === 'media'}
-          onTouchTap={() => navTo('media')}
+          selected={nav === 'docs'}
+          onTouchTap={() => navTo('docs')}
         />
 
         <MenuItem
-          icon={views.download.menuIcon()}
-          text={views.download.menuName()}
+          icon={views.media.menuIcon()}
+          text={i18n.__('Video')}
           primaryColor={primaryColor}
-          selected={nav === 'download'}
-          onTouchTap={() => navTo('download')}
+          selected={nav === 'video'}
+          onTouchTap={() => navTo('video')}
         />
       </div>
     )

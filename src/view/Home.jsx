@@ -26,6 +26,7 @@ import MoveDialog from '../file/MoveDialog'
 import FileContent from '../file/FileContent'
 import RenameDialog from '../file/RenameDialog'
 import NewFolderDialog from '../file/NewFolderDialog'
+import FileUploadButton from '../file/FileUploadButton'
 import ContextMenu from '../common/ContextMenu'
 import DialogOverlay from '../common/DialogOverlay'
 import FlatButton from '../common/FlatButton'
@@ -662,7 +663,11 @@ class Home extends Base {
       if (node.type === 'publicRoot') {
         this.rootDrive = null
         this.ctx.props.apis.request('drives')
-      } else this.ctx.props.apis.request('listNavDir', { driveUUID: path[0].uuid, dirUUID: node.uuid })
+      } else {
+        const pos = { driveUUID: path[0].uuid, dirUUID: node.uuid }
+        this.enter(pos, err => err && console.error('Jump via breadCrumb error', err))
+        this.history.add(pos)
+      }
     }
 
     /*
@@ -671,7 +676,7 @@ class Home extends Base {
     */
 
     return (
-      <div style={Object.assign({}, style, { marginLeft: 168 })}>
+      <div style={Object.assign({}, style, { marginLeft: 48 })}>
         {
           path.reduce((acc, node, index) => {
             const isDrop = () => this.state.select.isDrop()
@@ -705,10 +710,13 @@ class Home extends Base {
   }
 
   renderToolBar ({ style }) {
-    const color = 'rgba(0,0,0,.54)'
     const { curr, queue } = this.history.get()
     const noBack = curr < 1
     const noForward = curr > queue.length - 2
+    const { select } = this.state
+    const itemSelected = select && select.selected && select.selected.length
+    const color = 'rgba(0,0,0,.54)'
+    const altColor = itemSelected ? 'rgba(0,0,0,.54)' : 'rgba(0,0,0,.18)'
     return (
       <div style={style}>
         <div style={{ width: 48 }} />
@@ -721,20 +729,20 @@ class Home extends Base {
         <IconButton onTouchTap={() => this.refresh()} tooltip={i18n.__('Refresh')} >
           <RefreshIcon color={color} />
         </IconButton>
+
+        <FileUploadButton upload={this.upload} />
+
         <FlatButton
-          onTouchTap={() => this.toggleDialog('gridView')}
-          label={i18n.__('Upload')}
-          icon={<GridIcon color={color} />}
+          onTouchTap={this.download}
+          label={i18n.__('Download')}
+          disabled={!itemSelected}
+          icon={<DownloadIcon color={altColor} />}
         />
         <FlatButton
-          onTouchTap={() => this.toggleDialog('gridView')}
-          label={i18n.__('Dowload')}
-          icon={<GridIcon color={color} />}
-        />
-        <FlatButton
-          onTouchTap={() => this.toggleDialog('gridView')}
+          onTouchTap={() => this.toggleDialog('delete')}
           label={i18n.__('Delete')}
-          icon={<ListIcon color={color} />}
+          disabled={!itemSelected}
+          icon={<DeleteIcon color={altColor} />}
         />
         <FlatButton
           onTouchTap={() => this.toggleDialog('gridView')}

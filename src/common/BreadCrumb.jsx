@@ -20,7 +20,9 @@ export class BreadCrumbItem extends React.PureComponent {
   }
   render () {
     /* alt: small version and bgColor is white */
-    const { alt, text } = this.props
+    // const { alt, text } = this.props
+    const { text } = this.props
+    const alt = true
 
     /* adjust the different lineHeight of Noto and Roboto */
     const pureRoboto = !text.replace(/[a-zA-Z0-9`~!@#$%^&()-_=+{}[\];', ]/g, '').length
@@ -58,7 +60,7 @@ export class BreadCrumbItem extends React.PureComponent {
 
 export class BreadCrumbSeparator extends React.PureComponent {
   render () {
-    const { alt } = this.props
+    const alt = true
     return (
       <div
         style={{

@@ -1,7 +1,8 @@
-import React from 'react'
 import i18n from 'i18n'
-import { FloatingActionButton, Popover, Menu, MenuItem } from 'material-ui'
-import FileFileUpload from 'material-ui/svg-icons/file/file-upload'
+import React from 'react'
+import { Popover, Menu, MenuItem } from 'material-ui'
+import UploadIcon from 'material-ui/svg-icons/file/file-upload'
+import FlatButton from '../common/FlatButton'
 import { UploadFile, UploadFold } from '../common/Svg'
 
 class FileUploadButton extends React.Component {
@@ -13,21 +14,22 @@ class FileUploadButton extends React.Component {
       this.props.upload(type)
       this.setState({ open: false })
     }
+
+    this.openPop = (e) => {
+      e.preventDefault()
+      this.setState({ open: true, anchorEl: e.currentTarget })
+    }
   }
 
   render () {
+    const color = 'rgba(0,0,0,.54)'
     return (
-      <div style={{ position: 'absolute', top: -36, left: 24, zIndex: 1000 }}>
-        <FloatingActionButton
-          backgroundColor="#2196F3"
-          zDepth={3}
-          onTouchTap={(e) => {
-            e.preventDefault()
-            this.setState({ open: true, anchorEl: e.currentTarget })
-          }}
-        >
-          <FileFileUpload />
-        </FloatingActionButton>
+      <div>
+        <FlatButton
+          onClick={this.openPop}
+          label={i18n.__('Upload')}
+          icon={<UploadIcon color={color} />}
+        />
         <Popover
           open={this.state.open}
           animated
