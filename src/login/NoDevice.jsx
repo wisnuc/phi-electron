@@ -75,7 +75,7 @@ class NoDevice extends React.Component {
             onKeyDown={this.onKeyDown}
           />
           <IconButton
-            onTouchTap={this.checkIP}
+            onClick={this.checkIP}
             disabled={!!this.state.errorText || !this.state.IP}
           >
             <DoneIcon color="#006064" />

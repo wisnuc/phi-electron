@@ -165,7 +165,7 @@ class PhotoApp extends React.Component {
             >
               <div style={{ width: 12 }} />
               <div ref={ref => (this.refClearSelected = ref)}>
-                <IconButton onTouchTap={this.props.clearSelect}>
+                <IconButton onClick={this.props.clearSelect}>
                   <CloseIcon color="#FFF" />
                 </IconButton>
               </div>
@@ -175,17 +175,17 @@ class PhotoApp extends React.Component {
               </div>
               <div style={{ flexGrow: 1 }} />
 
-              <IconButton onTouchTap={this.props.startDownload} tooltip={i18n.__('Download')}>
+              <IconButton onClick={this.props.startDownload} tooltip={i18n.__('Download')}>
                 <DownloadIcon color="#FFF" />
               </IconButton>
 
               {/*
-              <IconButton onTouchTap={() => this.toggleDialog('deleteDialog')}>
+              <IconButton onClick={() => this.toggleDialog('deleteDialog')}>
                 <DeleteIcon color="#FFF" />
               </IconButton>
               */}
 
-              <IconButton onTouchTap={() => this.toggleDialog('hideDialog')} tooltip={i18n.__('Hide')}>
+              <IconButton onClick={() => this.toggleDialog('hideDialog')} tooltip={i18n.__('Hide')}>
                 <VisibilityOff color="#FFF" />
               </IconButton>
               <div style={{ width: 24 }} />
@@ -208,11 +208,11 @@ class PhotoApp extends React.Component {
                   </div>
                   <div style={{ height: 24 }} />
                   <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-                    <FlatButton label={i18n.__('Cancel')} primary onTouchTap={() => this.toggleDialog('deleteDialog')} keyboardFocused />
+                    <FlatButton label={i18n.__('Cancel')} primary onClick={() => this.toggleDialog('deleteDialog')} keyboardFocused />
                     <FlatButton
                       label={i18n.__('Remove')}
                       primary
-                      onTouchTap={() => {
+                      onClick={() => {
                         this.toggleDialog('deleteDialog')
                         this.props.removeMedia()
                       }}
@@ -238,11 +238,11 @@ class PhotoApp extends React.Component {
                   </div>
                   <div style={{ height: 24 }} />
                   <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-                    <FlatButton label={i18n.__('Cancel')} primary onTouchTap={() => this.toggleDialog('hideDialog')} keyboardFocused />
+                    <FlatButton label={i18n.__('Cancel')} primary onClick={() => this.toggleDialog('hideDialog')} keyboardFocused />
                     <FlatButton
                       label={i18n.__('Hide')}
                       primary
-                      onTouchTap={() => {
+                      onClick={() => {
                         this.toggleDialog('hideDialog')
                         this.props.hideMedia()
                       }}

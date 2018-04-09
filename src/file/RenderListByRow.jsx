@@ -99,7 +99,7 @@ class Row extends React.PureComponent {
             border: onDropping ? `2px ${this.props.primaryColor} solid` : ''
           }}
           role="presentation"
-          onTouchTap={e => this.props.onRowTouchTap(e, index)}
+          onMouseUp={e => this.props.onRowTouchTap(e, index)}
           onMouseEnter={e => this.props.onRowMouseEnter(e, index)}
           onMouseLeave={e => this.props.onRowMouseLeave(e, index)}
           onDoubleClick={e => this.props.onRowDoubleClick(e, index)}
@@ -233,7 +233,7 @@ class RenderListByRow extends React.Component {
         }}
         onMouseMove={() => this.enterDiv(h.title)}
         onMouseLeave={() => this.leaveDiv(h.title)}
-        onTouchTap={() => {
+        onClick={() => {
           this.props.sortType === h.up ? this.props.changeSortType(h.down) : this.props.changeSortType(h.up)
         }}
       >
@@ -272,7 +272,7 @@ class RenderListByRow extends React.Component {
         <FlatButton
           label={h.title}
           labelStyle={{ fontSize: 14, color: 'rgba(0,0,0,0.54)', textTransform: '' }}
-          onTouchTap={this.toggleMenu}
+          onClick={this.toggleMenu}
         />
         {/* menu */}
         <Popover
@@ -287,13 +287,13 @@ class RenderListByRow extends React.Component {
               style={{ fontSize: 13 }}
               leftIcon={this.state.type === i18n.__('Date Modified') ? <CheckIcon /> : <div />}
               primaryText={i18n.__('Date Modified')}
-              onTouchTap={() => this.handleChange(i18n.__('Date Modified'))}
+              onClick={() => this.handleChange(i18n.__('Date Modified'))}
             />
             <MenuItem
               style={{ fontSize: 13 }}
               leftIcon={this.state.type === i18n.__('Date Taken') ? <CheckIcon /> : <div />}
               primaryText={i18n.__('Date Taken')}
-              onTouchTap={() => this.handleChange(i18n.__('Date Taken'))}
+              onClick={() => this.handleChange(i18n.__('Date Taken'))}
             />
           </Menu>
         </Popover>
@@ -303,7 +303,7 @@ class RenderListByRow extends React.Component {
           style={{ height: 36, width: 36, padding: 9, borderRadius: '18px', marginLeft: -8, display: isSelected ? '' : 'none' }}
           iconStyle={{ height: 18, width: 18, color: 'rgba(0,0,0,0.54)' }}
           hoveredStyle={{ backgroundColor: 'rgba(153,153,153,0.2)' }}
-          onTouchTap={() => (sortType === h.up || !sortType ? changeSortType(h.down) : changeSortType(h.up))}
+          onClick={() => (sortType === h.up || !sortType ? changeSortType(h.down) : changeSortType(h.up))}
         >
           { sortType === h.up && <ArrowUpward /> }
           { sortType === h.down && <ArrowDownward /> }
@@ -371,11 +371,10 @@ class RenderListByRow extends React.Component {
                 <div
                   role="presentation"
                   onMouseDown={e => this.props.selectStart(e)}
-                  onMouseUp={e => this.props.selectEnd(e)}
+                  onMouseUp={(e) => { this.props.selectEnd(e); this.props.onRowTouchTap(e, -1) }}
                   onMouseMove={e => this.props.selectRow(e, this.getScrollToPosition())}
                   onMouseLeave={e => 0 && this.props.selectEnd(e)}
                   draggable={false}
-                  onTouchTap={e => this.props.onRowTouchTap(e, -1)}
                 >
                   <ScrollBar
                     ref={ref => (this.ListRef = ref)}

@@ -43,7 +43,7 @@ class ModelNameCard extends React.Component {
             style={{ flex: this.props.toggle ? '0 0 24px' : '0 0 64px', transition: 'all 300ms', zIndex: 100 }}
             direction="left"
             color={bcolor}
-            onTouchTap={this.props.toggle ? undefined : this.props.onNavPrev}
+            onClick={this.props.toggle ? undefined : this.props.onNavPrev}
           />
           <div style={{ flexGrow: 1, transition: 'height 300ms' }}>
             <div style={{ position: 'relative', width: '100%', height: '100%' }}>
@@ -102,7 +102,7 @@ class ModelNameCard extends React.Component {
             style={{ flex: this.props.toggle ? '0 0 24px' : '0 0 64px', transition: 'all 300ms' }}
             direction="right"
             color={bcolor}
-            onTouchTap={this.props.toggle ? undefined : this.props.onNavNext}
+            onClick={this.props.toggle ? undefined : this.props.onNavNext}
           />
         </div>
       </Paper>

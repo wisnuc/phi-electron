@@ -80,7 +80,7 @@ class AccountApp extends React.Component {
                 <IconButton
                   iconStyle={{ width: 67, height: 67, color: primaryColor }}
                   style={{ width: 67, height: 67, padding: 0 }}
-                  onTouchTap={() => !(account.global && account.global.wx) && this.toggleDialog('editAvatar')}
+                  onClick={() => !(account.global && account.global.wx) && this.toggleDialog('editAvatar')}
                 >
                   <ActionAccountCircle />
                 </IconButton>
@@ -112,7 +112,7 @@ class AccountApp extends React.Component {
                 : (
                   <div style={{ display: 'flex', alignItems: 'center', height: 26 }}>
                     { i18n.__('WeChat not Bind Text') }
-                    { <FlatButton label={i18n.__('Bind WeChat Title')} onTouchTap={() => this.setState({ weChat: true })} primary /> }
+                    { <FlatButton label={i18n.__('Bind WeChat Title')} onClick={() => this.setState({ weChat: true })} primary /> }
                   </div>
                 )
             }
@@ -154,7 +154,7 @@ class AccountApp extends React.Component {
                 label={i18n.__('Change Username')}
                 style={{ marginLeft: -8 }}
                 primary
-                onTouchTap={() => this.setState({ openDialog: 'username' })}
+                onClick={() => this.setState({ openDialog: 'username' })}
               />
             </div>
           </div>
@@ -184,7 +184,7 @@ class AccountApp extends React.Component {
               <FlatButton
                 primary
                 label={i18n.__('Change Password')}
-                onTouchTap={() => this.setState({ openDialog: 'password' })}
+                onClick={() => this.setState({ openDialog: 'password' })}
               />
           }
           {/* show when login via WeChat */}
@@ -193,7 +193,7 @@ class AccountApp extends React.Component {
               <FlatButton
                 primary
                 label={i18n.__('Reset Password')}
-                onTouchTap={() => this.setState({ reset: true })}
+                onClick={() => this.setState({ reset: true })}
               />
           }
         </div>
@@ -220,7 +220,7 @@ class AccountApp extends React.Component {
               <div style={{ color: 'rgba(0,0,0,0.54)' }}> { i18n.__('Avatar Edit Text') } </div>
               <div style={{ height: 24 }} />
               <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-                <FlatButton label={i18n.__('Confirm')} primary onTouchTap={() => this.toggleDialog('editAvatar')} />
+                <FlatButton label={i18n.__('Confirm')} primary onClick={() => this.toggleDialog('editAvatar')} />
               </div>
             </div>
           }

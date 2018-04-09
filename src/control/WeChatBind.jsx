@@ -253,8 +253,8 @@ class WeChatBind extends React.Component {
 
               <div style={{ height: 84 }} />
               <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-                <FlatButton label={i18n.__('Cancel')} primary onTouchTap={this.done} />
-                <FlatButton label={i18n.__('Confirm')} primary onTouchTap={this.confirm} />
+                <FlatButton label={i18n.__('Cancel')} primary onClick={this.done} />
+                <FlatButton label={i18n.__('Confirm')} primary onClick={this.confirm} />
               </div>
             </div>
         }
@@ -271,7 +271,7 @@ class WeChatBind extends React.Component {
               </div>
               <div style={{ height: 106 }} />
               <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-                <FlatButton label={i18n.__('Confirm')} primary onTouchTap={this.done} />
+                <FlatButton label={i18n.__('Confirm')} primary onClick={this.done} />
               </div>
             </div>
         }
@@ -291,7 +291,7 @@ class WeChatBind extends React.Component {
               </div>
               <div style={{ height: 58 }} />
               <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-                <FlatButton label={i18n.__('Return')} primary onTouchTap={this.done} />
+                <FlatButton label={i18n.__('Return')} primary onClick={this.done} />
               </div>
             </div>
         }

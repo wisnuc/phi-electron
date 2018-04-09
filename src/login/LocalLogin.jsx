@@ -338,7 +338,7 @@ class Login extends StateUp(React.Component) {
         return (
           <div style={boxStyle}>
             <div>{ i18n.__('Device Not Initialized') }</div>
-            <FlatButton label={i18n.__('Initialize')} onTouchTap={() => this.toggleExpanded()} />
+            <FlatButton label={i18n.__('Initialize')} onClick={() => this.toggleExpanded()} />
           </div>
         )
       }
@@ -414,7 +414,7 @@ class Login extends StateUp(React.Component) {
         return (
           <div style={boxStyle}>
             <div>{text}</div>
-            <FlatButton label={i18n.__('Maintenance Mode')} onTouchTap={this.toggleMaint} />
+            <FlatButton label={i18n.__('Maintenance Mode')} onClick={this.toggleMaint} />
           </div>
         )
       }
@@ -445,7 +445,7 @@ class Login extends StateUp(React.Component) {
         return (
           <div style={boxStyle}>
             <div>{text}</div>
-            <FlatButton label={i18n.__('Create User')} onTouchTap={this.toggleFirstUser} />
+            <FlatButton label={i18n.__('Create User')} onClick={this.toggleFirstUser} />
           </div>
         )
       }
@@ -469,8 +469,8 @@ class Login extends StateUp(React.Component) {
           <div style={{ height: 16 }} />
           <UsernamePassword {...this.bindVState('userpass')} />
           <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -16 }}>
-            <FlatButton label={i18n.__('Cancel')} onTouchTap={this.toggleFirstUser} primary />
-            <FlatButton label={i18n.__('Confirm')} disabled={!this.state.userpass.isInputOK()} onTouchTap={this.addFirstUser} primary />
+            <FlatButton label={i18n.__('Cancel')} onClick={this.toggleFirstUser} primary />
+            <FlatButton label={i18n.__('Confirm')} disabled={!this.state.userpass.isInputOK()} onClick={this.addFirstUser} primary />
           </div>
         </div>
       )
@@ -559,7 +559,7 @@ class Login extends StateUp(React.Component) {
                                 </div>
                                 <div style={{ flexGrow: 1 }} />
                                 <div style={{ width: 56 }}>
-                                  <IconButton onTouchTap={this.refresh} >
+                                  <IconButton onClick={this.refresh} >
                                     <RefreshIcon />
                                   </IconButton>
                                 </div>
@@ -598,7 +598,7 @@ class Login extends StateUp(React.Component) {
                   <FlatButton
                     label={i18n.__('Refresh')}
                     labelStyle={{ color: '#424242', fontWeight: 500 }}
-                    onTouchTap={this.refresh}
+                    onClick={this.refresh}
                   />
                 </div>
               </div>

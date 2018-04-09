@@ -88,7 +88,7 @@ class Row extends React.Component {
                     <FlatButton
                       label={this.state.type}
                       labelStyle={{ fontSize: 14, color: 'rgba(0,0,0,0.54)' }}
-                      onTouchTap={this.toggleMenu}
+                      onClick={this.toggleMenu}
                     />
                     {/* menu */}
                     <Popover
@@ -103,25 +103,25 @@ class Row extends React.Component {
                           style={{ fontSize: 13 }}
                           leftIcon={this.state.type === i18n.__('Name') ? <CheckIcon /> : <div />}
                           primaryText={i18n.__('Name')}
-                          onTouchTap={() => this.handleChange(i18n.__('Name'))}
+                          onClick={() => this.handleChange(i18n.__('Name'))}
                         />
                         <MenuItem
                           style={{ fontSize: 13 }}
                           leftIcon={this.state.type === i18n.__('Date Modified') ? <CheckIcon /> : <div />}
                           primaryText={i18n.__('Date Modified')}
-                          onTouchTap={() => this.handleChange(i18n.__('Date Modified'))}
+                          onClick={() => this.handleChange(i18n.__('Date Modified'))}
                         />
                         <MenuItem
                           style={{ fontSize: 13 }}
                           leftIcon={this.state.type === i18n.__('Date Taken') ? <CheckIcon /> : <div />}
                           primaryText={i18n.__('Date Taken')}
-                          onTouchTap={() => this.handleChange(i18n.__('Date Taken'))}
+                          onClick={() => this.handleChange(i18n.__('Date Taken'))}
                         />
                         <MenuItem
                           style={{ fontSize: 13 }}
                           leftIcon={this.state.type === i18n.__('Size') ? <CheckIcon /> : <div />}
                           primaryText={i18n.__('Size')}
-                          onTouchTap={() => this.handleChange(i18n.__('Size'))}
+                          onClick={() => this.handleChange(i18n.__('Size'))}
                         />
                       </Menu>
                     </Popover>
@@ -131,7 +131,7 @@ class Row extends React.Component {
                       style={{ height: 36, width: 36, padding: 9, borderRadius: '18px' }}
                       iconStyle={{ height: 18, width: 18, color: 'rgba(0,0,0,0.54)' }}
                       hoveredStyle={{ backgroundColor: 'rgba(0,0,0,0.18)' }}
-                      onTouchTap={() => { sortType === h.up || !sortType ? changeSortType(h.down) : changeSortType(h.up) }}
+                      onClick={() => { sortType === h.up || !sortType ? changeSortType(h.down) : changeSortType(h.up) }}
                     >
                       { sortType === h.up || !sortType ? <ArrowUpward /> : <ArrowDownward /> }
                     </IconButton>
@@ -160,7 +160,7 @@ class Row extends React.Component {
                       : 'rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px'
                   }}
                   role="presentation"
-                  onTouchTap={e => this.props.onRowTouchTap(e, index)}
+                  onMouseUp={e => this.props.onRowTouchTap(e, index)}
                   onDoubleClick={e => this.props.onRowDoubleClick(e, index)}
                   onMouseDown={e => e.stopPropagation() || this.props.gridDragStart(e, index)}
                   onMouseEnter={e => this.props.onRowMouseEnter(e, index)}
@@ -410,10 +410,9 @@ class GridView extends React.Component {
               <div
                 role="presentation"
                 onMouseDown={e => this.props.selectStart(e)}
-                onMouseUp={e => this.props.selectEnd(e)}
+                onMouseUp={(e) => { this.props.selectEnd(e); this.props.onRowTouchTap(e, -1) }}
                 onMouseMove={e => this.props.selectGrid(e, this.getStatus())}
                 onMouseLeave={e => 0 && this.props.selectEnd(e)}
-                onTouchTap={e => this.props.onRowTouchTap(e, -1)}
               >
                 <ScrollBar
                   ref={ref => (this.ListRef = ref)}

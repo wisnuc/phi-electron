@@ -261,11 +261,11 @@ class Media extends Base {
     return !this.state.selectedItems.length
   }
 
-  renderNavigationMenu ({ style, onTouchTap }) {
+  renderNavigationMenu ({ style, onClick }) {
     const CustomStyle = Object.assign(style, { opacity: 1 })
     return (
       <div style={CustomStyle} ref={ref => (this.refNavigationMenu = ref)}>
-        <IconButton onTouchTap={onTouchTap}>
+        <IconButton onClick={onClick}>
           <NavigationMenu color="rgba(0,0,0,0.54)" />
         </IconButton>
       </div>
@@ -284,7 +284,7 @@ class Media extends Base {
   renderToolBar ({ style }) {
     return (
       <div style={style}>
-        <FlatButton label={i18n.__('Upload')} onTouchTap={this.uploadMedia} primary />
+        <FlatButton label={i18n.__('Upload')} onClick={this.uploadMedia} primary />
       </div>
     )
   }

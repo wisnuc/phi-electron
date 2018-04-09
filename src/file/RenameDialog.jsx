@@ -84,8 +84,8 @@ class RenameDialog extends React.PureComponent {
         </div>
         <div style={{ height: 24 }} />
         <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-          <FlatButton label={i18n.__('Cancel')} primary onTouchTap={this.props.onRequestClose} />
-          <FlatButton label={i18n.__('Confirm')} primary disabled={disabled} onTouchTap={this.fire} />
+          <FlatButton label={i18n.__('Cancel')} primary onClick={this.props.onRequestClose} />
+          <FlatButton label={i18n.__('Confirm')} primary disabled={disabled} onClick={this.fire} />
         </div>
       </div>
     )

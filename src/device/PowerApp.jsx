@@ -128,8 +128,8 @@ class Power extends React.Component {
 
     return (
       <div>
-        <FlatButton label={i18n.__('Cancel')} primary onTouchTap={this.handleClose} />
-        <FlatButton label={i18n.__('Confirm')} primary onTouchTap={() => this.handleStartProgress(operation)} />
+        <FlatButton label={i18n.__('Cancel')} primary onClick={this.handleClose} />
+        <FlatButton label={i18n.__('Confirm')} primary onClick={() => this.handleStartProgress(operation)} />
       </div>
     )
   }
@@ -177,7 +177,7 @@ class Power extends React.Component {
           <CircularProgress style={{ marginTop: 48, marginLeft: 148 }} />
           <div style={{ textAlign: 'center', marginTop: 24 }}>{hintText} </div>
           <div style={{ textAlign: 'center', marginTop: 24 }}>
-            <FlatButton label={i18n.__('Exit')} primary onTouchTap={this.handleExit} />
+            <FlatButton label={i18n.__('Exit')} primary onClick={this.handleExit} />
           </div>
         </div>
       )
@@ -214,7 +214,7 @@ class Power extends React.Component {
             {hintText}
           </div>
           <div style={{ textAlign: 'center', marginTop: 24 }}>
-            <FlatButton label={linkText} primary onTouchTap={this.handleEndProgress} />
+            <FlatButton label={linkText} primary onClick={this.handleEndProgress} />
           </div>
         </div>
       )
@@ -245,13 +245,13 @@ class Power extends React.Component {
               label={i18n.__('Shut Down')}
               primary
               style={{ marginLeft: i18n.getLocale() === 'zh-CN' ? -16 : -8 }}
-              onTouchTap={() => this.handleOpen('POWEROFF')}
+              onClick={() => this.handleOpen('POWEROFF')}
             />
             <FlatButton
               label={i18n.__('Reboot')}
               primary
               style={{ marginLeft: 0 }}
-              onTouchTap={() => this.handleOpen('REBOOT')}
+              onClick={() => this.handleOpen('REBOOT')}
             />
           </div>
         </div>
@@ -282,7 +282,7 @@ class Power extends React.Component {
               label={i18n.__('Reboot To Maintenance')}
               primary
               style={{ marginLeft: -8 }}
-              onTouchTap={() => this.handleOpen('REBOOTMAINTENANCE')}
+              onClick={() => this.handleOpen('REBOOTMAINTENANCE')}
             />
           </div>
         </div>

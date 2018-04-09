@@ -61,7 +61,7 @@ class PluginApp extends React.Component {
             toggled={enabled}
             onToggle={func}
             disabled={isWIP}
-            onTouchTap={(e) => { e.stopPropagation(); e.preventDefault() }}
+            onClick={(e) => { e.stopPropagation(); e.preventDefault() }}
           />
           { isWIP && <CircularProgress size={16} thickness={2} /> }
         </div>

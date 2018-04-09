@@ -46,7 +46,7 @@ export class BreadCrumbItem extends React.PureComponent {
           border: this.state.dropable ? '2px #FAFAFA solid' : '',
           backgroundColor: this.state.isDrop ? 'transparent' : this.state.hover ? bgColor : 'transparent'
         }}
-        onTouchTap={this.props.onTouchTap}
+        onClick={this.props.onClick}
         onMouseMove={this.onMouseMove}
         onMouseLeave={this.onMouseLeave}
       >

@@ -114,7 +114,7 @@ class SettingsApp extends React.Component {
             <FlatButton
               primary
               label={i18n.__(lan)}
-              onTouchTap={this.toggleMenu}
+              onClick={this.toggleMenu}
             />
             {/* menu */}
             <Popover
@@ -128,12 +128,12 @@ class SettingsApp extends React.Component {
                 <MenuItem
                   style={{ fontSize: 13 }}
                   primaryText="简体中文"
-                  onTouchTap={() => this.handleChange('zh-CN')}
+                  onClick={() => this.handleChange('zh-CN')}
                 />
                 <MenuItem
                   style={{ fontSize: 13 }}
                   primaryText="English"
-                  onTouchTap={() => this.handleChange('en-US')}
+                  onClick={() => this.handleChange('en-US')}
                 />
               </Menu>
             </Popover>
@@ -158,7 +158,7 @@ class SettingsApp extends React.Component {
           }
         </div>
         <div style={{ width: 480, display: 'flex', alignItems: 'center', marginLeft: -8 }}>
-          <FlatButton primary label={i18n.__('Clean')} onTouchTap={() => this.toggleDialog('confirm')} disabled={this.state.loading} />
+          <FlatButton primary label={i18n.__('Clean')} onClick={() => this.toggleDialog('confirm')} disabled={this.state.loading} />
         </div>
       </div>
     )
@@ -185,7 +185,7 @@ class SettingsApp extends React.Component {
             primary
             disabled={this.state.loading}
             label={i18n.__('Set Download Path')}
-            onTouchTap={() => this.openDialog()}
+            onClick={() => this.openDialog()}
           />
         </div>
       </div>
@@ -237,12 +237,12 @@ class SettingsApp extends React.Component {
                   <FlatButton
                     label={i18n.__('Cancel')}
                     primary
-                    onTouchTap={() => this.toggleDialog('confirm')}
+                    onClick={() => this.toggleDialog('confirm')}
                   />
                   <FlatButton
                     label={i18n.__('Clean')}
                     primary
-                    onTouchTap={this.cleanCache}
+                    onClick={this.cleanCache}
                   />
                 </div>
               </div>

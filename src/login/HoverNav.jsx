@@ -21,14 +21,14 @@ class HoverNav extends React.Component {
   }
 
   render () {
-    const enabled = !!this.props.onTouchTap
+    const enabled = !!this.props.onClick
     return (
       <div style={this.props.style}>
         {
           enabled &&
           <div
             style={{ width: '100%', height: '100%' }}
-            onTouchTap={this.props.onTouchTap}
+            onClick={this.props.onClick}
             onMouseMove={() => this.setState({ hover: true })}
             onMouseLeave={() => this.setState({ hover: false })}
           >

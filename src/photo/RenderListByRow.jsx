@@ -62,7 +62,7 @@ class RenderListByRow extends React.Component {
                 opacity: selected ? 1 : 0,
                 transition: selected ? 'all .1s .1s cubic-bezier(0.0, 0.0, 0.2, 1)' : 'all .1s cubic-bezier(0.0, 0.0, 0.2, 1)'
               }}
-              onTouchTap={(e) => { this.onSelectIconButton(); e.stopPropagation() }}
+              onClick={(e) => { this.onSelectIconButton(); e.stopPropagation() }}
             >
               <CheckIcon
                 style={{ margin: 8 }}

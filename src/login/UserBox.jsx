@@ -32,7 +32,7 @@ let isFirst = true // only auto login the first time
 
 class NamedAvatar extends React.PureComponent {
   render () {
-    const { style, name, selected, onTouchTap, uuid } = this.props
+    const { style, name, selected, onClick, uuid } = this.props
     let avatarUrl = null
     const index = global.config.users.findIndex(uc => uc && uc.userUUID === uuid && uc.weChat)
     if (index > -1) avatarUrl = global.config.users[index].weChat.avatarUrl
@@ -52,7 +52,7 @@ class NamedAvatar extends React.PureComponent {
               cursor: 'pointer'
             }}
             size={36}
-            onTouchTap={onTouchTap}
+            onClick={onClick}
           >
             <div style={{ lineHeight: '24px', fontSize: 14 }}>
               {
@@ -190,7 +190,7 @@ class UserBox extends React.Component {
             label={i18n.__('Cancel')}
             primary
             disabled={!!this.state.wait}
-            onTouchTap={this.cancel}
+            onClick={this.cancel}
           />
         </div>
       </div>
@@ -240,7 +240,7 @@ class UserBox extends React.Component {
                         name={user.username}
                         uuid={user.uuid}
                         selected={index === this.state.selectedIndex}
-                        onTouchTap={() => this.selectUser(index)}
+                        onClick={() => this.selectUser(index)}
                       />
                     ))
                   }

@@ -114,7 +114,7 @@ class MaintGuide extends React.Component {
               <FlatButton
                 primary
                 label={i18n.__('Start')}
-                onTouchTap={this.forceBoot}
+                onClick={this.forceBoot}
                 style={{ marginRight: 24 }}
                 disabled={this.state.loading}
               />
@@ -138,14 +138,14 @@ class MaintGuide extends React.Component {
       <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
         <FlatButton
           label={i18n.__('Return')}
-          onTouchTap={this.state.action ? this.toggleAction : this.props.toggleMaint}
+          onClick={this.state.action ? this.toggleAction : this.props.toggleMaint}
           primary
         />
         {
           !this.state.action &&
           <FlatButton
             label={i18n.__('Enter Maint')}
-            onTouchTap={this.toggleAction}
+            onClick={this.toggleAction}
             primary
           />
         }
@@ -173,7 +173,7 @@ class MaintGuide extends React.Component {
         <FlatButton
           label={label}
           labelStyle={{ textTransform: '' }}
-          onTouchTap={func}
+          onClick={func}
           style={{ marginLeft: -8 }}
           disabled={disabled || this.state.loading}
           primary
@@ -272,7 +272,7 @@ class MaintGuide extends React.Component {
                       <IconButton
                         iconStyle={{ width: 24, height: 24 }}
                         style={{ width: 40, height: 40, padding: 8 }}
-                        onTouchTap={() => this.changeIndex(-1)}
+                        onClick={() => this.changeIndex(-1)}
                       >
                         <NavigationChevronLeft />
                       </IconButton>
@@ -284,7 +284,7 @@ class MaintGuide extends React.Component {
                       <IconButton
                         iconStyle={{ width: 24, height: 24 }}
                         style={{ width: 40, height: 40, padding: 8 }}
-                        onTouchTap={() => this.changeIndex(1)}
+                        onClick={() => this.changeIndex(1)}
                       >
                         <NavigationChevronRight />
                       </IconButton>

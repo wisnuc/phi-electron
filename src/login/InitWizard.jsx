@@ -98,7 +98,7 @@ class InitWizard extends StateUp(React.Component) {
                   : false
           }
           primary
-          onTouchTap={() => (step < 3 ? this.handleNext() : step === 4 ? this.props.onOK() : this.props.bindWechat())}
+          onClick={() => (step < 3 ? this.handleNext() : step === 4 ? this.props.onOK() : this.props.bindWechat())}
           style={{ marginRight: 12 }}
         />
         {
@@ -108,7 +108,7 @@ class InitWizard extends StateUp(React.Component) {
             disabled={stepIndex === 0}
             disableTouchRipple
             disableFocusRipple
-            onTouchTap={() => (step !== 3 ? this.handlePrev() : this.handleNext())}
+            onClick={() => (step !== 3 ? this.handlePrev() : this.handleNext())}
           />
         }
       </div>
@@ -213,7 +213,7 @@ class InitWizard extends StateUp(React.Component) {
               disableTouchRipple
               disableFocusRipple
               primary
-              onTouchTap={() => (info[0] === 'success' ? this.setState({ stepIndex: 3 }) : this.retry())}
+              onClick={() => (info[0] === 'success' ? this.setState({ stepIndex: 3 }) : this.retry())}
               style={{ marginRight: 12 }}
             />
           }
@@ -246,7 +246,7 @@ class InitWizard extends StateUp(React.Component) {
           justifyContent: 'flex-end'
         }}
       >
-        { label && <FlatButton label={label} primary onTouchTap={action} style={{ marginBottom: -8 }} /> }
+        { label && <FlatButton label={label} primary onClick={action} style={{ marginBottom: -8 }} /> }
       </div>
     )
   }

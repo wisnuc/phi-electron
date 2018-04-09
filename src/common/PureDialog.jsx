@@ -118,7 +118,7 @@ class TransitionItem extends React.Component {
             backgroundColor: 'rgba(0, 0, 0, 0.541176)',
             zIndex: 1400
           }}
-          onTouchTap={this.handleTouchTapOverlay}
+          onClick={this.handleTouchTapOverlay}
         />
       </div>
     )

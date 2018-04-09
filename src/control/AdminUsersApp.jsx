@@ -114,7 +114,7 @@ class AdminUsersApp extends React.Component {
             label={userLabel}
             labelStyle={{ fontSize: 14, color: 'rgba(0,0,0,0.54)', textTransform: '' }}
             labelPosition="before"
-            onTouchTap={event => !user.disabled && this.toggleMenu(event, user)}
+            onClick={event => !user.disabled && this.toggleMenu(event, user)}
             style={{ marginLeft: -4 }}
             disabled={user.isFirstUser || user.disabled || (!this.props.apis.account.data.isFirstUser)}
             icon={user.isFirstUser || user.disabled || (!this.props.apis.account.data.isFirstUser) ? <div /> : <DeltaIcon />}
@@ -132,7 +132,7 @@ class AdminUsersApp extends React.Component {
             ? <div />
             : <FlatButton
               label=i18n.__('Reset Password')
-              onTouchTap={() => this.toggleDialog('resetPwd', user)}
+              onClick={() => this.toggleDialog('resetPwd', user)}
               primary
               disabled={user.nologin}
             />
@@ -161,7 +161,7 @@ class AdminUsersApp extends React.Component {
         <FloatingActionButton
           style={{ position: 'absolute', top: -36, left: 24, zIndex: 200 }}
           secondary
-          onTouchTap={() => this.toggleDialog('createNewUser')}
+          onClick={() => this.toggleDialog('createNewUser')}
         >
           <SocialPersonAdd />
         </FloatingActionButton>
@@ -203,13 +203,13 @@ class AdminUsersApp extends React.Component {
               style={{ fontSize: 13, marginLeft: -8 }}
               leftIcon={this.state.user.isAdmin ? <CheckIcon /> : <div />}
               primaryText={i18n.__('Admin User')}
-              onTouchTap={() => !this.state.user.isAdmin && this.toggleDialog('changeAuth', this.state.user)}
+              onClick={() => !this.state.user.isAdmin && this.toggleDialog('changeAuth', this.state.user)}
             />
             <MenuItem
               style={{ fontSize: 13, marginLeft: -8 }}
               leftIcon={!this.state.user.isAdmin ? <CheckIcon /> : <div />}
               primaryText={i18n.__('Normal User')}
-              onTouchTap={() => this.state.user.isAdmin && this.toggleDialog('changeAuth', this.state.user)}
+              onClick={() => this.state.user.isAdmin && this.toggleDialog('changeAuth', this.state.user)}
             />
           </Menu>
           }
@@ -240,8 +240,8 @@ class AdminUsersApp extends React.Component {
                   <div style={{ color: 'rgba(0,0,0,0.54)' }}> { i18n.__('Reset Password Text 2')} </div>
                   <div style={{ height: 24 }} />
                   <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-                    <FlatButton label={i18n.__('Cancel')} primary onTouchTap={() => this.toggleDialog('resetPwd')} />
-                    <FlatButton label={i18n.__('Confirm')} primary onTouchTap={this.resetPwd} />
+                    <FlatButton label={i18n.__('Cancel')} primary onClick={() => this.toggleDialog('resetPwd')} />
+                    <FlatButton label={i18n.__('Confirm')} primary onClick={this.resetPwd} />
                   </div>
                 </div>
             }
@@ -256,9 +256,9 @@ class AdminUsersApp extends React.Component {
                   </div>
                   <div style={{ height: 24 }} />
                   <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-                    <FlatButton label={i18n.__('Copy to Clipboard')} primary onTouchTap={this.copyText} />
+                    <FlatButton label={i18n.__('Copy to Clipboard')} primary onClick={this.copyText} />
                     <div style={{ width: 158 }} />
-                    <FlatButton label={i18n.__('Confirm')} primary onTouchTap={() => this.toggleDialog('randomPwd')} />
+                    <FlatButton label={i18n.__('Confirm')} primary onClick={() => this.toggleDialog('randomPwd')} />
                   </div>
                 </div>
             }
@@ -282,8 +282,8 @@ class AdminUsersApp extends React.Component {
                   </div>
                   <div style={{ height: 24 }} />
                   <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-                    <FlatButton label={i18n.__('Cancel')} primary onTouchTap={() => this.toggleDialog('disableUser')} />
-                    <FlatButton label={i18n.__('Confirm')} primary onTouchTap={this.disableUser} />
+                    <FlatButton label={i18n.__('Cancel')} primary onClick={() => this.toggleDialog('disableUser')} />
+                    <FlatButton label={i18n.__('Confirm')} primary onClick={this.disableUser} />
                   </div>
                 </div>
             }
@@ -305,8 +305,8 @@ class AdminUsersApp extends React.Component {
                   </div>
                   <div style={{ height: 24 }} />
                   <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-                    <FlatButton label={i18n.__('Cancel')} primary onTouchTap={() => this.toggleDialog('changeAuth')} />
-                    <FlatButton label={i18n.__('Confirm')} primary onTouchTap={this.toggleAuth} />
+                    <FlatButton label={i18n.__('Cancel')} primary onClick={() => this.toggleDialog('changeAuth')} />
+                    <FlatButton label={i18n.__('Confirm')} primary onClick={this.toggleAuth} />
                   </div>
                 </div>
             }

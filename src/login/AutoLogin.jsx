@@ -37,7 +37,7 @@ class AutoLogin extends React.Component {
           <FlatButton
             label={i18n.__('Cancel')}
             primary
-            onTouchTap={this.cancel}
+            onClick={this.cancel}
           />
         </div>
       </div>

@@ -112,7 +112,7 @@ class FinishedTask extends Component {
         <div style={{ flex: '0 0 60px', display: 'flex', alignItems: 'center', marginRight: 8 }}>
           {
             task.warnings && !!task.warnings.length &&
-            <IconButton onTouchTap={this.checkError} tooltip={i18n.__('Detail')}>
+            <IconButton onClick={this.checkError} tooltip={i18n.__('Detail')}>
               <WarningIcon color="#FB8C00" />
             </IconButton>
           }

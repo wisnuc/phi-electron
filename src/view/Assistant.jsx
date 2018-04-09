@@ -69,11 +69,11 @@ class Assistant extends Media {
     return 'colored'
   }
 
-  renderNavigationMenu ({ style, onTouchTap }) {
+  renderNavigationMenu ({ style, onClick }) {
     const CustomStyle = Object.assign(style, { opacity: 1 })
     return (
       <div style={CustomStyle} ref={ref => (this.refNavigationMenu = ref)}>
-        <IconButton onTouchTap={onTouchTap}>
+        <IconButton onClick={onClick}>
           <NavigationMenu color="#FFF" />
         </IconButton>
       </div>

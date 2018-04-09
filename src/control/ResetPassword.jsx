@@ -208,8 +208,8 @@ class ResetPassword extends React.Component {
         <div style={{ height: 24 }} />
         {/* button */}
         <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-          <FlatButton label={i18n.__('Cancel')} onTouchTap={this.props.onRequestClose} primary />
-          <FlatButton label={i18n.__('Confirm')} onTouchTap={this.confirm} primary />
+          <FlatButton label={i18n.__('Cancel')} onClick={this.props.onRequestClose} primary />
+          <FlatButton label={i18n.__('Confirm')} onClick={this.confirm} primary />
         </div>
       </div>
     )

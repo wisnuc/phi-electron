@@ -126,7 +126,7 @@ class RunningTask extends React.Component {
           color: 'rgba(0,0,0,0.87)',
           backgroundColor: this.state.isSelected ? '#f4f4f4' : ''
         }}
-        onTouchTap={this.selectTaskItem}
+        onClick={this.selectTaskItem}
       >
         {/* task type */}
         <div style={{ flex: '0 0 48px' }}>
@@ -189,19 +189,19 @@ class RunningTask extends React.Component {
           {
             task.state === 'failed'
               ? (
-                <IconButton onTouchTap={this.checkError} tooltip={i18n.__('Detail')}>
+                <IconButton onClick={this.checkError} tooltip={i18n.__('Detail')}>
                   { task.errors.length ? <InfoSvg color="#F44336" /> : <WarningIcon color="#FB8C00" /> }
                 </IconButton>
               )
               : (
-                <IconButton iconStyle={svgStyle} onTouchTap={this.toggleTask} tooltip={task.paused ? i18n.__('Resume') : i18n.__('Pause')}>
+                <IconButton iconStyle={svgStyle} onClick={this.toggleTask} tooltip={task.paused ? i18n.__('Resume') : i18n.__('Pause')}>
                   { task.paused ? <PlaySvg /> : <PauseSvg /> }
                 </IconButton>
               )
           }
           {
             task.paused &&
-              <IconButton iconStyle={svgStyle} onTouchTap={this.props.delete} tooltip={i18n.__('Delete')}>
+              <IconButton iconStyle={svgStyle} onClick={this.props.delete} tooltip={i18n.__('Delete')}>
                 <DeleteSvg />
               </IconButton>
           }

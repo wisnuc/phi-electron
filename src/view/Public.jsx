@@ -120,11 +120,11 @@ class Public extends Home {
   renderToolBar ({ style }) {
     return (
       <div style={style}>
-        <IconButton onTouchTap={() => this.refresh()} tooltip={i18n.__('Refresh')} >
+        <IconButton onClick={() => this.refresh()} tooltip={i18n.__('Refresh')} >
           <RefreshIcon color="#FFF" />
         </IconButton>
         <IconButton
-          onTouchTap={() => this.toggleDialog('gridView')}
+          onClick={() => this.toggleDialog('gridView')}
           tooltip={this.state.gridView ? i18n.__('List View') : i18n.__('Grid View')}
         >
           { this.state.gridView ? <ListIcon color="#FFF" /> : <GridIcon color="#FFF" /> }
@@ -132,7 +132,7 @@ class Public extends Home {
         <IconButton
           disabled={this.state.inRoot}
           tooltip={i18n.__('Create New Folder')}
-          onTouchTap={() => this.toggleDialog('createNewFolder')}
+          onClick={() => this.toggleDialog('createNewFolder')}
         >
           <FileCreateNewFolder color="#FFF" />
         </IconButton>
@@ -215,7 +215,7 @@ class Public extends Home {
                 style={{ position: 'absolute', top: -36, left: 24, zIndex: 200 }}
                 backgroundColor="#2196F3"
                 disabled={!this.state.users || !this.state.drives}
-                onTouchTap={() => this.setState({ newDrive: true })}
+                onClick={() => this.setState({ newDrive: true })}
               >
                 <ContentAdd />
               </FloatingActionButton>

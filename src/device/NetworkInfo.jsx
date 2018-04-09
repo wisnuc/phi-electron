@@ -65,7 +65,7 @@ class Ethernet extends React.Component {
     /*
     const getAddress = () => (
       <div>
-        <div onTouchTap={this.setIp}>
+        <div onClick={this.setIp}>
           {data.address}
           <ModeEdit color={this.props.primaryColor} style={{ marginLeft: 8 }} viewBox="0 0 36 12" />
         </div>
@@ -125,8 +125,8 @@ class Ethernet extends React.Component {
               {/* button */}
               <div style={{ height: 24 }} />
               <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-                <FlatButton label={i18n.__('Cancel')} onTouchTap={this.onCloseDialog} primary />
-                <FlatButton label={i18n.__('Confirm')} disabled={!this.validateAlias()} onTouchTap={this.aliasRequest} primary />
+                <FlatButton label={i18n.__('Cancel')} onClick={this.onCloseDialog} primary />
+                <FlatButton label={i18n.__('Confirm')} disabled={!this.validateAlias()} onClick={this.aliasRequest} primary />
               </div>
             </div>
           }

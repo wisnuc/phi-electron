@@ -137,8 +137,8 @@ class PolicyDialog extends React.PureComponent {
             />
           }
           <div style={{ flexGrow: 1 }} />
-          <FlatButton label={i18n.__('Cancel')} onTouchTap={this.cancel} primary />
-          <FlatButton label={i18n.__('Confirm')} onTouchTap={this.next} primary />
+          <FlatButton label={i18n.__('Cancel')} onClick={this.cancel} primary />
+          <FlatButton label={i18n.__('Confirm')} onClick={this.next} primary />
         </div>
       </div>
     )

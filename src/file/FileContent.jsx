@@ -9,7 +9,7 @@ import RenderListByRow from './RenderListByRow'
 import GridView from './GridView'
 
 /* Draw Select Box */
-const TOP = 232
+const TOP = 296
 const LEFT = 184
 
 class FileContent extends React.Component {
@@ -61,6 +61,8 @@ class FileContent extends React.Component {
 
       const type = e.type
       const button = e.nativeEvent.button
+      console.log('e, type button', e, type, button)
+
       if (type !== 'mouseup' || !(button === 0 || button === 2)) return
 
       /* just touch */
@@ -287,7 +289,7 @@ class FileContent extends React.Component {
     return (
       <div
         style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-        onTouchTap={e => this.onRowTouchTap(e, -1)}
+        onMouseUp={e => this.onRowTouchTap(e, -1)}
         onDrop={this.drop}
       >
         {
@@ -319,7 +321,7 @@ class FileContent extends React.Component {
     return (
       <div
         style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-        onTouchTap={e => this.onRowTouchTap(e, -1)}
+        onMouseUp={e => this.onRowTouchTap(e, -1)}
       >
         <div
           style={{

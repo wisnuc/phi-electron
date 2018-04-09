@@ -216,7 +216,7 @@ class ContainerOverlayInline extends React.Component {
             justifyContent: 'center',
             transition: 'all 225ms cubic-bezier(0.0, 0.0, 0.2, 1)'
           }}
-          onTouchTap={this.close}
+          onClick={this.close}
         >
           {
             [this.leftItem, this.centerItem, this.rightItem].map((item, index) => (
@@ -263,11 +263,11 @@ class ContainerOverlayInline extends React.Component {
                 alignItems: 'center',
                 background: 'linear-gradient(0deg, rgba(0,0,0,0), rgba(0,0,0,0.54))'
               }}
-              onTouchTap={(e) => { e.preventDefault(); e.stopPropagation() }}
+              onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
             >
               {/* return Button */}
               <IconButton
-                onTouchTap={this.close}
+                onClick={this.close}
                 style={{ margin: 12 }}
               >
                 <div ref={ref => (this.refReturn = ref)} >
@@ -303,7 +303,7 @@ class ContainerOverlayInline extends React.Component {
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <IconButton
                   tooltip={i18n.__('Download')}
-                  onTouchTap={this.props.download}
+                  onClick={this.props.download}
                 >
                   <DownloadIcon color="#FFF" />
                 </IconButton>
@@ -328,7 +328,7 @@ class ContainerOverlayInline extends React.Component {
               left: '2%'
             }}
             hoveredStyle={{ backgroundColor: primaryColor }}
-            onTouchTap={(e) => { this.changeIndex('left'); e.preventDefault(); e.stopPropagation() }}
+            onClick={(e) => { this.changeIndex('left'); e.preventDefault(); e.stopPropagation() }}
           >
             <svg width={36} height={36} viewBox="0 0 24 24" fill="white">
               <path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z" />
@@ -351,7 +351,7 @@ class ContainerOverlayInline extends React.Component {
               right: '2%'
             }}
             hoveredStyle={{ backgroundColor: primaryColor }}
-            onTouchTap={(e) => { this.changeIndex('right'); e.preventDefault(); e.stopPropagation() }}
+            onClick={(e) => { this.changeIndex('right'); e.preventDefault(); e.stopPropagation() }}
           >
             <svg width={36} height={36} viewBox="0 0 24 24" fill="white">
               <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z" />

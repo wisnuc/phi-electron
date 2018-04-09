@@ -153,10 +153,10 @@ class Base extends EventEmitter {
     return <div style={style}>{this.menuName()}</div>
   }
 
-  renderNavigationMenu ({ style, onTouchTap }) {
+  renderNavigationMenu ({ style, onClick }) {
     return (
       <div style={style}>
-        <IconButton onTouchTap={onTouchTap}>
+        <IconButton onClick={onClick}>
           <NavigationMenu color="#FFF" />
         </IconButton>
       </div>

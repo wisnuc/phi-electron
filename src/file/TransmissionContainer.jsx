@@ -279,20 +279,20 @@ class TrsContainer extends React.Component {
                   label={i18n.__('Resume All')}
                   disabled={!userTasks.length}
                   icon={<PlaySvg style={{ color: '#000', opacity: 0.54 }} />}
-                  onTouchTap={() => this.handleAll(userTasks, 'RESUME')}
+                  onClick={() => this.handleAll(userTasks, 'RESUME')}
                 />
                 : <FlatButton
                   label={i18n.__('Pause All')}
                   disabled={!userTasks.length}
                   icon={<PauseSvg style={{ color: '#000', opacity: 0.54 }} />}
-                  onTouchTap={() => this.handleAll(userTasks, 'PAUSE')}
+                  onClick={() => this.handleAll(userTasks, 'PAUSE')}
                 />
             }
             <FlatButton
               label={i18n.__('Clear All')}
               disabled={!userTasks.length}
               icon={<DeleteSvg style={{ color: '#000', opacity: 0.54 }} />}
-              onTouchTap={() => this.toggleDialog('clearRunningDialog')}
+              onClick={() => this.toggleDialog('clearRunningDialog')}
             />
           </div>
         </div>
@@ -332,7 +332,7 @@ class TrsContainer extends React.Component {
               label={i18n.__('Clear All Record')}
               disabled={!finishTasks.length}
               icon={<DeleteSvg style={{ color: '#000', opacity: 0.54 }} />}
-              onTouchTap={() => this.toggleDialog('clearFinishedDialog')}
+              onClick={() => this.toggleDialog('clearFinishedDialog')}
             />
           </div>
         </div>
@@ -401,7 +401,7 @@ class TrsContainer extends React.Component {
                 width: '100%',
                 height: '100%'
               }}
-              onTouchTap={this.hideMenu}
+              onClick={this.hideMenu}
             >
               <Paper style={{ position: 'absolute', top: this.state.y, left: this.state.x }}>
                 <Menu>
@@ -409,28 +409,28 @@ class TrsContainer extends React.Component {
                     this.state.play &&
                       <MenuItem
                         primaryText={this.state.tasks[0].state === 'failed' ? i18n.__('Retry') : i18n.__('Resume')}
-                        onTouchTap={() => this.handleAll(this.state.tasks, 'RESUME')}
+                        onClick={() => this.handleAll(this.state.tasks, 'RESUME')}
                       />
                   }
                   {
                     this.state.pause &&
-                      <MenuItem primaryText={i18n.__('Pause')} onTouchTap={() => this.handleAll(this.state.tasks, 'PAUSE')} />
+                      <MenuItem primaryText={i18n.__('Pause')} onClick={() => this.handleAll(this.state.tasks, 'PAUSE')} />
                   }
                   {
                     this.state.tasks.length === 1 && this.state.tasks[0].trsType === 'download' &&
-                      <MenuItem primaryText={i18n.__('Open Downloads Folder')} onTouchTap={this.open} />
+                      <MenuItem primaryText={i18n.__('Open Downloads Folder')} onClick={this.open} />
                   }
                   {
                     this.state.tasks.length === 1 && this.state.tasks[0].trsType === 'upload' &&
-                      <MenuItem primaryText={i18n.__('Show in Folder')} onTouchTap={this.openInDrive} />
+                      <MenuItem primaryText={i18n.__('Show in Folder')} onClick={this.openInDrive} />
                   }
                   {
                     this.state.play &&
-                      <MenuItem primaryText={i18n.__('Delete')} onTouchTap={() => this.toggleDialog('deleteRunningDialog')} />
+                      <MenuItem primaryText={i18n.__('Delete')} onClick={() => this.toggleDialog('deleteRunningDialog')} />
                   }
                   {
                     this.state.tasks[0].state === 'finished' &&
-                      <MenuItem primaryText={i18n.__('Delete')} onTouchTap={() => this.handleAll(this.state.tasks, 'DELETE')} />
+                      <MenuItem primaryText={i18n.__('Delete')} onClick={() => this.handleAll(this.state.tasks, 'DELETE')} />
                   }
                 </Menu>
               </Paper>
@@ -456,12 +456,12 @@ class TrsContainer extends React.Component {
                       primary
                       keyboardFocused
                       label={i18n.__('Cancel')}
-                      onTouchTap={() => this.toggleDialog('deleteRunningDialog')}
+                      onClick={() => this.toggleDialog('deleteRunningDialog')}
                     />
                     <FlatButton
                       label={i18n.__('Confirm')}
                       primary
-                      onTouchTap={() => {
+                      onClick={() => {
                         this.toggleDialog('deleteRunningDialog')
                         this.handleAll(this.state.tasks, 'DELETE')
                       }}
@@ -491,12 +491,12 @@ class TrsContainer extends React.Component {
                       primary
                       keyboardFocused
                       label={i18n.__('Cancel')}
-                      onTouchTap={() => this.toggleDialog('clearRunningDialog')}
+                      onClick={() => this.toggleDialog('clearRunningDialog')}
                     />
                     <FlatButton
                       label={i18n.__('Delete')}
                       primary
-                      onTouchTap={() => {
+                      onClick={() => {
                         this.toggleDialog('clearRunningDialog')
                         this.handleAll(userTasks, 'DELETE')
                       }}
@@ -525,13 +525,13 @@ class TrsContainer extends React.Component {
                     <FlatButton
                       label={i18n.__('Cancel')}
                       primary
-                      onTouchTap={() => this.toggleDialog('clearFinishedDialog')}
+                      onClick={() => this.toggleDialog('clearFinishedDialog')}
                       keyboardFocused
                     />
                     <FlatButton
                       label={i18n.__('Clear')}
                       primary
-                      onTouchTap={() => {
+                      onClick={() => {
                         this.handleAll(this.state.finishTasks, 'DELETE')
                         this.toggleDialog('clearFinishedDialog')
                       }}

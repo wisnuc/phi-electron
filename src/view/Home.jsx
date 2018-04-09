@@ -41,7 +41,7 @@ import History from '../common/history'
 
 /* Drag Item's Coordinate */
 const DRAGLEFT = 180
-const DRAGTOP = 280
+const DRAGTOP = 344
 
 class Home extends Base {
   constructor (ctx) {
@@ -251,12 +251,12 @@ class Home extends Base {
     this.showContextMenu = (clientX, clientY) => {
       if (this.select.state.ctrl || this.select.state.shift) return
       const containerDom = document.getElementById('content-container')
-      const maxLeft = containerDom.offsetLeft + containerDom.clientWidth - 240
+      const maxLeft = containerDom.offsetLeft + containerDom.clientWidth - 60
       const x = clientX > maxLeft ? maxLeft : clientX
       /* calc positon of menu using height of menu which is related to number of selected items */
       const length = (this.select.state && this.select.state.selected && this.select.state.selected.length) || 0
       const adjust = !length ? 128 : length > 1 ? 240 : 304
-      const maxTop = containerDom.offsetTop + containerDom.offsetHeight - adjust
+      const maxTop = containerDom.offsetTop + containerDom.offsetHeight - adjust + 80
       const y = clientY > maxTop ? maxTop : clientY
       this.setState({
         contextMenuOpen: !this.state.inRoot, // not show menu in Public root
@@ -644,11 +644,11 @@ class Home extends Base {
     )
   }
 
-  renderNavigationMenu ({ style, onTouchTap }) {
+  renderNavigationMenu ({ style, onClick }) {
     const CustomStyle = Object.assign(style, { opacity: 1 })
     return (
       <div style={CustomStyle} ref={ref => (this.refNavigationMenu = ref)}>
-        <IconButton onTouchTap={onTouchTap}>
+        <IconButton onClick={onClick}>
           <NavigationMenu color="#FFFFFF" />
         </IconButton>
       </div>
@@ -681,7 +681,7 @@ class Home extends Base {
           path.reduce((acc, node, index) => {
             const isDrop = () => this.state.select.isDrop()
             const dropable = () => this.state.select.isDrop() && this.dropHeader()
-            const funcs = { node, isDrop, dropable, onHoverHeader: this.onHoverHeader, onTouchTap: () => touchTap(node) }
+            const funcs = { node, isDrop, dropable, onHoverHeader: this.onHoverHeader, onClick: () => touchTap(node) }
 
             if (path.length > 4 && index > 0 && index < path.length - 3) {
               if (index === path.length - 4) {
@@ -720,38 +720,38 @@ class Home extends Base {
     return (
       <div style={style}>
         <div style={{ width: 48 }} />
-        <IconButton onTouchTap={this.back} tooltip={i18n.__('Refresh')} disabled={noBack}>
+        <IconButton onClick={this.back} tooltip={i18n.__('Refresh')} disabled={noBack}>
           <BackwardIcon color={color} />
         </IconButton>
-        <IconButton onTouchTap={this.forward} tooltip={i18n.__('Refresh')} disabled={noForward}>
+        <IconButton onClick={this.forward} tooltip={i18n.__('Refresh')} disabled={noForward}>
           <ForwardIcon color={color} />
         </IconButton>
-        <IconButton onTouchTap={() => this.refresh()} tooltip={i18n.__('Refresh')} >
+        <IconButton onClick={() => this.refresh()} tooltip={i18n.__('Refresh')} >
           <RefreshIcon color={color} />
         </IconButton>
 
         <FileUploadButton upload={this.upload} />
 
         <FlatButton
-          onTouchTap={this.download}
+          onClick={this.download}
           label={i18n.__('Download')}
           disabled={!itemSelected}
           icon={<DownloadIcon color={altColor} />}
         />
         <FlatButton
-          onTouchTap={() => this.toggleDialog('delete')}
+          onClick={() => this.toggleDialog('delete')}
           label={i18n.__('Delete')}
           disabled={!itemSelected}
           icon={<DeleteIcon color={altColor} />}
         />
         <FlatButton
-          onTouchTap={() => this.toggleDialog('gridView')}
+          onClick={() => this.toggleDialog('gridView')}
           label={this.state.gridView ? i18n.__('List View') : i18n.__('Grid View')}
           icon={this.state.gridView ? <ListIcon color={color} /> : <GridIcon color={color} />}
         />
         <FlatButton
           label={i18n.__('Create New Folder')}
-          onTouchTap={() => this.toggleDialog('createNewFolder')}
+          onClick={() => this.toggleDialog('createNewFolder')}
           icon={<FileCreateNewFolder color={color} />}
         />
         <Search fire={() => {}} />
@@ -863,12 +863,12 @@ class Home extends Base {
                 { this.state.deleteLoading && <CircularProgress size={16} thickness={2} style={{ marginLeft: 8 }} /> }
               </div>
               <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-                <FlatButton label={i18n.__('Cancel')} primary disabled={this.state.deleteLoading} onTouchTap={() => this.toggleDialog('delete')} />
+                <FlatButton label={i18n.__('Cancel')} primary disabled={this.state.deleteLoading} onClick={() => this.toggleDialog('delete')} />
                 <FlatButton
                   label={i18n.__('Confirm')}
                   disabled={this.state.deleteLoading}
                   primary
-                  onTouchTap={this.delete}
+                  onClick={this.delete}
                 />
               </div>
             </div>
@@ -882,7 +882,7 @@ class Home extends Base {
               <div style={{ color: 'rgba(0,0,0,0.54)' }}>{ i18n.__('No Access Text') }</div>
               <div style={{ height: 24 }} />
               <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-                <FlatButton label={i18n.__('OK')} primary onTouchTap={() => this.toggleDialog('noAccess')} />
+                <FlatButton label={i18n.__('OK')} primary onClick={() => this.toggleDialog('noAccess')} />
               </div>
             </div>
           }
@@ -906,7 +906,7 @@ class Home extends Base {
                 <MenuItem
                   primaryText={i18n.__('Create New Folder')}
                   leftIcon={<FileCreateNewFolder style={{ height: 20, width: 20, marginTop: 6 }} />}
-                  onTouchTap={() => this.toggleDialog('createNewFolder')}
+                  onClick={() => this.toggleDialog('createNewFolder')}
                 />
                 <div style={{ height: 8 }} />
                 <Divider />
@@ -915,12 +915,12 @@ class Home extends Base {
                 <MenuItem
                   primaryText={i18n.__('Upload Folder')}
                   leftIcon={<UploadFold style={{ height: 20, width: 20, marginTop: 6 }} />}
-                  onTouchTap={() => this.upload('directory')}
+                  onClick={() => this.upload('directory')}
                 />
                 <MenuItem
                   primaryText={i18n.__('Upload File')}
                   leftIcon={<UploadFile style={{ height: 20, width: 20, marginTop: 6 }} />}
-                  onTouchTap={() => this.upload('file')}
+                  onClick={() => this.upload('file')}
                 />
               </div>
             )
@@ -932,18 +932,18 @@ class Home extends Base {
                     <MenuItem
                       leftIcon={<ShareIcon style={{ height: 20, width: 20, marginTop: 6 }} />}
                       primaryText={i18n.__('Share to Public')}
-                      onTouchTap={() => this.toggleDialog('share')}
+                      onClick={() => this.toggleDialog('share')}
                     />
                   }
                   <MenuItem
                     leftIcon={<CopyIcon style={{ height: 20, width: 20, marginTop: 6 }} />}
                     primaryText={i18n.__('Copy to')}
-                    onTouchTap={() => this.toggleDialog('copy')}
+                    onClick={() => this.toggleDialog('copy')}
                   />
                   <MenuItem
                     leftIcon={<MoveIcon style={{ height: 20, width: 20, marginTop: 6 }} />}
                     primaryText={i18n.__('Move to')}
-                    onTouchTap={() => this.toggleDialog('move')}
+                    onClick={() => this.toggleDialog('move')}
                   />
                 </div>
                 {
@@ -951,7 +951,7 @@ class Home extends Base {
                   <MenuItem
                     leftIcon={<EditIcon style={{ height: 20, width: 20, marginTop: 6 }} />}
                     primaryText={i18n.__('Rename')}
-                    onTouchTap={() => this.toggleDialog('rename')}
+                    onClick={() => this.toggleDialog('rename')}
                   />
                 }
                 <div style={{ height: 8 }} />
@@ -960,7 +960,7 @@ class Home extends Base {
                 <MenuItem
                   leftIcon={<InfoIcon style={{ height: 20, width: 20, marginTop: 6 }} />}
                   primaryText={getDetailStatus() ? i18n.__('Close Detail') : i18n.__('Open Detail')}
-                  onTouchTap={toggleDetail}
+                  onClick={toggleDetail}
                 />
                 {
                   this.state.select && this.state.select.selected && this.state.select.selected.length === 1 &&
@@ -968,13 +968,13 @@ class Home extends Base {
                     <MenuItem
                       leftIcon={<CopyIcon style={{ height: 20, width: 20, marginTop: 6 }} />}
                       primaryText={i18n.__('Make a Copy')}
-                      onTouchTap={this.dupFile}
+                      onClick={this.dupFile}
                     />
                 }
                 <MenuItem
                   leftIcon={<DownloadIcon style={{ height: 20, width: 20, marginTop: 6 }} />}
                   primaryText={i18n.__('Download')}
-                  onTouchTap={this.download}
+                  onClick={this.download}
                 />
                 <div style={{ height: 8 }} />
                 <Divider />
@@ -982,7 +982,7 @@ class Home extends Base {
                 <MenuItem
                   leftIcon={<DeleteIcon style={{ height: 20, width: 20, marginTop: 6 }} />}
                   primaryText={i18n.__('Delete')}
-                  onTouchTap={() => this.toggleDialog('delete')}
+                  onClick={() => this.toggleDialog('delete')}
                 />
               </div>
             )

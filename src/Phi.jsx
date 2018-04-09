@@ -155,13 +155,13 @@ class Fruitmix extends React.Component {
           >
             <div style={{ WebkitAppRegion: 'drag', height: 32, flexGrow: 1 }} />
             <div style={{ width: 72, padding: 4, display: 'flex', alignItems: 'center' }}>
-              <IconButton style={styles.small} iconStyle={styles.smallIcon} onTouchTap={this.minimize} >
+              <IconButton style={styles.small} iconStyle={styles.smallIcon} onClick={this.minimize} >
                 <MinIcon />
               </IconButton>
-              <IconButton style={styles.small} iconStyle={styles.smallIcon} onTouchTap={this.toggleMax} >
+              <IconButton style={styles.small} iconStyle={styles.smallIcon} onClick={this.toggleMax} >
                 <MaxIcon />
               </IconButton>
-              <IconButton style={styles.small} iconStyle={styles.smallIcon} onTouchTap={this.hide} >
+              <IconButton style={styles.small} iconStyle={styles.smallIcon} onClick={this.hide} >
                 <CloseIcon />
               </IconButton>
             </div>

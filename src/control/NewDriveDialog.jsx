@@ -134,13 +134,13 @@ class NewDriveDialog extends PureComponent {
           <FlatButton
             primary
             label={i18n.__('Cancel')}
-            onTouchTap={this.props.onRequestClose}
+            onClick={this.props.onRequestClose}
           />
           <FlatButton
             primary
             label={i18n.__('Create')}
             disabled={this.state.label.length === 0 || !!this.state.errorText || this.state.loading}
-            onTouchTap={this.fire}
+            onClick={this.fire}
           />
         </div>
       </div>

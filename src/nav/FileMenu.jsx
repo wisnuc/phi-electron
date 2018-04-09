@@ -38,7 +38,7 @@ class MenuItem extends React.PureComponent {
           ':hover': { backgroundColor: '#EEEEEE' },
           backgroundColor: selected ? '#F5F5F5' : '#FFF'
         }}
-        onTouchTap={this.props.onTouchTap}
+        onClick={this.props.onClick}
       >
         <div style={{ flex: '0 0 24px' }} />
         <this.props.icon style={{ width: dense ? 18 : 24, height: dense ? 18 : 24, color: iconColor }} />
@@ -55,7 +55,6 @@ class MenuItem extends React.PureComponent {
 @Radium
 class NavDrawer extends React.Component {
   render () {
-    console.log(' NavDrawer render', this.props)
     const { views, nav, navTo } = this.props
     const primaryColor = views[nav].primaryColor()
 
@@ -68,7 +67,7 @@ class NavDrawer extends React.Component {
           text={i18n.__('All Files')}
           primaryColor={primaryColor}
           selected={nav === 'home'}
-          onTouchTap={() => navTo('home')}
+          onClick={() => navTo('home')}
         />
 
         <MenuItem
@@ -76,7 +75,7 @@ class NavDrawer extends React.Component {
           text={i18n.__('Photos')}
           primaryColor={primaryColor}
           selected={nav === 'media'}
-          onTouchTap={() => navTo('media')}
+          onClick={() => navTo('media')}
         />
 
         <MenuItem
@@ -84,7 +83,7 @@ class NavDrawer extends React.Component {
           text={i18n.__('Audio')}
           primaryColor={primaryColor}
           selected={nav === 'audio'}
-          onTouchTap={() => navTo('audio')}
+          onClick={() => navTo('audio')}
         />
 
         <MenuItem
@@ -92,7 +91,7 @@ class NavDrawer extends React.Component {
           text={i18n.__('Docs')}
           primaryColor={primaryColor}
           selected={nav === 'docs'}
-          onTouchTap={() => navTo('docs')}
+          onClick={() => navTo('docs')}
         />
 
         <MenuItem
@@ -100,7 +99,7 @@ class NavDrawer extends React.Component {
           text={i18n.__('Video')}
           primaryColor={primaryColor}
           selected={nav === 'video'}
-          onTouchTap={() => navTo('video')}
+          onClick={() => navTo('video')}
         />
       </div>
     )

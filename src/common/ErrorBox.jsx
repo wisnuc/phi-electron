@@ -39,7 +39,7 @@ class ErrorBox extends React.PureComponent {
           <IconButton
             tooltip={this.props.tooltip}
             iconStyle={this.props.iconStyle}
-            onTouchTap={() => this.setState(state => Object.assign({}, state, { open: true }))}
+            onClick={() => this.setState(state => Object.assign({}, state, { open: true }))}
           >
             <AlertError />
           </IconButton>
@@ -64,7 +64,7 @@ class ErrorBox extends React.PureComponent {
               primary
               style={{ marginTop: 24 }}
               label={i18n.__('Copy to Clipboard')}
-              onTouchTap={() => clipboard.writeText(JSON.stringify(this.props.error))}
+              onClick={() => clipboard.writeText(JSON.stringify(this.props.error))}
             />
           </Dialog>
         </div>

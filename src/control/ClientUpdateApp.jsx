@@ -90,8 +90,8 @@ class Update extends React.Component {
       <div style={{ marginTop: -4 }}>
         <div>
           { i18n.__('New Version Detected %s', rel.name) }
-          <FlatButton style={{ marginLeft: 16 }} primary label={i18n.__('Official Download')} onTouchTap={this.openOfficial} />
-          <FlatButton primary label={i18n.__('Github Download')} onTouchTap={this.moreVersion} />
+          <FlatButton style={{ marginLeft: 16 }} primary label={i18n.__('Official Download')} onClick={this.openOfficial} />
+          <FlatButton primary label={i18n.__('Github Download')} onClick={this.moreVersion} />
         </div>
         <div style={{ height: 16 }} />
         <div> { i18n.__('Publish Date %s', date) } </div>
@@ -146,7 +146,7 @@ class Update extends React.Component {
                       { !!this.state.error && <ErrorBox error={this.state.error} iconStyle={{ color: orange500 }} /> }
                     </div>
                     <div style={{ margin: '8px 0 0 -8px' }}>
-                      <FlatButton primary label={i18n.__('Check Update')} onTouchTap={this.sendCheck} disabled={this.state.loading} />
+                      <FlatButton primary label={i18n.__('Check Update')} onClick={this.sendCheck} disabled={this.state.loading} />
                     </div>
                   </div>
                 )

@@ -112,7 +112,7 @@ class Fan extends React.Component {
             >
               <FlatButton
                 primary
-                onTouchTap={this.increment}
+                onClick={this.increment}
                 icon={<HardwareKeyboardArrowUp />}
               />
               <div
@@ -128,7 +128,7 @@ class Fan extends React.Component {
               </div>
               <FlatButton
                 primary
-                onTouchTap={this.decrement}
+                onClick={this.decrement}
                 icon={<HardwareKeyboardArrowDown />}
               />
             </div>

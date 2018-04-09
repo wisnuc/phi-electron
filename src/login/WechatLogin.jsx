@@ -29,7 +29,7 @@ class DeviceList extends React.PureComponent {
           alignItems: 'center',
           ':hover': { backgroundColor: '#EEEEEE' }
         }}
-        onTouchTap={() => list.isOnline && select(list)}
+        onClick={() => list.isOnline && select(list)}
       >
         {
           list.LANIP
@@ -419,7 +419,7 @@ class WechatLogin extends React.Component {
             <FlatButton
               label={i18n.__('Return')}
               labelStyle={{ color: '#424242', fontWeight: 500 }}
-              onTouchTap={this.resetWCL}
+              onClick={this.resetWCL}
             />
           </div>
         </div>
@@ -496,7 +496,7 @@ class WechatLogin extends React.Component {
                             label={i18n.__('Avaliable Device List')}
                             labelPosition="before"
                             labelStyle={{ color: '#424242', fontWeight: 500 }}
-                            onTouchTap={this.enterList}
+                            onClick={this.enterList}
                             icon={<RightIcon color="#424242" />}
                           />
                         </div>

@@ -163,7 +163,7 @@ class ErrorTree extends React.PureComponent {
           <div style={{ fontSize: 20 }}> { i18n.__('Error Dialog Title') } </div>
           <div style={{ flexGrow: 1 }} />
           <IconButton
-            onTouchTap={() => this.props.onRequestClose()}
+            onClick={() => this.props.onRequestClose()}
             style={{ width: 40, height: 40, padding: 10, marginRight: -10 }}
             iconStyle={{ width: 20, height: 20, color: 'rgba(0,0,0,0.54)' }}
           >
@@ -185,7 +185,7 @@ class ErrorTree extends React.PureComponent {
           <FlatButton
             primary
             label={this.state.expand ? i18n.__('Return') : i18n.__('Open Detail')}
-            onTouchTap={() => this.setState({ expand: !this.state.expand })}
+            onClick={() => this.setState({ expand: !this.state.expand })}
           />
           <div style={{ flexGrow: 1 }} />
           {
@@ -193,14 +193,14 @@ class ErrorTree extends React.PureComponent {
               <FlatButton
                 primary
                 label={i18n.__('Ignore All')}
-                onTouchTap={this.ignore}
+                onClick={this.ignore}
                 disabled={this.props.finished}
               />
           }
           <FlatButton
             primary
             label={this.state.expand ? i18n.__('Copy to Clipboard') : i18n.__('Retry All')}
-            onTouchTap={this.state.expand ? this.copyText : this.retry}
+            onClick={this.state.expand ? this.copyText : this.retry}
             disabled={!this.state.expand && this.props.finished}
           />
         </div>

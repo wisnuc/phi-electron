@@ -68,7 +68,7 @@ class LoginApp extends React.Component {
             label={this.state.local ? i18n.__('Login via WeChat') : i18n.__('Login via LAN')}
             labelPosition="before"
             labelStyle={{ color: '#FAFAFA', fontWeight: 500 }}
-            onTouchTap={this.toggleMode}
+            onClick={this.toggleMode}
             icon={<RightIcon color="#FAFAFA" />}
           />
         </div>

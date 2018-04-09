@@ -34,7 +34,7 @@ class FileUploadButton extends React.Component {
           open={this.state.open}
           animated
           anchorEl={this.state.anchorEl}
-          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+          anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
           targetOrigin={{ horizontal: 'left', vertical: 'top' }}
           onRequestClose={() => this.setState({ open: false })}
         >
@@ -42,13 +42,13 @@ class FileUploadButton extends React.Component {
             <MenuItem
               primaryText={i18n.__('Upload Folder')}
               leftIcon={<UploadFold />}
-              onTouchTap={() => this.upload('directory')}
+              onClick={() => this.upload('directory')}
               style={{ fontSize: 13 }}
             />
             <MenuItem
               primaryText={i18n.__('Upload File')}
               leftIcon={<UploadFile />}
-              onTouchTap={() => this.upload('file')}
+              onClick={() => this.upload('file')}
               style={{ fontSize: 13 }}
             />
           </Menu>

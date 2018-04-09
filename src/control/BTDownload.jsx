@@ -255,7 +255,7 @@ class BTDownload extends React.Component {
     return (
       <div
         style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-        onTouchTap={e => this.onRowTouchTap(e, -1)}
+        onClick={e => this.onRowTouchTap(e, -1)}
       >
         <div
           style={{
@@ -280,7 +280,7 @@ class BTDownload extends React.Component {
     return (
       <div
         style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-        onTouchTap={e => this.onRowTouchTap(e, -1)}
+        onClick={e => this.onRowTouchTap(e, -1)}
       >
         <div
           style={{
@@ -305,7 +305,7 @@ class BTDownload extends React.Component {
     return (
       <div
         style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-        onTouchTap={e => this.onRowTouchTap(e, -1)}
+        onClick={e => this.onRowTouchTap(e, -1)}
       >
         <div
           style={{
@@ -397,7 +397,7 @@ class BTDownload extends React.Component {
               ? (
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <IconButton
-                    onTouchTap={e => this.toggleStatus(e, infoHash, isPause)}
+                    onClick={e => this.toggleStatus(e, infoHash, isPause)}
                     tooltip={isPause ? i18n.__('Resume') : i18n.__('Pause')}
                   >
                     { isPause ? <PlaySvg color={this.props.primaryColor} /> : <PauseSvg color={this.props.primaryColor} /> }
@@ -426,7 +426,7 @@ class BTDownload extends React.Component {
           fontSize: 14,
           backgroundColor: selected ? '#EEEEEE' : hovered ? '#F5F5F5' : ''
         }}
-        onTouchTap={e => this.onRowTouchTap(e, index)}
+        onClick={e => this.onRowTouchTap(e, index)}
         onDoubleClick={() => this.props.alt && this.showFolder()}
         onMouseEnter={e => this.onRowMouseEnter(e, index)}
         onMouseLeave={e => this.onRowMouseLeave(e, index)}
@@ -476,7 +476,7 @@ class BTDownload extends React.Component {
           {
             hovered &&
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <IconButton onTouchTap={e => this.openDestroy(e, [infoHash])} tooltip={i18n.__('Delete')}>
+              <IconButton onClick={e => this.openDestroy(e, [infoHash])} tooltip={i18n.__('Delete')}>
                 <DeleteSvg color={this.props.primaryColor} />
               </IconButton>
             </div>
@@ -496,12 +496,12 @@ class BTDownload extends React.Component {
     if (this.props.disabled) return this.renderDisabled()
 
     return (
-      <div style={{ position: 'relative', height: '100%', width: '100%' }} onTouchTap={e => this.onRowTouchTap(e, -1)} >
+      <div style={{ position: 'relative', height: '100%', width: '100%' }} onClick={e => this.onRowTouchTap(e, -1)} >
         {/* FAB */}
         <FloatingActionButton
           style={{ position: 'absolute', top: -36, left: 24, zIndex: 200 }}
           secondary
-          onTouchTap={e => this.openFAB(e)}
+          onClick={e => this.openFAB(e)}
         >
           <ContentAdd />
         </FloatingActionButton>
@@ -517,13 +517,13 @@ class BTDownload extends React.Component {
             <MenuItem
               primaryText={i18n.__('Add Torrent')}
               leftIcon={<BTTorrentIcon />}
-              onTouchTap={() => this.addTorrent()}
+              onClick={() => this.addTorrent()}
               style={{ fontSize: 13 }}
             />
             <MenuItem
               primaryText={i18n.__('Add Magnet')}
               leftIcon={<BTMagnetIcon />}
-              onTouchTap={() => this.setState({ magnet: true, openFAB: false })}
+              onClick={() => this.setState({ magnet: true, openFAB: false })}
               style={{ fontSize: 13 }}
             />
           </Menu>
@@ -555,7 +555,7 @@ class BTDownload extends React.Component {
                       label={i18n.__('Confirm')}
                       disabled={!this.isInputOK(this.state.value) || this.state.WIP}
                       primary
-                      onTouchTap={this.addMagnet}
+                      onClick={this.addMagnet}
                     />
                   </div>
                 </div>
@@ -578,13 +578,13 @@ class BTDownload extends React.Component {
                     <FlatButton
                       label={i18n.__('Cancel')}
                       primary
-                      onTouchTap={() => this.setState({ destroy: false })}
+                      onClick={() => this.setState({ destroy: false })}
                     />
                     <FlatButton
                       label={i18n.__('Delete')}
                       disabled={this.state.WIP}
                       primary
-                      onTouchTap={this.destroy}
+                      onClick={this.destroy}
                     />
                   </div>
                 </div>
@@ -610,11 +610,11 @@ class BTDownload extends React.Component {
         >
           {
             this.state.select.selected && this.state.select.selected.length === 1 &&
-              <MenuItem primaryText={i18n.__('Show in Folder')} onTouchTap={this.showFolder} />
+              <MenuItem primaryText={i18n.__('Show in Folder')} onClick={this.showFolder} />
           }
           <MenuItem
             primaryText={i18n.__('Delete')}
-            onTouchTap={e => this.openDestroy(e, this.state.select.selected.map(i => this.props.tasks[i].infoHash))}
+            onClick={e => this.openDestroy(e, this.state.select.selected.map(i => this.props.tasks[i].infoHash))}
           />
         </ContextMenu>
       </div>

@@ -176,7 +176,7 @@ class DeviceInfo extends React.PureComponent {
     return (
       <div
         style={{ position: 'relative', width: '100%', height: '100%', overflow: 'auto' }}
-        onTouchTap={() => !this.state.progress && this.setState({ modify: false, label: '' })}
+        onClick={() => !this.state.progress && this.setState({ modify: false, label: '' })}
       >
         <div style={{ height: 16 }} />
         <div style={{ height: 72, display: 'flex', alignItems: 'center', width: '100%' }} >
@@ -191,7 +191,7 @@ class DeviceInfo extends React.PureComponent {
               style={{ height: 48, fontSize: 16, color: 'rgba(0, 0, 0, 0.87)' }}
               onMouseMove={() => this.setState({ titleHover: true })}
               onMouseLeave={() => this.setState({ titleHover: false })}
-              onTouchTap={e => e.stopPropagation()}
+              onClick={e => e.stopPropagation()}
             >
               <div style={{ height: 16 }} />
               {
@@ -217,7 +217,7 @@ class DeviceInfo extends React.PureComponent {
                           )
                           : (
                             <IconButton
-                              onTouchTap={() => this.state.changed && this.changeDeviceName()}
+                              onClick={() => this.state.changed && this.changeDeviceName()}
                               disabled={!!this.state.errorText || !this.state.label || !this.state.label.length}
                             >
                               <DoneIcon color={this.props.primaryColor} />
@@ -229,7 +229,7 @@ class DeviceInfo extends React.PureComponent {
                   : (
                     <div
                       style={{ display: 'flex', alignItems: 'center', height: 32 }}
-                      onTouchTap={() => this.setState({ modify: true })}
+                      onClick={() => this.setState({ modify: true })}
                     >
                       { this.state.label ? this.state.label : this.props.info.name }
                       <ModeEdit color={this.props.primaryColor} style={{ marginLeft: 24 }} />

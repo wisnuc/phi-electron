@@ -219,7 +219,7 @@ class Firm extends React.PureComponent {
                   <div style={{ height: 8 }} />
                   <div style={{ display: 'flex', alignItems: 'center', height: 36, marginLeft: -8 }}>
                     {
-                      action ? <FlatButton primary label={label} onTouchTap={action} disabled={this.state.loading} />
+                      action ? <FlatButton primary label={label} onClick={action} disabled={this.state.loading} />
                         : <CircularProgress size={24} thickness={2} style={{ marginLeft: 8 }} />
                     }
                   </div>
@@ -234,7 +234,7 @@ class Firm extends React.PureComponent {
                 <div style={{ marginTop: 12 }}>
                   <div> { checked ? i18n.__('Already LTS Text') : i18n.__('Check Update Failed Text') } </div>
                   <div style={{ margin: '8px 0 0 -8px' }}>
-                    <FlatButton primary label={i18n.__('Check Update')} onTouchTap={() => this.props.checkUpdates()} disabled={this.state.loading} />
+                    <FlatButton primary label={i18n.__('Check Update')} onClick={() => this.props.checkUpdates()} disabled={this.state.loading} />
                   </div>
                 </div>
               )
@@ -271,7 +271,7 @@ class Firm extends React.PureComponent {
             </div>
             <div style={{ height: 8 }} />
             <div style={{ display: 'flex', alignItems: 'center', height: 36, marginLeft: -12 }}>
-              { appifi && action && <FlatButton primary label={label} onTouchTap={action} disabled={this.state.loading} /> }
+              { appifi && action && <FlatButton primary label={label} onClick={action} disabled={this.state.loading} /> }
             </div>
             <div style={{ height: 16 }} />
             <Divider style={{ marginLeft: -60 }} />
@@ -349,13 +349,13 @@ class Firm extends React.PureComponent {
                   <FlatButton
                     primary
                     label={i18n.__('Cancel')}
-                    onTouchTap={() => this.toggleDialog('confirm')}
+                    onClick={() => this.toggleDialog('confirm')}
                   />
                   <FlatButton
                     primary
                     label={i18n.__('Confirm')}
                     disabled={this.state.loading}
-                    onTouchTap={() => this.install(this.state.confirm)}
+                    onClick={() => this.install(this.state.confirm)}
                   />
                 </div>
               </div>

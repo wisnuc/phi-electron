@@ -29,7 +29,7 @@ class Row extends React.PureComponent {
           background: isSelected ? '#4d90fe' : '',
           opacity: disable ? 0.5 : 1
         }}
-        onTouchTap={disable ? null : this.props.selectNode}
+        onClick={disable ? null : this.props.selectNode}
         onDoubleClick={() => !disable && this.props.enter(node)}
       >
         <div style={{ margin: '0 12px 0 12px', display: 'flex' }}>
@@ -63,7 +63,7 @@ class Row extends React.PureComponent {
             cursor: 'pointer',
             justifyContent: 'center'
           }}
-          onTouchTap={() => this.props.enter(node)}
+          onClick={() => this.props.enter(node)}
         >
           <ArrowRight color="rgba(0,0,0,0.54)" />
         </div>
@@ -411,7 +411,7 @@ class MoveDialog extends React.PureComponent {
         {/* back button */}
         <div
           style={{ flex: '0 0 48px', display: 'flex', justifyContent: 'center' }}
-          onTouchTap={this.state.cnf ? () => this.setState({ cnf: false }) : this.back}
+          onClick={this.state.cnf ? () => this.setState({ cnf: false }) : this.back}
         >
           <IconButton style={{ display: this.state.path.length > 1 ? '' : 'none' }}>
             <BackIcon color="rgba(0,0,0,0.54)" style={{ height: 16, width: 16 }} />
@@ -445,7 +445,7 @@ class MoveDialog extends React.PureComponent {
         {/* confirm or close button */}
         <div style={{ flex: '0 0 48px', display: 'flex', justifyContent: 'center' }}>
           <IconButton
-            onTouchTap={this.state.cnf ? this.createNewFolder : this.closeDialog}
+            onClick={this.state.cnf ? this.createNewFolder : this.closeDialog}
             disabled={!!this.state.errorText || (this.state.cnf && !this.state.newFoldName.length)}
           >
             { this.state.cnf ? <DoneIcon color={this.props.primaryColor} /> : <CloseIcon color="rgba(0,0,0,0.54)" /> }
@@ -516,7 +516,7 @@ class MoveDialog extends React.PureComponent {
                                 <FlatButton
                                   primary
                                   label={i18n.__('Jump to Create')}
-                                  onTouchTap={() => { this.closeDialog(); this.props.navTo('public') }}
+                                  onClick={() => { this.closeDialog(); this.props.navTo('public') }}
                                 />
                               }
                             </div>
@@ -542,7 +542,7 @@ class MoveDialog extends React.PureComponent {
             label={this.getButtonText()}
             disabled={this.getButtonStatus()}
             disabledBackgroundColor="#FAFAFA"
-            onTouchTap={this.move}
+            onClick={this.move}
           />
           <div style={{ flexGrow: 1 }} />
           { /* can't add new fold in root or publicRoot */
@@ -551,7 +551,7 @@ class MoveDialog extends React.PureComponent {
                 tooltip={i18n.__('Create New Folder')}
                 tooltipPosition="top-center"
                 style={{ marginRight: 16 }}
-                onTouchTap={() => this.setState({ cnf: true })}
+                onClick={() => this.setState({ cnf: true })}
                 disabled={this.state.cnf}
               >
                 <FileCreateNewFolder color="rgba(0,0,0,0.54)" />

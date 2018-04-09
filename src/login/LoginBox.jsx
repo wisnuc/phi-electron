@@ -148,7 +148,7 @@ class LoginBox extends React.Component {
                   style={{ position: 'absolute', bottom: 0 }}
                   fullWidth
                   hintText="*********"
-                  onTouchTap={this.passwordMode}
+                  onClick={this.passwordMode}
                 />
                 : <TextField
                   style={{ position: 'absolute', bottom: 0 }}
@@ -200,13 +200,13 @@ class LoginBox extends React.Component {
                     label={i18n.__('Cancel')}
                     primary
                     disabled={busy}
-                    onTouchTap={this.props.cancel}
+                    onClick={this.props.cancel}
                   />
                   <FlatButton
                     label={i18n.__('Login')}
                     primary
                     disabled={!this.token && (this.state.password.length === 0 || busy)}
-                    onTouchTap={() => (this.token ? this.fakeLogin() : this.login())}
+                    onClick={() => (this.token ? this.fakeLogin() : this.login())}
                   />
                 </div>
             }

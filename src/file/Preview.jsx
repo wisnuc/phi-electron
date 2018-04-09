@@ -162,7 +162,7 @@ class Preview extends React.Component {
     return (
       <div
         style={{ height: '80%', width: '80%', backgroundColor: '#FFFFFF' }}
-        onTouchTap={(e) => { e.preventDefault(); e.stopPropagation() }}
+        onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
       >
         <iframe
           title="Text"
@@ -181,7 +181,7 @@ class Preview extends React.Component {
       return (
         <div
           style={{ height: '80%', width: '80%', backgroundColor: '#FFFFFF', overflowY: 'auto' }}
-          onTouchTap={(e) => { e.preventDefault(); e.stopPropagation() }}
+          onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
         >
           <code><pre style={{ margin: 8 }}>{ this.state.data }</pre></code>
         </div>
@@ -201,7 +201,7 @@ class Preview extends React.Component {
     return (
       <div
         style={{ height: '80%', width: '80%', backgroundColor: 'rgba(0,0,0,0)' }}
-        onTouchTap={(e) => { e.preventDefault(); e.stopPropagation() }}
+        onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
       >
         <video
           width="100%"
@@ -231,7 +231,7 @@ class Preview extends React.Component {
 
   renderAudio () {
     return (
-      <div onTouchTap={(e) => { e.preventDefault(); e.stopPropagation() }} >
+      <div onClick={(e) => { e.preventDefault(); e.stopPropagation() }} >
         <audio width="100%" height="100%" controls >
           <source src={this.state.filePath} />
           <track kind="captions" />
@@ -254,7 +254,7 @@ class Preview extends React.Component {
           backgroundColor: '#424242',
           borderRadius: '20px'
         }}
-        onTouchTap={(e) => { e.preventDefault(); e.stopPropagation() }}
+        onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
       >
         <div style={{ color: '#FFFFFF', fontSize: 20, fontWeight: 500 }}>
           { i18n.__('Can Not Preview Text')}
@@ -266,13 +266,13 @@ class Preview extends React.Component {
             primary
             style={{ margin: 12 }}
             icon={<DownloadIcon />}
-            onTouchTap={() => { this.props.download(); this.props.close() }}
+            onClick={() => { this.props.download(); this.props.close() }}
           />
           <RaisedButton
             label={i18n.__('Open via Local App')}
             style={{ margin: 12 }}
             icon={<OpenIcon />}
-            onTouchTap={this.openByLocal}
+            onClick={this.openByLocal}
           />
         </div>
       </div>
@@ -283,7 +283,7 @@ class Preview extends React.Component {
     return (
       <div
         style={{ height: '80%', width: '80%', overflowY: 'auto', overflowX: 'hidden' }}
-        onTouchTap={(e) => { e.preventDefault(); e.stopPropagation() }}
+        onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
       >
         <PDFView
           filePath={this.state.filePath}
@@ -355,7 +355,7 @@ class Preview extends React.Component {
             this.state.alert &&
               <div
                 style={{ width: 560, padding: '24px 24px 0px 24px' }}
-                onTouchTap={(e) => { e.preventDefault(); e.stopPropagation() }}
+                onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
               >
                 <div style={{ fontSize: 21, fontWeight: 500 }}>
                   { i18n.__('Tips') }
@@ -369,12 +369,12 @@ class Preview extends React.Component {
                   <FlatButton
                     label={i18n.__('Cancel')}
                     primary
-                    onTouchTap={() => this.setState({ alert: false })}
+                    onClick={() => this.setState({ alert: false })}
                   />
                   <FlatButton
                     label={i18n.__('Download')}
                     primary
-                    onTouchTap={() => { this.props.download(); this.setState({ alert: false }); this.props.close() }}
+                    onClick={() => { this.props.download(); this.setState({ alert: false }); this.props.close() }}
                   />
                 </div>
               </div>

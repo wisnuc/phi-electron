@@ -199,7 +199,7 @@ class NavViews extends React.Component {
           { this.state.nav === 'home' && this.views[this.state.nav].renderBreadCrumbItem({ style: breadCrumbStyle }) }
 
           {/* File Content */}
-          <div style={{ height: 'calc(100% - 64px)', width: '100%' }}>
+          <div style={{ height: 'calc(100% - 64px)', width: '100%' }} id="content-container">
             { this.renderView() }
           </div>
         </div>

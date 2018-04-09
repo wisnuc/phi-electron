@@ -140,7 +140,7 @@ class DrivesDetail extends PureComponent {
                       whiteSpace: 'nowrap',
                       textOverflow: 'ellipsis'
                     }}
-                    onTouchTap={() => this.setState({ modify: true })}
+                    onClick={() => this.setState({ modify: true })}
                   >
                     { this.state.label ? this.state.label : this.currentLabel }
                     {/* <ModeEdit color="FAFAFA" style={{ marginLeft: 24 }} /> */}
@@ -200,7 +200,7 @@ class DrivesDetail extends PureComponent {
               label={i18n.__('Apply')}
               primary
               disabled={!this.state.changed || !!this.state.errorText || this.state.modify || detailDrive.tag === 'built-in'}
-              onTouchTap={this.fire}
+              onClick={this.fire}
             />
           </div>
         </div>
