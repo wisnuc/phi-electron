@@ -720,12 +720,14 @@ class Home extends Base {
     return (
       <div style={style}>
         <div style={{ width: 48 }} />
-        <IconButton onClick={this.back} tooltip={i18n.__('Refresh')} disabled={noBack}>
+        <IconButton onClick={this.back} tooltip={noBack ? null : i18n.__('Backward')} disabled={noBack}>
           <BackwardIcon color={color} />
         </IconButton>
-        <IconButton onClick={this.forward} tooltip={i18n.__('Refresh')} disabled={noForward}>
+        <div style={{ width: 8 }} />
+        <IconButton onClick={this.forward} tooltip={noForward ? null : i18n.__('Forward')} disabled={noForward}>
           <ForwardIcon color={color} />
         </IconButton>
+        <div style={{ width: 8 }} />
         <IconButton onClick={() => this.refresh()} tooltip={i18n.__('Refresh')} >
           <RefreshIcon color={color} />
         </IconButton>
