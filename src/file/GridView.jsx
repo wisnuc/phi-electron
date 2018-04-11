@@ -374,7 +374,6 @@ class GridView extends React.Component {
             backgroundColor: '#FFFFFF'
           }}
           role="presentation"
-          onMouseUp={e => this.props.selectEnd(e)}
           onMouseMove={e => this.props.selectGrid(e, this.getStatus())}
         />
         <div style={{ height: 24 }} />
@@ -410,9 +409,8 @@ class GridView extends React.Component {
               <div
                 role="presentation"
                 onMouseDown={e => this.props.selectStart(e)}
-                onMouseUp={(e) => { this.props.selectEnd(e); this.props.onRowTouchTap(e, -1) }}
+                onMouseUp={e => this.props.onRowTouchTap(e, -1)}
                 onMouseMove={e => this.props.selectGrid(e, this.getStatus())}
-                onMouseLeave={e => 0 && this.props.selectEnd(e)}
               >
                 <ScrollBar
                   ref={ref => (this.ListRef = ref)}

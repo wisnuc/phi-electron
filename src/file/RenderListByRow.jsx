@@ -99,7 +99,9 @@ class Row extends React.PureComponent {
             border: onDropping ? `2px ${this.props.primaryColor} solid` : ''
           }}
           role="presentation"
-          onMouseUp={e => this.props.onRowTouchTap(e, index)}
+          onClick={e => this.props.onRowClick(e, index)}
+          onMouseUp={(e) => { e.preventDefault(); e.stopPropagation() }}
+          onContextMenu={e => this.props.onRowContextMenu(e, index)}
           onMouseEnter={e => this.props.onRowMouseEnter(e, index)}
           onMouseLeave={e => this.props.onRowMouseLeave(e, index)}
           onDoubleClick={e => this.props.onRowDoubleClick(e, index)}
@@ -318,10 +320,6 @@ class RenderListByRow extends React.Component {
       <Row
         {...props}
         {...this.props}
-        onRowTouchTap={this.props.onRowTouchTap}
-        onRowMouseEnter={this.props.onRowMouseEnter}
-        onRowMouseLeave={this.props.onRowMouseLeave}
-        onRowDoubleClick={this.props.onRowDoubleClick}
       />
     )
     // console.log('RenderListByRow.jsx', this.props)
@@ -342,8 +340,6 @@ class RenderListByRow extends React.Component {
             top: -8
           }}
           role="presentation"
-          onMouseUp={e => this.props.selectEnd(e)}
-          onMouseMove={e => this.props.selectRow(e, this.getScrollToPosition())}
         >
           <div style={{ flex: '0 0 104px' }} />
           {
@@ -371,9 +367,8 @@ class RenderListByRow extends React.Component {
                 <div
                   role="presentation"
                   onMouseDown={e => this.props.selectStart(e)}
-                  onMouseUp={(e) => { this.props.selectEnd(e); this.props.onRowTouchTap(e, -1) }}
-                  onMouseMove={e => this.props.selectRow(e, this.getScrollToPosition())}
-                  onMouseLeave={e => 0 && this.props.selectEnd(e)}
+                  onMouseUp={e => this.props.onRowClick(e, -1)}
+                  onContextMenu={e => this.props.onRowContextMenu(e, -1)}
                   draggable={false}
                 >
                   <ScrollBar

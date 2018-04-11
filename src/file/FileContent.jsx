@@ -43,36 +43,32 @@ class FileContent extends React.Component {
 
     this.handleResize = () => this.forceUpdate()
 
-    /* touchTap file */
-    this.onRowTouchTap = (e, index) => {
-      /*
-       * using e.nativeEvent.button instead of e.nativeEvent.which
-       * 0 - left
-       * 1 - middle
-       * 2 - right
-       * e.type must be mouseup
-       * must be button 1 or button 2 of mouse
-       */
-
+    /* left click file */
+    this.onRowClick = (e, index) => {
       e.preventDefault() // important, to prevent other event
       e.stopPropagation()
 
+      console.log('e, type button', e, e.type, e.nativeEvent.button, this.selectBox, index)
+      /* disabled in select box mode */
+      if (this.selectBox) return
+
+      /* disabled when selecting folder */
       if (this.props.fileSelect && this.props.entries[index] && this.props.entries[index].type !== 'file') return
 
-      const type = e.type
-      const button = e.nativeEvent.button
-      console.log('e, type button', e, type, button)
+      this.props.select.touchTap(0, index)
+      this.props.resetScrollTo()
+    }
 
-      if (type !== 'mouseup' || !(button === 0 || button === 2)) return
+    /* right click */
+    this.onRowContextMenu = (e, index) => {
+      e.preventDefault() // important, to prevent other event
+      e.stopPropagation()
 
-      /* just touch */
-      this.props.select.touchTap(button, index)
+      console.log('this.onRowContextMenu', e, e.type, e.nativeEvent.button, this.selectBox)
+      this.props.select.touchTap(2, index)
       this.props.resetScrollTo()
 
-      /* right click */
-      if (button === 2) {
-        this.props.showContextMenu(e.nativeEvent.clientX, e.nativeEvent.clientY)
-      }
+      this.props.showContextMenu(e.nativeEvent.clientX, e.nativeEvent.clientY)
     }
 
     this.onRowDoubleClick = (e, index) => {
@@ -143,7 +139,9 @@ class FileContent extends React.Component {
     }
 
     this.selectEnd = (event) => {
+      console.log('this.selectEnd', this.selectBox)
       if (!this.selectBox) return
+
       const s = this.refSelectBox.style
       s.display = 'none'
       s.top = '0px'
@@ -289,7 +287,7 @@ class FileContent extends React.Component {
     return (
       <div
         style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-        onMouseUp={e => this.onRowTouchTap(e, -1)}
+        onContextmenu={e => this.onRowContextMenu(e, -1)}
         onDrop={this.drop}
       >
         {
@@ -319,10 +317,7 @@ class FileContent extends React.Component {
 
   renderOffLine () {
     return (
-      <div
-        style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-        onMouseUp={e => this.onRowTouchTap(e, -1)}
-      >
+      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
         <div
           style={{
             width: 360,
@@ -373,12 +368,12 @@ class FileContent extends React.Component {
           this.props.gridView
             ? <GridView
               {...this.props}
-              onRowTouchTap={this.onRowTouchTap}
+              onRowClick={this.onRowClick}
+              onRowContextMenu={this.onRowContextMenu}
               onRowMouseEnter={this.onRowMouseEnter}
               onRowMouseLeave={this.onRowMouseLeave}
               onRowDoubleClick={this.onRowDoubleClick}
               selectStart={this.selectStart}
-              selectEnd={this.selectEnd}
               selectGrid={this.selectGrid}
               gridDragStart={this.props.gridDragStart}
               setGridData={this.props.setGridData}
@@ -387,12 +382,12 @@ class FileContent extends React.Component {
             />
             : <RenderListByRow
               {...this.props}
-              onRowTouchTap={this.onRowTouchTap}
+              onRowClick={this.onRowClick}
+              onRowContextMenu={this.onRowContextMenu}
               onRowMouseEnter={this.onRowMouseEnter}
               onRowMouseLeave={this.onRowMouseLeave}
               onRowDoubleClick={this.onRowDoubleClick}
               selectStart={this.selectStart}
-              selectEnd={this.selectEnd}
               selectRow={this.selectRow}
               rowDragStart={this.props.rowDragStart}
               onScroll={this.onScroll}
@@ -421,7 +416,6 @@ class FileContent extends React.Component {
           role="presentation"
           ref={ref => (this.refSelectBox = ref)}
           onMouseDown={e => this.selectStart(e)}
-          onMouseUp={e => this.selectEnd(e)}
           onMouseMove={e => (this.props.gridView ? this.selectGrid(e, this.data) : this.selectRow(e, this.scrollTop))}
           style={{
             position: 'absolute',
