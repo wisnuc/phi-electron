@@ -7,15 +7,18 @@ import { teal600 } from 'material-ui/styles/colors'
 import FileIcon from 'material-ui/svg-icons/file/folder'
 
 import FileMenu from './FileMenu'
+import TransMenu from './TransMenu'
 
 import Home from '../view/Home'
-import Share from '../view/Share'
 import Media from '../view/Media'
 import Public from '../view/Public'
 import Account from '../view/Account'
-import Download from '../view/Download'
+
+import Downloading from '../view/Downloading'
+import Uploading from '../view/Uploading'
+import Finished from '../view/Finished'
+
 import Settings from '../view/Settings'
-import Transmission from '../view/Transmission'
 
 import Fruitmix from '../common/fruitmix'
 
@@ -36,10 +39,12 @@ class NavViews extends React.Component {
       { name: 'home', View: Home },
       { name: 'media', View: Media },
       { name: 'public', View: Public },
-      { name: 'share', View: Share },
-      { name: 'download', View: Download },
+
       { name: 'account', View: Account },
-      { name: 'transmission', View: Transmission },
+      { name: 'downloading', View: Downloading },
+      { name: 'uploading', View: Uploading },
+      { name: 'finished', View: Finished },
+
       { name: 'settings', View: Settings }
     ])
 
@@ -60,7 +65,7 @@ class NavViews extends React.Component {
             this.navTo('home')
             break
           case 'transmission':
-            this.navTo('transmission')
+            this.navTo('uploading')
             break
           case 'settings':
             this.navTo('settings')
@@ -210,6 +215,24 @@ class NavViews extends React.Component {
     )
   }
 
+  renderTrans () {
+    return (
+      <div style={{ height: '100%', width: '100%', position: 'relative' }}>
+        <div style={{ height: 64, width: '100%', display: 'flex', alignItems: 'center' }}>
+          <TransMenu
+            views={this.views}
+            nav={this.state.nav}
+            navTo={this.navTo}
+          />
+        </div>
+
+        <div style={{ height: 'calc(100% - 64px)', width: '100%' }} id="content-container">
+          { this.renderView() }
+        </div>
+      </div>
+    )
+  }
+
   render () {
     if (!this.state.nav) return null
     let view = null
@@ -218,7 +241,7 @@ class NavViews extends React.Component {
         view = this.renderFileGroup()
         break
       case 'transmission':
-        view = this.renderView()
+        view = this.renderTrans()
         break
       case 'settings':
         view = this.renderView()

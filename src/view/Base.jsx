@@ -1,6 +1,6 @@
 import React from 'react'
 import i18n from 'i18n'
-import { teal600, indigo600, lightBlue600, lightGreen700, blueGrey400, blueGrey500, deepPurple500, pinkA200
+import { teal600, lightBlue600, lightGreen700, blueGrey400, blueGrey500, deepPurple500, pinkA200
 } from 'material-ui/styles/colors'
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu'
 import ErrorIcon from 'material-ui/svg-icons/alert/error'
@@ -60,6 +60,8 @@ class Base extends EventEmitter {
         return teal600
       case 'box':
         return teal600
+      case 'transmission':
+        return teal600
       case 'group':
         return teal600
       case 'media':
@@ -76,12 +78,10 @@ class Base extends EventEmitter {
         return deepPurple500
       case 'update':
         return blueGrey400
-      case 'download':
-        return indigo600
       case 'user':
         return deepPurple500
       default:
-        return 'white'
+        return teal600
     }
   }
 

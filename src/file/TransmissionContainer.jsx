@@ -219,7 +219,15 @@ class TrsContainer extends React.Component {
     }
 
     this.updateTransmission = (e, userTasks, finishTasks) => {
-      this.setState({ userTasks, finishTasks })
+      const { type } = this.props
+      console.log('this.updateTransmission', userTasks, finishTasks)
+      if (type === 'u') {
+        this.setState({ userTasks: userTasks.filter(u => u.trsType === 'upload') })
+      } else if (type === 'd') {
+        this.setState({ userTasks: userTasks.filter(u => u.trsType === 'download') })
+      } else if (type === 'f') {
+        this.setState({ finishTasks })
+      }
     }
   }
 
@@ -235,7 +243,31 @@ class TrsContainer extends React.Component {
     ipcRenderer.removeListener('UPDATE_TRANSMISSION', this.updateTransmission)
   }
 
+  renderProcessSum () {
+    const pColor = 'rgba(0,0,0,.54)'
+    const bColor = 'rgba(0,0,0,.12)'
+    const pWidth = 61.8
+    return (
+      <div style={{ height: '100%', width: '100%', display: 'flex', alignItems: 'center' }}>
+        <div style={{ width: 200 }}>
+          { i18n.__('Transmission Process') }
+        </div>
+        {/* progress bar */}
+        <div style={{ display: 'flex', width: 400, height: 6, borderRadius: 2, backgroundColor: bColor }} >
+          <div style={{ backgroundColor: pColor, width: `${pWidth}%`, borderRadius: 2 }} />
+        </div>
+
+        <div style={{ width: 24 }} />
+        {/* total speed */}
+        <div style={{ fontSize: 14 }}>
+          { '5M/s' }
+        </div>
+      </div>
+    )
+  }
+
   render () {
+    const { type } = this.props
     const userTasks = this.state.userTasks
     const finishTasks = this.state.finishTasks
 
@@ -264,100 +296,106 @@ class TrsContainer extends React.Component {
 
     const list = []
 
-    /* running task title */
-    const runningTaskTitle = () => (
-      <div>
-        <div style={{ height: 24 }} />
-        <div style={titileStyle} >
-          <div style={{ flexGrow: 1 }}>
-            { i18n.__('Running Task Title %s', userTasks.length) }
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            {
-              allPaused
-                ? <FlatButton
-                  label={i18n.__('Resume All')}
-                  disabled={!userTasks.length}
-                  icon={<PlaySvg style={{ color: '#000', opacity: 0.54 }} />}
-                  onClick={() => this.handleAll(userTasks, 'RESUME')}
-                />
-                : <FlatButton
-                  label={i18n.__('Pause All')}
-                  disabled={!userTasks.length}
-                  icon={<PauseSvg style={{ color: '#000', opacity: 0.54 }} />}
-                  onClick={() => this.handleAll(userTasks, 'PAUSE')}
-                />
-            }
-            <FlatButton
-              label={i18n.__('Clear All')}
-              disabled={!userTasks.length}
-              icon={<DeleteSvg style={{ color: '#000', opacity: 0.54 }} />}
-              onClick={() => this.toggleDialog('clearRunningDialog')}
-            />
+    if (type === 'd' || type === 'u') {
+      /* running task title */
+      const runningTaskTitle = () => (
+        <div>
+          <div style={{ height: 24 }} />
+          <div style={titileStyle} >
+            <div style={{ width: 720, display: 'flex', alignItems: 'center', position: 'relative' }}>
+              { this.renderProcessSum() }
+            </div>
+            <div style={{ flexGrow: 1 }} />
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              {
+                allPaused
+                  ? (
+                    <FlatButton
+                      label={i18n.__('Resume All')}
+                      disabled={!userTasks.length}
+                      icon={<PlaySvg style={{ color: '#000', opacity: 0.54 }} />}
+                      onClick={() => this.handleAll(userTasks, 'RESUME')}
+                    />
+                  )
+                  : (
+                    <FlatButton
+                      label={i18n.__('Pause All')}
+                      disabled={!userTasks.length}
+                      icon={<PauseSvg style={{ color: '#000', opacity: 0.54 }} />}
+                      onClick={() => this.handleAll(userTasks, 'PAUSE')}
+                    />
+                  )
+              }
+              <FlatButton
+                label={i18n.__('Clear All')}
+                disabled={!userTasks.length}
+                icon={<DeleteSvg style={{ color: '#000', opacity: 0.54 }} />}
+                onClick={() => this.toggleDialog('clearRunningDialog')}
+              />
+            </div>
           </div>
         </div>
-        <div style={hrStyle} />
-      </div>
-    )
+      )
 
-    list.push(runningTaskTitle())
+      list.push(runningTaskTitle())
 
-    /* running task list */
-    list.push(...userTasks.map((task, index) => (
-      <RunningTask
-        ref={ref => (this.taskRefs[task.uuid] = ref)}
-        key={task.uuid}
-        trsType={task.trsType}
-        index={index}
-        task={task}
-        pause={this.pause}
-        resume={this.resume}
-        select={this.select}
-        delete={() => this.toggleDialog('deleteRunningDialog')}
-        openErrorDialog={this.openErrorDialog}
-      />
-    )))
+      /* running task list */
+      list.push(...userTasks.map((task, index) => (
+        <RunningTask
+          ref={ref => (this.taskRefs[task.uuid] = ref)}
+          key={task.uuid}
+          trsType={task.trsType}
+          index={index}
+          task={task}
+          pause={this.pause}
+          resume={this.resume}
+          select={this.select}
+          delete={() => this.toggleDialog('deleteRunningDialog')}
+          openErrorDialog={this.openErrorDialog}
+        />
+      )))
+    } else if (type === 'f') {
+      /* finished task title */
+      const finishedTaskTitle = () => (
+        <div>
+          <div style={titileStyle}>
+            <div style={{ flexGrow: 1 }}>
+              { i18n.__('Finished Task Title %s', finishTasks.length) }
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <FlatButton
+                label={i18n.__('Clear All Record')}
+                disabled={!finishTasks.length}
+                icon={<DeleteSvg style={{ color: '#000', opacity: 0.54 }} />}
+                onClick={() => this.toggleDialog('clearFinishedDialog')}
+              />
+            </div>
+          </div>
+          <div style={hrStyle} />
+        </div>
+      )
+
+      list.push(finishedTaskTitle())
+
+      /* finished task list */
+      list.push(...finishTasks.map((task, index) => (
+        <FinishedTask
+          ref={ref => (this.taskRefs[task.uuid] = ref)}
+          key={task.uuid}
+          index={index}
+          task={task}
+          select={this.select}
+          open={this.open}
+          openInDrive={this.openInDrive}
+          openErrorDialog={this.openErrorDialog}
+        />
+      )))
+    }
 
     list.push(<div style={{ height: 56 }} />)
 
-    /* finished task title */
-    const finishedTaskTitle = () => (
-      <div>
-        <div style={titileStyle}>
-          <div style={{ flexGrow: 1 }}>
-            { i18n.__('Finished Task Title %s', finishTasks.length) }
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <FlatButton
-              label={i18n.__('Clear All Record')}
-              disabled={!finishTasks.length}
-              icon={<DeleteSvg style={{ color: '#000', opacity: 0.54 }} />}
-              onClick={() => this.toggleDialog('clearFinishedDialog')}
-            />
-          </div>
-        </div>
-        <div style={hrStyle} />
-      </div>
-    )
-
-    list.push(finishedTaskTitle())
-
-    /* finished task list */
-    list.push(...finishTasks.map((task, index) => (
-      <FinishedTask
-        ref={ref => (this.taskRefs[task.uuid] = ref)}
-        key={task.uuid}
-        index={index}
-        task={task}
-        select={this.select}
-        open={this.open}
-        openInDrive={this.openInDrive}
-        openErrorDialog={this.openErrorDialog}
-      />
-    )))
-
     /* rowCount */
-    const rowCount = userTasks.length + finishTasks.length + 3
+    const rowCount = list.length
 
     /* rowHeight */
     const allHeight = []
