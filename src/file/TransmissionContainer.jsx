@@ -243,10 +243,32 @@ class TrsContainer extends React.Component {
     ipcRenderer.removeListener('UPDATE_TRANSMISSION', this.updateTransmission)
   }
 
+  formatSize (s) {
+    const size = parseFloat(s, 10)
+    if (!size) return `${0} KB`
+    if (size < 1024) return `${size.toFixed(2)} B`
+    else if (size < (1024 * 1024)) return `${(size / 1024).toFixed(2)} KB`
+    else if (size < (1024 * 1024 * 1024)) return `${(size / 1024 / 1024).toFixed(2)} MB`
+    return `${(size / 1024 / 1024 / 1024).toFixed(2)} GB`
+  }
+
+  calcTotalProcess () {
+    let [completeSize, size, speed] = [0, 0, 0]
+    this.state.userTasks.forEach((task) => {
+      completeSize += task.completeSize
+      size += task.size
+      speed += task.speed
+    })
+
+    const percent = (Math.min(completeSize / size, 1) * 100).toFixed(2)
+    return ({ percent, speed: `${this.formatSize(speed)}/s` })
+  }
+
   renderProcessSum () {
     const pColor = 'rgba(0,0,0,.54)'
     const bColor = 'rgba(0,0,0,.12)'
-    const pWidth = 61.8
+    const { percent, speed } = this.calcTotalProcess()
+
     return (
       <div style={{ height: '100%', width: '100%', display: 'flex', alignItems: 'center' }}>
         <div style={{ width: 200 }}>
@@ -254,13 +276,13 @@ class TrsContainer extends React.Component {
         </div>
         {/* progress bar */}
         <div style={{ display: 'flex', width: 400, height: 6, borderRadius: 2, backgroundColor: bColor }} >
-          <div style={{ backgroundColor: pColor, width: `${pWidth}%`, borderRadius: 2 }} />
+          <div style={{ backgroundColor: pColor, width: `${percent}%`, borderRadius: 2 }} />
         </div>
 
         <div style={{ width: 24 }} />
         {/* total speed */}
         <div style={{ fontSize: 14 }}>
-          { '5M/s' }
+          { speed }
         </div>
       </div>
     )

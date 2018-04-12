@@ -8,11 +8,11 @@ import FileIcon from 'material-ui/svg-icons/file/folder'
 
 import FileMenu from './FileMenu'
 import TransMenu from './TransMenu'
+import Account from './Account'
 
 import Home from '../view/Home'
 import Media from '../view/Media'
 import Public from '../view/Public'
-import Account from '../view/Account'
 
 import Downloading from '../view/Downloading'
 import Uploading from '../view/Uploading'
@@ -21,6 +21,7 @@ import Finished from '../view/Finished'
 import Settings from '../view/Settings'
 
 import Fruitmix from '../common/fruitmix'
+import WindowAction from '../common/WindowAction'
 
 const HEADER_HEIGHT = 160
 
@@ -40,7 +41,6 @@ class NavViews extends React.Component {
       { name: 'media', View: Media },
       { name: 'public', View: Public },
 
-      { name: 'account', View: Account },
       { name: 'downloading', View: Downloading },
       { name: 'uploading', View: Uploading },
       { name: 'finished', View: Finished },
@@ -122,11 +122,6 @@ class NavViews extends React.Component {
     const navs = [
       {
         Icon: FileIcon,
-        text: i18n.__('Change Device'),
-        fn: () => this.props.nav('login')
-      },
-      {
-        Icon: FileIcon,
         text: i18n.__('Files Menu Name'),
         fn: () => this.navGroup('file')
       },
@@ -134,6 +129,11 @@ class NavViews extends React.Component {
         Icon: FileIcon,
         text: i18n.__('Transmission Menu Name'),
         fn: () => this.navGroup('transmission')
+      },
+      {
+        Icon: FileIcon,
+        text: i18n.__('Change Device'),
+        fn: () => this.props.nav('login')
       },
       {
         Icon: FileIcon,
@@ -263,6 +263,11 @@ class NavViews extends React.Component {
           { this.renderHeader() }
         </div>
 
+        {/* Account */}
+        <div style={{ position: 'fixed', top: 16, right: 108, height: 36 }}>
+          <Account />
+        </div>
+
         {/* Views */}
         <div style={{ height: 'calc(100% - 160px)', position: 'relative', display: 'flex' }}>
           { view }
@@ -270,6 +275,8 @@ class NavViews extends React.Component {
 
         {/* snackBar */}
         { this.renderSnackBar() }
+
+        <WindowAction />
       </div>
     )
   }

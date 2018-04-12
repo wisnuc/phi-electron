@@ -6,7 +6,7 @@ const child = require('child_process')
 const path= require('path')
 
 const string = 'i18n.__'
-const dir = './src ./node'
+const dir = './src ./lib'
 const lines_src = child.execSync(`grep -r ${string} ${dir}`).toString().split('\n').map(l => l.trim()).filter(l => l.length)
 const keys_src = lines_src.map(l => l.split('i18n.')).join('__').split('__')
   .filter(l => l.startsWith('(\'') || l.startsWith('n(\'')).map(l => l.split('\'')[1])

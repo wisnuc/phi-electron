@@ -1,8 +1,9 @@
 import i18n from 'i18n'
 import React from 'react'
 
-import { WISNUC } from '../common/Svg'
 import LocalLogin from './LocalLogin'
+import { WISNUC } from '../common/Svg'
+import WindowAction from '../common/WindowAction'
 
 const duration = 300
 
@@ -60,6 +61,8 @@ class LoginApp extends React.Component {
         </div>
 
         <LocalLogin {...this.props} />
+
+        <WindowAction />
       </div>
     )
   }

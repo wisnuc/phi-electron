@@ -3,11 +3,8 @@ import { ipcRenderer } from 'electron'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import { teal500, pinkA200 } from 'material-ui/styles/colors'
-import { IconButton } from 'material-ui'
-import MinIcon from 'material-ui/svg-icons/content/remove'
-import MaxIcon from 'material-ui/svg-icons/image/crop-landscape'
-import CloseIcon from 'material-ui/svg-icons/navigation/close'
 
+// import Login from './login/NewLogin'
 import Login from './login/Login'
 import Navigation from './nav/Navigation'
 import Device from './common/device'
@@ -30,22 +27,6 @@ const defaultTheme = getMuiTheme({
   color: 'rgba(0,0,0,0.87)',
   palette: { primary1Color: teal500, accent1Color: pinkA200 }
 })
-
-const styles = {
-  smallIcon: {
-    width: 18,
-    height: 18,
-    fill: 'rgba(0,0,0,.54)'
-  },
-  small: {
-    width: 24,
-    height: 24,
-    padding: 3,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
-}
 
 class Fruitmix extends React.Component {
   constructor () {
@@ -145,27 +126,14 @@ class Fruitmix extends React.Component {
             style={{
               position: 'fixed',
               top: 0,
-              left: -4,
-              height: 32,
+              left: 0,
+              height: 12,
               width: '100%',
               display: 'flex',
               alignItems: 'center',
-              zIndex: 200
+              WebkitAppRegion: 'drag'
             }}
-          >
-            <div style={{ WebkitAppRegion: 'drag', height: 32, flexGrow: 1 }} />
-            <div style={{ width: 72, padding: 4, display: 'flex', alignItems: 'center' }}>
-              <IconButton style={styles.small} iconStyle={styles.smallIcon} onClick={this.minimize} >
-                <MinIcon />
-              </IconButton>
-              <IconButton style={styles.small} iconStyle={styles.smallIcon} onClick={this.toggleMax} >
-                <MaxIcon />
-              </IconButton>
-              <IconButton style={styles.small} iconStyle={styles.smallIcon} onClick={this.hide} >
-                <CloseIcon />
-              </IconButton>
-            </div>
-          </div>
+          />
         </div>
       </MuiThemeProvider>
     )

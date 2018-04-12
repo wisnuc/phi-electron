@@ -287,7 +287,7 @@ class FileContent extends React.Component {
     return (
       <div
         style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-        onContextmenu={e => this.onRowContextMenu(e, -1)}
+        onContextMenu={e => this.onRowContextMenu(e, -1)}
         onDrop={this.drop}
       >
         {
