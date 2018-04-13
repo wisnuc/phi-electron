@@ -6,7 +6,6 @@ import Visibility from 'material-ui/svg-icons/action/visibility'
 import CloseIcon from 'material-ui/svg-icons/navigation/close'
 
 import FlatButton from '../common/FlatButton'
-import WindowAction from '../common/WindowAction'
 
 class PhiLogin extends React.Component {
   constructor (props) {
@@ -37,6 +36,10 @@ class PhiLogin extends React.Component {
 
     this.clearPn = () => this.setState({ pn: '' })
     this.togglePwd = () => this.setState({ showPwd: !this.state.showPwd })
+
+    this.login = () => {
+      this.props.CST('device')
+    }
   }
 
   componentDidMount () {
@@ -120,6 +123,7 @@ class PhiLogin extends React.Component {
             backgroundColor="#00B0FF"
             style={{ borderRadius, width: '100%', height: 40 }}
             buttonStyle={{ borderRadius }}
+            onClick={this.login}
           />
         </div>
 
@@ -137,8 +141,6 @@ class PhiLogin extends React.Component {
             />
           </div>
         </div>
-
-        <WindowAction />
       </div>
     )
   }

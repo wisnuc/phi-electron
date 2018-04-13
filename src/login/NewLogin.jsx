@@ -1,15 +1,26 @@
 import i18n from 'i18n'
 import React from 'react'
 
-import { WISNUC } from '../common/Svg'
 import PhiLogin from './PhiLogin'
+import DeviceSelect from './DeviceSelect'
+import { WISNUC } from '../common/Svg'
+import WindowAction from '../common/WindowAction'
 
 const duration = 300
 
 class LoginApp extends React.Component {
   constructor (props) {
     super(props)
-    this.state = { local: true, hello: true }
+    this.state = {
+      stage: 'login', // login, device, failed, addNew
+      local: true,
+      hello: true
+    }
+
+    /* change stage */
+    this.CST = (stage) => {
+      this.setState({ stage })
+    }
   }
 
   componentDidMount () {
@@ -18,6 +29,20 @@ class LoginApp extends React.Component {
   }
 
   render () {
+    console.log('NewLogin', this.state, this.props)
+    const props = Object.assign({ CST: this.CST }, this.props)
+    let view = null
+    switch (this.state.stage) {
+      case 'login':
+        view = <PhiLogin {...props} />
+        break
+      case 'device':
+        view = <DeviceSelect {...props} />
+        break
+      default:
+        break
+    }
+
     return (
       <div
         style={{
@@ -87,7 +112,8 @@ class LoginApp extends React.Component {
             { '4007 567 567' }
           </div>
         </div>
-        <PhiLogin />
+        { view }
+        <WindowAction />
       </div>
     )
   }
