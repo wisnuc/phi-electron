@@ -260,7 +260,7 @@ class TrsContainer extends React.Component {
       speed += task.speed
     })
 
-    const percent = (Math.min(completeSize / size, 1) * 100).toFixed(2)
+    const percent = (Math.min(completeSize / size || 0, 1) * 100).toFixed(2)
     return ({ percent, speed: `${this.formatSize(speed)}/s` })
   }
 
