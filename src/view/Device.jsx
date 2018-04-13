@@ -30,11 +30,15 @@ class Device extends Base {
   }
 
   navGroup () {
-    return 'device'
+    return 'settings'
   }
 
   menuName () {
     return i18n.__('Device Menu Name')
+  }
+
+  menuDes () {
+    return i18n.__('Device Description')
   }
 
   menuIcon () {

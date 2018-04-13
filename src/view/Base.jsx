@@ -92,6 +92,10 @@ class Base extends EventEmitter {
   menuName () {
   }
 
+  menuDes () {
+    return this.menuName()
+  }
+
   menuIcon () {
   }
 

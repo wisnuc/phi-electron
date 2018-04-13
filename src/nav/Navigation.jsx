@@ -6,9 +6,10 @@ import { ipcRenderer } from 'electron'
 import { teal600 } from 'material-ui/styles/colors'
 import FileIcon from 'material-ui/svg-icons/file/folder'
 
+import Account from './Account'
 import FileMenu from './FileMenu'
 import TransMenu from './TransMenu'
-import Account from './Account'
+import SettingsMenu from './SettingMenu'
 
 import Home from '../view/Home'
 import Media from '../view/Media'
@@ -19,6 +20,11 @@ import Uploading from '../view/Uploading'
 import Finished from '../view/Finished'
 
 import Settings from '../view/Settings'
+import Device from '../view/Device'
+import FirmwareUpdate from '../view/FirmwareUpdate'
+import Networking from '../view/Networking'
+import ClientUpdate from '../view/ClientUpdate'
+import Plugin from '../view/Plugin'
 
 import Fruitmix from '../common/fruitmix'
 import WindowAction from '../common/WindowAction'
@@ -45,7 +51,12 @@ class NavViews extends React.Component {
       { name: 'uploading', View: Uploading },
       { name: 'finished', View: Finished },
 
-      { name: 'settings', View: Settings }
+      { name: 'settings', View: Settings },
+      { name: 'device', View: Device },
+      { name: 'firmwareUpdate', View: FirmwareUpdate },
+      { name: 'networking', View: Networking },
+      { name: 'clientUpdate', View: ClientUpdate },
+      { name: 'plugin', View: Plugin }
     ])
 
     this.navTo = (nav, target) => {
@@ -233,6 +244,19 @@ class NavViews extends React.Component {
     )
   }
 
+  renderSettings () {
+    if (this.state.nav !== 'settings') return this.renderView()
+    return (
+      <div style={{ height: '100%', width: '100%', position: 'relative' }}>
+        <SettingsMenu
+          views={this.views}
+          nav={this.state.nav}
+          navTo={this.navTo}
+        />
+      </div>
+    )
+  }
+
   render () {
     if (!this.state.nav) return null
     let view = null
@@ -244,7 +268,7 @@ class NavViews extends React.Component {
         view = this.renderTrans()
         break
       case 'settings':
-        view = this.renderView()
+        view = this.renderSettings()
         break
       default:
         break
