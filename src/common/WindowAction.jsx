@@ -1,15 +1,13 @@
 import React from 'react'
 import { ipcRenderer } from 'electron'
 import { IconButton } from 'material-ui'
-import MinIcon from 'material-ui/svg-icons/content/remove'
-import MaxIcon from 'material-ui/svg-icons/image/crop-landscape'
-import CloseIcon from 'material-ui/svg-icons/navigation/close'
+import { MinIcon, MaxIcon, CloseIcon } from '../common/Svg'
 
 const styles = {
   smallIcon: {
-    width: 24,
-    height: 24,
-    fill: 'rgba(0,0,0,.54)'
+    width: 16,
+    height: 16,
+    fill: '#FFF'
   },
   small: {
     width: 32,
@@ -32,13 +30,15 @@ class WindowAction extends React.PureComponent {
 
   render () {
     return (
-      <div style={{ position: 'fixed', top: 12, right: 16, display: 'flex', alignItems: 'center' }}>
+      <div style={{ position: 'fixed', top: 11, right: 17, display: 'flex', alignItems: 'center' }}>
         <IconButton style={styles.small} iconStyle={styles.smallIcon} onClick={this.minimize} >
           <MinIcon />
         </IconButton>
+        <div style={{ width: 12 }} />
         <IconButton style={styles.small} iconStyle={styles.smallIcon} onClick={this.toggleMax} >
           <MaxIcon />
         </IconButton>
+        <div style={{ width: 12 }} />
         <IconButton style={styles.small} iconStyle={styles.smallIcon} onClick={this.hide} >
           <CloseIcon />
         </IconButton>

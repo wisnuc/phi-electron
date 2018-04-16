@@ -3,8 +3,6 @@ import React from 'react'
 import { Snackbar } from 'material-ui'
 
 import { ipcRenderer } from 'electron'
-import { teal600 } from 'material-ui/styles/colors'
-import FileIcon from 'material-ui/svg-icons/file/folder'
 
 import Account from './Account'
 import FileMenu from './FileMenu'
@@ -28,8 +26,9 @@ import Plugin from '../view/Plugin'
 
 import Fruitmix from '../common/fruitmix'
 import WindowAction from '../common/WindowAction'
+import { FileManage, TransIcon, DeviceChangeIcon, FuncIcon } from '../common/Svg'
 
-const HEADER_HEIGHT = 160
+const HEADER_HEIGHT = 110
 
 class NavViews extends React.Component {
   constructor (props) {
@@ -132,55 +131,73 @@ class NavViews extends React.Component {
   renderHeader () {
     const navs = [
       {
-        Icon: FileIcon,
+        selected: this.views[this.state.nav].navGroup() === 'file',
+        Icon: FileManage,
         text: i18n.__('Files Menu Name'),
         fn: () => this.navGroup('file')
       },
       {
-        Icon: FileIcon,
+        selected: this.views[this.state.nav].navGroup() === 'transmission',
+        Icon: TransIcon,
         text: i18n.__('Transmission Menu Name'),
         fn: () => this.navGroup('transmission')
       },
       {
-        Icon: FileIcon,
+        selected: this.views[this.state.nav].navGroup() === 'selectingDevice',
+        Icon: DeviceChangeIcon,
         text: i18n.__('Change Device'),
         fn: () => this.props.nav('login')
       },
       {
-        Icon: FileIcon,
+        selected: this.views[this.state.nav].navGroup() === 'settings',
+        Icon: FuncIcon,
         text: i18n.__('Settings Menu Name'),
         fn: () => this.navGroup('settings')
       }
     ]
     return (
-      <div style={{ display: 'flex', alignItems: 'center', height: '100%', width: '100%' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 34, width: 180 }}>
-          { 'NAS' }
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          height: HEADER_HEIGHT,
+          width: '100%',
+          position: 'relative',
+          backgroundColor: '#f3f8ff',
+          background: 'linear-gradient(to right, #4a95f2, #6363ff)'
+        }}
+      >
+        <div style={{ width: 220, height: '100%' }}>
+          <div style={{ color: '#FFF', fontSize: 24, margin: '18px 27px', fontWeight: 900 }}>
+            { 'PHINAS' }
+          </div>
         </div>
-        <div style={{ flexGrow: 1 }} />
         {
-          navs.map(({ Icon, text, fn }) => ([
+          navs.map(({ Icon, text, fn, selected }) => (
             <div
               key={text}
               style={{
-                width: 180,
-                height: 120,
-                color: teal600,
+                width: 130,
+                paddingTop: 8,
+                height: 102,
+                color: '#FFF',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                flexDirection: 'column'
+                flexDirection: 'column',
+                letterSpacing: '1.4px',
+                backgroundColor: selected ? 'rgba(83, 104, 183, 0.17)' : ''
               }}
               onClick={fn}
             >
-              <Icon style={{ width: 64, height: 64 }} color={teal600} />
-              <div>
+              <Icon style={{ width: 32, height: 32 }} color="#FFF" />
+              <div style={{ height: 8 }} />
+              <div style={{ transform: 'scale(1,.9)' }}>
                 { text }
               </div>
-            </div>,
-            <div style={{ flexGrow: 1 }} />
-          ]))
+            </div>
+          ))
         }
       </div>
     )
@@ -195,11 +212,11 @@ class NavViews extends React.Component {
   }
 
   renderFileGroup () {
-    const toolBarStyle = { height: 64, width: '100%', display: 'flex', alignItems: 'center' }
+    const toolBarStyle = { height: 50, width: '100%', display: 'flex', alignItems: 'center', backgroundColor: '#e1edfe' }
     const breadCrumbStyle = { height: 64, width: '100%', display: 'flex', alignItems: 'center', color: 'red' }
     return (
       <div style={{ display: 'flex', alignItems: 'center', height: '100%', width: '100%', position: 'relative' }}>
-        <div style={{ height: '100%', width: 180 }}>
+        <div style={{ height: '100%', width: 220 }}>
           <FileMenu
             views={this.views}
             nav={this.state.nav}
@@ -207,7 +224,7 @@ class NavViews extends React.Component {
           />
         </div>
 
-        <div style={{ height: '100%', width: 'calc(100% - 180px)', position: 'relative' }}>
+        <div style={{ height: '100%', width: 'calc(100% - 220px)', position: 'relative' }}>
           {/* Toolbar */}
           { this.views[this.state.nav].renderToolBar({ style: toolBarStyle }) }
 
@@ -276,19 +293,10 @@ class NavViews extends React.Component {
     return (
       <div style={{ width: '100%', height: '100%', overflow: 'hidden' }} >
         {/* Navs */}
-        <div
-          style={{
-            height: HEADER_HEIGHT,
-            width: '100%',
-            position: 'relative',
-            backgroundColor: '#F5F5F5'
-          }}
-        >
-          { this.renderHeader() }
-        </div>
+        { this.renderHeader() }
 
         {/* Account */}
-        <div style={{ position: 'fixed', top: 16, right: 108, height: 36 }}>
+        <div style={{ position: 'fixed', top: 12, right: 147, height: 36 }}>
           <Account />
         </div>
 

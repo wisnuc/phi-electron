@@ -38,6 +38,7 @@ import renderFileIcon from '../common/renderFileIcon'
 import { xcopyMsg } from '../common/msg'
 import Search from '../common/Search'
 import History from '../common/history'
+import LIButton from '../common/LIButton'
 
 /* Drag Item's Coordinate */
 const DRAGLEFT = 180
@@ -715,24 +716,24 @@ class Home extends Base {
     const noForward = curr > queue.length - 2
     const { select } = this.state
     const itemSelected = select && select.selected && select.selected.length
-    const color = 'rgba(0,0,0,.54)'
-    const altColor = itemSelected ? 'rgba(0,0,0,.54)' : 'rgba(0,0,0,.18)'
+    const color = '#7d868f'
+    const altColor = itemSelected ? '#7d868f' : '#7d868f'
     return (
       <div style={style}>
-        <div style={{ width: 48 }} />
-        <IconButton onClick={this.back} tooltip={noBack ? null : i18n.__('Backward')} disabled={noBack}>
+        <div style={{ width: 20 }} />
+        <LIButton onClick={this.back} tooltip={noBack ? null : i18n.__('Backward')} disabled={noBack}>
           <BackwardIcon color={color} />
-        </IconButton>
-        <div style={{ width: 8 }} />
-        <IconButton onClick={this.forward} tooltip={noForward ? null : i18n.__('Forward')} disabled={noForward}>
+        </LIButton>
+        <div style={{ width: 14 }} />
+        <LIButton onClick={this.forward} tooltip={noForward ? null : i18n.__('Forward')} disabled={noForward}>
           <ForwardIcon color={color} />
-        </IconButton>
-        <div style={{ width: 8 }} />
-        <IconButton onClick={() => this.refresh()} tooltip={i18n.__('Refresh')} >
+        </LIButton>
+        <div style={{ width: 14 }} />
+        <LIButton onClick={() => this.refresh()} tooltip={i18n.__('Refresh')} >
           <RefreshIcon color={color} />
-        </IconButton>
+        </LIButton>
 
-        <FileUploadButton upload={this.upload} />
+        <div style={{ width: 52 }} />
 
         <FlatButton
           onClick={this.download}
@@ -740,23 +741,30 @@ class Home extends Base {
           disabled={!itemSelected}
           icon={<DownloadIcon color={altColor} />}
         />
+
+        <FileUploadButton upload={this.upload} />
+
         <FlatButton
           onClick={() => this.toggleDialog('delete')}
           label={i18n.__('Delete')}
           disabled={!itemSelected}
           icon={<DeleteIcon color={altColor} />}
         />
-        <FlatButton
-          onClick={() => this.toggleDialog('gridView')}
-          label={this.state.gridView ? i18n.__('List View') : i18n.__('Grid View')}
-          icon={this.state.gridView ? <ListIcon color={color} /> : <GridIcon color={color} />}
-        />
+
         <FlatButton
           label={i18n.__('Create New Folder')}
           onClick={() => this.toggleDialog('createNewFolder')}
           icon={<FileCreateNewFolder color={color} />}
         />
+
+        <FlatButton
+          onClick={() => this.toggleDialog('gridView')}
+          label={this.state.gridView ? i18n.__('List View') : i18n.__('Grid View')}
+          icon={this.state.gridView ? <ListIcon color={color} /> : <GridIcon color={color} />}
+        />
+        {/*
         <Search fire={() => {}} />
+        */}
       </div>
     )
   }

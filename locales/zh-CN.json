@@ -459,13 +459,9 @@
   "Management Title": "管理",
   "Device Management": "设备管理",
   "Files": "文件",
-  "Photos": "照片",
   "Groups": "私友群",
   "Inboxes": "收件箱",
   "System Settings": "系统设置",
-
-  "==== nav/Navigation.jsx ====": "",
-  "Detail": "详情",
 
   "==== nav/Notifications.jsx ====": "",
   "Back": "Back",
@@ -603,7 +599,7 @@
   "Jump to Create": "去创建",
 
   "==== view/Settings.jsx ====": "",
-  "Settings Menu Name": "设置",
+  "Settings Menu Name": "功能设置",
   "Settings Quick Name": "设置",
 
   "==== view/Share.jsx ====": "",
@@ -877,5 +873,31 @@
 
   "==== node/app.js ====": "",
   "New Client Version Detected": "检测到新版本的WISNUC客户端",
-  "New Client Version Detected Text": "点击下载最新的客户端。"
+  "New Client Version Detected Text": "点击下载最新的客户端。",
+
+  "==== login/PhiLogin ====": "",
+  "Welcome Text": "欢迎使用斐迅NAS产品",
+  "Phone Number: ": "服务热线",
+  "Log Out": "登出设备",
+  "Login or Sign Up": "登录注册",
+  "Not Phone Number": "请输入正确的手机号",
+  "Phone Number": "手机号",
+  "Quit": "退出",
+  "Sign Up": "注册帐号",
+  "Forget Password": "忘记密码",
+  "Phone Number Hint": "请输入手机号",
+  "Download Phi App Text": "下载斐迅NAS APP",
+
+  "==== nav/Navigation.jsx ====": "",
+  "Detail": "详情",
+  "Change Device": "切换设备",
+  "Files Menu Name": "文件管理",
+
+  "==== nav/FileMenu.jsx ====": "",
+  "File Menu Title": "N2家庭",
+  "All Files": "全部文件",
+  "Photos": "我的照片",
+  "Audio": "我的音乐",
+  "Docs": "我的文本",
+  "Video": "我的视频"
 }

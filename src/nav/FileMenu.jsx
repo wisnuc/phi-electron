@@ -1,58 +1,47 @@
-import React from 'react'
 import i18n from 'i18n'
-import Radium from 'radium'
+import React from 'react'
+import { RaisedButton } from 'material-ui'
 
-class SubHeader extends React.PureComponent {
-  render () {
-    return (
-      <div
-        style={{ height: 48,
-          fontSize: 14,
-          fontWeight: 500,
-          display: 'flex',
-          alignItems: 'center',
-          color: 'rgba(0,0,0,0.54)' }}
-      >
-        <div style={{ flex: '0 0 24px' }} />
-        { this.props.children }
-      </div>
-    )
-  }
-}
-
-@Radium
 class MenuItem extends React.PureComponent {
   render () {
-    const { text, dense, primaryColor, selected, disabled } = this.props
+    const { text, selected } = this.props
+    const Icon = this.props.icon
 
-    const iconColor = selected ? primaryColor : (disabled ? 'rgba(0,0,0,0.38)' : 'rgba(0,0,0,0.54)')
-    const fontColor = selected ? primaryColor : (disabled ? 'rgba(0,0,0,0.38)' : 'rgba(0,0,0,0.87)')
+    const iconColor = selected ? '#FFF' : '#505259'
+    const fontColor = selected ? '#FFF' : '#505259'
+    const buttonColor = selected ? '#627ee5' : ''
+    const boxShadow = selected ? '0px 3px 10px 0 rgba(98, 126, 229, 0.35)' : ''
+    const zIndex = selected ? 100 : 1
+
+    const borderRadius = 4
 
     return (
       <div
         style={{
-          width: '100%',
-          height: dense ? 40 : 48,
+          width: 220,
+          height: 50,
+          position: 'relative',
           display: 'flex',
           alignItems: 'center',
-          ':hover': { backgroundColor: '#EEEEEE' },
-          backgroundColor: selected ? '#F5F5F5' : '#FFF'
+          justifyContent: 'center'
         }}
-        onClick={this.props.onClick}
       >
-        <div style={{ flex: '0 0 24px' }} />
-        <this.props.icon style={{ width: dense ? 18 : 24, height: dense ? 18 : 24, color: iconColor }} />
-        <div style={{ flex: '0 0 32px' }} />
-        <div style={{ flexGrow: 1, fontSize: dense ? 13 : 14, color: fontColor, fontWeight: 500 }}>
-          {text}
-        </div>
-        <div style={{ flex: '0 0 16px' }} />
+        <RaisedButton
+          label={text}
+          labelColor={fontColor}
+          labelStyle={{ position: 'absolute', top: 0, left: 65 }}
+          backgroundColor={buttonColor}
+          style={{ borderRadius, width: 190, height: 41, boxShadow, zIndex }}
+          buttonStyle={{ borderRadius }}
+          onClick={this.props.onClick}
+        >
+          <Icon style={{ position: 'absolute', top: 9, left: 33, width: 24, height: 24, color: iconColor }} />
+        </RaisedButton>
       </div>
     )
   }
 }
 
-@Radium
 class NavDrawer extends React.Component {
   render () {
     const { views, nav, navTo } = this.props
@@ -60,7 +49,19 @@ class NavDrawer extends React.Component {
 
     return (
       <div style={{ width: '100%', height: '100%' }} >
-        <SubHeader>{ i18n.__('Box Title') }</SubHeader>
+        <div
+          style={{
+            height: 50,
+            fontSize: 16,
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#505259'
+          }}
+        >
+          { i18n.__('File Menu Title') }
+        </div>
 
         <MenuItem
           icon={views.home.menuIcon()}

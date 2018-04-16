@@ -2,10 +2,9 @@ import React from 'react'
 import { ipcRenderer } from 'electron'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import { teal500, pinkA200 } from 'material-ui/styles/colors'
 
-import Login from './login/NewLogin'
-// import Login from './login/Login'
+// import Login from './login/NewLogin'
+import Login from './login/Login'
 import Navigation from './nav/Navigation'
 import Device from './common/device'
 
@@ -23,9 +22,10 @@ const adjustSeq = (pre) => {
 }
 
 const defaultTheme = getMuiTheme({
-  fontFamily: 'Roboto, Noto Sans SC, sans-serif',
-  color: 'rgba(0,0,0,0.87)',
-  palette: { primary1Color: teal500, accent1Color: pinkA200 }
+  fontFamily: 'Microsoft YaHei, PingFang SC, sans-serif',
+  color: '#50529',
+  fontSize: 14,
+  palette: { primary1Color: '#31a0f5', accent1Color: '#fa5353' }
 })
 
 class Fruitmix extends React.Component {
@@ -106,7 +106,7 @@ class Fruitmix extends React.Component {
     switch (this.state.view) {
       case 'login':
         Object.assign(this.state, { theme: defaultTheme })
-        view = <Login mdns={adjustSeq(global.mdnsStore)} primaryColor={teal500} {...this.state} />
+        view = <Login mdns={adjustSeq(global.mdnsStore)} primaryColor="#31a0f5" {...this.state} />
         break
 
       case 'user':

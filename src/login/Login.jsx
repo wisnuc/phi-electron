@@ -42,7 +42,7 @@ class LoginApp extends React.Component {
         >
           <img
             style={{ position: 'absolute', width: '100%', height: '100%', zIndex: -1000 }}
-            src="./assets/images/index.jpg"
+            src="./assets/images/index.png"
             alt=""
           />
         </div>

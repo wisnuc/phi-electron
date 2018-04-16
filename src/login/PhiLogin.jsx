@@ -13,7 +13,9 @@ class PhiLogin extends React.Component {
 
     this.state = {
       pn: '',
+      pnError: '',
       pwd: '',
+      pwdError: '',
       error: '',
       showPwd: false
     }
@@ -50,20 +52,29 @@ class PhiLogin extends React.Component {
 
   render () {
     const borderRadius = 20
-    const iconStyle = { width: 18, height: 18, color: 'rgba(0,0,0,.54)', padding: 0 }
+    const iconStyle = { width: 18, height: 18, color: '#31a0f5', padding: 0 }
     const buttonStyle = { width: 26, height: 26, padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }
     return (
-      <div style={{ width: 380, height: 540, backgroundColor: '#FAFAFA', zIndex: 100 }}>
-        <div style={{ height: 72, backgroundColor: '#FAFAFA', display: 'flex', alignItems: 'center', paddingLeft: 24 }} >
+      <div style={{ width: 320, height: 500, backgroundColor: '#FAFAFA', zIndex: 100 }}>
+        <div style={{ height: 61, backgroundColor: '#FAFAFA', display: 'flex', alignItems: 'center', paddingLeft: 19, fontSize: 20 }} >
           { i18n.__('Login or Sign Up') }
         </div>
         <Divider />
-        <div style={{ height: 160 }} />
-        <div style={{ width: 320, margin: '0 auto', position: 'relative' }}>
+        <div style={{ height: 160, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <img
+            style={{ width: 220, height: 116 }}
+            src="./assets/images/pic-login.png"
+            alt=""
+          />
+        </div>
+        <div style={{ width: 282, margin: '0 auto', position: 'relative' }}>
           <TextField
             fullWidth
+            style={{ marginTop: -10 }}
             hintText={i18n.__('Phone Number Hint')}
             floatingLabelText={i18n.__('Phone Number')}
+            errorStyle={{ position: 'absolute', right: 8, top: 18 }}
+            floatingLabelStyle={{ fontSize: 14, color: '#505259', marginTop: -6 }}
             floatingLabelFixed
             type="text"
             errorText={this.state.pnError}
@@ -72,8 +83,11 @@ class PhiLogin extends React.Component {
           />
           <TextField
             fullWidth
+            style={{ marginTop: -6 }}
             hintText={i18n.__('Password Hint')}
             floatingLabelText={i18n.__('Password')}
+            errorStyle={{ position: 'absolute', right: 8, top: 18 }}
+            floatingLabelStyle={{ fontSize: 14, color: '#505259', marginTop: -6 }}
             floatingLabelFixed
             type={this.state.showPwd ? 'text' : 'password'}
             errorText={this.state.pwdError}
@@ -83,26 +97,26 @@ class PhiLogin extends React.Component {
           />
 
           {/* clear password */}
-          <div style={{ position: 'absolute', right: 4, top: 36 }}>
+          <div style={{ position: 'absolute', right: 4, top: 26 }}>
             <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.clearPn}>
               <CloseIcon />
             </IconButton>
           </div>
 
           {/* password visibility */}
-          <div style={{ position: 'absolute', right: 4, top: 108 }}>
+          <div style={{ position: 'absolute', right: 4, top: 94 }}>
             <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.togglePwd}>
               { this.state.showPwd ? <VisibilityOff /> : <Visibility /> }
             </IconButton>
           </div>
         </div>
-        <div style={{ display: 'flex', margin: '8px 32px' }}>
+        <div style={{ display: 'flex', margin: '4px 18px' }}>
           <Checkbox
             label={i18n.__('Remember Password')}
             disableTouchRipple
             style={{ width: 120 }}
             iconStyle={{ height: 16, width: 16, marginTop: 2 }}
-            labelStyle={{ fontSize: 12, color: 'rgba(0,0,0,0.54)', marginLeft: -9 }}
+            labelStyle={{ fontSize: 14, color: 'rgba(0,0,0,0.54)', marginLeft: -9 }}
             checked={!!this.state.saveToken}
             onCheck={() => this.handleSaveToken()}
           />
@@ -111,33 +125,35 @@ class PhiLogin extends React.Component {
             disableTouchRipple
             style={{ width: 120 }}
             iconStyle={{ height: 16, width: 16, marginTop: 2 }}
-            labelStyle={{ fontSize: 12, color: 'rgba(0,0,0,0.54)', marginLeft: -9 }}
+            labelStyle={{ fontSize: 14, color: 'rgba(0,0,0,0.54)', marginLeft: -9 }}
             checked={!!this.state.autologin}
             onCheck={() => this.handleAutologin()}
           />
         </div>
-        <div style={{ width: 240, margin: '24px auto' }}>
+        <div style={{ height: 26 }} />
+        <div style={{ width: 240, height: 40, margin: '0 auto' }}>
           <RaisedButton
             label={i18n.__('Login')}
             labelColor="#FFF"
             backgroundColor="#00B0FF"
-            style={{ borderRadius, width: '100%', height: 40 }}
+            style={{ borderRadius, width: 240, height: 40, fontSize: 16 }}
             buttonStyle={{ borderRadius }}
             onClick={this.login}
           />
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
+        <div style={{ display: 'flex', alignItems: 'center', position: 'relative', height: 50, color: '#85868c' }}>
           <div style={{ width: '50%', textAlign: 'right' }}>
             <FlatButton
+              style={{ color: '#85868c' }}
               label={i18n.__('Sign Up')}
             />
           </div>
           <div style={{ width: 1, height: 16, backgroundColor: 'rgba(0,0,0,.38)' }} />
-          <div style={{ width: '50%' }}>
+          <div style={{ width: '50%', textAlign: 'left' }}>
             <FlatButton
               label={i18n.__('Forget Password')}
-              style={{ marginLeft: 8 }}
+              style={{ marginLeft: 8, color: '#85868c' }}
             />
           </div>
         </div>

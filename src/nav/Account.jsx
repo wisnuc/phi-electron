@@ -1,7 +1,6 @@
 import i18n from 'i18n'
 import React from 'react'
 import { Popover, Menu, MenuItem, IconButton } from 'material-ui'
-import AccountIcon from 'material-ui/svg-icons/action/account-circle'
 import ADD from 'material-ui/svg-icons/navigation/arrow-drop-down'
 import { UploadFile, UploadFold } from '../common/Svg'
 
@@ -22,23 +21,33 @@ class Account extends React.Component {
   }
 
   render () {
-    const color = 'rgba(0,0,0,.54)'
+    const color = 'rgba(255, 255, 255, 0.7)'
     return (
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={{ display: 'flex', alignItems: 'center', height: 30 }}>
         <div>
-          <AccountIcon />
+          <img src="./assets/images/avator-default.png" alt="" width={30} height={30} />
         </div>
-        <div style={{ padding: 4 }}>
-          { 'username' }
+        <div style={{ paddingLeft: 10, color }}>
+          { 'Brown' }
         </div>
 
         <IconButton
+          style={{
+            width: 26,
+            height: 26,
+            padding: 4,
+            margin: '0 8px 0 0',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
           onClick={this.openPop}
-          iconStyle={{ width: 18, height: 18, color }}
-          style={{ width: 26, height: 26, padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          iconStyle={{ width: 20, height: 20, color }}
         >
           <ADD />}
         </IconButton>
+
+        <div style={{ height: 12, width: 1, backgroundColor: color, opacity: 0.3 }} />
         <Popover
           open={this.state.open}
           animated

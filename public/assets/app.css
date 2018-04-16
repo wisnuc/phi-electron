@@ -2,7 +2,7 @@
 
 * {
   user-select: none;
-  font-family: Roboto, "Noto Sans SC" , "Microsoft YaHei", sans-serif!important;
+  font-family: "Microsoft YaHei", "PingFang SC", sans-serif!important;
 }
 
 html {
@@ -15,8 +15,9 @@ body {
   padding:0;
   width:100%;
   height:100%;
-  cursor: default;
-  color:rgba(0,0,0,0.87);
+  cursor:default;
+  font-size:14px;
+  color:##505259;
 }
 
 a {
