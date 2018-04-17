@@ -33,7 +33,6 @@ class LoginApp extends React.Component {
 
   render () {
     console.log('NewLogin', this.state, this.props)
-    const BoundDevices = [{ }]
     const props = Object.assign({ CST: this.CST }, this.props)
     let view = null
     switch (this.state.stage) {

@@ -126,6 +126,21 @@ img[src=""] {
   color: var(--grey-text);
 }
 
+.flexCenter {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.paper {
+	box-shadow: 0px 20px 30px 0 rgba(23, 99, 207, 0.12);	
+	background-color: #FFF;
+}
+
+.divider {
+	background-color: #f2f2f2!important;
+}
+
 /* booting animation */
 .spinner {
   margin: -60px 0 0 0;
