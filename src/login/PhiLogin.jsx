@@ -55,9 +55,9 @@ class PhiLogin extends React.Component {
     const iconStyle = { width: 18, height: 18, color: '#31a0f5', padding: 0 }
     const buttonStyle = { width: 26, height: 26, padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }
     return (
-      <div style={{ width: 320, height: 500, backgroundColor: '#FAFAFA', zIndex: 100 }}>
-        <div style={{ height: 61, backgroundColor: '#FAFAFA', display: 'flex', alignItems: 'center', paddingLeft: 19, fontSize: 20 }} >
-          { i18n.__('Login or Sign Up') }
+      <div style={{ width: 320, height: 480, backgroundColor: '#FAFAFA', zIndex: 100 }}>
+        <div style={{ height: 61, color: '#505259', display: 'flex', alignItems: 'center', paddingLeft: 19, fontSize: 20 }} >
+          { i18n.__('Login') }
         </div>
         <Divider />
         <div style={{ height: 160, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -70,12 +70,9 @@ class PhiLogin extends React.Component {
         <div style={{ width: 282, margin: '0 auto', position: 'relative' }}>
           <TextField
             fullWidth
-            style={{ marginTop: -10 }}
+            style={{ marginTop: 12 }}
             hintText={i18n.__('Phone Number Hint')}
-            floatingLabelText={i18n.__('Phone Number')}
-            errorStyle={{ position: 'absolute', right: 8, top: 18 }}
-            floatingLabelStyle={{ fontSize: 14, color: '#505259', marginTop: -6 }}
-            floatingLabelFixed
+            errorStyle={{ position: 'absolute', right: 0, top: 0 }}
             type="text"
             errorText={this.state.pnError}
             value={this.state.pn}
@@ -83,12 +80,9 @@ class PhiLogin extends React.Component {
           />
           <TextField
             fullWidth
-            style={{ marginTop: -6 }}
+            style={{ marginTop: 12 }}
             hintText={i18n.__('Password Hint')}
-            floatingLabelText={i18n.__('Password')}
-            errorStyle={{ position: 'absolute', right: 8, top: 18 }}
-            floatingLabelStyle={{ fontSize: 14, color: '#505259', marginTop: -6 }}
-            floatingLabelFixed
+            errorStyle={{ position: 'absolute', right: 0, top: 0 }}
             type={this.state.showPwd ? 'text' : 'password'}
             errorText={this.state.pwdError}
             value={this.state.pwd}
@@ -104,7 +98,7 @@ class PhiLogin extends React.Component {
           </div>
 
           {/* password visibility */}
-          <div style={{ position: 'absolute', right: 4, top: 94 }}>
+          <div style={{ position: 'absolute', right: 4, top: 86 }}>
             <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.togglePwd}>
               { this.state.showPwd ? <VisibilityOff /> : <Visibility /> }
             </IconButton>
@@ -116,7 +110,7 @@ class PhiLogin extends React.Component {
             disableTouchRipple
             style={{ width: 120 }}
             iconStyle={{ height: 16, width: 16, marginTop: 2 }}
-            labelStyle={{ fontSize: 14, color: 'rgba(0,0,0,0.54)', marginLeft: -9 }}
+            labelStyle={{ fontSize: 14, color: '#85868c', marginLeft: -9 }}
             checked={!!this.state.saveToken}
             onCheck={() => this.handleSaveToken()}
           />
@@ -125,18 +119,19 @@ class PhiLogin extends React.Component {
             disableTouchRipple
             style={{ width: 120 }}
             iconStyle={{ height: 16, width: 16, marginTop: 2 }}
-            labelStyle={{ fontSize: 14, color: 'rgba(0,0,0,0.54)', marginLeft: -9 }}
+            labelStyle={{ fontSize: 14, color: '#85868c', marginLeft: -9 }}
             checked={!!this.state.autologin}
             onCheck={() => this.handleAutologin()}
           />
         </div>
-        <div style={{ height: 26 }} />
+        <div style={{ height: 16 }} />
         <div style={{ width: 240, height: 40, margin: '0 auto' }}>
           <RaisedButton
-            label={i18n.__('Login')}
             labelColor="#FFF"
+            label={i18n.__('Login')}
+            labelStyle={{ fontSize: 16, color: '#FFF' }}
             backgroundColor="#00B0FF"
-            style={{ borderRadius, width: 240, height: 40, fontSize: 16 }}
+            style={{ borderRadius, width: 240, height: 40, fontWeight: 400 }}
             buttonStyle={{ borderRadius }}
             onClick={this.login}
           />
@@ -145,15 +140,16 @@ class PhiLogin extends React.Component {
         <div style={{ display: 'flex', alignItems: 'center', position: 'relative', height: 50, color: '#85868c' }}>
           <div style={{ width: '50%', textAlign: 'right' }}>
             <FlatButton
-              style={{ color: '#85868c' }}
               label={i18n.__('Sign Up')}
+              labelStyle={{ fontSize: 14, color: '#85868c' }}
             />
           </div>
           <div style={{ width: 1, height: 16, backgroundColor: 'rgba(0,0,0,.38)' }} />
           <div style={{ width: '50%', textAlign: 'left' }}>
             <FlatButton
               label={i18n.__('Forget Password')}
-              style={{ marginLeft: 8, color: '#85868c' }}
+              labelStyle={{ fontSize: 14, color: '#85868c' }}
+              style={{ marginLeft: 8 }}
             />
           </div>
         </div>

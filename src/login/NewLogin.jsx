@@ -78,7 +78,7 @@ class LoginApp extends React.Component {
             src="./assets/images/logo.png"
             alt=""
           />
-          <div style={{ fontSize: 14, color: '#888a8c', marginTop: 8 }}>
+          <div style={{ fontSize: 14, color: '#888a8c', marginTop: 8, letterSpacing: 1.4 }}>
             { i18n.__('Welcome Text') }
           </div>
         </div>
