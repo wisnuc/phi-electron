@@ -6,6 +6,7 @@ import Visibility from 'material-ui/svg-icons/action/visibility'
 import CloseIcon from 'material-ui/svg-icons/navigation/close'
 
 import FlatButton from '../common/FlatButton'
+import RRButton from '../common/RRButton'
 
 class PhiLogin extends React.Component {
   constructor (props) {
@@ -51,15 +52,22 @@ class PhiLogin extends React.Component {
   }
 
   render () {
-    const borderRadius = 20
     const iconStyle = { width: 18, height: 18, color: '#31a0f5', padding: 0 }
     const buttonStyle = { width: 26, height: 26, padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }
     return (
-      <div style={{ width: 320, height: 480, backgroundColor: '#FAFAFA', zIndex: 100 }}>
-        <div style={{ height: 61, color: '#505259', display: 'flex', alignItems: 'center', paddingLeft: 19, fontSize: 20 }} >
+      <div
+        style={{
+          width: 320,
+          height: 480,
+          backgroundColor: '#FAFAFA',
+          zIndex: 100,
+          boxShadow: '0px 20px 30px 0 rgba(23, 99, 207, 0.12)'
+        }}
+      >
+        <div style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 19 }} className="title">
           { i18n.__('Login') }
         </div>
-        <Divider />
+        <Divider style={{ marginLeft: 20, width: 280 }} />
         <div style={{ height: 160, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <img
             style={{ width: 220, height: 116 }}
@@ -90,70 +98,65 @@ class PhiLogin extends React.Component {
             onKeyDown={this.onKeyDown}
           />
 
-          {/* clear password */}
-          <div style={{ position: 'absolute', right: 4, top: 26 }}>
-            <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.clearPn}>
-              <CloseIcon />
-            </IconButton>
-          </div>
-
-          {/* password visibility */}
-          <div style={{ position: 'absolute', right: 4, top: 86 }}>
-            <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.togglePwd}>
-              { this.state.showPwd ? <VisibilityOff /> : <Visibility /> }
-            </IconButton>
-          </div>
-        </div>
-        <div style={{ display: 'flex', margin: '4px 18px' }}>
-          <Checkbox
-            label={i18n.__('Remember Password')}
-            disableTouchRipple
-            style={{ width: 120 }}
-            iconStyle={{ height: 16, width: 16, marginTop: 2 }}
-            labelStyle={{ fontSize: 14, color: '#85868c', marginLeft: -9 }}
-            checked={!!this.state.saveToken}
-            onCheck={() => this.handleSaveToken()}
-          />
-          <Checkbox
-            label={i18n.__('Auto Login')}
-            disableTouchRipple
-            style={{ width: 120 }}
-            iconStyle={{ height: 16, width: 16, marginTop: 2 }}
-            labelStyle={{ fontSize: 14, color: '#85868c', marginLeft: -9 }}
-            checked={!!this.state.autologin}
-            onCheck={() => this.handleAutologin()}
-          />
-        </div>
-        <div style={{ height: 16 }} />
-        <div style={{ width: 240, height: 40, margin: '0 auto' }}>
-          <RaisedButton
-            labelColor="#FFF"
-            label={i18n.__('Login')}
-            labelStyle={{ fontSize: 16, color: '#FFF' }}
-            backgroundColor="#00B0FF"
-            style={{ borderRadius, width: 240, height: 40, fontWeight: 400 }}
-            buttonStyle={{ borderRadius }}
-            onClick={this.login}
-          />
+        {/* clear password */}
+        <div style={{ position: 'absolute', right: 4, top: 26 }}>
+          <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.clearPn}>
+            <CloseIcon />
+          </IconButton>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', position: 'relative', height: 50, color: '#85868c' }}>
-          <div style={{ width: '50%', textAlign: 'right' }}>
-            <FlatButton
-              label={i18n.__('Sign Up')}
-              labelStyle={{ fontSize: 14, color: '#85868c' }}
-            />
-          </div>
-          <div style={{ width: 1, height: 16, backgroundColor: 'rgba(0,0,0,.38)' }} />
-          <div style={{ width: '50%', textAlign: 'left' }}>
-            <FlatButton
-              label={i18n.__('Forget Password')}
-              labelStyle={{ fontSize: 14, color: '#85868c' }}
-              style={{ marginLeft: 8 }}
-            />
-          </div>
+        {/* password visibility */}
+        <div style={{ position: 'absolute', right: 4, top: 86 }}>
+          <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.togglePwd}>
+            { this.state.showPwd ? <VisibilityOff /> : <Visibility /> }
+          </IconButton>
         </div>
       </div>
+      <div style={{ display: 'flex', margin: '4px 18px' }}>
+        <Checkbox
+          label={i18n.__('Remember Password')}
+          disableTouchRipple
+          style={{ width: 120 }}
+          iconStyle={{ height: 16, width: 16, marginTop: 2 }}
+          labelStyle={{ fontSize: 14, color: '#85868c', marginLeft: -9 }}
+          checked={!!this.state.saveToken}
+          onCheck={() => this.handleSaveToken()}
+        />
+        <Checkbox
+          label={i18n.__('Auto Login')}
+          disableTouchRipple
+          style={{ width: 120 }}
+          iconStyle={{ height: 16, width: 16, marginTop: 2 }}
+          labelStyle={{ fontSize: 14, color: '#85868c', marginLeft: -9 }}
+          checked={!!this.state.autologin}
+          onCheck={() => this.handleAutologin()}
+        />
+      </div>
+      <div style={{ height: 18 }} />
+      <div style={{ width: 240, height: 40, margin: '0 auto' }}>
+        <RRButton
+          label={i18n.__('Login')}
+          onClick={this.login}
+        />
+      </div>
+
+      <div style={{ display: 'flex', alignItems: 'center', position: 'relative', height: 50, color: '#85868c' }}>
+        <div style={{ width: '50%', textAlign: 'right' }}>
+          <FlatButton
+            label={i18n.__('Sign Up')}
+            labelStyle={{ fontSize: 14, color: '#85868c' }}
+          />
+        </div>
+        <div style={{ width: 1, height: 16, backgroundColor: 'rgba(0,0,0,.38)' }} />
+        <div style={{ width: '50%', textAlign: 'left' }}>
+          <FlatButton
+            label={i18n.__('Forget Password')}
+            labelStyle={{ fontSize: 14, color: '#85868c' }}
+            style={{ marginLeft: 8 }}
+          />
+        </div>
+      </div>
+    </div>
     )
   }
 }

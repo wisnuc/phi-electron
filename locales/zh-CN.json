@@ -888,6 +888,13 @@
   "Phone Number Hint": "请输入手机号",
   "Download Phi App Text": "下载斐迅NAS APP",
 
+  "==== login/DeviceSelect.jsx====": "",
+  "Add Device": "添加设备",
+  "Select Device To Bind": "请选择需要绑定的NAS设备",
+  "Device Storage": "存储状态",
+  "Device Speed": "传输速率",
+  "Device Location": "所在地",
+
   "==== nav/Navigation.jsx ====": "",
   "Detail": "详情",
   "Change Device": "切换设备",

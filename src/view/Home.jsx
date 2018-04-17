@@ -38,7 +38,7 @@ import renderFileIcon from '../common/renderFileIcon'
 import { xcopyMsg } from '../common/msg'
 import Search from '../common/Search'
 import History from '../common/history'
-import LIButton from '../common/LIButton'
+import { LIButton } from '../common/IconButton'
 
 /* Drag Item's Coordinate */
 const DRAGLEFT = 180

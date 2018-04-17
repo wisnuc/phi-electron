@@ -44,6 +44,88 @@ img[src=""] {
   overflow-x: hidden;
 }
 
+/* global css */
+:root {
+  --dark-text: #505259;
+  --light-grey-text: #c4c5cc;
+  --grey-text: #85868c;
+  --dodger-blue: #31a0f5;
+}
+
+/* Text styles */
+.title {
+  font-family: MicrosoftYaHei;
+  font-size: 20px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: left;
+  color: #505259;
+  color: var(--dark-text);
+}
+.inputText {
+  font-family: MicrosoftYaHei;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: left;
+  color: #505259;
+  color: var(--dark-text);
+}
+.inputHint {
+  font-family: MicrosoftYaHei;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: left;
+  color: #c4c5cc;
+  color: var(--light-grey-text);
+}
+.body {
+  font-family: MicrosoftYaHei;
+  font-size: 14px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: left;
+  color: #505259;
+  color: var(--dark-text);
+}
+.buttonLabel {
+  font-family: MicrosoftYaHei;
+  font-size: 14px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: center;
+  color: #85868c;
+  color: var(--grey-text);
+}
+.caption {
+  font-family: MicrosoftYaHei;
+  font-size: 14px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: left;
+  color: #85868c;
+  color: var(--grey-text);
+}
+
 /* booting animation */
 .spinner {
   margin: -60px 0 0 0;

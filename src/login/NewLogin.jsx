@@ -20,6 +20,10 @@ class LoginApp extends React.Component {
     this.CST = (stage) => {
       this.setState({ stage })
     }
+
+    this.login = () => {
+      this.setState({ stage: 'addDevice' })
+    }
   }
 
   componentDidMount () {
@@ -29,6 +33,7 @@ class LoginApp extends React.Component {
 
   render () {
     console.log('NewLogin', this.state, this.props)
+    const BoundDevices = [{ }]
     const props = Object.assign({ CST: this.CST }, this.props)
     let view = null
     switch (this.state.stage) {
@@ -98,7 +103,7 @@ class LoginApp extends React.Component {
             fontSize: 14,
             display: 'flex',
             alignItems: 'center',
-            color: '#b6b7bf',
+            color: '#85868c',
             width: '100%',
             height: 40,
             backgroundColor: '#f3f8ff',
@@ -112,10 +117,10 @@ class LoginApp extends React.Component {
             { `${i18n.__('Version:')} ${global.config && global.config.appVersion}` }
           </div>
           <div style={{ flexGrow: 1 }} />
-          <div style={{ margin: '0px 16px', color: '#85868c' }}>
+          <div style={{ margin: '0px 16px' }}>
             { i18n.__('Phone Number: ') }
           </div>
-          <div style={{ fontSize: 18, color: '#85868c', marginRight: 20 }}>
+          <div style={{ fontSize: 18, marginRight: 20 }}>
             { '4007 567 567' }
           </div>
         </div>
