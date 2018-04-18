@@ -138,10 +138,10 @@ class LoginApp extends React.Component {
         <div
           style={{
             position: 'absolute',
-            top: 10,
-            left: 10,
+            top: 4,
+            left: 4,
             height: 80,
-            width: 'calc(100% - 20px)',
+            width: 'calc(100% - 8px)',
             WebkitAppRegion: 'drag'
           }}
         />

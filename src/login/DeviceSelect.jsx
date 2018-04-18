@@ -1,7 +1,6 @@
 import React from 'react'
 import i18n from 'i18n'
 import { Divider, IconButton, TextField } from 'material-ui'
-import BackIcon from 'material-ui/svg-icons/navigation/chevron-left'
 import VisibilityOff from 'material-ui/svg-icons/action/visibility-off'
 import Visibility from 'material-ui/svg-icons/action/visibility'
 import { AutoSizer } from 'react-virtualized'
@@ -9,12 +8,10 @@ import ScrollBar from '../common/ScrollBar'
 import RRButton from '../common/RRButton'
 import { RefreshIcon, HelpIcon } from '../common/Svg'
 import { SIButton } from '../common/IconButton'
-import ModeSelect from './ModeSelect'
 import Dialog from '../common/PureDialog'
-import DiskModeGuide from './DiskModeGuide'
 import ConnectionHint from './ConnectionHint'
 import ConfirmBind from './ConfirmBind'
-import DiskFormating from './DiskFormating'
+import ManageDisk from './ManageDisk'
 
 class DeviceSelect extends React.Component {
   constructor (props) {
@@ -189,126 +186,6 @@ class DeviceSelect extends React.Component {
     )
   }
 
-  renderFormatDisk (dev) {
-    const iconStyle = { width: 14, height: 14, fill: '#31a0f5' }
-    const buttonStyle = { width: 22, height: 22, padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }
-    const storage = [
-      { pos: '磁盘1', model: '希捷', size: '2.0T', serial: 'BYUHYSTYGFG' },
-      { pos: '磁盘2', model: '希捷', size: '1.0T', serial: 'DKJHFHJISHF' }
-    ]
-    return (
-      <div className="paper" style={{ width: 320, height: 491, zIndex: 100 }} >
-        <div style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 20 }} className="title">
-          <IconButton
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: 4,
-              height: 44,
-              width: 44,
-              marginLeft: -6
-            }}
-            iconStyle={{ width: 36, height: 36, fill: '#525a60' }}
-            onClick={this.backToList}
-          >
-            <BackIcon />
-          </IconButton>
-          { i18n.__('Discover Disk') }
-        </div>
-        <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
-        <div style={{ height: 184, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <img
-            style={{ width: 220, height: 116 }}
-            src="./assets/images/pic-finddisk.png"
-            alt=""
-          />
-        </div>
-        <div style={{ height: 8 }} />
-        {
-          storage.map(disk => (
-            <div
-              style={{
-                height: 22,
-                width: 'calc(100% - 40px)',
-                marginLeft: 20,
-                display: 'flex',
-                color: '#888a8c',
-                alignItems: 'center'
-              }}
-              key={disk.pos}
-            >
-              <div style={{ color: '#525a60' }}> { disk.pos } </div>
-              <div style={{ flexGrow: 1 }} />
-              <div style={{ width: 32 }}> { disk.model } </div>
-              <div style={{ width: 32 }}> { disk.size } </div>
-              <div style={{ width: 120 }}> { disk.serial } </div>
-            </div>
-          ))
-        }
-        <div style={{ height: 18 }} />
-        <div
-          style={{
-            height: 22,
-            width: 'calc(100% - 40px)',
-            marginLeft: 20,
-            display: 'flex',
-            color: '#888a8c',
-            alignItems: 'center'
-          }}
-        >
-          <div style={{ color: '#525a60' }}> { i18n.__('Select Disk Mode') } </div>
-          <div style={{ flexGrow: 1 }} />
-          <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={() => this.setState({ showGuide: true })}>
-            <HelpIcon />
-          </IconButton>
-        </div>
-        <div style={{ height: 6 }} />
-        <div style={{ height: 50, width: 'calc(100% - 40px)', marginLeft: 20, display: 'flex', alignItems: 'center' }} >
-          <ModeSelect
-            selected={this.state.mode === 'single'}
-            label={i18n.__('Single Mode')}
-            onClick={() => this.setState({ mode: this.state.mode === 'single' ? '' : 'single' })}
-          />
-          <div style={{ width: 10 }} />
-          <ModeSelect
-            selected={this.state.mode === 'raid1'}
-            label={i18n.__('Raid1 Mode')}
-            onClick={() => this.setState({ mode: this.state.mode === 'raid1' ? '' : 'raid1' })}
-          />
-        </div>
-        <div style={{ height: 34 }} />
-        <div style={{ width: 240, height: 40, margin: '0 auto' }}>
-          <RRButton
-            disabled={!this.state.mode}
-            label={i18n.__('Format Disk in First Boot')}
-            onClick={this.format}
-          />
-        </div>
-        <Dialog open={!!this.state.showGuide} onRequestClose={() => this.setState({ showGuide: false })}>
-          {
-            !!this.state.showGuide &&
-            <DiskModeGuide
-              onRequestClose={() => this.setState({ showGuide: false })}
-              powerOff={() => {}}
-            />
-          }
-        </Dialog>
-
-        <Dialog open={!!this.state.format} onRequestClose={() => this.setState({ format: '' })} modal >
-          {
-            !!this.state.format &&
-            <DiskFormating
-              status={this.state.format}
-              onSuccess={this.onFormatSuccess}
-              onRequestClose={() => this.setState({ format: false })}
-            />
-          }
-        </Dialog>
-      </div>
-    )
-  }
-
   renderLANPwd () {
     const iconStyle = { width: 18, height: 18, color: '#31a0f5', padding: 0 }
     const buttonStyle = { width: 26, height: 26, padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }
@@ -392,7 +269,15 @@ class DeviceSelect extends React.Component {
     if (this.state.LANPwd) return this.renderLANPwd()
 
     /* Format Disk */
-    if (this.state.dev && !this.state.confirm) return this.renderFormatDisk(this.state.dev)
+    if (this.state.dev && !this.state.confirm) {
+      return (
+        <ManageDisk
+          dev={this.state.dev}
+          backToList={this.backToList}
+          onFormatSuccess={this.onFormatSuccess}
+        />
+      )
+    }
 
     const arr = [...this.state.list, ...this.state.list].slice(0, 6)
 

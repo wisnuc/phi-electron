@@ -1,5 +1,36 @@
+import i18n from 'i18n'
+import React from 'react'
+import { Divider, IconButton } from 'material-ui'
+import BackIcon from 'material-ui/svg-icons/navigation/chevron-left'
 
-  renderFormatDisk (dev) {
+import ModeSelect from './ModeSelect'
+import DiskModeGuide from './DiskModeGuide'
+import DiskFormating from './DiskFormating'
+
+import { HelpIcon } from '../common/Svg'
+import RRButton from '../common/RRButton'
+import Dialog from '../common/PureDialog'
+
+class ManageDisk extends React.Component {
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      mode: '',
+      showGuide: false,
+      format: '' // 'busy', 'success', 'error'
+    }
+
+    this.format = () => {
+      this.setState({ format: 'busy' })
+      setTimeout(() => this.setState({ format: 'error' }), 2000)
+      setTimeout(() => this.setState({ format: 'success' }), 4000)
+    }
+  }
+
+  render () {
+    const { dev, backToList, onFormatSuccess } = this.props
+    console.log('ManageDisk', dev)
     const iconStyle = { width: 14, height: 14, fill: '#31a0f5' }
     const buttonStyle = { width: 22, height: 22, padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }
     const storage = [
@@ -20,7 +51,7 @@
               marginLeft: -6
             }}
             iconStyle={{ width: 36, height: 36, fill: '#525a60' }}
-            onClick={this.backToList}
+            onClick={backToList}
           >
             <BackIcon />
           </IconButton>
@@ -110,7 +141,7 @@
             !!this.state.format &&
             <DiskFormating
               status={this.state.format}
-              onSuccess={this.onFormatSuccess}
+              onSuccess={onFormatSuccess}
               onRequestClose={() => this.setState({ format: false })}
             />
           }
@@ -118,3 +149,6 @@
       </div>
     )
   }
+}
+
+export default ManageDisk
