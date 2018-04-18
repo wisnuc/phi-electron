@@ -1,6 +1,9 @@
 import React from 'react'
 import i18n from 'i18n'
-import { Divider, IconButton } from 'material-ui'
+import { Divider, IconButton, TextField } from 'material-ui'
+import BackIcon from 'material-ui/svg-icons/navigation/chevron-left'
+import VisibilityOff from 'material-ui/svg-icons/action/visibility-off'
+import Visibility from 'material-ui/svg-icons/action/visibility'
 import { AutoSizer } from 'react-virtualized'
 import ScrollBar from '../common/ScrollBar'
 import RRButton from '../common/RRButton'
@@ -10,14 +13,18 @@ import ModeSelect from './ModeSelect'
 import Dialog from '../common/PureDialog'
 import DiskModeGuide from './DiskModeGuide'
 import ConnectionHint from './ConnectionHint'
+import ConfirmBind from './ConfirmBind'
+import DiskFormating from './DiskFormating'
 
 class DeviceSelect extends React.Component {
   constructor (props) {
     super(props)
 
     this.state = {
+      dev: null,
       list: null,
-      dev: null
+      confirm: false,
+      format: '' // 'busy', 'success', 'error'
     }
 
     this.enterSelectDevice = () => {
@@ -25,11 +32,26 @@ class DeviceSelect extends React.Component {
     }
 
     this.slDevice = (dev) => {
-      this.setState({ dev })
+      this.setState({ dev, confirm: true })
+      setTimeout(() => this.setState({ confirm: false }), 2000)
     }
 
     this.backToList = () => {
       this.setState({ dev: null })
+    }
+
+    this.format = () => {
+      this.setState({ format: 'busy' })
+      setTimeout(() => this.setState({ format: 'error' }), 2000)
+      setTimeout(() => this.setState({ format: 'success' }), 4000)
+    }
+
+    this.onFormatSuccess = () => {
+      this.setState({ LANPwd: true, format: '' })
+    }
+
+    this.saveLANPwd = () => {
+      this.setState({ LANPwd: false })
     }
   }
 
@@ -47,11 +69,10 @@ class DeviceSelect extends React.Component {
           height: 340,
           padding: 20,
           margin: '16px 8px',
-          cursor: 'pointer',
-          backgroundColor: '#FFF',
-          boxShadow: '0px 10px 20px 0 rgba(23, 99, 207, 0.1)'
+          cursor: 'pointer'
         }}
         key={dev.address}
+        className="paper"
         onClick={() => this.slDevice(dev)}
       >
         <div style={{ fontSize: 16, color: '#525a60' }}>
@@ -138,12 +159,11 @@ class DeviceSelect extends React.Component {
         style={{
           width: 320,
           height: 310,
-          backgroundColor: '#FAFAFA',
           overflow: 'hidden',
           zIndex: 200,
-          position: 'relative',
-          boxShadow: '0px 20px 30px 0 rgba(23, 99, 207, 0.12)'
+          position: 'relative'
         }}
+        className="paper"
       >
         <div
           style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 19 }}
@@ -178,7 +198,22 @@ class DeviceSelect extends React.Component {
     ]
     return (
       <div className="paper" style={{ width: 320, height: 491, zIndex: 100 }} >
-        <div style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 19 }} className="title">
+        <div style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 20 }} className="title">
+          <IconButton
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: 4,
+              height: 44,
+              width: 44,
+              marginLeft: -6
+            }}
+            iconStyle={{ width: 36, height: 36, fill: '#525a60' }}
+            onClick={this.backToList}
+          >
+            <BackIcon />
+          </IconButton>
           { i18n.__('Discover Disk') }
         </div>
         <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
@@ -247,7 +282,7 @@ class DeviceSelect extends React.Component {
           <RRButton
             disabled={!this.state.mode}
             label={i18n.__('Format Disk in First Boot')}
-            onClick={this.login}
+            onClick={this.format}
           />
         </div>
         <Dialog open={!!this.state.showGuide} onRequestClose={() => this.setState({ showGuide: false })}>
@@ -259,6 +294,92 @@ class DeviceSelect extends React.Component {
             />
           }
         </Dialog>
+
+        <Dialog open={!!this.state.format} onRequestClose={() => this.setState({ format: '' })} modal >
+          {
+            !!this.state.format &&
+            <DiskFormating
+              status={this.state.format}
+              onSuccess={this.onFormatSuccess}
+              onRequestClose={() => this.setState({ format: false })}
+            />
+          }
+        </Dialog>
+      </div>
+    )
+  }
+
+  renderLANPwd () {
+    const iconStyle = { width: 18, height: 18, color: '#31a0f5', padding: 0 }
+    const buttonStyle = { width: 26, height: 26, padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }
+    return (
+      <div
+        style={{
+          width: 320,
+          height: 430,
+          overflow: 'hidden',
+          zIndex: 200,
+          position: 'relative'
+        }}
+        className="paper"
+      >
+        <div
+          style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 19 }}
+          className="title"
+        >
+          { i18n.__('Set LAN Pwd') }
+        </div>
+        <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
+        <div style={{ height: 180, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <img
+            style={{ width: 218, height: 121 }}
+            src="./assets/images/pic-offlinepassword.png"
+            alt=""
+          />
+        </div>
+        <div style={{ width: 282, margin: '-20px auto 0px auto', position: 'relative' }}>
+          <TextField
+            fullWidth
+            style={{ marginTop: 12 }}
+            hintText={i18n.__('LAN Password Hint')}
+            errorStyle={{ position: 'absolute', right: 0, top: 0 }}
+            type={this.state.showPwd ? 'text' : 'password'}
+            errorText={this.state.pwdError}
+            value={this.state.pwd}
+            onChange={e => this.onPassword(e.target.value)}
+            onKeyDown={this.onKeyDown}
+          />
+          <TextField
+            fullWidth
+            style={{ marginTop: 12 }}
+            hintText={i18n.__('Password Again Hint')}
+            errorStyle={{ position: 'absolute', right: 0, top: 0 }}
+            type={this.state.showPwd ? 'text' : 'password'}
+            errorText={this.state.pwdError}
+            value={this.state.pwd}
+            onChange={e => this.onPassword(e.target.value)}
+            onKeyDown={this.onKeyDown}
+          />
+          {/* clear password */}
+          <div style={{ position: 'absolute', right: 4, top: 26 }}>
+            <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.clearPn}>
+              { this.state.showPwd ? <VisibilityOff /> : <Visibility /> }
+            </IconButton>
+          </div>
+          {/* password visibility */}
+          <div style={{ position: 'absolute', right: 4, top: 86 }}>
+            <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.togglePwd}>
+              { this.state.showPwd ? <VisibilityOff /> : <Visibility /> }
+            </IconButton>
+          </div>
+        </div>
+        <div style={{ height: 20 }} />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <RRButton
+            label={i18n.__('Save')}
+            onClick={this.saveLANPwd}
+          />
+        </div>
       </div>
     )
   }
@@ -268,9 +389,13 @@ class DeviceSelect extends React.Component {
     /* No Bound Device Hint */
     if (!this.state.list) return this.renderNoBound()
 
+    if (this.state.LANPwd) return this.renderLANPwd()
+
     /* Format Disk */
-    if (this.state.dev) return this.renderFormatDisk(this.state.dev)
-    const arr = this.state.list
+    if (this.state.dev && !this.state.confirm) return this.renderFormatDisk(this.state.dev)
+
+    const arr = [...this.state.list, ...this.state.list].slice(0, 6)
+
     return (
       <div
         style={{
@@ -303,6 +428,17 @@ class DeviceSelect extends React.Component {
         {/* Connection Hint */}
         <Dialog open={!!this.state.showHelp} onRequestClose={() => this.setState({ showHelp: false })}>
           { !!this.state.showHelp && <ConnectionHint onRequestClose={() => this.setState({ showHelp: false })} /> }
+        </Dialog>
+
+        {/* Confirm Device Bind */}
+        <Dialog open={!!this.state.confirm} onRequestClose={() => this.setState({ confirm: false })} modal >
+          {
+            !!this.state.confirm &&
+            <ConfirmBind
+              backToList={this.backToList}
+              onRequestClose={() => this.setState({ confirm: false })}
+            />
+          }
         </Dialog>
       </div>
     )

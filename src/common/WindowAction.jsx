@@ -30,7 +30,7 @@ class WindowAction extends React.PureComponent {
 
   render () {
     return (
-      <div style={{ position: 'fixed', top: 11, right: 17, display: 'flex', alignItems: 'center' }}>
+      <div style={{ position: 'fixed', top: 11, right: 17, display: 'flex', alignItems: 'center', WebkitAppRegion: 'no-drag' }}>
         <IconButton style={styles.small} iconStyle={styles.smallIcon} onClick={this.minimize} >
           <MinIcon />
         </IconButton>

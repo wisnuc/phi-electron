@@ -1,9 +1,12 @@
 import i18n from 'i18n'
 import React from 'react'
+import { Divider } from 'material-ui'
 
 import PhiLogin from './PhiLogin'
 import DeviceSelect from './DeviceSelect'
+import { SIButton } from '../common/IconButton'
 import WindowAction from '../common/WindowAction'
+import { RefreshIcon, HelpIcon } from '../common/Svg'
 
 const duration = 300
 
@@ -24,11 +27,53 @@ class LoginApp extends React.Component {
     this.login = () => {
       this.setState({ stage: 'addDevice' })
     }
+
+    this.refresh = () => {
+    
+    }
   }
 
   componentDidMount () {
     document.getElementById('start-bg').style.display = 'none'
     setTimeout(() => this.setState({ hello: false }), 300)
+  }
+
+  renderNetError () {
+    return (
+      <div
+        style={{
+          width: 320,
+          height: 270,
+          overflow: 'hidden',
+          zIndex: 200,
+          position: 'relative'
+        }}
+        className="paper"
+      >
+        <div
+          style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 19 }}
+          className="title"
+        >
+          { i18n.__('Network Connection Error') }
+          <div style={{ flexGrow: 1 }} />
+          <SIButton onClick={this.refresh} > <RefreshIcon /> </SIButton>
+          <div style={{ width: 10 }} />
+          <SIButton onClick={() => this.setState({ showHelp: true })} > <HelpIcon /> </SIButton>
+          <div style={{ width: 14 }} />
+        </div>
+        <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
+        <div style={{ height: 116, marginTop: 33 }} className="flexCenter">
+          <img
+            style={{ width: 173, height: 116 }}
+            src="./assets/images/pic-network.png"
+            alt=""
+          />
+        </div>
+        <div className="flexCenter" style={{ color: 'var(--grey-text)', marginTop: 10 }}>
+          { i18n.__('Network Connection Error Text') }
+        </div>
+      </div>
+    )
   }
 
   render () {
@@ -45,6 +90,8 @@ class LoginApp extends React.Component {
       default:
         break
     }
+
+    if (!window.navigator.onLine) view = this.renderNetError()
 
     return (
       <div
@@ -86,6 +133,18 @@ class LoginApp extends React.Component {
             { i18n.__('Welcome Text') }
           </div>
         </div>
+
+        {/* WebkitAppRegion */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 10,
+            left: 10,
+            height: 80,
+            width: 'calc(100% - 20px)',
+            WebkitAppRegion: 'drag'
+          }}
+        />
 
         {/* QR Code */}
         <div style={{ position: 'absolute', bottom: 72, right: 48, textAlign: 'center' }}>
