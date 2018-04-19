@@ -3,8 +3,8 @@ import { ipcRenderer } from 'electron'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 
-import Login from './login/NewLogin'
-// import Login from './login/Login'
+// import Login from './login/NewLogin'
+import Login from './login/Login'
 import Navigation from './nav/Navigation'
 import Device from './common/device'
 
@@ -122,7 +122,6 @@ class Fruitmix extends React.Component {
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%' }}>
           { view }
           {/* WebkitAppRegion */}
-          {/*
           <div
             style={{
               position: 'fixed',
@@ -135,7 +134,6 @@ class Fruitmix extends React.Component {
               WebkitAppRegion: 'drag'
             }}
           />
-          */}
         </div>
       </MuiThemeProvider>
     )

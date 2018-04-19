@@ -677,7 +677,7 @@ class Home extends Base {
     */
 
     return (
-      <div style={Object.assign({}, style, { marginLeft: 48 })}>
+      <div style={Object.assign({}, style, { marginLeft: 20, marginTop: -4 })}>
         {
           path.reduce((acc, node, index) => {
             const isDrop = () => this.state.select.isDrop()
@@ -706,8 +706,22 @@ class Home extends Base {
   }
 
   renderTitle ({ style }) {
+    const breadCrumbStyle = { color: 'var(--grey-text)' }
     if (!this.state.listNavDir) return (<div />)
-    return this.renderBreadCrumbItem({ style })
+    return (
+      <div style={style}>
+        <div style={{ height: 70 }}>
+          <div style={{ fontSize: 20, color: 'var(--dark-text)', marginTop: 12, marginLeft: 24 }}>
+            { this.menuName() }
+          </div>
+          { this.renderBreadCrumbItem({ style: breadCrumbStyle }) }
+        </div>
+        <div style={{ flexGrow: 1 }} />
+        <div style={{ marginRight: 15 }}>
+          Search
+        </div>
+      </div>
+    )
   }
 
   renderToolBar ({ style }) {

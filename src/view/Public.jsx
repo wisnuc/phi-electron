@@ -108,7 +108,12 @@ class Public extends Home {
   }
 
   menuIcon () {
-    return ShareDisk
+    const Pic = props => (
+      <div {...props}>
+        <img src="./assets/images/ic-commondisk.png" alt="" width={28} height={28} />
+      </div>
+    )
+    return Pic
   }
 
   /* renderers */

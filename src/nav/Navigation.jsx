@@ -10,8 +10,12 @@ import TransMenu from './TransMenu'
 import SettingsMenu from './SettingMenu'
 
 import Home from '../view/Home'
-import Media from '../view/Media'
+import Photo from '../view/Photo'
+import Music from '../view/Music'
+import Docs from '../view/Docs'
+import Video from '../view/Video'
 import Public from '../view/Public'
+import USB from '../view/USB'
 
 import Downloading from '../view/Downloading'
 import Uploading from '../view/Uploading'
@@ -43,8 +47,12 @@ class NavViews extends React.Component {
 
     this.install([
       { name: 'home', View: Home },
-      { name: 'media', View: Media },
+      { name: 'photo', View: Photo },
+      { name: 'music', View: Music },
+      { name: 'docs', View: Docs },
+      { name: 'video', View: Video },
       { name: 'public', View: Public },
+      { name: 'usb', View: USB },
 
       { name: 'downloading', View: Downloading },
       { name: 'uploading', View: Uploading },
@@ -213,7 +221,7 @@ class NavViews extends React.Component {
 
   renderFileGroup () {
     const toolBarStyle = { height: 50, width: '100%', display: 'flex', alignItems: 'center', backgroundColor: '#e1edfe' }
-    const breadCrumbStyle = { height: 64, width: '100%', display: 'flex', alignItems: 'center', color: 'red' }
+    const titleStyle = { height: 70, width: '100%', display: 'flex', alignItems: 'center' }
     return (
       <div style={{ display: 'flex', alignItems: 'center', height: '100%', width: '100%', position: 'relative' }}>
         <div style={{ height: '100%', width: 220 }}>
@@ -228,8 +236,8 @@ class NavViews extends React.Component {
           {/* Toolbar */}
           { this.views[this.state.nav].renderToolBar({ style: toolBarStyle }) }
 
-          {/* Toolbar */}
-          { this.state.nav === 'home' && this.views[this.state.nav].renderBreadCrumbItem({ style: breadCrumbStyle }) }
+          {/* Title and BreadCrumbItem */}
+          { this.state.nav === 'home' && this.views[this.state.nav].renderTitle({ style: titleStyle }) }
 
           {/* File Content */}
           <div style={{ height: 'calc(100% - 64px)', width: '100%' }} id="content-container">

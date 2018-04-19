@@ -1,6 +1,6 @@
 import i18n from 'i18n'
 import React from 'react'
-import { RaisedButton } from 'material-ui'
+import { RaisedButton, Divider } from 'material-ui'
 
 class MenuItem extends React.PureComponent {
   render () {
@@ -19,7 +19,8 @@ class MenuItem extends React.PureComponent {
       <div
         style={{
           width: 220,
-          height: 50,
+          paddingTop: 10,
+          height: 40,
           position: 'relative',
           display: 'flex',
           alignItems: 'center',
@@ -27,15 +28,16 @@ class MenuItem extends React.PureComponent {
         }}
       >
         <RaisedButton
+          disableTouchRipple
           label={text}
           labelColor={fontColor}
           labelStyle={{ position: 'absolute', top: 0, left: 65 }}
           backgroundColor={buttonColor}
-          style={{ borderRadius, width: 190, height: 41, boxShadow, zIndex }}
+          style={{ borderRadius, width: 190, height: 40, boxShadow, zIndex }}
           buttonStyle={{ borderRadius }}
           onClick={this.props.onClick}
         >
-          <Icon style={{ position: 'absolute', top: 9, left: 33, width: 24, height: 24, color: iconColor }} />
+          <Icon style={{ position: 'absolute', top: 9, left: 33, width: 24, height: 24, fill: iconColor }} />
         </RaisedButton>
       </div>
     )
@@ -43,8 +45,23 @@ class MenuItem extends React.PureComponent {
 }
 
 class NavDrawer extends React.Component {
+  constructor (props) {
+    super(props)
+
+    this.state = { nav: this.props.nav }
+
+    this.navTo = (nav) => {
+      this.setState({ nav })
+    }
+  }
+
+  componentDidUpdate () {
+    if (this.state.nav !== this.props.nav) this.props.navTo(this.state.nav)
+  }
+
   render () {
-    const { views, nav, navTo } = this.props
+    const { views } = this.props
+    const { nav } = this.state
     const primaryColor = views[nav].primaryColor()
 
     return (
@@ -63,45 +80,50 @@ class NavDrawer extends React.Component {
           { i18n.__('File Menu Title') }
         </div>
 
-        <MenuItem
-          icon={views.home.menuIcon()}
-          text={i18n.__('All Files')}
-          primaryColor={primaryColor}
-          selected={nav === 'home'}
-          onClick={() => navTo('home')}
-        />
+        {
+          ['home', 'photo', 'music', 'docs', 'video'].map(v => (
+            <MenuItem
+              key={v}
+              icon={views[v].menuIcon()}
+              text={views[v].menuName()}
+              primaryColor={primaryColor}
+              selected={nav === v}
+              onClick={() => this.navTo(v)}
+            />
+          ))
+        }
 
-        <MenuItem
-          icon={views.media.menuIcon()}
-          text={i18n.__('Photos')}
-          primaryColor={primaryColor}
-          selected={nav === 'media'}
-          onClick={() => navTo('media')}
-        />
+        <div style={{ height: 10 }} />
+        <Divider style={{ marginLeft: 15, width: 180 }} className="divider" />
 
-        <MenuItem
-          icon={views.media.menuIcon()}
-          text={i18n.__('Audio')}
-          primaryColor={primaryColor}
-          selected={nav === 'audio'}
-          onClick={() => navTo('audio')}
-        />
+        {
+          ['public'].map(v => (
+            <MenuItem
+              key={v}
+              icon={views[v].menuIcon()}
+              text={views[v].menuName()}
+              primaryColor={primaryColor}
+              selected={nav === v}
+              onClick={() => this.navTo(v)}
+            />
+          ))
+        }
 
-        <MenuItem
-          icon={views.media.menuIcon()}
-          text={i18n.__('Docs')}
-          primaryColor={primaryColor}
-          selected={nav === 'docs'}
-          onClick={() => navTo('docs')}
-        />
+        <div style={{ height: 10 }} />
+        <Divider style={{ marginLeft: 15, width: 180 }} className="divider" />
 
-        <MenuItem
-          icon={views.media.menuIcon()}
-          text={i18n.__('Video')}
-          primaryColor={primaryColor}
-          selected={nav === 'video'}
-          onClick={() => navTo('video')}
-        />
+        {
+          ['usb'].map(v => (
+            <MenuItem
+              key={v}
+              icon={views[v].menuIcon()}
+              text={views[v].menuName()}
+              primaryColor={primaryColor}
+              selected={nav === v}
+              onClick={() => this.navTo(v)}
+            />
+          ))
+        }
       </div>
     )
   }

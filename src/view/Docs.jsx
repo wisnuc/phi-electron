@@ -9,7 +9,7 @@ import Base from './Base'
 import PhotoApp from '../photo/PhotoApp'
 import FlatButton from '../common/FlatButton'
 import { combineElement, removeElement } from '../common/array'
-import { MyPicIcon } from '../common/Svg'
+import { MyDocIcon } from '../common/Svg'
 
 const getName = (photo) => {
   if (!photo.date && !photo.datetime) {
@@ -226,15 +226,11 @@ class Media extends Base {
   }
 
   menuName () {
-    return i18n.__('Media Menu Name')
+    return i18n.__('Docs Menu Name')
   }
 
   menuIcon () {
-    return MyPicIcon
-  }
-
-  quickName () {
-    return i18n.__('Media Quick Name')
+    return MyDocIcon
   }
 
   appBarStyle () {

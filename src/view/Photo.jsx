@@ -226,15 +226,11 @@ class Media extends Base {
   }
 
   menuName () {
-    return i18n.__('Media Menu Name')
+    return i18n.__('Photo Menu Name')
   }
 
   menuIcon () {
     return MyPicIcon
-  }
-
-  quickName () {
-    return i18n.__('Media Quick Name')
   }
 
   appBarStyle () {
