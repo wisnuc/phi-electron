@@ -1,4 +1,5 @@
 import React from 'react'
+import { CheckedIcon } from '../common/Svg'
 
 class ModeSelect extends React.Component {
   constructor (props) {
@@ -42,6 +43,12 @@ class ModeSelect extends React.Component {
                 borderLeft: '20px solid transparent'
               }}
             />
+        }
+        {
+          selected &&
+            <div style={{ position: 'absolute', right: 0, top: -4 }} >
+              <CheckedIcon style={{ width: 10 }} />
+            </div>
         }
       </div>
     )

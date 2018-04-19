@@ -487,6 +487,18 @@ export const HelpIcon = props => (
   </SvgIcon>
 )
 
+export const BackIcon = props => (
+  <SvgIcon viewBox="0 0 12 21" {...props}>
+    <path fill="none" fillRule="evenodd" stroke="#525A60" strokeWidth="2" d="M9.484 18.5L.997 10.014l8.487-8.485" />
+  </SvgIcon>
+)
+
+export const CheckedIcon = props => (
+  <SvgIcon viewBox="0 0 9.5 7.5" {...props}>
+    <path fill="none" stroke="#FFF" d="M1.499 2.5l2.001 2 4-4" />
+  </SvgIcon>
+)
+
 export const Template = props => (
   <SvgIcon viewBox="0 0 30 30" {...props}>
     <path fill="#FFF" fillRule="evenodd" d="M26 30h-6c-2.206 0-4-1.794-4-4V16h10a4.003 4.003 0 0 1 3.999 4v6c0 2.206-1.793 4-3.999 4zm2-10c0-1.103-.898-2-2-2h-8v8c0 1.103.897 2 2 2h6c1.102 0 2-.897 2-2v-6zm-2-6H16V4c0-2.206 1.794-4 4-4h6a4.003 4.003 0 0 1 3.999 4v6c0 2.206-1.793 4-3.999 4zm2-10c0-1.103-.898-2-2-2h-6c-1.103 0-2 .897-2 2v8h8c1.102 0 2-.897 2-2V4zM10 30H4c-2.206 0-4-1.794-4-4v-6c0-2.206 1.794-4 4-4h9.999v10c0 2.206-1.793 4-3.999 4zm2-12H4c-1.103 0-2 .897-2 2v6c0 1.103.897 2 2 2h6c1.102 0 2-.897 2-2v-8zM0 10V4c0-2.206 1.794-4 4-4h6a4.003 4.003 0 0 1 3.999 4v10H4c-2.206 0-4-1.794-4-4zm12-6c0-1.103-.898-2-2-2H4c-1.103 0-2 .897-2 2v6c0 1.103.897 2 2 2h8V4z" opacity=".702" />

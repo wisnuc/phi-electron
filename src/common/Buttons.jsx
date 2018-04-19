@@ -60,7 +60,7 @@ export class RaisedButton extends Button {
       },
       style
     )
-    const textStyle = Object.assign({ color: '#FFF', fontSize: 16, height: 36, minWidth: 88 }, labelStyle)
+    const textStyle = Object.assign({ color: '#FFF', fontSize: 16, height: 31, minWidth: 81 }, labelStyle)
 
     return (
       <div {...this.funcs} style={buttonStyle} >

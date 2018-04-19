@@ -1,13 +1,12 @@
 import i18n from 'i18n'
 import React from 'react'
 import { Divider, IconButton } from 'material-ui'
-import BackIcon from 'material-ui/svg-icons/navigation/chevron-left'
 
 import ModeSelect from './ModeSelect'
 import DiskModeGuide from './DiskModeGuide'
 import DiskFormating from './DiskFormating'
 
-import { HelpIcon } from '../common/Svg'
+import { HelpIcon, BackIcon } from '../common/Svg'
 import { RRButton } from '../common/Buttons'
 import Dialog from '../common/PureDialog'
 
@@ -122,14 +121,15 @@ class ManageDisk extends React.Component {
 
   renderRecover () {
     const storage = [
-      { pos: '磁盘1', model: '希捷', size: '2.0T', serial: 'BYUHYSTYGFG', mode: 'Single 模式' },
-      { pos: '磁盘2', model: '希捷', size: '1.0T', serial: 'DKJHFHJISHF', mode: 'Raid 1 模式' }
+      { pos: '磁盘1', posAlt: '磁盘2', model: '希捷', size: '2.0T', mode: 'Single 模式' },
+      { pos: '磁盘2', posAlt: '磁盘1', model: '希捷', size: '1.0T', mode: 'Raid 1 模式' }
     ]
     return (
       <div>
         {
           storage.map(disk => (
             <div key={disk.pos} >
+              <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
               <div style={{ height: 10 }} />
               <div style={{ height: 30, margin: '0 auto', width: 280, display: 'flex', color: '#888a8c', alignItems: 'center' }} >
                 <div style={{ color: '#525a60' }}> { disk.pos } </div>
@@ -143,10 +143,10 @@ class ManageDisk extends React.Component {
                 <div> { disk.mode } </div>
               </div>
               <div style={{ height: 10 }} />
-              { this.renderArrowTips(i18n.__('Fortmat Disk Text'), true) }
+              { this.renderArrowTips(i18n.__('%s Fortmat Disk Text', disk.posAlt), true) }
               <div style={{ width: 240, height: 40, margin: '0 auto' }}>
                 <RRButton
-                  label={i18n.__('Create Volume')}
+                  label={i18n.__('Import')}
                   onClick={this.format}
                 />
               </div>
@@ -161,7 +161,7 @@ class ManageDisk extends React.Component {
   renderSelect () {
     return (
       <div>
-        { this.renderArrowTips(i18n.__('Fortmat Disk Text')) }
+        { this.renderArrowTips(i18n.__('Format Current Disk')) }
         <div style={{ width: 240, height: 40, margin: '0 auto' }}>
           <RRButton
             label={i18n.__('Create Volume')}
@@ -195,17 +195,16 @@ class ManageDisk extends React.Component {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              padding: 4,
-              height: 44,
-              width: 44,
-              marginLeft: -6
+              padding: 5,
+              height: 32,
+              width: 32
             }}
-            iconStyle={{ width: 36, height: 36, fill: '#525a60' }}
+            iconStyle={{ width: 22, height: 22, fill: '#525a60' }}
             onClick={backToList}
           >
             <BackIcon />
           </IconButton>
-          { init ? i18n.__('Discover Disk') : recover ? i18n.__('Recover Disk') : i18n.__('Create or Import Disk') }
+          { init ? i18n.__('Discover Disk') : recover ? i18n.__('Recover Volume') : i18n.__('Create or Import Disk') }
         </div>
         <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
         {

@@ -107,7 +107,7 @@ class DeviceSelect extends React.Component {
           const rowCount = Math.ceil(arr.length / count)
           if (rowCount === 1) {
             return (
-              <div className="flexCenter" style={{ width, height }}>
+              <div className="flexCenter" style={{ width, height, marginTop: -15 }}>
                 { arr.map((dev, i) => this.renderDev(dev, i)) }
               </div>
             )
@@ -213,16 +213,7 @@ class DeviceSelect extends React.Component {
     const iconStyle = { width: 18, height: 18, color: '#31a0f5', padding: 0 }
     const buttonStyle = { width: 26, height: 26, padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }
     return (
-      <div
-        style={{
-          width: 320,
-          height: 430,
-          overflow: 'hidden',
-          zIndex: 200,
-          position: 'relative'
-        }}
-        className="paper"
-      >
+      <div style={{ width: 320, zIndex: 200, position: 'relative' }} className="paper" >
         <div
           style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 19 }}
           className="title"
@@ -249,26 +240,9 @@ class DeviceSelect extends React.Component {
             onChange={e => this.onPassword(e.target.value)}
             onKeyDown={this.onKeyDown}
           />
-          <TextField
-            fullWidth
-            style={{ marginTop: 12 }}
-            hintText={i18n.__('Password Again Hint')}
-            errorStyle={{ position: 'absolute', right: 0, top: 0 }}
-            type={this.state.showPwd ? 'text' : 'password'}
-            errorText={this.state.pwdError}
-            value={this.state.pwd}
-            onChange={e => this.onPassword(e.target.value)}
-            onKeyDown={this.onKeyDown}
-          />
           {/* clear password */}
           <div style={{ position: 'absolute', right: 4, top: 26 }}>
             <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.clearPn}>
-              { this.state.showPwd ? <VisibilityOff /> : <Visibility /> }
-            </IconButton>
-          </div>
-          {/* password visibility */}
-          <div style={{ position: 'absolute', right: 4, top: 86 }}>
-            <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.togglePwd}>
               { this.state.showPwd ? <VisibilityOff /> : <Visibility /> }
             </IconButton>
           </div>
@@ -280,6 +254,7 @@ class DeviceSelect extends React.Component {
             onClick={this.saveLANPwd}
           />
         </div>
+        <div style={{ height: 30 }} />
       </div>
     )
   }
@@ -302,7 +277,7 @@ class DeviceSelect extends React.Component {
       )
     }
 
-    const arr = [...this.state.list, ...this.state.list, ...this.state.list, ...this.state.list, ...this.state.list].slice(0, 3)
+    const arr = [...this.state.list, ...this.state.list, ...this.state.list, ...this.state.list, ...this.state.list].slice(0, 5)
 
     return (
       <div

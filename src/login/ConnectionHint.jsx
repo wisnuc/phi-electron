@@ -12,8 +12,8 @@ class ConnectionHint extends React.PureComponent {
       i18n.__('Device Connection Text 3')
     ]
     return (
-      <div style={{ height: 401, width: 300, backgroundColor: '#FFF' }} >
-        <div style={{ height: 50, width: '100%', display: 'flex', alignItems: 'center' }}>
+      <div style={{ width: 300, backgroundColor: '#FFF' }} >
+        <div style={{ height: 59, width: '100%', display: 'flex', alignItems: 'center' }}>
           <div style={{ marginLeft: 20 }} className="title">
             { i18n.__('Device Connection Title') }
           </div>
@@ -22,7 +22,6 @@ class ConnectionHint extends React.PureComponent {
         <div style={{ height: 180, width: '100%' }} className="flexCenter" >
           <img src="./assets/images/pic-connection.png" alt="" width={215} height={120} />
         </div>
-        <div style={{ height: 8 }} />
         {
           texts.map(text => (
             <div style={{ display: 'flex', alignItems: 'center', height: 30, marginLeft: 20 }} key={text}>
