@@ -26,10 +26,14 @@ class ManageDisk extends React.Component {
       setTimeout(() => this.setState({ format: 'error' }), 2000)
       setTimeout(() => this.setState({ format: 'success' }), 4000)
     }
+
+    this.recover = () => {
+      this.setState({ recover: 'select' })
+    }
   }
 
-  render () {
-    const { dev, backToList, onFormatSuccess } = this.props
+  renderInitFormat () {
+    const { dev } = this.props
     console.log('ManageDisk', dev)
     const iconStyle = { width: 14, height: 14, fill: '#31a0f5' }
     const buttonStyle = { width: 22, height: 22, padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }
@@ -38,39 +42,12 @@ class ManageDisk extends React.Component {
       { pos: '磁盘2', model: '希捷', size: '1.0T', serial: 'DKJHFHJISHF' }
     ]
     return (
-      <div className="paper" style={{ width: 320, height: 491, zIndex: 100 }} >
-        <div style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 20 }} className="title">
-          <IconButton
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: 4,
-              height: 44,
-              width: 44,
-              marginLeft: -6
-            }}
-            iconStyle={{ width: 36, height: 36, fill: '#525a60' }}
-            onClick={backToList}
-          >
-            <BackIcon />
-          </IconButton>
-          { i18n.__('Discover Disk') }
-        </div>
-        <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
-        <div style={{ height: 184, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <img
-            style={{ width: 220, height: 116 }}
-            src="./assets/images/pic-finddisk.png"
-            alt=""
-          />
-        </div>
-        <div style={{ height: 8 }} />
+      <div>
         {
           storage.map(disk => (
             <div
               style={{
-                height: 22,
+                height: 30,
                 width: 'calc(100% - 40px)',
                 marginLeft: 20,
                 display: 'flex',
@@ -87,10 +64,9 @@ class ManageDisk extends React.Component {
             </div>
           ))
         }
-        <div style={{ height: 18 }} />
         <div
           style={{
-            height: 22,
+            height: 30,
             width: 'calc(100% - 40px)',
             marginLeft: 20,
             display: 'flex',
@@ -104,7 +80,7 @@ class ManageDisk extends React.Component {
             <HelpIcon />
           </IconButton>
         </div>
-        <div style={{ height: 6 }} />
+        <div style={{ height: 10 }} />
         <div style={{ height: 50, width: 'calc(100% - 40px)', marginLeft: 20, display: 'flex', alignItems: 'center' }} >
           <ModeSelect
             selected={this.state.mode === 'single'}
@@ -118,7 +94,7 @@ class ManageDisk extends React.Component {
             onClick={() => this.setState({ mode: this.state.mode === 'raid1' ? '' : 'raid1' })}
           />
         </div>
-        <div style={{ height: 34 }} />
+        <div style={{ height: 30 }} />
         <div style={{ width: 240, height: 40, margin: '0 auto' }}>
           <RRButton
             disabled={!this.state.mode}
@@ -126,6 +102,125 @@ class ManageDisk extends React.Component {
             onClick={this.format}
           />
         </div>
+        <div style={{ height: 30 }} />
+      </div>
+    )
+  }
+
+  renderArrowTips (text, alt) {
+    const style = alt ? { fontSize: 14, color: '#fa5353' } : { opacity: 0.7, fontSize: 12, color: '#525a60' }
+    return (
+      <div style={{ height: 30, width: 'calc(100% - 40px)', marginLeft: 20 }} className="flexCenter">
+        <div style={{ height: 19, width: 160 }} className="arrow_box">
+          <div style={style}>
+            { text }
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  renderRecover () {
+    const storage = [
+      { pos: '磁盘1', model: '希捷', size: '2.0T', serial: 'BYUHYSTYGFG', mode: 'Single 模式' },
+      { pos: '磁盘2', model: '希捷', size: '1.0T', serial: 'DKJHFHJISHF', mode: 'Raid 1 模式' }
+    ]
+    return (
+      <div>
+        {
+          storage.map(disk => (
+            <div key={disk.pos} >
+              <div style={{ height: 10 }} />
+              <div style={{ height: 30, margin: '0 auto', width: 280, display: 'flex', color: '#888a8c', alignItems: 'center' }} >
+                <div style={{ color: '#525a60' }}> { disk.pos } </div>
+                <div style={{ flexGrow: 1 }} />
+                <div style={{ width: 40 }}> { disk.model } </div>
+                <div style={{ width: 32 }}> { disk.size } </div>
+              </div>
+              <div style={{ height: 30, margin: '0 auto', width: 280, display: 'flex', color: '#888a8c', alignItems: 'center' }} >
+                <div style={{ color: '#525a60' }}> { i18n.__('Current Mode') } </div>
+                <div style={{ flexGrow: 1 }} />
+                <div> { disk.mode } </div>
+              </div>
+              <div style={{ height: 10 }} />
+              { this.renderArrowTips(i18n.__('Fortmat Disk Text'), true) }
+              <div style={{ width: 240, height: 40, margin: '0 auto' }}>
+                <RRButton
+                  label={i18n.__('Create Volume')}
+                  onClick={this.format}
+                />
+              </div>
+              <div style={{ height: 30 }} />
+            </div>
+          ))
+        }
+      </div>
+    )
+  }
+
+  renderSelect () {
+    return (
+      <div>
+        { this.renderArrowTips(i18n.__('Fortmat Disk Text')) }
+        <div style={{ width: 240, height: 40, margin: '0 auto' }}>
+          <RRButton
+            label={i18n.__('Create Volume')}
+            onClick={this.format}
+          />
+        </div>
+        <div style={{ height: 10 }} />
+        { this.renderArrowTips(i18n.__('Recover Volume Text')) }
+        <div style={{ width: 240, height: 40, margin: '0 auto' }}>
+          <RRButton
+            label={i18n.__('Recover Volume')}
+            onClick={this.recover}
+          />
+        </div>
+        <div style={{ height: 30 }} />
+      </div>
+    )
+  }
+
+  render () {
+    const { dev, backToList, onFormatSuccess } = this.props
+    console.log('ManageDisk', dev)
+    const init = false
+    const recover = !!this.state.recover
+    const imgSrc = init ? 'pic-finddisk.png' : 'pic-login.png'
+    return (
+      <div className="paper" style={{ width: 320, zIndex: 100 }} >
+        <div style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 20 }} className="title">
+          <IconButton
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: 4,
+              height: 44,
+              width: 44,
+              marginLeft: -6
+            }}
+            iconStyle={{ width: 36, height: 36, fill: '#525a60' }}
+            onClick={backToList}
+          >
+            <BackIcon />
+          </IconButton>
+          { init ? i18n.__('Discover Disk') : recover ? i18n.__('Recover Disk') : i18n.__('Create or Import Disk') }
+        </div>
+        <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
+        {
+          !recover &&
+            <div style={{ height: 180, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <img
+                style={{ width: 220, height: 116 }}
+                src={`./assets/images/${imgSrc}`}
+                alt=""
+              />
+            </div>
+        }
+
+        { init ? this.renderInitFormat() : recover ? this.renderRecover() : this.renderSelect() }
+
         <Dialog open={!!this.state.showGuide} onRequestClose={() => this.setState({ showGuide: false })}>
           {
             !!this.state.showGuide &&

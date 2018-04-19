@@ -53,7 +53,7 @@ class DeviceSelect extends React.Component {
   }
 
   renderDev (dev, index) {
-    const [stationName, bindStatus, storage, speed, location] = ['斐迅N2办公', '待绑定', '500GB/2TB', '30Mbps/3Mbps', '上海 电信']
+    const [stationName, storage, speed, location] = ['斐迅N2办公', '500GB/2TB', '30Mbps/3Mbps', '上海 电信']
     const data = [
       { des: i18n.__('Device Storage'), val: storage },
       { des: i18n.__('Device Speed'), val: speed },
@@ -63,22 +63,18 @@ class DeviceSelect extends React.Component {
       <div
         style={{
           width: 210,
-          height: 340,
-          padding: 20,
-          margin: '16px 8px',
+          padding: '0 20px',
+          margin: '30px 7px 0 7px',
           cursor: 'pointer'
         }}
         key={index.toString()}
         className="paper"
         onClick={() => this.slDevice(dev)}
       >
-        <div style={{ fontSize: 16, color: '#525a60' }}>
+        <div style={{ height: 56, fontSize: 16, color: '#525a60', display: 'flex', alignItems: 'center' }}>
           { stationName }
         </div>
-        <div style={{ fontSize: 14, color: '#31a0f5', marginTop: 1 }}>
-          { bindStatus }
-        </div>
-        <div style={{ height: 222 }} className="flexCenter">
+        <div style={{ height: 224 }} className="flexCenter">
           <img
             style={{ width: 51, height: 104 }}
             src="./assets/images/ic-n-2.png"
@@ -87,7 +83,7 @@ class DeviceSelect extends React.Component {
         </div>
         {
           data.map(({ des, val }) => (
-            <div style={{ height: 27, display: 'flex', alignItems: 'center' }} key={des}>
+            <div style={{ height: 30, display: 'flex', alignItems: 'center' }} key={des}>
               <div style={{ color: '#525a60' }}>
                 { des }
               </div>
@@ -98,6 +94,7 @@ class DeviceSelect extends React.Component {
             </div>
           ))
         }
+        <div style={{ height: 10 }} />
       </div>
     )
   }
@@ -106,15 +103,41 @@ class DeviceSelect extends React.Component {
     return (
       <AutoSizer>
         {({ height, width }) => {
-          const rowRenderer = ({ key, index, style, isScrolling }) => (
-            <div key={key} style={style} >
-              <div style={{ minWidth: 'min-content', display: 'flex', justifyContent: 'center' }}>
-                { arr.slice(index * 4, index * 4 + 4).map((dev, i) => this.renderDev(dev, i)) }
+          const count = Math.floor((width - 1100) / 264) + 4
+          const rowCount = Math.ceil(arr.length / count)
+          if (rowCount === 1) {
+            return (
+              <div className="flexCenter" style={{ width, height }}>
+                { arr.map((dev, i) => this.renderDev(dev, i)) }
               </div>
-            </div>
-          )
-          const rowHeight = 412
-          const rowCount = Math.ceil(arr.length / 4)
+            )
+          }
+
+          const rowRenderer = ({ key, index, style, isScrolling }) => {
+            const currArr = arr.slice(index * count, index * count + count)
+            return (
+              <div key={key} style={style} >
+                <div
+                  style={{
+                    minWidth: 'min-content',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginTop: index > 0 ? -40 * index : 0
+                  }}
+                >
+                  {
+                    Array.from({ length: count }).map((v, i) => {
+                      const dev = currArr[i]
+                      if (dev) return this.renderDev(dev, i)
+                      return <div style={{ width: 250, margin: '30px 7px 0 7px', opacity: 0 }} key={i.toString()} />
+                    })
+                  }
+                </div>
+              </div>
+            )
+          }
+
+          const rowHeight = 440
           const allHeight = rowHeight * rowCount
           return (
             <ScrollBar
@@ -279,7 +302,7 @@ class DeviceSelect extends React.Component {
       )
     }
 
-    const arr = [...this.state.list, ...this.state.list]
+    const arr = [...this.state.list, ...this.state.list, ...this.state.list, ...this.state.list, ...this.state.list].slice(0, 3)
 
     return (
       <div
@@ -294,7 +317,7 @@ class DeviceSelect extends React.Component {
           backgroundColor: '#f3f8ff'
         }}
       >
-        <div style={{ height: 50, width: '100%', display: 'flex', alignItems: 'center' }}>
+        <div style={{ height: 49, width: '100%', display: 'flex', alignItems: 'center' }}>
           <div style={{ marginLeft: 30 }} className="title">
             { i18n.__('Select Device To Bind') }
           </div>
@@ -305,8 +328,8 @@ class DeviceSelect extends React.Component {
           <div style={{ width: 32 }} />
         </div>
         <Divider style={{ marginLeft: 30, width: 'calc(100% - 60px)' }} />
-        <div style={{ width: '100%', height: 'calc(100% - 50px)', overflowY: arr.length < 5 ? 'hidden' : 'auto', overflowX: 'hidden' }}>
-          <div style={{ height: (arr.length && (arr.length < 5)) ? 'calc((100% - 412px) / 2)' : 0 }} />
+
+        <div style={{ width: '100%', height: 'calc(100% - 50px)' }} >
           { arr.length ? this.renderDevs(arr) : this.renderNoDev() }
         </div>
 
