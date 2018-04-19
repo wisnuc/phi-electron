@@ -5,8 +5,7 @@ import VisibilityOff from 'material-ui/svg-icons/action/visibility-off'
 import Visibility from 'material-ui/svg-icons/action/visibility'
 import CloseIcon from 'material-ui/svg-icons/navigation/close'
 
-import FlatButton from '../common/FlatButton'
-import RRButton from '../common/RRButton'
+import { RRButton, FLButton } from '../common/Buttons'
 
 class PhiLogin extends React.Component {
   constructor (props) {
@@ -129,21 +128,20 @@ class PhiLogin extends React.Component {
           <RRButton
             label={i18n.__('Login')}
             onClick={this.login}
+            disabled={this.state.pnError || this.state.pwdError}
           />
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', position: 'relative', height: 50, color: '#85868c' }}>
           <div style={{ width: '50%', textAlign: 'right' }}>
-            <FlatButton
+            <FLButton
               label={i18n.__('Sign Up')}
-              labelStyle={{ fontSize: 14, color: '#85868c' }}
             />
           </div>
           <div style={{ width: 1, height: 16, backgroundColor: 'rgba(0,0,0,.38)' }} />
           <div style={{ width: '50%', textAlign: 'left' }}>
-            <FlatButton
+            <FLButton
               label={i18n.__('Forget Password')}
-              labelStyle={{ fontSize: 14, color: '#85868c' }}
               style={{ marginLeft: 8 }}
             />
           </div>

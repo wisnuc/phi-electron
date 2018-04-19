@@ -8,7 +8,7 @@ import DiskModeGuide from './DiskModeGuide'
 import DiskFormating from './DiskFormating'
 
 import { HelpIcon } from '../common/Svg'
-import RRButton from '../common/RRButton'
+import { RRButton } from '../common/Buttons'
 import Dialog from '../common/PureDialog'
 
 class ManageDisk extends React.Component {

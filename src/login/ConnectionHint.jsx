@@ -1,6 +1,7 @@
 import i18n from 'i18n'
 import React from 'react'
-import { Divider, RaisedButton } from 'material-ui'
+import { Divider } from 'material-ui'
+import { RaisedButton } from '../common/Buttons'
 
 class ConnectionHint extends React.PureComponent {
   render () {

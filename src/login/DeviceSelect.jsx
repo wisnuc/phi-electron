@@ -5,7 +5,7 @@ import VisibilityOff from 'material-ui/svg-icons/action/visibility-off'
 import Visibility from 'material-ui/svg-icons/action/visibility'
 import { AutoSizer } from 'react-virtualized'
 import ScrollBar from '../common/ScrollBar'
-import RRButton from '../common/RRButton'
+import { RRButton } from '../common/Buttons'
 import { RefreshIcon, HelpIcon } from '../common/Svg'
 import { SIButton } from '../common/IconButton'
 import Dialog from '../common/PureDialog'
@@ -52,7 +52,7 @@ class DeviceSelect extends React.Component {
     }
   }
 
-  renderDev (dev) {
+  renderDev (dev, index) {
     const [stationName, bindStatus, storage, speed, location] = ['斐迅N2办公', '待绑定', '500GB/2TB', '30Mbps/3Mbps', '上海 电信']
     const data = [
       { des: i18n.__('Device Storage'), val: storage },
@@ -68,7 +68,7 @@ class DeviceSelect extends React.Component {
           margin: '16px 8px',
           cursor: 'pointer'
         }}
-        key={dev.address}
+        key={index.toString()}
         className="paper"
         onClick={() => this.slDevice(dev)}
       >
@@ -109,7 +109,7 @@ class DeviceSelect extends React.Component {
           const rowRenderer = ({ key, index, style, isScrolling }) => (
             <div key={key} style={style} >
               <div style={{ minWidth: 'min-content', display: 'flex', justifyContent: 'center' }}>
-                { arr.slice(index * 4, index * 4 + 4).map(dev => this.renderDev(dev)) }
+                { arr.slice(index * 4, index * 4 + 4).map((dev, i) => this.renderDev(dev, i)) }
               </div>
             </div>
           )
@@ -279,7 +279,7 @@ class DeviceSelect extends React.Component {
       )
     }
 
-    const arr = [...this.state.list, ...this.state.list].slice(0, 6)
+    const arr = [...this.state.list, ...this.state.list]
 
     return (
       <div
