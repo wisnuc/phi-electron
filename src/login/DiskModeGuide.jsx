@@ -1,10 +1,11 @@
 import i18n from 'i18n'
 import React from 'react'
-import { Divider, RaisedButton } from 'material-ui'
+import { Divider } from 'material-ui'
+import { RSButton } from '../common/Buttons'
 
 class DiskModeGuide extends React.PureComponent {
   render () {
-    const { onRequestClose, powerOff } = this.props
+    const { onRequestClose } = this.props
     return (
       <div style={{ height: 471, width: 590, backgroundColor: '#FFF' }} >
         <div style={{ height: 50, width: '100%', display: 'flex', alignItems: 'center' }}>
@@ -23,9 +24,7 @@ class DiskModeGuide extends React.PureComponent {
             { i18n.__('Change Disk Text') }
           </div>
           <div style={{ flexGrow: 1 }} />
-          <RaisedButton label={i18n.__('Got It')} onClick={onRequestClose} />
-          <div style={{ width: 10 }} />
-          <RaisedButton label={i18n.__('Power Off')} onClick={powerOff} />
+          <RSButton label={i18n.__('Got It')} onClick={onRequestClose} />
         </div>
       </div>
     )

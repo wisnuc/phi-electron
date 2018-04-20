@@ -2,12 +2,11 @@ import i18n from 'i18n'
 import React from 'react'
 import { Divider, IconButton } from 'material-ui'
 
-import ModeSelect from './ModeSelect'
 import DiskModeGuide from './DiskModeGuide'
 import DiskFormating from './DiskFormating'
 
 import { HelpIcon, BackIcon } from '../common/Svg'
-import { RRButton } from '../common/Buttons'
+import { RRButton, ModeSelect } from '../common/Buttons'
 import Dialog from '../common/PureDialog'
 
 class ManageDisk extends React.Component {
@@ -172,6 +171,7 @@ class ManageDisk extends React.Component {
         { this.renderArrowTips(i18n.__('Recover Volume Text')) }
         <div style={{ width: 240, height: 40, margin: '0 auto' }}>
           <RRButton
+            alt
             label={i18n.__('Recover Volume')}
             onClick={this.recover}
           />
@@ -184,7 +184,7 @@ class ManageDisk extends React.Component {
   render () {
     const { dev, backToList, onFormatSuccess } = this.props
     console.log('ManageDisk', dev)
-    const init = false
+    const init = true
     const recover = !!this.state.recover
     const imgSrc = init ? 'pic-finddisk.png' : 'pic-login.png'
     return (

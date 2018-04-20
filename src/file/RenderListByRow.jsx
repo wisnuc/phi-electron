@@ -335,9 +335,7 @@ class RenderListByRow extends React.Component {
             alignItems: 'center',
             position: 'absolute',
             zIndex: 100,
-            backgroundColor: '#FFFFFF',
-            paddingTop: 8,
-            top: -8
+            backgroundColor: '#FFFFFF'
           }}
           role="presentation"
         >

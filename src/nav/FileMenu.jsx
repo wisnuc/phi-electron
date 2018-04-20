@@ -1,48 +1,7 @@
 import i18n from 'i18n'
 import React from 'react'
-import { RaisedButton, Divider } from 'material-ui'
-
-class MenuItem extends React.PureComponent {
-  render () {
-    const { text, selected } = this.props
-    const Icon = this.props.icon
-
-    const iconColor = selected ? '#FFF' : '#505259'
-    const fontColor = selected ? '#FFF' : '#505259'
-    const buttonColor = selected ? '#627ee5' : ''
-    const boxShadow = selected ? '0px 3px 10px 0 rgba(98, 126, 229, 0.35)' : ''
-    const zIndex = selected ? 100 : 1
-
-    const borderRadius = 4
-
-    return (
-      <div
-        style={{
-          width: 220,
-          paddingTop: 10,
-          height: 40,
-          position: 'relative',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
-        <RaisedButton
-          disableTouchRipple
-          label={text}
-          labelColor={fontColor}
-          labelStyle={{ position: 'absolute', top: 0, left: 65 }}
-          backgroundColor={buttonColor}
-          style={{ borderRadius, width: 190, height: 40, boxShadow, zIndex }}
-          buttonStyle={{ borderRadius }}
-          onClick={this.props.onClick}
-        >
-          <Icon style={{ position: 'absolute', top: 9, left: 33, width: 24, height: 24, fill: iconColor }} />
-        </RaisedButton>
-      </div>
-    )
-  }
-}
+import { Divider } from 'material-ui'
+import { MenuButton } from '../common/Buttons'
 
 class NavDrawer extends React.Component {
   constructor (props) {
@@ -82,7 +41,7 @@ class NavDrawer extends React.Component {
 
         {
           ['home', 'photo', 'music', 'docs', 'video'].map(v => (
-            <MenuItem
+            <MenuButton
               key={v}
               icon={views[v].menuIcon()}
               text={views[v].menuName()}
@@ -98,7 +57,7 @@ class NavDrawer extends React.Component {
 
         {
           ['public'].map(v => (
-            <MenuItem
+            <MenuButton
               key={v}
               icon={views[v].menuIcon()}
               text={views[v].menuName()}
@@ -114,7 +73,7 @@ class NavDrawer extends React.Component {
 
         {
           ['usb'].map(v => (
-            <MenuItem
+            <MenuButton
               key={v}
               icon={views[v].menuIcon()}
               text={views[v].menuName()}

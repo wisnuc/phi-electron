@@ -706,7 +706,7 @@ class Home extends Base {
   }
 
   renderTitle ({ style }) {
-    const breadCrumbStyle = { color: 'var(--grey-text)' }
+    const breadCrumbStyle = { color: 'var(--grey-text)', width: '100%', display: 'flex', alignItems: 'center', flexWrap: 'wrap' }
     if (!this.state.listNavDir) return (<div />)
     return (
       <div style={style}>
@@ -717,8 +717,8 @@ class Home extends Base {
           { this.renderBreadCrumbItem({ style: breadCrumbStyle }) }
         </div>
         <div style={{ flexGrow: 1 }} />
-        <div style={{ marginRight: 15 }}>
-          Search
+        <div style={{ marginRight: 15, height: 51, paddingTop: 19 }}>
+          <Search fire={() => {}} />
         </div>
       </div>
     )
@@ -747,7 +747,7 @@ class Home extends Base {
           <RefreshIcon color={color} />
         </LIButton>
 
-        <div style={{ width: 52 }} />
+        <div style={{ flexGrow: 1 }} />
 
         <FlatButton
           onClick={this.download}
@@ -776,9 +776,13 @@ class Home extends Base {
           label={this.state.gridView ? i18n.__('List View') : i18n.__('Grid View')}
           icon={this.state.gridView ? <ListIcon color={color} /> : <GridIcon color={color} />}
         />
-        {/*
-        <Search fire={() => {}} />
-        */}
+
+        <FlatButton
+          label={i18n.__('Help')}
+          onClick={() => this.toggleDialog('createNewFolder')}
+          icon={<FileCreateNewFolder color={color} />}
+        />
+        <div style={{ width: 10 }} />
       </div>
     )
   }

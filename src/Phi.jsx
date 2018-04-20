@@ -3,8 +3,8 @@ import { ipcRenderer } from 'electron'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 
-// import Login from './login/NewLogin'
-import Login from './login/Login'
+import Login from './login/NewLogin'
+// import Login from './login/Login'
 import Navigation from './nav/Navigation'
 import Device from './common/device'
 

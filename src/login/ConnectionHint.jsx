@@ -1,7 +1,7 @@
 import i18n from 'i18n'
 import React from 'react'
 import { Divider } from 'material-ui'
-import { RaisedButton } from '../common/Buttons'
+import { RSButton } from '../common/Buttons'
 
 class ConnectionHint extends React.PureComponent {
   render () {
@@ -32,7 +32,7 @@ class ConnectionHint extends React.PureComponent {
         }
         <div style={{ height: 70, width: 'calc(100% - 40px)', display: 'flex', alignItems: 'center', padding: '0 20px' }}>
           <div style={{ flexGrow: 1 }} />
-          <RaisedButton label={i18n.__('Got It')} onClick={onRequestClose} />
+          <RSButton label={i18n.__('Got It')} onClick={onRequestClose} />
         </div>
       </div>
     )

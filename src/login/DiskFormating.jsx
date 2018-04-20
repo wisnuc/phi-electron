@@ -5,7 +5,7 @@ import { CircularProgress } from 'material-ui'
 import { teal500, pinkA200 } from 'material-ui/styles/colors'
 import CheckIcon from 'material-ui/svg-icons/navigation/check'
 import ErrorBox from '../common/ErrorBox'
-import { RaisedButton } from '../common/Buttons'
+import { RSButton } from '../common/Buttons'
 
 const primaryColor = teal500
 const accentColor = pinkA200
@@ -34,7 +34,7 @@ class ConfirmBind extends React.PureComponent {
         <div className="flexCenter">
           {
             status !== 'busy' &&
-            <RaisedButton
+            <RSButton
               label={status === 'success' ? i18n.__('OK') : i18n.__('Retry')}
               onClick={() => (status === 'success' ? onSuccess() : onRequestClose())}
               style={{ marginRight: 12 }}

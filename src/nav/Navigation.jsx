@@ -221,7 +221,7 @@ class NavViews extends React.Component {
 
   renderFileGroup () {
     const toolBarStyle = { height: 50, width: '100%', display: 'flex', alignItems: 'center', backgroundColor: '#e1edfe' }
-    const titleStyle = { height: 70, width: '100%', display: 'flex', alignItems: 'center' }
+    const titleStyle = { height: 70, width: '100%', display: 'flex', alignItems: 'center', backgroundColor: '#f3f8ff' }
     return (
       <div style={{ display: 'flex', alignItems: 'center', height: '100%', width: '100%', position: 'relative' }}>
         <div style={{ height: '100%', width: 220 }}>
