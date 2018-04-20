@@ -12,6 +12,7 @@ import Dialog from '../common/PureDialog'
 import ConnectionHint from './ConnectionHint'
 import ConfirmBind from './ConfirmBind'
 import ManageDisk from './ManageDisk'
+import LANLogin from './LANLogin'
 
 class DeviceSelect extends React.Component {
   constructor (props) {
@@ -29,12 +30,16 @@ class DeviceSelect extends React.Component {
     }
 
     this.slDevice = (dev) => {
-      this.setState({ dev, confirm: true })
-      setTimeout(() => this.setState({ confirm: false }), 2000)
+      if (dev) {
+        this.setState({ LANLogin: dev })
+      } else {
+        this.setState({ dev, confirm: true })
+        setTimeout(() => this.setState({ confirm: false }), 2000)
+      }
     }
 
     this.backToList = () => {
-      this.setState({ dev: null })
+      this.setState({ dev: null, LANLogin: null })
     }
 
     this.format = () => {
@@ -73,6 +78,7 @@ class DeviceSelect extends React.Component {
       >
         <div style={{ height: 56, fontSize: 16, color: '#525a60', display: 'flex', alignItems: 'center' }}>
           { stationName }
+          { dev.address }
         </div>
         <div style={{ height: 224 }} className="flexCenter">
           <img
@@ -259,6 +265,56 @@ class DeviceSelect extends React.Component {
     )
   }
 
+  renderLANLogin () {
+    const iconStyle = { width: 18, height: 18, color: '#31a0f5', padding: 0 }
+    const buttonStyle = { width: 26, height: 26, padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }
+    return (
+      <div style={{ width: 320, zIndex: 200, position: 'relative' }} className="paper" >
+        <div
+          style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 19 }}
+          className="title"
+        >
+          { i18n.__('LAN Login') }
+        </div>
+        <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
+        <div style={{ height: 180, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <img
+            style={{ width: 218, height: 121 }}
+            src="./assets/images/pic-offlinepassword.png"
+            alt=""
+          />
+        </div>
+        <div style={{ width: 282, margin: '-20px auto 0px auto', position: 'relative' }}>
+          <TextField
+            fullWidth
+            style={{ marginTop: 12 }}
+            hintText={i18n.__('LAN Password Hint')}
+            errorStyle={{ position: 'absolute', right: 0, top: 0 }}
+            type={this.state.showPwd ? 'text' : 'password'}
+            errorText={this.state.pwdError}
+            value={this.state.pwd}
+            onChange={e => this.onPassword(e.target.value)}
+            onKeyDown={this.onKeyDown}
+          />
+          {/* clear password */}
+          <div style={{ position: 'absolute', right: 4, top: 26 }}>
+            <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.clearPn}>
+              { this.state.showPwd ? <VisibilityOff /> : <Visibility /> }
+            </IconButton>
+          </div>
+        </div>
+        <div style={{ height: 20 }} />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <RRButton
+            label={i18n.__('Save')}
+            onClick={this.saveLANPwd}
+          />
+        </div>
+        <div style={{ height: 30 }} />
+      </div>
+    )
+  }
+
   render () {
     console.log('DeviceSelect', this.state, this.props)
     /* No Bound Device Hint */
@@ -277,7 +333,7 @@ class DeviceSelect extends React.Component {
       )
     }
 
-    const arr = [...this.state.list, ...this.state.list, ...this.state.list, ...this.state.list, ...this.state.list].slice(0, 5)
+    const arr = [...this.state.list]
 
     return (
       <div
@@ -321,6 +377,18 @@ class DeviceSelect extends React.Component {
               backToList={this.backToList}
               onRequestClose={() => this.setState({ confirm: false })}
             />
+          }
+        </Dialog>
+
+        {/* LANLogin */}
+        <Dialog open={!!this.state.LANLogin} onRequestClose={() => this.setState({ LANLogin: null })} modal >
+          {
+            !!this.state.LANLogin &&
+              <LANLogin
+                {...this.props}
+                dev={this.state.LANLogin}
+                onRequestClose={() => this.setState({ LANLogin: null })}
+              />
           }
         </Dialog>
       </div>

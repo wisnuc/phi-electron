@@ -809,6 +809,8 @@
   "Download Phi App Text": "下载斐迅NAS APP",
   "Network Connection Error": "网络连接失败",
   "Network Connection Error Text": "网络连接失败，请连接网络",
+  "Phi Login Failed Title": "登录失败",
+  "Phi Login Failed Text": "云账户登录失败，请检查网络，或继续管理本地离线设备",
 
   "==== login/DeviceSelect.jsx====": "",
   "Add Device": "添加设备",

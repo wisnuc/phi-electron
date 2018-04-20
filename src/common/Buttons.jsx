@@ -60,11 +60,9 @@ export class RSButton extends Button {
         : disabled ? 'solid 1px var(--light-grey-text)'
           : 'solid 1px #dddddd'
 
-    const boxShadow = disabled
-      ? '0px 5px 10px 0 rgba(122, 125, 128, 0.25)'
-      : this.state.hover
-        ? '0px 10px 15px 0 rgba(33, 110, 209, 0.2)'
-        : '0px 5px 10px 0 rgba(33, 110, 209, 0.25)'
+    const boxShadow = this.state.hover
+      ? `0px 2px 4px 0 ${alt ? 'rgba(164, 168, 171, 0.25)' : 'rgba(33, 110, 209, 0.25)'}`
+      : undefined
 
     const buttonStyle = Object.assign(
       {

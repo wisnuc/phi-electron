@@ -103,7 +103,7 @@ class TransitionItem extends React.Component {
           }}
         >
           <EventListener target="window" onKeyUp={this.handleKeyUp} />
-          <Paper zDepth={4}>
+          <Paper zDepth={0}>
             {this.props.children}
           </Paper>
         </div>
@@ -115,7 +115,7 @@ class TransitionItem extends React.Component {
             width: '100%',
             top: 0,
             left: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.541176)',
+            backgroundColor: 'rgba(0, 0, 0, 0.4)',
             zIndex: 1400
           }}
           onClick={this.handleTouchTapOverlay}

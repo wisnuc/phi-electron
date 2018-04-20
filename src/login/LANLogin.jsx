@@ -1,14 +1,14 @@
-import React from 'react'
 import i18n from 'i18n'
+import React from 'react'
 import { Checkbox, Divider, IconButton, TextField } from 'material-ui'
 import VisibilityOff from 'material-ui/svg-icons/action/visibility-off'
 import Visibility from 'material-ui/svg-icons/action/visibility'
 import CloseIcon from 'material-ui/svg-icons/navigation/close'
+import { BackIcon } from '../common/Svg'
 
-import Dialog from '../common/PureDialog'
-import { RRButton, FLButton, RSButton } from '../common/Buttons'
+import { RRButton } from '../common/Buttons'
 
-class PhiLogin extends React.Component {
+class LANLogin extends React.Component {
   constructor (props) {
     super(props)
 
@@ -41,7 +41,22 @@ class PhiLogin extends React.Component {
     this.togglePwd = () => this.setState({ showPwd: !this.state.showPwd })
 
     this.login = () => {
-      this.setState({ failed: true })
+      const device = this.props.selectedDevice
+      const user = this.props.selectedDevice.users.data[0]
+      const { uuid } = user
+      const password = 'w'
+      device.request('token', { uuid, password }, (err, data) => {
+        if (err) console.error(`login err: ${err}`)
+        else {
+          Object.assign(device.mdev, {
+            autologin: this.state.autologin,
+            saveToken: this.state.saveToken ? data : null,
+            user
+          })
+          this.props.ipcRenderer.send('LOGIN', device, user)
+          this.props.login()
+        }
+      })
     }
 
     this.reset = () => {
@@ -55,38 +70,31 @@ class PhiLogin extends React.Component {
   }
 
   componentDidMount () {
-  }
-
-  componentWillUnmount () {
-  }
-
-  renderFailed () {
-    return (
-      <div style={{ width: 300, zIndex: 100 }} className="paper" >
-        <div style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 20 }} className="title">
-          { i18n.__('Phi Login Failed Title') }
-        </div>
-        <Divider style={{ marginLeft: 20, width: 260 }} />
-        <div style={{ padding: 20, width: 'calc(100% - 40px)', color: '#888a8c' }}>
-          { i18n.__('Phi Login Failed Text') }
-        </div>
-        <div style={{ height: 31, display: 'flex', alignItems: 'center', padding: '0 20px 20px 0' }}>
-          <div style={{ flexGrow: 1 }} />
-          <RSButton label={i18n.__('Cancel')} onClick={this.reset} alt />
-          <div style={{ width: 10 }} />
-          <RSButton label={i18n.__('OK')} onClick={this.enterLANLogin} />
-        </div>
-      </div>
-    )
+    this.props.selectDevice(this.props.dev)
   }
 
   render () {
+    console.log('LANLogin', this.props, this.state)
     const iconStyle = { width: 18, height: 18, color: '#31a0f5', padding: 0 }
     const buttonStyle = { width: 26, height: 26, padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }
     return (
       <div style={{ width: 320, zIndex: 100 }} className="paper" >
         <div style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 20 }} className="title">
-          { i18n.__('Login') }
+          <IconButton
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: 5,
+              height: 32,
+              width: 32
+            }}
+            iconStyle={{ width: 22, height: 22, fill: '#525a60' }}
+            onClick={this.props.onRequestClose}
+          >
+            <BackIcon />
+          </IconButton>
+          { i18n.__('LAN Login') }
         </div>
         <Divider style={{ marginLeft: 20, width: 280 }} />
         <div style={{ height: 30 }} />
@@ -163,29 +171,10 @@ class PhiLogin extends React.Component {
             disabled={this.state.pnError || this.state.pwdError}
           />
         </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', position: 'relative', height: 50, color: '#85868c' }}>
-          <div style={{ width: '50%', textAlign: 'right' }}>
-            <FLButton
-              label={i18n.__('Sign Up')}
-            />
-          </div>
-          <div style={{ width: 1, height: 16, backgroundColor: 'rgba(0,0,0,.38)' }} />
-          <div style={{ width: '50%', textAlign: 'left' }}>
-            <FLButton
-              label={i18n.__('Forget Password')}
-              style={{ marginLeft: 8 }}
-            />
-          </div>
-        </div>
-
-        {/* Phi Login Failed */}
-        <Dialog open={!!this.state.failed} onRequestClose={() => this.setState({ failed: false })} modal >
-          { !!this.state.failed && this.renderFailed() }
-        </Dialog>
+        <div style={{ height: 30 }} />
       </div>
     )
   }
 }
 
-export default PhiLogin
+export default LANLogin
