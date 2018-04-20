@@ -166,6 +166,7 @@ class NavViews extends React.Component {
     return (
       <div
         style={{
+          WebkitAppRegion: 'drag',
           display: 'flex',
           alignItems: 'center',
           height: HEADER_HEIGHT,
@@ -185,6 +186,7 @@ class NavViews extends React.Component {
             <div
               key={text}
               style={{
+                WebkitAppRegion: 'no-drag',
                 width: 130,
                 paddingTop: 8,
                 height: 102,
@@ -304,7 +306,7 @@ class NavViews extends React.Component {
         { this.renderHeader() }
 
         {/* Account */}
-        <div style={{ position: 'fixed', top: 12, right: 147, height: 36 }}>
+        <div style={{ position: 'fixed', top: 12, right: 147, height: 36, WebkitAppRegion: 'no-drag' }}>
           <Account />
         </div>
 

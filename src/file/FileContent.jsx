@@ -361,7 +361,7 @@ class FileContent extends React.Component {
 
     /* got list */
     return (
-      <div style={{ width: '100%', height: '100%' }}>
+      <div style={{ width: '100%', height: '100%', backgroundColor: '#f3f8ff' }}>
         <EventListener target="window" onResize={this.handleResize} />
         {/* render list */}
         {
