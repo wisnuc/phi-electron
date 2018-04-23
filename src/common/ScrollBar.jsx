@@ -79,11 +79,11 @@ class ScrollBar extends React.PureComponent {
     const { width, height, allHeight } = this.props
     const barH = Math.max(height * height / allHeight, 48) || 48
     const barStyle = {
+      position: 'absolute',
       top: 0,
       right: 0,
-      width: 8,
+      width: 3,
       borderRadius: 4,
-      position: 'absolute',
       transition: 'opacity 225ms',
       opacity: this.state.hover ? 1 : 0,
       display: barH < height ? '' : 'none'
@@ -105,7 +105,7 @@ class ScrollBar extends React.PureComponent {
         {/* scrollBar background */}
         <div
           ref={ref => (this.refBg = ref)}
-          style={Object.assign({ backgroundColor: '#EEEEEE', height }, barStyle)}
+          style={Object.assign({ backgroundColor: 'rgba(0,0,0,.1)', height }, barStyle)}
           onMouseMove={this.onHover}
         />
         {/* scrollBar */}
@@ -114,7 +114,7 @@ class ScrollBar extends React.PureComponent {
           onMouseMove={this.onHover}
           onMouseDown={this.onMouseDown}
           ref={ref => (this.refBar = ref)}
-          style={Object.assign({ backgroundColor: '#BDBDBD', height: barH }, barStyle)}
+          style={Object.assign({ backgroundColor: '#4a95f2', height: barH }, barStyle)}
         />
       </div>
     )

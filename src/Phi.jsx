@@ -41,6 +41,7 @@ class Fruitmix extends React.Component {
       theme: defaultTheme,
 
       nav: this.nav.bind(this),
+      refreshMdns: this.refreshMdns.bind(this),
       login: this.login.bind(this),
       selectDevice: this.selectDevice.bind(this),
       setPalette: this.setPalette.bind(this),
@@ -85,15 +86,19 @@ class Fruitmix extends React.Component {
   }
 
   nav (view) {
+    this.refreshMdns ()
+    this.setState({ view })
+  }
+
+  refreshMdns () {
     global.mdns.scan()
+    this.selectDevice({ address: '' })
     setTimeout(() => {
       const mdns = adjustSeq(global.mdnsStore)
       if (mdns.length > 0) {
         this.selectDevice(mdns[0])
       }
     }, 1000)
-    this.selectDevice({ address: '' })
-    this.setState({ view })
   }
 
   login () {

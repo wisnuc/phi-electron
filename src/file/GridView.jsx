@@ -65,7 +65,7 @@ class Row extends React.Component {
                               width={80}
                             />
                           ) : renderFileIcon(entry.name, entry.metadata, 50)
-                        ) : <FileFolder />
+                        ) : <FileFolder style={{ width: 50, height: 50, fill: '#ffa93e' }} />
                     }
                   </div>
 
@@ -227,10 +227,6 @@ class GridView extends React.Component {
                   rowSum={mapData.length}
                   isScrolling={isScrolling}
                   list={mapData[index]}
-                  onRowTouchTap={this.props.onRowTouchTap}
-                  onRowMouseEnter={this.props.onRowMouseEnter}
-                  onRowMouseLeave={this.props.onRowMouseLeave}
-                  onRowDoubleClick={this.props.onRowDoubleClick}
                 />
               </div>
             )
@@ -239,13 +235,14 @@ class GridView extends React.Component {
               <div
                 role="presentation"
                 onMouseDown={e => this.props.selectStart(e)}
-                onMouseUp={e => this.props.onRowTouchTap(e, -1)}
+                onMouseUp={e => this.props.onRowClick(e, -1)}
+                onContextMenu={e => this.props.onRowContextMenu(e, -1)}
                 onMouseMove={e => this.props.selectGrid(e, this.getStatus())}
               >
                 <ScrollBar
                   ref={ref => (this.ListRef = ref)}
                   allHeight={rowHeightSum}
-                  height={height - 24}
+                  height={height - 8}
                   width={width}
                   estimatedRowSize={estimatedRowSize}
                   rowHeight={rowHeight}

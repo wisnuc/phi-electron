@@ -837,6 +837,9 @@
   "LAN Password Hint": "请输入离线密码",
   "Password Again Hint": "确认密码",
   "Save": "保存",
+  "User Maint Text": "请联系管理员检查磁盘",
+  "User Maint Title": "发现磁盘变化",
+  "LAN Login": "离线登录",
 
   "==== login/DiskFormating.jsx ====": "",
   "Disk Format Busy Text": "磁盘格式化进行中，请稍候...",

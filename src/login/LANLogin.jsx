@@ -41,19 +41,19 @@ class LANLogin extends React.Component {
     this.togglePwd = () => this.setState({ showPwd: !this.state.showPwd })
 
     this.login = () => {
-      const device = this.props.selectedDevice
       const user = this.props.selectedDevice.users.data[0]
       const { uuid } = user
       const password = 'w'
-      device.request('token', { uuid, password }, (err, data) => {
+      this.props.selectedDevice.request('token', { uuid, password }, (err, data) => {
         if (err) console.error(`login err: ${err}`)
         else {
-          Object.assign(device.mdev, {
+          Object.assign(this.props.selectedDevice.mdev, {
             autologin: this.state.autologin,
             saveToken: this.state.saveToken ? data : null,
             user
           })
-          this.props.ipcRenderer.send('LOGIN', device, user)
+          console.log('device', this.props.selectedDevice)
+          this.props.ipcRenderer.send('LOGIN', this.props.selectedDevice, user)
           this.props.login()
         }
       })

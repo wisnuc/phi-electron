@@ -247,6 +247,18 @@ class NavViews extends React.Component {
           </div>
         </div>
 
+        {/* shadow of FileMenu */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 50,
+            left: 220,
+            width: 10,
+            height: '100%',
+            backgroundImage: 'linear-gradient(to right, rgba(23,99,207,.03), #f3f8ff)'
+          }}
+        />
+
         {/* drag item */}
         { this.views[this.state.nav].renderDragItems() }
       </div>

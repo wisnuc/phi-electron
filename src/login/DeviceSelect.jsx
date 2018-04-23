@@ -1,11 +1,11 @@
 import React from 'react'
 import i18n from 'i18n'
-import { Divider, IconButton, TextField } from 'material-ui'
+import { Divider, IconButton, TextField, CircularProgress } from 'material-ui'
 import VisibilityOff from 'material-ui/svg-icons/action/visibility-off'
 import Visibility from 'material-ui/svg-icons/action/visibility'
 import { AutoSizer } from 'react-virtualized'
 import ScrollBar from '../common/ScrollBar'
-import { RRButton } from '../common/Buttons'
+import { RRButton, RSButton } from '../common/Buttons'
 import { RefreshIcon, HelpIcon } from '../common/Svg'
 import { SIButton } from '../common/IconButton'
 import Dialog from '../common/PureDialog'
@@ -22,18 +22,22 @@ class DeviceSelect extends React.Component {
       dev: null,
       list: null,
       confirm: false,
+      loading: true,
       format: '' // 'busy', 'success', 'error'
     }
 
     this.enterSelectDevice = () => {
-      this.setState({ list: this.props.mdns })
+      this.setState({ list: this.props.mdns, loading: true })
+      this.timer = setTimeout(() => this.setState({ loading: false }), 2000)
     }
 
     this.slDevice = (dev) => {
-      if (dev) {
+      if (dev.address === '10.10.9.153') { // LAN Login
         this.setState({ LANLogin: dev })
+      } else if (dev.address === '10.10.9.251') { // User Maint
+        this.setState({ UserMaint: true })
       } else {
-        this.setState({ dev, confirm: true })
+        this.setState({ dev, confirm: true }) // First Boot, Bind Device and Formating Disk
         setTimeout(() => this.setState({ confirm: false }), 2000)
       }
     }
@@ -46,6 +50,20 @@ class DeviceSelect extends React.Component {
       this.setState({ format: 'busy' })
       setTimeout(() => this.setState({ format: 'error' }), 2000)
       setTimeout(() => this.setState({ format: 'success' }), 4000)
+    }
+
+    this.refresh = () => {
+      this.setState({
+        dev: null,
+        list: null,
+        confirm: false,
+        loading: true,
+        format: ''
+      })
+      this.props.refreshMdns()
+
+      clearTimeout(this.refreshHandle)
+      this.refreshHandle = setTimeout(() => this.enterSelectDevice(), 1500)
     }
 
     this.onFormatSuccess = () => {
@@ -315,9 +333,50 @@ class DeviceSelect extends React.Component {
     )
   }
 
+  renderUserMaint () {
+    return (
+      <div style={{ width: 320, zIndex: 200, position: 'relative' }} className="paper" >
+        <div
+          style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 19 }}
+          className="title"
+        >
+          { i18n.__('User Maint Title') }
+        </div>
+        <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
+        <div style={{ height: 180, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <img
+            style={{ width: 207, height: 117 }}
+            src="./assets/images/pic-diskchange.png"
+            alt=""
+          />
+        </div>
+        <div style={{ width: '100%', textAlign: 'center', color: '#fa5353' }}>
+          { i18n.__('User Maint Text')}
+        </div>
+        <div style={{ height: 70, width: 'calc(100% - 40px)', display: 'flex', alignItems: 'center', padding: '0 20px' }}>
+          <div style={{ flexGrow: 1 }} />
+          <RSButton label={i18n.__('Got It')} onClick={() => this.setState({ UserMaint: false })} />
+        </div>
+      </div>
+    )
+  }
+
+  renderLoading () {
+    return (
+      <div style={{ width: '100%', height: '100%' }} className="flexCenter">
+        <CircularProgress size={64} thickness={3} />
+      </div>
+    )
+  }
+
+  componentWillUnmount () {
+    clearInterval(this.timer)
+  }
+
   render () {
     console.log('DeviceSelect', this.state, this.props)
-    /* No Bound Device Hint */
+
+    /* No Bound Device Hint TODO */
     if (!this.state.list) return this.renderNoBound()
 
     if (this.state.LANPwd) return this.renderLANPwd()
@@ -361,7 +420,7 @@ class DeviceSelect extends React.Component {
         <Divider style={{ marginLeft: 30, width: 'calc(100% - 60px)' }} />
 
         <div style={{ width: '100%', height: 'calc(100% - 50px)' }} >
-          { arr.length ? this.renderDevs(arr) : this.renderNoDev() }
+          { this.state.loading ? this.renderLoading() : arr.length ? this.renderDevs(arr) : this.renderNoDev() }
         </div>
 
         {/* Connection Hint */}
@@ -378,6 +437,11 @@ class DeviceSelect extends React.Component {
               onRequestClose={() => this.setState({ confirm: false })}
             />
           }
+        </Dialog>
+
+        {/* Device boot failed, due to disk changed */}
+        <Dialog open={!!this.state.UserMaint} onRequestClose={() => this.setState({ UserMaint: null })} modal >
+          { !!this.state.UserMaint && this.renderUserMaint() }
         </Dialog>
 
         {/* LANLogin */}
