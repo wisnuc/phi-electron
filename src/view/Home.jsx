@@ -3,21 +3,12 @@ import React from 'react'
 import { TweenMax } from 'gsap'
 import { ipcRenderer } from 'electron'
 import { IconButton, Divider, CircularProgress, Avatar } from 'material-ui'
-import FileFolder from 'material-ui/svg-icons/file/folder'
-import FileCreateNewFolder from 'material-ui/svg-icons/file/create-new-folder'
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu'
-import RefreshIcon from 'material-ui/svg-icons/navigation/refresh'
-import ListIcon from 'material-ui/svg-icons/action/list'
-import GridIcon from 'material-ui/svg-icons/action/view-module'
-import DownloadIcon from 'material-ui/svg-icons/file/file-download'
 import InfoIcon from 'material-ui/svg-icons/action/info'
-import DeleteIcon from 'material-ui/svg-icons/action/delete'
 import CopyIcon from 'material-ui/svg-icons/content/content-copy'
 import MoveIcon from 'material-ui/svg-icons/content/forward'
 import ShareIcon from 'material-ui/svg-icons/social/person-add'
 import EditIcon from 'material-ui/svg-icons/editor/border-color'
-import BackwardIcon from 'material-ui/svg-icons/navigation/arrow-back'
-import ForwardIcon from 'material-ui/svg-icons/navigation/arrow-forward'
 
 import Base from './Base'
 import FileDetail from '../file/FileDetail'
@@ -33,7 +24,7 @@ import FlatButton from '../common/FlatButton'
 import MenuItem from '../common/MenuItem'
 import sortByType from '../common/sort'
 import { BreadCrumbItem, BreadCrumbSeparator } from '../common/BreadCrumb'
-import { UploadFile, UploadFold } from '../common/Svg'
+import { UploadFile, UploadFold, BackwardIcon, ForwardIcon, RefreshAltIcon, DownloadIcon, DeleteIcon, NewFolderIcon, ListIcon, GridIcon, HelpIcon, AllFileIcon } from '../common/Svg'
 import renderFileIcon from '../common/renderFileIcon'
 import { xcopyMsg } from '../common/msg'
 import Search from '../common/Search'
@@ -550,7 +541,7 @@ class Home extends Base {
   }
 
   menuIcon () {
-    return FileFolder
+    return AllFileIcon
   }
 
   appBarStyle () {
@@ -599,7 +590,7 @@ class Home extends Base {
           <Avatar style={{ backgroundColor: 'white', width: 36, height: 36 }}>
             {
               this.entry.type === 'directory'
-                ? <FileFolder style={{ color: 'rgba(0,0,0,0.54)', width: 24, height: 24 }} />
+                ? <AllFileIcon style={{ width: 24, height: 24 }} />
                 : this.entry.type === 'file'
                   ? renderFileIcon(this.entry.name, this.entry.metadata, 24)
                   : <div />
@@ -731,20 +722,20 @@ class Home extends Base {
     const { select } = this.state
     const itemSelected = select && select.selected && select.selected.length
     const color = '#7d868f'
-    const altColor = itemSelected ? '#7d868f' : '#7d868f'
+    const iconStyle = { fill: color, width: 20, height: 20 }
     return (
       <div style={style}>
-        <div style={{ width: 20 }} />
+        <div style={{ width: 24 }} />
         <LIButton onClick={this.back} tooltip={noBack ? null : i18n.__('Backward')} disabled={noBack}>
           <BackwardIcon color={color} />
         </LIButton>
-        <div style={{ width: 14 }} />
+        <div style={{ width: 24 }} />
         <LIButton onClick={this.forward} tooltip={noForward ? null : i18n.__('Forward')} disabled={noForward}>
           <ForwardIcon color={color} />
         </LIButton>
-        <div style={{ width: 14 }} />
+        <div style={{ width: 24 }} />
         <LIButton onClick={() => this.refresh()} tooltip={i18n.__('Refresh')} >
-          <RefreshIcon color={color} />
+          <RefreshAltIcon color={color} />
         </LIButton>
 
         <div style={{ flexGrow: 1 }} />
@@ -752,8 +743,9 @@ class Home extends Base {
         <FlatButton
           onClick={this.download}
           label={i18n.__('Download')}
+          labelStyle={{ fontSize: 14, marginLeft: 4 }}
           disabled={!itemSelected}
-          icon={<DownloadIcon color={altColor} />}
+          icon={<DownloadIcon style={iconStyle} />}
         />
 
         <FileUploadButton upload={this.upload} />
@@ -761,26 +753,30 @@ class Home extends Base {
         <FlatButton
           onClick={() => this.toggleDialog('delete')}
           label={i18n.__('Delete')}
+          labelStyle={{ fontSize: 14, marginLeft: 4 }}
           disabled={!itemSelected}
-          icon={<DeleteIcon color={altColor} />}
+          icon={<DeleteIcon style={iconStyle} />}
         />
 
         <FlatButton
           label={i18n.__('Create New Folder')}
+          labelStyle={{ fontSize: 14, marginLeft: 4 }}
           onClick={() => this.toggleDialog('createNewFolder')}
-          icon={<FileCreateNewFolder color={color} />}
+          icon={<NewFolderIcon style={iconStyle} />}
         />
 
         <FlatButton
           onClick={() => this.toggleDialog('gridView')}
           label={this.state.gridView ? i18n.__('List View') : i18n.__('Grid View')}
-          icon={this.state.gridView ? <ListIcon color={color} /> : <GridIcon color={color} />}
+          labelStyle={{ fontSize: 14, marginLeft: 4 }}
+          icon={this.state.gridView ? <ListIcon style={iconStyle} /> : <GridIcon style={iconStyle} />}
         />
 
         <FlatButton
           label={i18n.__('Help')}
+          labelStyle={{ fontSize: 14, marginLeft: 4 }}
           onClick={() => this.toggleDialog('createNewFolder')}
-          icon={<FileCreateNewFolder color={color} />}
+          icon={<HelpIcon style={iconStyle} />}
         />
         <div style={{ width: 10 }} />
       </div>
@@ -933,7 +929,7 @@ class Home extends Base {
               <div>
                 <MenuItem
                   primaryText={i18n.__('Create New Folder')}
-                  leftIcon={<FileCreateNewFolder style={{ height: 20, width: 20, marginTop: 6 }} />}
+                  leftIcon={<NewFolderIcon style={{ height: 20, width: 20, marginTop: 6 }} />}
                   onClick={() => this.toggleDialog('createNewFolder')}
                 />
                 <div style={{ height: 8 }} />

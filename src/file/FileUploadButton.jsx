@@ -1,9 +1,8 @@
 import i18n from 'i18n'
 import React from 'react'
 import { Popover, Menu, MenuItem } from 'material-ui'
-import UploadIcon from 'material-ui/svg-icons/file/file-upload'
 import FlatButton from '../common/FlatButton'
-import { UploadFile, UploadFold } from '../common/Svg'
+import { UploadFile, UploadFold, UploadIcon } from '../common/Svg'
 
 class FileUploadButton extends React.Component {
   constructor (props) {
@@ -22,13 +21,15 @@ class FileUploadButton extends React.Component {
   }
 
   render () {
-    const color = 'rgba(0,0,0,.54)'
+    const color = '#7d868f'
+    const iconStyle = { fill: color, width: 20, height: 20 }
     return (
       <div>
         <FlatButton
           onClick={this.openPop}
           label={i18n.__('Upload')}
-          icon={<UploadIcon color={color} />}
+          labelStyle={{ fontSize: 14, marginLeft: 4 }}
+          icon={<UploadIcon style={iconStyle} />}
         />
         <Popover
           open={this.state.open}

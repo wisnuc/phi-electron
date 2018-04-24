@@ -52,10 +52,13 @@ class Tooltip extends React.PureComponent {
     }
 
     return (
-      <div style={{ width: '100%', height: '100%' }}>
-        <div style={style} {...listeners} >
-          { this.props.tooltip }
-        </div>
+      <div>
+        {
+          this.props.tooltip &&
+          <div style={style} {...listeners} >
+            { this.props.tooltip }
+          </div>
+        }
         { React.cloneElement(this.props.children, listeners) }
       </div>
     )

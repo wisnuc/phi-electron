@@ -11,6 +11,8 @@ export class Button extends React.PureComponent {
 
     this.onMouseDown = () => this.setState({ pressed: true })
 
+    this.onMouseUp = () => this.setState({ pressed: false })
+
     this.onMouseMove = () => this.setState({ hover: true })
 
     this.onMouseLeave = () => this.setState({ pressed: false, hover: false })
@@ -22,6 +24,7 @@ export class Button extends React.PureComponent {
     }
 
     this.funcs = {
+      onMouseUp: this.onMouseUp,
       onMouseDown: this.onMouseDown,
       onMouseMove: this.onMouseMove,
       onMouseLeave: this.onMouseLeave,
@@ -47,13 +50,8 @@ export class RSButton extends Button {
 
     const backgroundColor = alt ? '#FFF'
       : disabled ? '#c4c5cc'
-        : this.state.pressed ? undefined
+        : this.state.pressed ? '#2588f2'
           : 'var(--dodger-blue)'
-
-    const backgroundBlendMode = !alt && this.state.pressed ? 'overlay' : undefined
-    const backgroundImage = alt || disabled || !this.state.pressed
-      ? undefined
-      : 'linear-gradient(var(--dodger-blue), var(--dodger-blue)), linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25))'
 
     const border = !alt ? undefined
       : this.state.pressed ? 'solid 1px var(--dodger-blue)'
@@ -72,9 +70,7 @@ export class RSButton extends Button {
         border,
         boxShadow,
         borderRadius,
-        backgroundColor,
-        backgroundImage,
-        backgroundBlendMode
+        backgroundColor
       },
       style
     )
@@ -96,13 +92,9 @@ export class RRButton extends Button {
     const width = 240
     const cursor = disabled ? 'default' : 'pointer'
     const borderRadius = height / 2
-    const backgroundColor = disabled ? '#a8acaf' : this.state.pressed ? undefined : alt ? '#44c468' : 'var(--dodger-blue)'
-    const backgroundBlendMode = this.state.pressed ? 'overlay' : undefined
-    const backgroundImage = disabled || !this.state.pressed
-      ? undefined
-      : alt
-        ? 'linear-gradient(#44c468, #44c468), linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25))'
-        : 'linear-gradient(var(--dodger-blue), var(--dodger-blue)), linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25))'
+    const backgroundColor = disabled ? 'var(--light-grey-text)'
+      : alt ? (this.state.pressed ? '#33b54e' : '#44c468')
+        : (this.state.pressed ? '#2588f2' : 'var(--dodger-blue)')
 
     const boxShadow = disabled
       ? '0px 5px 10px 0 rgba(122, 125, 128, 0.25)'
@@ -110,10 +102,7 @@ export class RRButton extends Button {
         ? `0px 10px 15px 0 ${alt ? 'rgba(47, 162, 79, 0.2)' : 'rgba(33, 110, 209, 0.2)'}`
         : `0px 5px 10px 0 ${alt ? 'rgba(47, 162, 79, 0.25)' : 'rgba(33, 110, 209, 0.25)'}`
 
-    const buttonStyle = Object.assign(
-      { width, height, cursor, borderRadius, backgroundColor, boxShadow, backgroundBlendMode, backgroundImage },
-      style
-    )
+    const buttonStyle = Object.assign({ width, height, cursor, borderRadius, backgroundColor, boxShadow }, style)
     const textStyle = Object.assign({ color: '#FFF', fontSize: 16 }, labelStyle)
 
     return (
@@ -233,6 +222,63 @@ export class MenuButton extends Button {
         >
           <Icon style={{ margin: '0 30px', width: 24, height: 24, fill: iconColor }} />
           <div style={{ color: textColor }}> { text } </div>
+        </div>
+      </div>
+    )
+  }
+}
+
+/* Larger Icon Button */
+export class LIButton extends Button {
+  render () {
+    const { style, iconStyle, disabled, children } = this.props
+
+    const cursor = disabled ? 'default' : 'pointer'
+    const fill = !disabled && (this.state.hover || this.state.pressed) ? 'var(--dodger-blue)' : ' var(--grey-text)'
+    const opacity = disabled ? 0.5 : 1
+    const buttonStyle = Object.assign({ width: 32, height: 32, padding: 4, cursor }, style)
+    const iStyle = Object.assign({ width: 24, height: 24, fill, opacity }, iconStyle)
+
+    return (
+      <div {...this.funcs} style={buttonStyle} className="flexCenter">
+        { React.cloneElement(children, { style: iStyle }) }
+      </div>
+    )
+  }
+}
+
+/* Small Icon Button */
+export class SIButton extends Button {
+  render () {
+    const { style, icon, iconStyle, disabled } = this.props
+
+    const cursor = disabled ? 'default' : 'pointer'
+    const fill = !disabled && (this.state.hover || this.state.pressed) ? 'var(--dodger-blue)' : ' var(--grey-text)'
+    const buttonStyle = Object.assign({ width: 24, height: 24, padding: 2, cursor }, style)
+    const iStyle = Object.assign({ width: 20, height: 20, fill }, iconStyle)
+
+    return (
+      <div {...this.funcs} style={buttonStyle} className="flexCenter">
+        <icon style={iStyle} />
+      </div>
+    )
+  }
+}
+
+/* IconButton with label */
+export class ILButton extends Button {
+  render () {
+    const { style, icon, iconStyle, disabled } = this.props
+
+    const cursor = disabled ? 'default' : 'pointer'
+    const fill = this.state.hover || this.state.pressed ? 'var(--dodger-blue)' : ' var(--grey-text)'
+    const buttonStyle = Object.assign({ width: 32, height: 32, padding: 4, cursor, display: 'inline-block' }, style)
+    const iStyle = Object.assign({ width: 24, height: 24, fill }, iconStyle)
+
+    return (
+      <div {...this.funcs} style={buttonStyle} >
+        <div className="flexCenter">
+          <icon style={iStyle} />
         </div>
       </div>
     )

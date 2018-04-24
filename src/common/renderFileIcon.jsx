@@ -1,8 +1,7 @@
 import React from 'react'
-import PhotoIcon from 'material-ui/svg-icons/image/photo'
-import EditorInsertDriveFile from 'material-ui/svg-icons/editor/insert-drive-file'
 import {
-  TXTIcon, WORDIcon, EXCELIcon, PPTIcon, PDFIcon, VideoIcon, AudioIcon, JPGIcon, PNGIcon, GIFIcon, MOVIcon, MP4Icon
+  PhotoIcon, TXTIcon, WORDIcon, EXCELIcon, PPTIcon, PDFIcon, VideoIcon, AudioIcon,
+  JPGIcon, PNGIcon, GIFIcon, MOVIcon, MP4Icon, TypeUnknownIcon
 } from '../common/Svg'
 
 const renderFileIcon = (name, metadata, setSize, dark, white) => {
@@ -31,7 +30,7 @@ const renderFileIcon = (name, metadata, setSize, dark, white) => {
     JPG: { Icon: PhotoIcon, color: '#ea4335' },
     PNG: { Icon: PhotoIcon, color: '#ea4335' },
     GIF: { Icon: PhotoIcon, color: '#ea4335' },
-    OTHER: { Icon: EditorInsertDriveFile, color: dark ? '#FFFFFF' : 'rgba(0,0,0,0.54)' }
+    OTHER: { Icon: TypeUnknownIcon, color: dark ? '#FFFFFF' : 'rgba(0,0,0,0.54)' }
   }
 
   let type = extension.toUpperCase()

@@ -4,12 +4,12 @@ import Tooltip from '../common/Tooltip'
 
 const styles = {
   largeIcon: {
-    width: 30,
-    height: 30
+    width: 20,
+    height: 20
   },
   largeButton: {
-    width: 42,
-    height: 42,
+    width: 32,
+    height: 32,
     padding: 6,
     display: 'flex',
     alignItems: 'center',
@@ -20,9 +20,9 @@ const styles = {
     height: 20
   },
   smallButton: {
-    width: 32,
-    height: 32,
-    padding: 6,
+    width: 24,
+    height: 24,
+    padding: 2,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
