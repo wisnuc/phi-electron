@@ -9,8 +9,8 @@ import RenderListByRow from './RenderListByRow'
 import GridView from './GridView'
 
 /* Draw Select Box */
-const TOP = 296
-const LEFT = 184
+const TOP = 230
+const LEFT = 220
 
 class FileContent extends React.Component {
   constructor (props) {
@@ -21,6 +21,8 @@ class FileContent extends React.Component {
       loading: false,
       preview: false
     }
+
+    this.data = {}
 
     /* cathc key action */
     this.keyDown = (e) => {
@@ -230,7 +232,7 @@ class FileContent extends React.Component {
 
     /* calc rows should be selected */
     this.calcGrid = (data) => {
-      const { scrollTop, allHeight, indexHeightSum, mapData } = data
+      const { scrollTop, allHeight, mapData } = data
       const s = this.refSelectBox.style
       const top = parseInt(s.top, 10)
       const height = parseInt(s.height, 10)
@@ -242,12 +244,12 @@ class FileContent extends React.Component {
         .from({ length }, (v, i) => i)
         .filter((v, i) => {
           const lineNum = mapData[i]
-          const lineHeight = allHeight[lineNum] // 112, 64, 248, 200
-          const head = (lineNum > 0 ? indexHeightSum[lineNum - 1] + ((lineHeight === 248) && 48) : 48) + 24 - scrollTop
-          const tail = head + (lineHeight < 200 ? 48 : 184)
+          const lineHeight = allHeight[lineNum] // 150
+          const head = lineNum * lineHeight - scrollTop
+          const tail = head + 150
           if (!(tail > top) || !(head < top + height)) return false
-          const start = (i - mapData.findIndex(va => va === lineNum)) * 200 + 48
-          const end = start + 180
+          const start = (i - mapData.findIndex(va => va === lineNum)) * 150 + 10
+          const end = start + 144
           /* grid.tail > top && grid.head < top + height && grid.end > left && grid.start < left + width */
           return ((end > left) && (start < left + width))
         })

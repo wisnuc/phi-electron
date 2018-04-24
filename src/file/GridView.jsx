@@ -1,10 +1,10 @@
 import React from 'react'
-import FileFolder from 'material-ui/svg-icons/file/folder'
 import { AutoSizer } from 'react-virtualized'
 
 import Thumb from './Thumb'
 import ScrollBar from '../common/ScrollBar'
 import renderFileIcon from '../common/renderFileIcon'
+import { AllFileIcon } from '../common/Svg'
 
 class Row extends React.Component {
   shouldComponentUpdate (nextProps) {
@@ -52,25 +52,27 @@ class Row extends React.Component {
                   <div
                     draggable={false}
                     className="flexCenter"
-                    style={{ height: 80, width: 80, margin: selected ? '11px auto' : '12px auto', overflow: 'hidden' }}
+                    style={{ height: 80, width: 108, margin: selected ? '15px auto 0 auto' : '16px auto 0 auto', overflow: 'hidden' }}
                   >
                     {
                       entry.type === 'file'
                         ? ((rowSum < 500 || !isScrolling) && entry.metadata
                           ? (
                             <Thumb
+                              full
+                              bgColor="#f3f8ff"
                               digest={entry.hash}
                               ipcRenderer={this.props.ipcRenderer}
                               height={80}
-                              width={80}
+                              width={108}
                             />
                           ) : renderFileIcon(entry.name, entry.metadata, 50)
-                        ) : <FileFolder style={{ width: 50, height: 50, fill: '#ffa93e' }} />
+                        ) : <AllFileIcon style={{ width: 50, height: 50, fill: '#ffa93e' }} />
                     }
                   </div>
 
                   {/* file name */}
-                  <div style={{ height: selected ? 38 : 36, color: 'var(--dark-text)' }} className="flexCenter" >
+                  <div style={{ height: 40, color: 'var(--dark-text)', paddingBottom: 4 }} className="flexCenter" >
                     <div
                       style={{
                         overflow: 'hidden',
@@ -155,7 +157,6 @@ class GridView extends React.Component {
       const MAX = Math.floor((width - 0) / 144) - 1
       let MaxItem = 0
       let lineIndex = 0
-      let lastType = 'diriectory'
       this.allHeight = []
       this.rowHeightSum = 0
       this.indexHeightSum = []
@@ -164,7 +165,7 @@ class GridView extends React.Component {
       const firstFileIndex = entries.findIndex(item => item.type === 'file')
       this.mapData = []
       entries.forEach((entry, index) => {
-        if (MaxItem === 0 || lastType !== entry.type) {
+        if (MaxItem === 0) {
           /* add new row */
           this.mapData.push({
             first: (!index || index === firstFileIndex),
@@ -173,7 +174,6 @@ class GridView extends React.Component {
           })
 
           MaxItem = MAX
-          lastType = entry.type
           lineIndex += 1
         } else {
           MaxItem -= 1

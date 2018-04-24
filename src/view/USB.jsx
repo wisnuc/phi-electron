@@ -16,7 +16,7 @@ class USB extends Home {
   menuIcon () {
     const Pic = props => (
       <div {...props}>
-        <img src="./assets/images/ic-usbstorage.png" alt="" width={22} height={26} />
+        <img src="./assets/images/ic-usbstorage.png" alt="" width={22} height={26} style={{ marginLeft: 4 }} />
       </div>
     )
     return Pic
