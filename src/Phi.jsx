@@ -86,7 +86,7 @@ class Fruitmix extends React.Component {
   }
 
   nav (view) {
-    this.refreshMdns ()
+    this.refreshMdns()
     this.setState({ view })
   }
 
@@ -122,23 +122,16 @@ class Fruitmix extends React.Component {
         break
     }
 
+    const nodrag = { position: 'fixed', top: 0, WebkitAppRegion: 'no-drag' }
+
     return (
       <MuiThemeProvider muiTheme={this.state.theme}>
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%' }}>
           { view }
-          {/* WebkitAppRegion */}
-          <div
-            style={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              height: 12,
-              width: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              WebkitAppRegion: 'drag'
-            }}
-          />
+          {/* No WebkitAppRegion */}
+          <div style={Object.assign({ left: 0, height: 5, width: '100%' }, nodrag)} />
+          <div style={Object.assign({ left: 0, height: 110, width: 5 }, nodrag)} />
+          <div style={Object.assign({ right: 0, height: 110, width: 5 }, nodrag)} />
         </div>
       </MuiThemeProvider>
     )

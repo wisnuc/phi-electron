@@ -175,12 +175,12 @@ class FileContent extends React.Component {
       }
 
       if (dy > 0) s.height = `${dy}px`
-      else if (event.clientY - TOP > 48) {
+      else if (event.clientY - TOP > 0) {
         s.height = `${-dy}px`
         s.top = `${event.clientY - TOP}px`
       } else {
-        s.height = `${this.selectBox.y - TOP - 48}px`
-        s.top = '48px'
+        s.height = `${this.selectBox.y - TOP}px`
+        s.top = '0px'
       }
     }
 
@@ -232,6 +232,7 @@ class FileContent extends React.Component {
 
     /* calc rows should be selected */
     this.calcGrid = (data) => {
+      if (!data) return
       const { scrollTop, allHeight, mapData } = data
       const s = this.refSelectBox.style
       const top = parseInt(s.top, 10)
@@ -246,10 +247,10 @@ class FileContent extends React.Component {
           const lineNum = mapData[i]
           const lineHeight = allHeight[lineNum] // 150
           const head = lineNum * lineHeight - scrollTop
-          const tail = head + 150
+          const tail = head + 140
           if (!(tail > top) || !(head < top + height)) return false
-          const start = (i - mapData.findIndex(va => va === lineNum)) * 150 + 10
-          const end = start + 144
+          const start = (i - mapData.findIndex(va => va === lineNum)) * 144 + 10
+          const end = start + 140
           /* grid.tail > top && grid.head < top + height && grid.end > left && grid.start < left + width */
           return ((end > left) && (start < left + width))
         })

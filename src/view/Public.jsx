@@ -1,21 +1,13 @@
 import React from 'react'
 import i18n from 'i18n'
 import { ipcRenderer } from 'electron'
-import { IconButton, FloatingActionButton } from 'material-ui'
-import FileCreateNewFolder from 'material-ui/svg-icons/file/create-new-folder'
-import ListIcon from 'material-ui/svg-icons/action/list'
-import ContentAdd from 'material-ui/svg-icons/content/add'
-import GridIcon from 'material-ui/svg-icons/action/view-module'
-import RefreshIcon from 'material-ui/svg-icons/navigation/refresh'
 
 import Home from './Home'
 import FileDetail from '../file/FileDetail'
 import FileContent from '../file/FileContent'
-import FileUploadButton from '../file/FileUploadButton'
 import DriversDetail from '../control/DriversDetail'
 import NewDriveDialog from '../control/NewDriveDialog'
 import sortByType from '../common/sort'
-import { ShareDisk } from '../common/Svg'
 import DialogOverlay from '../common/DialogOverlay'
 
 class Public extends Home {
@@ -28,29 +20,54 @@ class Public extends Home {
 
     this.rootDrive = null
 
+    this.back = () => {
+      const pos = this.history.back()
+      console.log('this.back', pos)
+      if (pos.type === 'publicRoot') {
+        this.rootDrive = null
+        this.ctx.props.apis.request('drives')
+      } else {
+        this.enter(pos, err => err && console.error('back error', err))
+      }
+    }
+
+    this.forward = () => {
+      const { curr, queue } = this.history.get()
+      const pos = this.history.forward()
+      console.log('this.forward', queue[curr].type, pos)
+      if (queue[curr].type === 'publicRoot') {
+        this.rootDrive = { type: 'public', uuid: pos.driveUUID }
+        this.enter(pos, err => err && console.error('forward error', err))
+      } else {
+        this.enter(pos, err => err && console.error('forward error', err))
+      }
+    }
+
     this.listNavBySelect = () => {
       const selected = this.select.state.selected
       if (selected.length !== 1) return
 
+      /* reset jump action of files or drives */
+      this.resetScrollTo()
+
       const entry = this.state.entries[selected[0]]
       if (entry.type === 'directory') {
-        this.ctx.props.apis.request('listNavDir', {
-          driveUUID: this.state.path[0].uuid,
-          dirUUID: entry.uuid
-        })
+        const pos = { driveUUID: this.state.path[0].uuid, dirUUID: entry.uuid }
+        this.enter(pos, err => err && console.error('listNavBySelect error', err))
+        this.history.add(pos)
       } else if (entry.type === 'public') {
         const myUUID = this.ctx.props.apis.account.data.uuid
         const writable = entry.writelist === '*' || entry.writelist.findIndex(uuid => uuid === myUUID) > -1
-        if (!writable) {
+        if (!writable) { // TODO need to define UE
           this.toggleDialog('noAccess')
           this.refresh()
           return
         }
         this.rootDrive = entry
-        this.ctx.props.apis.request('listNavDir', {
-          driveUUID: entry.uuid,
-          dirUUID: entry.uuid
-        })
+
+        const pos = { driveUUID: entry.uuid, dirUUID: entry.uuid }
+        this.enter(pos, err => err && console.error('listNavBySelect error', err))
+        this.history.add(pos)
       }
     }
   }
@@ -68,6 +85,10 @@ class Public extends Home {
       const select = this.select.reset(entries.length)
 
       this.force = false
+
+      const pos = { type: 'publicRoot' }
+      if (this.history.get().curr === -1) this.history.add(pos)
+
       this.setState({ path, entries, select, inRoot: true, loading: false })
     } else {
       this.preListValue = this.state.listNavDir
@@ -84,6 +105,7 @@ class Public extends Home {
       const { counter } = this.state.listNavDir
 
       this.force = false
+
       this.setState({ path, entries, select, counter, inRoot: false, loading: false })
     }
   }
@@ -117,34 +139,6 @@ class Public extends Home {
   }
 
   /* renderers */
-  renderTitle ({ style }) {
-    if (!this.state.listNavDir && !this.state.drives) return (<div />)
-    return this.renderBreadCrumbItem({ style })
-  }
-
-  renderToolBar ({ style }) {
-    return (
-      <div style={style}>
-        <IconButton onClick={() => this.refresh()} tooltip={i18n.__('Refresh')} >
-          <RefreshIcon color="#FFF" />
-        </IconButton>
-        <IconButton
-          onClick={() => this.toggleDialog('gridView')}
-          tooltip={this.state.gridView ? i18n.__('List View') : i18n.__('Grid View')}
-        >
-          { this.state.gridView ? <ListIcon color="#FFF" /> : <GridIcon color="#FFF" /> }
-        </IconButton>
-        <IconButton
-          disabled={this.state.inRoot}
-          tooltip={i18n.__('Create New Folder')}
-          onClick={() => this.toggleDialog('createNewFolder')}
-        >
-          <FileCreateNewFolder color="#FFF" />
-        </IconButton>
-      </div>
-    )
-  }
-
   renderNoPublic () {
     return (
       <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
@@ -211,25 +205,6 @@ class Public extends Home {
   renderContent ({ toggleDetail, openSnackBar, getDetailStatus }) {
     return (
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-        {/* add new user FAB */}
-        {
-          this.ctx.props.apis.account && this.ctx.props.apis.account.data &&
-            this.ctx.props.apis.account.data.isAdmin && this.state.path && this.state.path.length === 1 &&
-            (
-              <FloatingActionButton
-                style={{ position: 'absolute', top: -36, left: 24, zIndex: 200 }}
-                backgroundColor="#2196F3"
-                disabled={!this.state.users || !this.state.drives}
-                onClick={() => this.setState({ newDrive: true })}
-              >
-                <ContentAdd />
-              </FloatingActionButton>
-            )
-        }
-
-        {/* upload FAB */}
-        { this.state.path && this.state.path.length > 1 && <FileUploadButton upload={this.upload} /> }
-
         {
           (this.state.path && this.state.path.length === 1 && !this.state.entries.length) ? this.renderNoPublic()
 

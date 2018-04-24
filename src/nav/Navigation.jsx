@@ -239,7 +239,7 @@ class NavViews extends React.Component {
           { this.views[this.state.nav].renderToolBar({ style: toolBarStyle }) }
 
           {/* Title and BreadCrumbItem */}
-          { this.state.nav === 'home' && this.views[this.state.nav].renderTitle({ style: titleStyle }) }
+          { ['home', 'public'].includes(this.state.nav) && this.views[this.state.nav].renderTitle({ style: titleStyle }) }
 
           {/* File Content */}
           <div style={{ height: 'calc(100% - 64px)', width: '100%' }} id="content-container">

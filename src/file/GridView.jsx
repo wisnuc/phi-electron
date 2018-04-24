@@ -16,8 +16,11 @@ class Row extends React.Component {
 
     return (
       <div style={{ height: '100%', width: '100%', marginLeft: 10 }} >
-        {/* file content */}
-        <div style={{ display: 'flex', height: 144 }}>
+        {/* onMouseDown: clear select and start grid select */}
+        <div
+          style={{ display: 'flex', height: 144 }}
+          onMouseDown={e => select.selected.length && (this.props.onRowClick(e, -1) || this.props.selectStart(e))}
+        >
           {
             list.entries.map((item) => {
               const { index, entry } = item

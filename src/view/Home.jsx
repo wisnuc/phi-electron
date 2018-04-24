@@ -698,7 +698,7 @@ class Home extends Base {
 
   renderTitle ({ style }) {
     const breadCrumbStyle = { color: 'var(--grey-text)', width: '100%', display: 'flex', alignItems: 'center', flexWrap: 'wrap' }
-    if (!this.state.listNavDir) return (<div />)
+    // if (!this.state.listNavDir) return (<div />)
     return (
       <div style={style}>
         <div style={{ height: 70 }}>
