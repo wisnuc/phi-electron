@@ -50,7 +50,7 @@ class FileContent extends React.Component {
       e.preventDefault() // important, to prevent other event
       e.stopPropagation()
 
-      console.log('e, type button', e, e.type, e.nativeEvent.button, this.selectBox, index)
+      console.log('this.onRowClick', this.selectBox, index)
       /* disabled in select box mode */
       if (this.selectBox) return
 
@@ -119,6 +119,7 @@ class FileContent extends React.Component {
     this.selectBox = null
 
     this.selectStart = (event, scrollTop) => {
+      console.log('this.selectStart', event, scrollTop)
       if (this.props.noGridSelect) return
       if (event.nativeEvent.button !== 0) return
       if (this.selectBox) {
@@ -175,12 +176,12 @@ class FileContent extends React.Component {
       }
 
       if (dy > 0) s.height = `${dy}px`
-      else if (event.clientY - TOP > 0) {
+      else if (event.clientY - TOP > 40) {
         s.height = `${-dy}px`
         s.top = `${event.clientY - TOP}px`
       } else {
-        s.height = `${this.selectBox.y - TOP}px`
-        s.top = '0px'
+        s.height = `${this.selectBox.y - TOP - 40}px`
+        s.top = '40px'
       }
     }
 
@@ -207,7 +208,7 @@ class FileContent extends React.Component {
     /* calc rows should be selected */
     this.calcRow = (scrollTop) => {
       const s = this.refSelectBox.style
-      const lineHeight = 48
+      const lineHeight = 40
       const length = this.props.entries.length
 
       const array = Array

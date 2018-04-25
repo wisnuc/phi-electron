@@ -1,8 +1,7 @@
 import React from 'react'
 import i18n from 'i18n'
-import Debug from 'debug'
 import prettysize from 'prettysize'
-import { Avatar, Popover, MenuItem, Menu, IconButton } from 'material-ui'
+import { Popover, MenuItem, Menu, IconButton } from 'material-ui'
 import ErrorIcon from 'material-ui/svg-icons/alert/error'
 import ToggleCheckBox from 'material-ui/svg-icons/toggle/check-box'
 import ToggleCheckBoxOutlineBlank from 'material-ui/svg-icons/toggle/check-box-outline-blank'
@@ -17,41 +16,7 @@ import { ShareDisk } from '../common/Svg'
 import FlatButton from '../common/FlatButton'
 import { formatDate, formatMtime } from '../common/datetime'
 
-const debug = Debug('component:file:RenderListByRow:')
-
-const renderLeading = (leading) => {
-  let height = '100%'
-  let backgroundColor = '#FFF'
-  let opacity = 0
-
-  switch (leading) {
-    case 'inactiveHint':
-      height = 20
-      backgroundColor = '#000'
-      opacity = 0.26
-      break
-    case 'activeHint':
-      height = 20
-      backgroundColor = '#FF0000'
-      opacity = 1
-      break
-    case 'fullOn':
-      backgroundColor = '#FF0000'
-      opacity = 1
-      break
-    default:
-      break
-  }
-
-  return <div style={{ flex: '0 0 4px', height, backgroundColor, opacity, zIndex: 1000 }} />
-}
-
-const renderCheck = check =>
-  ((check === 'checked' || check === 'unchecking')
-    ? <ToggleCheckBox style={{ color: '#FF0000' }} />
-    : check === 'checking'
-      ? <ToggleCheckBoxOutlineBlank style={{ color: 'rgba(0,0,0,0.38)' }} />
-      : null)
+const checkStyle = { width: 16, height: 16, marginLeft: 14 }
 
 class Row extends React.PureComponent {
   render () {
@@ -72,77 +37,105 @@ class Row extends React.PureComponent {
     } = this.props
 
     const entry = entries[index]
-    const leading = select.rowLeading(index)
-    const check = select.rowCheck(index)
 
     const onDropping = entry.type === 'directory' && select.rowDrop(index)
 
     /* backgroud color */
-    const color = onDropping ? '#FFF' : select.rowColor(index)
+    const backgroundColor = onDropping ? '#FFF' : select.rowColor(index)
 
-    const shouldStartDrag = check === 'checked' || (select.selected.length === 1 && select.selected.includes(index))
+    const isSelected = select.selected.includes(index)
 
     /* render drive list */
     let users = []
     if (inPublicRoot) users = this.props.apis.users && this.props.apis.users.data
 
+    const onRowMouseDown = (e, i) => {
+      e.stopPropagation()
+      if (isSelected) this.props.rowDragStart(e, i)
+      else {
+        this.props.onRowClick(e, i)
+        this.props.selectStart(e)
+      }
+    }
+
+    const onContentMouseDown = (e, i) => {
+      e.stopPropagation()
+      if (!isSelected) this.props.onRowClick(e, i)
+      this.props.rowDragStart(e, i)
+    }
+
+    const onBGMouseDown = (e) => {
+      this.props.onRowClick(e, -1)
+      this.props.selectStart(e)
+    }
+
     return (
-      <div key={entry.name} style={style}>
+      <div key={entry.name} style={Object.assign({ display: 'flex' }, style)}>
         <div
           style={{
-            width: '100%',
             height: '100%',
+            width: 'calc(100% - 20px)',
             display: 'flex',
             alignItems: 'center',
-            backgroundColor: color,
+            color: '#888a8c',
+            backgroundColor,
             boxSizing: 'border-box',
             border: onDropping ? `2px ${this.props.primaryColor} solid` : ''
           }}
           role="presentation"
-          onClick={e => this.props.onRowClick(e, index)}
           onMouseUp={(e) => { e.preventDefault(); e.stopPropagation() }}
           onContextMenu={e => this.props.onRowContextMenu(e, index)}
           onMouseEnter={e => this.props.onRowMouseEnter(e, index)}
           onMouseLeave={e => this.props.onRowMouseLeave(e, index)}
           onDoubleClick={e => this.props.onRowDoubleClick(e, index)}
-          onMouseDown={e => shouldStartDrag && (e.stopPropagation() || this.props.rowDragStart(e, index))}
+          onMouseDown={e => onRowMouseDown(e, index)}
         >
-          { renderLeading(leading) }
-          <div style={{ flex: '0 0 8px' }} />
-          <div style={{ flex: '0 0 36px', display: 'flex', alignItems: 'center', marginLeft: onDropping ? -2 : 0 }}>
-            { renderCheck(check) }
+          <div style={{ width: 40 }}>
+            {
+              isSelected
+                ? <ToggleCheckBox style={Object.assign({ color: '#31a0f5' }, checkStyle)} />
+                : <ToggleCheckBoxOutlineBlank style={Object.assign({ color: 'rgba(0,0,0,.25)' }, checkStyle)} />
+            }
           </div>
-          <div style={{ flex: '0 0 8px' }} />
 
           {/* file type may be: folder, public, directory, file, unsupported */}
-          <div style={{ flex: '0 0 48px', display: 'flex', alignItems: 'center' }} >
-            <Avatar style={{ backgroundColor: 'white' }} onMouseDown={e => e.stopPropagation() || this.props.rowDragStart(e, index)} >
-              {
-                entry.type === 'directory'
-                  ? <FileFolder style={{ color: 'rgba(0,0,0,0.54)', width: 24, height: 24 }} />
-                  : entry.type === 'public'
-                    ? <ShareDisk style={{ color: 'rgba(0,0,0,0.54)', width: 24, height: 24 }} />
-                    : entry.type === 'file'
-                      ? renderFileIcon(entry.name, entry.metadata, 24)
-                      : <ErrorIcon style={{ color: 'rgba(0,0,0,0.54)', width: 24, height: 24 }} />
-              }
-            </Avatar>
+          <div
+            style={{ width: 24 }}
+            onMouseDown={e => onContentMouseDown(e, index)}
+          >
+            {
+              entry.type === 'directory'
+                ? <FileFolder style={{ color: 'rgba(0,0,0,0.54)', width: 24, height: 24 }} />
+                : entry.type === 'public'
+                  ? <ShareDisk style={{ color: 'rgba(0,0,0,0.54)', width: 24, height: 24 }} />
+                  : entry.type === 'file'
+                    ? renderFileIcon(entry.name, entry.metadata, 24)
+                    : <ErrorIcon style={{ color: 'rgba(0,0,0,0.54)', width: 24, height: 24 }} />
+            }
           </div>
+          <div style={{ width: 16 }} />
 
-          <div style={{ flex: inPublicRoot ? '0 1 168px' : '0 0 500px', display: 'flex' }} >
+          <div style={{ width: 'calc(100% - 469px)', display: 'flex', alignItems: 'center' }} >
             <div
-              style={{
-                width: '', maxWidth: inPublicRoot ? 144 : 476, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis'
-              }}
-              role="presentation"
-              onMouseDown={e => e.stopPropagation() || this.props.rowDragStart(e, index)}
+              style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', color: '#525a60', letterSpacing: 1.4 }}
+              onMouseDown={e => onContentMouseDown(e, index)}
             >
               { entry.name }
             </div>
-            <div style={{ width: 24 }} />
+          </div>
+          <div style={{ width: 20 }} />
+
+          <div
+            style={{ width: 138, color: '#888a8c' }}
+            onMouseDown={e => onContentMouseDown(e, index)}
+          >
+            { entry.type === 'file' && prettysize(entry.size, false, true, 2).toUpperCase() }
           </div>
 
-          <div style={{ flex: inPublicRoot ? '0 0 476px' : '0 1 144px', fontSize: 13, color: 'rgba(0,0,0,0.54)' }}>
+          <div
+            style={{ width: 231, color: '#888a8c' }}
+            onMouseDown={e => onContentMouseDown(e, index)}
+          >
             { showTakenTime ? entry.metadata && (entry.metadata.date || entry.metadata.datetime) &&
               formatDate(entry.metadata.date || entry.metadata.datetime) : entry.mtime && formatMtime(entry.mtime) }
             {
@@ -152,13 +145,13 @@ class Row extends React.PureComponent {
               )
             }
           </div>
-
-          <div style={{ flex: '0 1 144px', fontSize: 13, color: 'rgba(0,0,0,0.54)', textAlign: 'right' }} >
-            { entry.type === 'file' && prettysize(entry.size, false, true, 2) }
-          </div>
-
-          <div style={{ flexGrow: 1 }} />
         </div>
+        <div
+          onMouseDown={e => onBGMouseDown(e)}
+          onContextMenu={e => this.props.onRowContextMenu(e, -1)}
+          draggable={false}
+          style={{ width: 20, height: '100%' }}
+        />
       </div>
     )
   }
@@ -191,7 +184,7 @@ class RenderListByRow extends React.Component {
             this.props.changeSortType('takenUp')
             break
           default:
-            debug('this.handleChange no such type', type)
+            console.error('this.handleChange no such type', type)
         }
         this.setState({ type, open: false })
       } else {
@@ -229,6 +222,7 @@ class RenderListByRow extends React.Component {
         key={h.title}
         style={{
           width: h.width,
+          flexGrow: h.flexGrow,
           display: 'flex',
           alignItems: 'center',
           cursor: this.state.type === h.title ? 'pointer' : 'default'
@@ -241,16 +235,17 @@ class RenderListByRow extends React.Component {
       >
         <div
           style={{
-            fontSize: 14,
-            fontWeight: 500,
-            color: this.state.type === h.title ? 'rgba(0,0,0,0.87)' : 'rgba(0,0,0,0.54)'
+            fontSize: 12,
+            color: '#888a8c',
+            letterSpacing: 1.4,
+            opacity: this.state.type === h.title ? 1 : 0.7
           }}
         >
           { h.title }
         </div>
-        <div style={{ marginLeft: 8, marginTop: 6 }}>
-          { this.props.sortType === h.up && <ArrowUpward style={{ height: 18, width: 18, color: '#9E9E9E' }} /> }
-          { this.props.sortType === h.down && <ArrowDownward style={{ height: 18, width: 18, color: '#9E9E9E' }} /> }
+        <div style={{ marginLeft: 8, marginTop: 6, opacity: 0.7 }}>
+          { this.props.sortType === h.up && <ArrowUpward style={{ height: 16, width: 16, color: '#888a8c' }} /> }
+          { this.props.sortType === h.down && <ArrowDownward style={{ height: 16, width: 16, color: '#888a8c' }} /> }
         </div>
       </div>
     )
@@ -267,10 +262,9 @@ class RenderListByRow extends React.Component {
     this.preHeader = h || this.preHeader || headers[0]
     const isSelected = !!h
     h = this.preHeader
-    // debug('renderPopoverHeader this.props', this.props, sortType, h, isSelected)
 
     return (
-      <div style={{ display: 'flex', alignItems: 'center ', width: 172, marginLeft: -10, marginTop: 2, marginRight: 92 }}>
+      <div style={{ display: 'flex', alignItems: 'center ', width: 240 }}>
         <FlatButton
           label={h.title}
           labelStyle={{ fontSize: 14, color: 'rgba(0,0,0,0.54)', textTransform: '' }}
@@ -315,68 +309,63 @@ class RenderListByRow extends React.Component {
   }
 
   render () {
-    // debug('RenderListByRow redner', this.props)
     const rowRenderer = props => (
       <Row
         {...props}
         {...this.props}
       />
     )
-    // console.log('RenderListByRow.jsx', this.props)
+    const allSelected = this.props.select && this.props.select.selected.length === this.props.entries.length
 
     return (
-      <div style={{ width: '100%', height: '100%' }} onDrop={this.props.drop}>
+      <div style={{ width: '100%', height: '100%', boxSizing: 'border-box' }} onDrop={this.props.drop}>
         {/* header */}
         <div
           style={{
-            width: '100%',
-            height: 48,
+            position: 'relative',
+            height: 40,
+            width: 'calc(100% - 40px)',
+            margin: '0 20px',
+            zIndex: 100,
             display: 'flex',
             alignItems: 'center',
-            position: 'absolute',
-            zIndex: 100,
-            backgroundColor: '#FFFFFF'
+            backgroundColor: '#edf2fa'
           }}
           role="presentation"
         >
-          <div style={{ flex: '0 0 104px' }} />
-          {
-            this.props.inPublicRoot
-              ? <div style={{ width: 168, fontSize: 14, fontWeight: 500, color: 'rgba(0,0,0,0.54)' }}> { i18n.__('Name') } </div>
-              : this.renderHeader({ title: i18n.__('Name'), width: 500, up: 'nameUp', down: 'nameDown' })
-          }
-          {
-            this.props.inPublicRoot
-              ? <div style={{ width: 172, fontSize: 14, fontWeight: 500, color: 'rgba(0,0,0,0.54)' }}> { i18n.__('Users') } </div>
-              : this.renderPopoverHeader()
-          }
-          { !this.props.inPublicRoot && this.renderHeader({ title: i18n.__('Size'), width: 60, up: 'sizeUp', down: 'sizeDown' }) }
-          <div style={{ flexGrow: 1 }} />
+          <div style={{ width: 28, marginRight: 12 }}>
+            {
+              allSelected
+                ? <ToggleCheckBox style={Object.assign({ color: '#31a0f5' }, checkStyle)} />
+                : <ToggleCheckBoxOutlineBlank style={Object.assign({ color: 'rgba(0,0,0,.25)' }, checkStyle)} />
+            }
+          </div>
+          { this.renderHeader({ title: i18n.__('File Name'), flexGrow: 1, up: 'nameUp', down: 'nameDown' }) }
+          { this.renderHeader({ title: i18n.__('Size'), width: 130, up: 'sizeUp', down: 'sizeDown' }) }
+          { this.renderPopoverHeader() }
         </div>
 
-        <div style={{ height: 48 }} />
-
         {/* list content */}
-        <div style={{ width: '100%', height: 'calc(100% - 48px)' }}>
+        <div style={{ width: '100%', height: 'calc(100% - 40px)' }}>
           {
             this.props.entries.length !== 0 &&
             <AutoSizer>
               {({ height, width }) => (
                 <div
                   role="presentation"
-                  onMouseDown={e => this.props.selectStart(e)}
-                  onMouseUp={e => this.props.onRowClick(e, -1)}
+                  onMouseDown={e => this.props.onRowClick(e, -1) || this.props.selectStart(e)}
                   onContextMenu={e => this.props.onRowContextMenu(e, -1)}
                   draggable={false}
+                  style={{ padding: '0 20px' }}
                 >
                   <ScrollBar
                     ref={ref => (this.ListRef = ref)}
                     height={height}
-                    width={width}
-                    allHeight={this.props.entries.length * 48}
+                    width={width - 20}
+                    allHeight={this.props.entries.length * 40}
                     rowCount={this.props.entries.length}
                     onScroll={this.onScroll}
-                    rowHeight={48}
+                    rowHeight={40}
                     rowRenderer={rowRenderer}
                   />
                 </div>

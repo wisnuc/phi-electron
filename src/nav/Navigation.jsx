@@ -4,7 +4,6 @@ import { Snackbar } from 'material-ui'
 
 import { ipcRenderer } from 'electron'
 
-import Account from './Account'
 import FileMenu from './FileMenu'
 import TransMenu from './TransMenu'
 import SettingsMenu from './SettingMenu'
@@ -248,6 +247,7 @@ class NavViews extends React.Component {
         </div>
 
         {/* shadow of FileMenu */}
+        {/*
         <div
           style={{
             position: 'absolute',
@@ -258,6 +258,7 @@ class NavViews extends React.Component {
             backgroundImage: 'linear-gradient(to right, rgba(23,99,207,.03), #f3f8ff)'
           }}
         />
+        */}
 
         {/* drag item */}
         { this.views[this.state.nav].renderDragItems() }
@@ -316,11 +317,6 @@ class NavViews extends React.Component {
       <div style={{ width: '100%', height: '100%', overflow: 'hidden' }} >
         {/* Navs */}
         { this.renderHeader() }
-
-        {/* Account */}
-        <div style={{ position: 'fixed', top: 12, right: 147, height: 36, WebkitAppRegion: 'no-drag' }}>
-          <Account />
-        </div>
 
         {/* Views */}
         <div style={{ height: 'calc(100% - 160px)', position: 'relative', display: 'flex' }}>

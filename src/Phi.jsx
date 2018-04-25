@@ -6,6 +6,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import Login from './login/NewLogin'
 // import Login from './login/Login'
 import Navigation from './nav/Navigation'
+import Account from './common/Account'
 import Device from './common/device'
 
 const adjustSeq = (pre) => {
@@ -45,6 +46,7 @@ class Fruitmix extends React.Component {
       login: this.login.bind(this),
       selectDevice: this.selectDevice.bind(this),
       setPalette: this.setPalette.bind(this),
+      phiLogin: this.phiLogin.bind(this),
       ipcRenderer
     }
 
@@ -72,6 +74,10 @@ class Fruitmix extends React.Component {
         }
       })
     })
+  }
+
+  phiLogin (user) {
+    this.setState({ account: user })
   }
 
   selectDevice (mdev) {
@@ -128,6 +134,15 @@ class Fruitmix extends React.Component {
       <MuiThemeProvider muiTheme={this.state.theme}>
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%' }}>
           { view }
+
+          {/* Account */}
+          {
+            this.state.account &&
+              <div style={{ position: 'fixed', top: 12, right: 147, height: 36, WebkitAppRegion: 'no-drag' }}>
+                <Account user={this.state.account} />
+              </div>
+          }
+
           {/* No WebkitAppRegion */}
           <div style={Object.assign({ left: 0, height: 5, width: '100%' }, nodrag)} />
           <div style={Object.assign({ left: 0, height: 110, width: 5 }, nodrag)} />
