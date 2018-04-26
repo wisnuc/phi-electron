@@ -22,7 +22,12 @@ class Ethernet extends Base {
   }
 
   menuIcon () {
-    return ActionSettingsEthernet
+    const Pic = props => (
+      <div {...props}>
+        <img src="./assets/images/ic-network.png" alt="" width={48} height={48} />
+      </div>
+    )
+    return Pic
   }
 
   quickName () {

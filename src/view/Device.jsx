@@ -42,7 +42,12 @@ class Device extends Base {
   }
 
   menuIcon () {
-    return ActionDns
+    const Pic = props => (
+      <div {...props}>
+        <img src="./assets/images/ic-deviceinfo.png" alt="" width={48} height={48} />
+      </div>
+    )
+    return Pic
   }
 
   quickName () {

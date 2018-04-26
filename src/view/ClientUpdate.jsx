@@ -1,7 +1,6 @@
 import React from 'react'
 import i18n from 'i18n'
 import { ipcRenderer } from 'electron'
-import UpdateIcon from 'material-ui/svg-icons/action/update'
 import Base from './Base'
 import UpdateApp from '../control/ClientUpdateApp'
 
@@ -15,7 +14,12 @@ class Update extends Base {
   }
 
   menuIcon () {
-    return UpdateIcon
+    const Pic = props => (
+      <div {...props}>
+        <img src="./assets/images/ic-update.png" alt="" width={48} height={48} />
+      </div>
+    )
+    return Pic
   }
 
   quickName () {

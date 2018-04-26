@@ -1,7 +1,6 @@
 import React from 'react'
 import i18n from 'i18n'
 import ListIcon from 'material-ui/svg-icons/action/list'
-import UpdateIcon from 'material-ui/svg-icons/action/system-update-alt'
 
 import Base from './Base'
 import FirmwareUpdateApp from '../device/FirmwareUpdateApp'
@@ -47,7 +46,12 @@ class FirmwareUpdate extends Base {
   }
 
   menuIcon () {
-    return UpdateIcon
+    const Pic = props => (
+      <div {...props}>
+        <img src="./assets/images/ic-firmwareupdate.png" alt="" width={48} height={48} />
+      </div>
+    )
+    return Pic
   }
 
   appBarStyle () {
