@@ -184,7 +184,7 @@ class ManageDisk extends React.Component {
   render () {
     const { dev, backToList, onFormatSuccess } = this.props
     console.log('ManageDisk', dev)
-    const init = true
+    const init = dev.address !== '10.10.9.157'
     const recover = !!this.state.recover
     const imgSrc = init ? 'pic-finddisk.png' : 'pic-login.png'
     return (
@@ -209,9 +209,9 @@ class ManageDisk extends React.Component {
         <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
         {
           !recover &&
-            <div style={{ height: 180, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ height: 150, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 30 }}>
               <img
-                style={{ width: 220, height: 116 }}
+                style={{ width: 280, height: 150 }}
                 src={`./assets/images/${imgSrc}`}
                 alt=""
               />

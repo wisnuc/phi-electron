@@ -89,10 +89,9 @@ class PhiLogin extends React.Component {
           { i18n.__('Login') }
         </div>
         <Divider style={{ marginLeft: 20, width: 280 }} />
-        <div style={{ height: 30 }} />
-        <div style={{ height: 120, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ height: 150, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <img
-            style={{ width: 220, height: 116 }}
+            style={{ width: 280, height: 150 }}
             src="./assets/images/pic-login.png"
             alt=""
           />

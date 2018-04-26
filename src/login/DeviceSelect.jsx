@@ -1,17 +1,14 @@
 import React from 'react'
 import i18n from 'i18n'
-import { Divider, IconButton, TextField, CircularProgress } from 'material-ui'
-import VisibilityOff from 'material-ui/svg-icons/action/visibility-off'
-import Visibility from 'material-ui/svg-icons/action/visibility'
+import { Divider, CircularProgress } from 'material-ui'
 import { AutoSizer } from 'react-virtualized'
 import ScrollBar from '../common/ScrollBar'
-import { RRButton, RSButton } from '../common/Buttons'
+import { RSButton } from '../common/Buttons'
 import { RefreshIcon, HelpIcon } from '../common/Svg'
 import { SIButton } from '../common/IconButton'
 import Dialog from '../common/PureDialog'
 import ConnectionHint from './ConnectionHint'
 import ConfirmBind from './ConfirmBind'
-import ManageDisk from './ManageDisk'
 import LANLogin from './LANLogin'
 
 class DeviceSelect extends React.Component {
@@ -21,15 +18,7 @@ class DeviceSelect extends React.Component {
     this.state = {
       dev: null,
       list: null,
-      confirm: false,
-      loading: true,
-      format: '' // 'busy', 'success', 'error'
-    }
-
-    this.enterSelectDevice = () => {
-      console.log('mdns', this.props.mdns)
-      this.setState({ list: this.props.mdns, loading: true })
-      this.timer = setTimeout(() => this.setState({ loading: false }), 2000)
+      confirm: false
     }
 
     this.slDevice = (dev) => {
@@ -39,40 +28,15 @@ class DeviceSelect extends React.Component {
         this.setState({ UserMaint: true })
       } else {
         this.setState({ dev, confirm: true }) // First Boot, Bind Device and Formating Disk
-        setTimeout(() => this.setState({ confirm: false }), 2000)
+        setTimeout(() => {
+          this.setState({ confirm: false })
+          this.props.manageDisk(dev)
+        }, 2000)
       }
     }
 
     this.backToList = () => {
       this.setState({ dev: null, LANLogin: null })
-    }
-
-    this.format = () => {
-      this.setState({ format: 'busy' })
-      setTimeout(() => this.setState({ format: 'error' }), 2000)
-      setTimeout(() => this.setState({ format: 'success' }), 4000)
-    }
-
-    this.refresh = () => {
-      this.setState({
-        dev: null,
-        list: null,
-        confirm: false,
-        loading: true,
-        format: ''
-      })
-      this.props.refreshMdns()
-
-      clearTimeout(this.refreshHandle)
-      this.refreshHandle = setTimeout(() => this.enterSelectDevice(), 1500)
-    }
-
-    this.onFormatSuccess = () => {
-      this.setState({ LANPwd: true, format: '' })
-    }
-
-    this.saveLANPwd = () => {
-      this.setState({ LANPwd: false })
     }
   }
 
@@ -186,150 +150,15 @@ class DeviceSelect extends React.Component {
       <div style={{ height: '100%', width: '100%' }} className="flexCenter">
         <div>
           <img
-            style={{ width: 173, height: 120 }}
+            width={280}
+            height={150}
             src="./assets/images/pic-nodevice.png"
             alt=""
           />
-          <div style={{ width: '100%', textAlign: 'center', color: '#31a0f5', marginTop: 7 }}>
-            { i18n.__('Not Found Any Device ?')}
+          <div style={{ width: '100%', textAlign: 'center', color: '#31a0f5', marginTop: -10 }}>
+            { i18n.__('Not Found Any Device ?') }
           </div>
         </div>
-      </div>
-    )
-  }
-
-  renderNoBound () {
-    return (
-      <div
-        style={{
-          width: 320,
-          height: 310,
-          overflow: 'hidden',
-          zIndex: 200,
-          position: 'relative'
-        }}
-        className="paper"
-      >
-        <div
-          style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 19 }}
-          className="title"
-        >
-          { i18n.__('Add Device') }
-        </div>
-        <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
-        <div style={{ height: 180, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <img
-            style={{ width: 220, height: 116 }}
-            src="./assets/images/pic-login.png"
-            alt=""
-          />
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <RRButton
-            label={i18n.__('Add Device')}
-            onClick={this.enterSelectDevice}
-          />
-        </div>
-      </div>
-    )
-  }
-
-  renderLANPwd () {
-    const iconStyle = { width: 18, height: 18, color: '#31a0f5', padding: 0 }
-    const buttonStyle = { width: 26, height: 26, padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }
-    return (
-      <div style={{ width: 320, zIndex: 200, position: 'relative' }} className="paper" >
-        <div
-          style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 19 }}
-          className="title"
-        >
-          { i18n.__('Set LAN Pwd') }
-        </div>
-        <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
-        <div style={{ height: 180, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <img
-            style={{ width: 218, height: 121 }}
-            src="./assets/images/pic-offlinepassword.png"
-            alt=""
-          />
-        </div>
-        <div style={{ width: 282, margin: '-20px auto 0px auto', position: 'relative' }}>
-          <TextField
-            fullWidth
-            style={{ marginTop: 12 }}
-            hintText={i18n.__('LAN Password Hint')}
-            errorStyle={{ position: 'absolute', right: 0, top: 0 }}
-            type={this.state.showPwd ? 'text' : 'password'}
-            errorText={this.state.pwdError}
-            value={this.state.pwd}
-            onChange={e => this.onPassword(e.target.value)}
-            onKeyDown={this.onKeyDown}
-          />
-          {/* clear password */}
-          <div style={{ position: 'absolute', right: 4, top: 26 }}>
-            <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.clearPn}>
-              { this.state.showPwd ? <VisibilityOff /> : <Visibility /> }
-            </IconButton>
-          </div>
-        </div>
-        <div style={{ height: 20 }} />
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <RRButton
-            label={i18n.__('Save')}
-            onClick={this.saveLANPwd}
-          />
-        </div>
-        <div style={{ height: 30 }} />
-      </div>
-    )
-  }
-
-  renderLANLogin () {
-    const iconStyle = { width: 18, height: 18, color: '#31a0f5', padding: 0 }
-    const buttonStyle = { width: 26, height: 26, padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }
-    return (
-      <div style={{ width: 320, zIndex: 200, position: 'relative' }} className="paper" >
-        <div
-          style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 19 }}
-          className="title"
-        >
-          { i18n.__('LAN Login') }
-        </div>
-        <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
-        <div style={{ height: 180, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <img
-            style={{ width: 218, height: 121 }}
-            src="./assets/images/pic-offlinepassword.png"
-            alt=""
-          />
-        </div>
-        <div style={{ width: 282, margin: '-20px auto 0px auto', position: 'relative' }}>
-          <TextField
-            fullWidth
-            style={{ marginTop: 12 }}
-            hintText={i18n.__('LAN Password Hint')}
-            errorStyle={{ position: 'absolute', right: 0, top: 0 }}
-            type={this.state.showPwd ? 'text' : 'password'}
-            errorText={this.state.pwdError}
-            value={this.state.pwd}
-            onChange={e => this.onPassword(e.target.value)}
-            onKeyDown={this.onKeyDown}
-          />
-          {/* clear password */}
-          <div style={{ position: 'absolute', right: 4, top: 26 }}>
-            <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.clearPn}>
-              { this.state.showPwd ? <VisibilityOff /> : <Visibility /> }
-            </IconButton>
-          </div>
-        </div>
-        <div style={{ height: 20 }} />
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <RRButton
-            label={i18n.__('Save')}
-            onClick={this.saveLANPwd}
-          />
-        </div>
-        <div style={{ height: 30 }} />
       </div>
     )
   }
@@ -369,9 +198,6 @@ class DeviceSelect extends React.Component {
       </div>
     )
   }
-  componentDidMount () {
-    this.enterSelectDevice()
-  }
 
   componentWillUnmount () {
     clearInterval(this.timer)
@@ -380,23 +206,7 @@ class DeviceSelect extends React.Component {
   render () {
     console.log('DeviceSelect', this.state, this.props)
 
-    /* No Bound Device Hint TODO */
-    if (!this.state.list) return this.renderNoBound()
-
-    if (this.state.LANPwd) return this.renderLANPwd()
-
-    /* Format Disk */
-    if (this.state.dev && !this.state.confirm) {
-      return (
-        <ManageDisk
-          dev={this.state.dev}
-          backToList={this.backToList}
-          onFormatSuccess={this.onFormatSuccess}
-        />
-      )
-    }
-
-    const arr = [...this.state.list]
+    const arr = [...this.props.list]
 
     const title = this.props.type === 'bind' ? i18n.__('Select Device To Bind') : i18n.__('Select Device To Login')
 
@@ -407,7 +217,7 @@ class DeviceSelect extends React.Component {
             { title }
           </div>
           <div style={{ flexGrow: 1 }} />
-          <SIButton onClick={this.refresh} > <RefreshIcon /> </SIButton>
+          <SIButton onClick={this.props.refresh} > <RefreshIcon /> </SIButton>
           <div style={{ width: 10 }} />
           <SIButton onClick={() => this.setState({ showHelp: true })} > <HelpIcon /> </SIButton>
           <div style={{ width: 32 }} />
@@ -415,7 +225,7 @@ class DeviceSelect extends React.Component {
         <Divider style={{ marginLeft: 30, width: 'calc(100% - 60px)' }} />
 
         <div style={{ width: '100%', height: 'calc(100% - 50px)' }} >
-          { this.state.loading ? this.renderLoading() : arr.length ? this.renderDevs(arr) : this.renderNoDev() }
+          { this.props.loading ? this.renderLoading() : arr.length ? this.renderDevs(arr) : this.renderNoDev() }
         </div>
 
         {/* Connection Hint */}
