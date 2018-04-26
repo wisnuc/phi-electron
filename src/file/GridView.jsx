@@ -245,7 +245,7 @@ class GridView extends React.Component {
                 <ScrollBar
                   ref={ref => (this.ListRef = ref)}
                   allHeight={rowHeightSum}
-                  height={height - 8}
+                  height={height}
                   width={width}
                   estimatedRowSize={estimatedRowSize}
                   rowHeight={rowHeight}

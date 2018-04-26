@@ -69,20 +69,23 @@ class Row extends React.PureComponent {
       this.props.selectStart(e)
     }
 
+    /* { borderColor, borderTopColor, borderBottomColor } = select.rowBorder(index) */
+    const rowStyle = Object.assign({
+      height: '100%',
+      width: 'calc(100% - 20px)',
+      display: 'flex',
+      alignItems: 'center',
+      backgroundColor,
+      color: 'transparent',
+      boxSizing: 'border-box',
+      border: 'solid 1px transparent'
+    }, select.rowBorder(index))
+
     return (
       <div key={entry.name} style={Object.assign({ display: 'flex' }, style)}>
         <div
-          style={{
-            height: '100%',
-            width: 'calc(100% - 20px)',
-            display: 'flex',
-            alignItems: 'center',
-            color: '#888a8c',
-            backgroundColor,
-            boxSizing: 'border-box',
-            border: onDropping ? `2px ${this.props.primaryColor} solid` : ''
-          }}
-          role="presentation"
+          style={rowStyle}
+          onClick={e => this.props.onRowClick(e, index)}
           onMouseUp={(e) => { e.preventDefault(); e.stopPropagation() }}
           onContextMenu={e => this.props.onRowContextMenu(e, index)}
           onMouseEnter={e => this.props.onRowMouseEnter(e, index)}
@@ -126,14 +129,14 @@ class Row extends React.PureComponent {
           <div style={{ width: 20 }} />
 
           <div
-            style={{ width: 138, color: '#888a8c' }}
+            style={{ width: 140, color: '#888a8c' }}
             onMouseDown={e => onContentMouseDown(e, index)}
           >
             { entry.type === 'file' && prettysize(entry.size, false, true, 2).toUpperCase() }
           </div>
 
           <div
-            style={{ width: 231, color: '#888a8c' }}
+            style={{ width: 230, color: '#888a8c' }}
             onMouseDown={e => onContentMouseDown(e, index)}
           >
             { showTakenTime ? entry.metadata && (entry.metadata.date || entry.metadata.datetime) &&
@@ -318,7 +321,7 @@ class RenderListByRow extends React.Component {
     const allSelected = this.props.select && this.props.select.selected.length === this.props.entries.length
 
     return (
-      <div style={{ width: '100%', height: '100%', boxSizing: 'border-box' }} onDrop={this.props.drop}>
+      <div style={{ width: '100%', height: '100%', boxSizing: 'border-box', position: 'relative' }} onDrop={this.props.drop}>
         {/* header */}
         <div
           style={{

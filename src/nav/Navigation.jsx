@@ -241,7 +241,7 @@ class NavViews extends React.Component {
           { ['home', 'public'].includes(this.state.nav) && this.views[this.state.nav].renderTitle({ style: titleStyle }) }
 
           {/* File Content */}
-          <div style={{ height: 'calc(100% - 64px)', width: '100%' }} id="content-container">
+          <div style={{ height: 'calc(100% - 120px)', width: '100%' }} id="content-container">
             { this.renderView() }
           </div>
         </div>
@@ -319,7 +319,7 @@ class NavViews extends React.Component {
         { this.renderHeader() }
 
         {/* Views */}
-        <div style={{ height: 'calc(100% - 160px)', position: 'relative', display: 'flex' }}>
+        <div style={{ height: 'calc(100% - 110px)', position: 'relative' }}>
           { view }
         </div>
 

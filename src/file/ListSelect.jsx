@@ -17,6 +17,7 @@ class ListSelect extends EventEmitter {
       rowLeading: this.rowLeading.bind(this),
       rowCheck: this.rowCheck.bind(this),
       rowDrop: this.rowDrop.bind(this),
+      rowBorder: this.rowBorder.bind(this),
       toggleDrag: this.toggleDrag.bind(this),
       isDrop: this.isDrop.bind(this),
       addByArray: this.addByArray.bind(this),
@@ -177,8 +178,18 @@ class ListSelect extends EventEmitter {
 
   rowColor (index) {
     if (this.state.selected.includes(index)) return '#e2f1fd'
-    else if (this.shiftInRange(index) || (index === this.state.hover && !this.dragging.length)) return '#e2f1fd'
+    else if (this.shiftInRange(index) || (index === this.state.hover && !this.dragging.length)) return '#FFF'
     return index % 2 ? '#edf2fa' : ''
+  }
+
+  rowBorder (index) {
+    const borderColor = '#31a0f5'
+    let borderTopColor = '#31a0f5'
+    let borderBottomColor = '#31a0f5'
+    if (!this.state.selected.includes(index)) return {} // not selected
+    if (this.state.selected.includes(index - 1)) borderTopColor = 'transparent'
+    if (this.state.selected.includes(index + 1)) borderBottomColor = 'transparent'
+    return ({ borderColor, borderTopColor, borderBottomColor })
   }
 
   rowLeading (index) {

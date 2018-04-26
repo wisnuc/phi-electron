@@ -429,8 +429,8 @@ export const RefreshAltIcon = props => (
 )
 
 export const ForwardIcon = props => (
-  <SvgIcon viewBox="0 0 18 20" {...props}>
-    <path fillRule="evenodd" d="M8.545.491l-1.391 1.4 7.07 7.12H-.013v1.98h14.237l-7.07 7.12 1.391 1.4 9.441-9.51L8.545.491z" />
+  <SvgIcon viewBox="0 0 30 30" {...props}>
+    <polygon points="2.9 13.5 21.4 13.5 11.9 4 14 1.8 27.2 15.1 14 28.2 11.9 26.1 21.4 16.6 2.9 16.6 2.9 13.5" />
   </SvgIcon>
 )
 
@@ -441,8 +441,9 @@ export const BackwardIcon = props => (
 )
 
 export const DownloadIcon = props => (
-  <SvgIcon viewBox="0 0 20 20" {...props}>
-    <path fillRule="evenodd" d="M10 0C4.477 0-.001 4.477-.001 10S4.477 20 10 20c5.522 0 10-4.477 10-10S15.522 0 10 0zm0 15.414l-4.707-4.707 1.413-1.414L9 11.586V5h1.999v6.586l2.294-2.293 1.414 1.414L10 15.414z" />
+  <SvgIcon viewBox="-32.3 35.7 30 30" {...props}>
+    <path id="XMLID_15_" fill="#040000" d="M-17.2,40.3c-5.8,0-10.5,4.6-10.5,10.4c0,5.8,4.7,10.4,10.5,10.4s10.4-4.7,10.4-10.4 S-11.5,40.3-17.2,40.3z M-19.4,44.2h4.4v0.5h-4.4V44.2z M-19.4,45.5h4.4v0.9h-4.4V45.5z M-17.2,57.2l-5-6.2h2.8v-3.9h4.4V51h2.8 L-17.2,57.2z" />
+    <path fill="none" d="M-2.2,65.7h-30v-30h30V65.7z" />
   </SvgIcon>
 )
 
@@ -459,8 +460,9 @@ export const DeleteIcon = props => (
 )
 
 export const NewFolderIcon = props => (
-  <SvgIcon viewBox="0 0 20 18" {...props}>
-    <path fillRule="evenodd" d="M12 2L9.999 0H0v18h20V2h-8zm2 9h-3v3H9v-3H6V9h3V6h2v3h3v2z" />
+  <SvgIcon viewBox="0 0 30 30" {...props}>
+    <path d="M24.8,11.8H9.6c-.9,0-1.2.6-1.3,1.3L6,24.1H22.5a1.59,1.59,0,0,0,1.3-1.3l2.3-9.6C26.3,12,25.5,11.8,24.8,11.8Zm-4,7.4H17.6v3.2H15.1V19.2H11.9V16.7h3.2V13.5h2.5v3.2h3.2Z" />
+    <path d="M8.5,10.9H23.4V9.1a.9.9,0,0,0-.9-.9H14.1V7.8c0-.5-.2-1-.8-1H5.8a.9.9,0,0,0-.9.9v15L7.2,12.1C7.5,11.4,7.8,10.9,8.5,10.9Z" />
   </SvgIcon>
 )
 
