@@ -27,6 +27,7 @@ class DeviceSelect extends React.Component {
     }
 
     this.enterSelectDevice = () => {
+      console.log('mdns', this.props.mdns)
       this.setState({ list: this.props.mdns, loading: true })
       this.timer = setTimeout(() => this.setState({ loading: false }), 2000)
     }
@@ -368,6 +369,9 @@ class DeviceSelect extends React.Component {
       </div>
     )
   }
+  componentDidMount () {
+    this.enterSelectDevice()
+  }
 
   componentWillUnmount () {
     clearInterval(this.timer)
@@ -394,22 +398,13 @@ class DeviceSelect extends React.Component {
 
     const arr = [...this.state.list]
 
+    const title = this.props.type === 'bind' ? i18n.__('Select Device To Bind') : i18n.__('Select Device To Login')
+
     return (
-      <div
-        style={{
-          width: '100%',
-          height: 'calc(100% - 150px)',
-          left: 0,
-          top: 110,
-          zIndex: 200,
-          overflow: 'hidden',
-          position: 'absolute',
-          backgroundColor: '#f3f8ff'
-        }}
-      >
+      <div style={{ width: '100%', height: '100%', backgroundColor: '#f3f8ff' }}>
         <div style={{ height: 49, width: '100%', display: 'flex', alignItems: 'center' }}>
           <div style={{ marginLeft: 30 }} className="title">
-            { i18n.__('Select Device To Bind') }
+            { title }
           </div>
           <div style={{ flexGrow: 1 }} />
           <SIButton onClick={this.refresh} > <RefreshIcon /> </SIButton>

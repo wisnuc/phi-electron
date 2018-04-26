@@ -264,25 +264,53 @@ class TrsContainer extends React.Component {
     return ({ percent, speed: `${this.formatSize(speed)}/s` })
   }
 
-  renderProcessSum () {
+  renderProcessSum ({ allPaused, userTasks }) {
     const pColor = 'rgba(0,0,0,.54)'
     const bColor = 'rgba(0,0,0,.12)'
     const { percent, speed } = this.calcTotalProcess()
 
     return (
-      <div style={{ height: '100%', width: '100%', display: 'flex', alignItems: 'center' }}>
-        <div style={{ width: 200 }}>
+      <div style={{ height: 50, width: '100%', display: 'flex', alignItems: 'center', backgroundColor: '#fafbfc' }}>
+        <div style={{ width: 100, marginLeft: 20 }}>
           { i18n.__('Transmission Process') }
         </div>
         {/* progress bar */}
-        <div style={{ display: 'flex', width: 400, height: 6, borderRadius: 2, backgroundColor: bColor }} >
-          <div style={{ backgroundColor: pColor, width: `${percent}%`, borderRadius: 2 }} />
+        <div style={{ display: 'flex', width: 320, height: 6, borderRadius: 3, backgroundColor: bColor }} >
+          <div style={{ backgroundColor: pColor, width: `${percent}%`, borderRadius: 3 }} />
         </div>
 
         <div style={{ width: 24 }} />
         {/* total speed */}
         <div style={{ fontSize: 14 }}>
           { speed }
+        </div>
+        <div style={{ flexGrow: 1 }} />
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          {
+            allPaused
+              ? (
+                <FlatButton
+                  label={i18n.__('Resume All')}
+                  disabled={!userTasks.length}
+                  icon={<PlaySvg style={{ color: '#000', opacity: 0.54 }} />}
+                  onClick={() => this.handleAll(userTasks, 'RESUME')}
+                />
+              )
+              : (
+                <FlatButton
+                  label={i18n.__('Pause All')}
+                  disabled={!userTasks.length}
+                  icon={<PauseSvg style={{ color: '#000', opacity: 0.54 }} />}
+                  onClick={() => this.handleAll(userTasks, 'PAUSE')}
+                />
+              )
+          }
+          <FlatButton
+            label={i18n.__('Clear All')}
+            disabled={!userTasks.length}
+            icon={<DeleteSvg style={{ color: '#000', opacity: 0.54 }} />}
+            onClick={() => this.toggleDialog('clearRunningDialog')}
+          />
         </div>
       </div>
     )
@@ -319,48 +347,6 @@ class TrsContainer extends React.Component {
     const list = []
 
     if (type === 'd' || type === 'u') {
-      /* running task title */
-      const runningTaskTitle = () => (
-        <div>
-          <div style={{ height: 24 }} />
-          <div style={titileStyle} >
-            <div style={{ width: 720, display: 'flex', alignItems: 'center', position: 'relative' }}>
-              { this.renderProcessSum() }
-            </div>
-            <div style={{ flexGrow: 1 }} />
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              {
-                allPaused
-                  ? (
-                    <FlatButton
-                      label={i18n.__('Resume All')}
-                      disabled={!userTasks.length}
-                      icon={<PlaySvg style={{ color: '#000', opacity: 0.54 }} />}
-                      onClick={() => this.handleAll(userTasks, 'RESUME')}
-                    />
-                  )
-                  : (
-                    <FlatButton
-                      label={i18n.__('Pause All')}
-                      disabled={!userTasks.length}
-                      icon={<PauseSvg style={{ color: '#000', opacity: 0.54 }} />}
-                      onClick={() => this.handleAll(userTasks, 'PAUSE')}
-                    />
-                  )
-              }
-              <FlatButton
-                label={i18n.__('Clear All')}
-                disabled={!userTasks.length}
-                icon={<DeleteSvg style={{ color: '#000', opacity: 0.54 }} />}
-                onClick={() => this.toggleDialog('clearRunningDialog')}
-              />
-            </div>
-          </div>
-        </div>
-      )
-
-      list.push(runningTaskTitle())
-
       /* running task list */
       list.push(...userTasks.map((task, index) => (
         <RunningTask
@@ -414,32 +400,29 @@ class TrsContainer extends React.Component {
       )))
     }
 
-    list.push(<div style={{ height: 56 }} />)
+    list.push(<div style={{ height: 60 }} />)
 
     /* rowCount */
     const rowCount = list.length
 
     /* rowHeight */
-    const allHeight = []
-    allHeight.length = rowCount
-    allHeight.fill(56)
-    allHeight[0] = 80
-    const rowHeight = ({ index }) => allHeight[index]
+    const rowHeight = 60
 
     /* rowRenderer */
     const rowRenderer = ({ key, index, style }) => (
       <div key={key} style={style}>
-        <div style={{ marginLeft: 20 }}>
-          { list[index] }
-        </div>
+        { list[index] }
       </div>
     )
     return (
-      <div style={{ height: '100%', width: '100%' }}>
+      <div style={{ height: '100%', width: '100%', padding: 20, boxSizing: 'border-box', position: 'relative' }}>
+        {/* Process Summary */}
+        { (type === 'd' || type === 'u') && this.renderProcessSum({ allPaused, userTasks }) }
+
         <AutoSizer>
           {({ height, width }) => (
             <List
-              height={height}
+              height={height - 50}
               width={width}
               rowHeight={rowHeight}
               rowRenderer={rowRenderer}
@@ -497,6 +480,7 @@ class TrsContainer extends React.Component {
             </div>
           )
         }
+
         {/* Delete Runing Tasks Dialog */}
         <DialogOverlay open={!!this.state.deleteRunningDialog}>
           <div>

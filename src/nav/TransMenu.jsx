@@ -1,7 +1,7 @@
 import React from 'react'
 import Radium from 'radium'
 
-const backgroundColor = '#E3F2FD'
+const backgroundColor = '#e1edfe'
 
 @Radium
 class MenuItem extends React.PureComponent {
@@ -15,7 +15,7 @@ class MenuItem extends React.PureComponent {
     return (
       <div
         style={{
-          width: 270,
+          width: 220,
           height: '100%',
           display: 'flex',
           alignItems: 'center',

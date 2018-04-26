@@ -72,7 +72,7 @@ class Account extends React.Component {
             <MenuItem
               primaryText={i18n.__('Log Out')}
               leftIcon={<UploadFile />}
-              onClick={() => {}}
+              onClick={this.props.logout}
               style={{ fontSize: 13 }}
             />
           </Menu>

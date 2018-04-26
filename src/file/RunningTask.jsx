@@ -10,7 +10,7 @@ import WarningIcon from 'material-ui/svg-icons/alert/warning'
 import DownloadSvg from 'material-ui/svg-icons/file/file-download'
 import UploadSvg from 'material-ui/svg-icons/file/file-upload'
 import MultiSvg from 'material-ui/svg-icons/content/content-copy'
-import IconButton from '../common/IconButton'
+import { IconButton } from 'material-ui'
 
 const svgStyle = { color: '#000', opacity: 0.54 }
 class RunningTask extends React.Component {
@@ -110,26 +110,25 @@ class RunningTask extends React.Component {
   }
 
   render () {
-    const task = this.props.task
+    console.log('RunningTask.jsx', this.props)
+    const { index, task } = this.props
     const pColor = task.paused ? 'rgba(0,0,0,.12)' : '#89c2f2'
     let pWidth = task.completeSize / task.size * 100
     if (pWidth === Infinity || !pWidth) pWidth = 0
+    const backgroundColor = this.state.isSelected ? '#f4f4f4' : index % 2 ? '#fafbfc' : '#FFF'
 
     return (
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
-          padding: '0 88px',
-          height: 56,
-          fontSize: 14,
-          color: 'rgba(0,0,0,0.87)',
-          backgroundColor: this.state.isSelected ? '#f4f4f4' : ''
+          height: 60,
+          backgroundColor
         }}
         onClick={this.selectTaskItem}
       >
         {/* task type */}
-        <div style={{ flex: '0 0 48px' }}>
+        <div style={{ width: 34, paddingLeft: 20 }}>
           { task.trsType === 'download' ? <DownloadSvg style={svgStyle} /> : <UploadSvg style={svgStyle} /> }
         </div>
 

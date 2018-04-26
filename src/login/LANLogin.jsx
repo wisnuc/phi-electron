@@ -62,11 +62,6 @@ class LANLogin extends React.Component {
     this.reset = () => {
       this.setState({ failed: false, pn: '', pnError: '', pwd: '', pwdError: '' })
     }
-
-    this.enterLANLogin = () => {
-      this.props.CST('device')
-      console.log('this.enterLANLogin')
-    }
   }
 
   componentDidMount () {

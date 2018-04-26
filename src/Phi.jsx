@@ -56,6 +56,12 @@ class Fruitmix extends React.Component {
 
     this.minimize = () => ipcRenderer.send('MINIMIZE')
 
+    this.logout = () => {
+      console.log('logout')
+      this.setState({ account: null })
+      this.nav('login')
+    }
+
     setTimeout(() => {
       const mdns = adjustSeq(global.mdnsStore)
       if (mdns.length > 0) {
@@ -121,7 +127,7 @@ class Fruitmix extends React.Component {
         break
 
       case 'user':
-        view = <Navigation {...this.state} />
+        view = <Navigation mdns={adjustSeq(global.mdnsStore)} {...this.state} />
         break
 
       default:
@@ -139,7 +145,7 @@ class Fruitmix extends React.Component {
           {
             this.state.account &&
               <div style={{ position: 'fixed', top: 12, right: 147, height: 36, WebkitAppRegion: 'no-drag' }}>
-                <Account user={this.state.account} />
+                <Account user={this.state.account} logout={this.logout} />
               </div>
           }
 

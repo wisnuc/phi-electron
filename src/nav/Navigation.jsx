@@ -27,6 +27,8 @@ import Networking from '../view/Networking'
 import ClientUpdate from '../view/ClientUpdate'
 import Plugin from '../view/Plugin'
 
+import DeviceSelect from '../login/DeviceSelect'
+
 import Fruitmix from '../common/fruitmix'
 import WindowAction from '../common/WindowAction'
 import { FileManage, TransIcon, DeviceChangeIcon, FuncIcon } from '../common/Svg'
@@ -82,7 +84,7 @@ class NavViews extends React.Component {
             this.navTo('home')
             break
           case 'transmission':
-            this.navTo('uploading')
+            this.navTo('downloading')
             break
           case 'settings':
             this.navTo('settings')
@@ -135,6 +137,11 @@ class NavViews extends React.Component {
     )
   }
 
+  renderChangeDevice () {
+    console.log('this.props renderChangeDevice', this.props)
+    return <DeviceSelect {...this.props} />
+  }
+
   renderHeader () {
     const navs = [
       {
@@ -153,7 +160,7 @@ class NavViews extends React.Component {
         selected: this.views[this.state.nav].navGroup() === 'selectingDevice',
         Icon: DeviceChangeIcon,
         text: i18n.__('Change Device'),
-        fn: () => this.props.nav('login')
+        fn: () => this.setState({ changeDevice: true })
       },
       {
         selected: this.views[this.state.nav].navGroup() === 'settings',
@@ -269,7 +276,7 @@ class NavViews extends React.Component {
   renderTrans () {
     return (
       <div style={{ height: '100%', width: '100%', position: 'relative' }}>
-        <div style={{ height: 64, width: '100%', display: 'flex', alignItems: 'center' }}>
+        <div style={{ height: 50, width: '100%', display: 'flex', alignItems: 'center' }}>
           <TransMenu
             views={this.views}
             nav={this.state.nav}
@@ -277,7 +284,7 @@ class NavViews extends React.Component {
           />
         </div>
 
-        <div style={{ height: 'calc(100% - 64px)', width: '100%' }} id="content-container">
+        <div style={{ height: 'calc(100% - 50px)', width: '100%' }} id="content-container">
           { this.renderView() }
         </div>
       </div>
@@ -313,6 +320,7 @@ class NavViews extends React.Component {
       default:
         break
     }
+    if (this.state.changeDevice) view = this.renderChangeDevice()
     return (
       <div style={{ width: '100%', height: '100%', overflow: 'hidden' }} >
         {/* Navs */}

@@ -49,7 +49,6 @@ class PhiLogin extends React.Component {
     }
 
     this.enterLANLogin = () => {
-      this.props.CST('device')
       this.props.phiLogin({ uuid: '123457', name: 'w' }) // TODO
       console.log('this.enterLANLogin')
     }

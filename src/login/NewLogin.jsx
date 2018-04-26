@@ -19,11 +19,6 @@ class LoginApp extends React.Component {
       hello: true
     }
 
-    /* change stage */
-    this.CST = (stage) => {
-      this.setState({ stage })
-    }
-
     this.login = () => {
       this.setState({ stage: 'addDevice' })
     }
@@ -76,22 +71,32 @@ class LoginApp extends React.Component {
     )
   }
 
+  renderDeviceSelect (props) {
+    return (
+      <div
+        style={{
+          position: 'absolute',
+          top: 110,
+          width: '100%',
+          height: 'calc(100% - 150px)',
+          zIndex: 200,
+          overflow: 'hidden'
+        }}
+      >
+        <DeviceSelect {...props} />
+      </div>
+    )
+  }
+
   render () {
     console.log('NewLogin', this.state, this.props)
-    const props = Object.assign({ CST: this.CST }, this.props)
+    const props = this.props
     let view = null
-    switch (this.state.stage) {
-      case 'login':
-        view = <PhiLogin {...props} />
-        break
-      case 'device':
-        view = <DeviceSelect {...props} />
-        break
-      default:
-        break
-    }
 
-    if (!window.navigator.onLine) view = this.renderNetError()
+    if (this.props.account) view = this.renderDeviceSelect(props)
+    else view = <PhiLogin {...props} />
+
+    // if (!window.navigator.onLine) view = this.renderNetError()
 
     return (
       <div
