@@ -9,7 +9,7 @@ class MenuCard extends Button {
       <div style={{ width: '100%', height: '100%' }} className="flexCenter">
         <div
           {...this.funcs}
-          style={{ width: 220, height: 100, display: 'flex', alignItems: 'center', backgroundColor }}
+          style={{ width: 250, height: 120, display: 'flex', alignItems: 'center', backgroundColor }}
           onClick={onClick}
         >
           <div style={{ width: 120, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -36,13 +36,13 @@ class Menu extends React.Component {
     const group = 'settings'
     const list = Object.keys(views).filter(key => views[key].navGroup() === group && key !== 'settings')
     return (
-      <div style={{ width: '100%', height: '100%' }} className="flexCenter" >
+      <div style={{ width: '100%', height: '100%', boxSizing: 'border-box', paddingBottom: 130 }} className="flexCenter" >
         <div
           style={{
-            width: 900,
+            width: 1000,
             height: 360,
             display: 'grid',
-            gridGap: 20,
+            gridGap: 0,
             gridTemplateColumns: '1fr 1fr 1fr 1fr'
           }}
         >

@@ -25,7 +25,6 @@ import Device from '../view/Device'
 import FirmwareUpdate from '../view/FirmwareUpdate'
 import Networking from '../view/Networking'
 import ClientUpdate from '../view/ClientUpdate'
-import Plugin from '../view/Plugin'
 
 import DeviceSelect from '../login/DeviceSelect'
 
@@ -63,8 +62,7 @@ class NavViews extends React.Component {
       { name: 'device', View: Device },
       { name: 'firmwareUpdate', View: FirmwareUpdate },
       { name: 'networking', View: Networking },
-      { name: 'clientUpdate', View: ClientUpdate },
-      { name: 'plugin', View: Plugin }
+      { name: 'clientUpdate', View: ClientUpdate }
     ])
 
     this.navTo = (nav, target) => {
@@ -78,6 +76,7 @@ class NavViews extends React.Component {
     }
 
     this.navGroup = (group) => {
+      if (this.state.changeDevice) this.setState({ changeDevice: false })
       if (!this.state.nav || this.views[this.state.nav].navGroup() !== group) {
         switch (group) {
           case 'file':
