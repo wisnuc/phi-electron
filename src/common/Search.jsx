@@ -24,9 +24,8 @@ class Search extends Button {
 
   render () {
     const searchHint = '搜索全部文件'
-    const backgroundBlendMode = this.state.hover ? 'normal, overlay' : undefined
     const backgroundImage = this.state.hover
-      ? 'linear-gradient(135deg, #c29fff, #7a7afc), linear-gradient(rgba(0, 0, 0, 0.33), rgba(0, 0, 0, 0.33))'
+      ? 'linear-gradient(135deg, #a36fff, #3d3dfa)'
       : 'linear-gradient(135deg, #c29fff, #7a7afc)'
 
     return (
@@ -60,8 +59,7 @@ class Search extends Button {
             cursor: 'pointer',
             borderRadius: '0 17px 17px 0',
             boxSizing: 'border-box',
-            backgroundImage,
-            backgroundBlendMode
+            backgroundImage
           }}
           className="flexCenter"
         >

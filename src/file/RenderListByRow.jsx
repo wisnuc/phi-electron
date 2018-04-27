@@ -332,7 +332,7 @@ class RenderListByRow extends React.Component {
             zIndex: 100,
             display: 'flex',
             alignItems: 'center',
-            backgroundColor: '#edf2fa'
+            backgroundColor: '#eef3fa'
           }}
           role="presentation"
         >

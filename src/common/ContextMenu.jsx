@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react'
-import { menuBoxShadow } from './boxShadow'
 
 class ContextMenu extends PureComponent {
   constructor () {
@@ -48,11 +47,10 @@ class ContextMenu extends PureComponent {
     const innerStyle = {
       position: 'relative',
       left: this.state.left,
-      width: 240,
-      paddingTop: 8,
-      paddingBottom: 8,
       backgroundColor: 'white',
       overflow: 'hidden',
+      border: 'solid 1px #d9d9d9',
+      display: 'inline-block',
       transition: 'all 125ms cubic-bezier(0.0, 0.0, 0.2, 1)'
     }
 
@@ -61,7 +59,6 @@ class ContextMenu extends PureComponent {
         Object.assign(innerStyle, {
           top: this.state.top - 8,
           maxHeight: 0,
-          boxShadow: 'none',
           opacity: 0,
           transition: 'all 125ms cubic-bezier(0.0, 0.0, 0.2, 1)'
         })
@@ -69,7 +66,6 @@ class ContextMenu extends PureComponent {
       case 2:
         Object.assign(innerStyle, {
           top: this.state.top,
-          boxShadow: menuBoxShadow,
           maxHeight: 384,
           opacity: 1,
           transition: 'all 125ms cubic-bezier(0.0, 0.0, 0.2, 1)'
@@ -78,7 +74,6 @@ class ContextMenu extends PureComponent {
       case 3:
         Object.assign(innerStyle, {
           top: this.state.top,
-          boxShadow: menuBoxShadow,
           maxHeight: 384,
           opacity: 0,
           transition: `all ${this.out}ms cubic-bezier(0.4, 0.0, 1, 1)`
@@ -90,7 +85,7 @@ class ContextMenu extends PureComponent {
     }
 
     return (
-      <div style={overlayStyle} onMouseDown={this.props.onRequestClose}>
+      <div style={overlayStyle} onClick={this.props.onRequestClose}>
         <div style={innerStyle}>
           { this.state.stage !== 3 ? this.props.children : this.preChildren}
         </div>

@@ -82,17 +82,15 @@ class ScrollBar extends React.PureComponent {
       position: 'absolute',
       top: 0,
       right: 0,
-      width: 3,
+      width: this.state.hover ? 8 : 3,
       borderRadius: 4,
       transition: 'opacity 225ms',
-      opacity: this.state.hover ? 1 : 0,
       display: barH < height ? '' : 'none'
     }
     return (
       <div style={{ position: 'relative', width, height, overflow: 'hidden' }}>
         <div
           style={{ position: 'absolute', width: width + 16, height, overflowY: 'scroll', overflowX: 'hidden', top: 0, left: 0 }}
-          onMouseMove={this.onHover}
         >
           <List
             {...this.props}
