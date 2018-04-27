@@ -22,7 +22,7 @@ class FileUploadButton extends React.Component {
 
   render () {
     const color = '#7d868f'
-    const iconStyle = { fill: color, width: 20, height: 20 }
+    const iconStyle = { fill: color, width: 30, height: 30 }
     return (
       <div>
         <FlatButton

@@ -4,13 +4,13 @@ import Tooltip from '../common/Tooltip'
 
 const styles = {
   largeIcon: {
-    width: 20,
-    height: 20
+    width: 30,
+    height: 30
   },
   largeButton: {
     width: 32,
     height: 32,
-    padding: 6,
+    padding: 1,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'

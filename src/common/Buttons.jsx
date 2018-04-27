@@ -220,7 +220,7 @@ export class MenuButton extends Button {
           }}
           {...this.funcs}
         >
-          <Icon style={{ margin: '0 30px', width: 24, height: 24, fill: iconColor }} />
+          <Icon style={{ margin: '0 30px', width: 30, height: 30, fill: iconColor }} />
           <div style={{ color: textColor }}> { text } </div>
         </div>
       </div>
