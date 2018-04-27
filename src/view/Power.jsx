@@ -1,24 +1,28 @@
 import React from 'react'
 import i18n from 'i18n'
-import ActionPowerSettingsNew from 'material-ui/svg-icons/action/power-settings-new'
 import Base from './Base'
 import PowerApp from '../device/PowerApp'
 
 class Power extends Base {
   navGroup () {
-    return 'device'
+    return 'settings'
   }
 
   menuName () {
     return i18n.__('Power Menu Name')
   }
 
-  menuIcon () {
-    return ActionPowerSettingsNew
+  menuDes () {
+    return i18n.__('Power Description')
   }
 
-  appBarStyle () {
-    return 'colored'
+  menuIcon () {
+    const Pic = props => (
+      <div {...props}>
+        <img src="./assets/images/ic-restart.png" alt="" width={44} height={48} />
+      </div>
+    )
+    return Pic
   }
 
   renderContent ({ openSnackBar }) {

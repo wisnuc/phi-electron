@@ -1,6 +1,5 @@
 import React from 'react'
 import i18n from 'i18n'
-import ActionSettings from 'material-ui/svg-icons/action/extension'
 import Base from './Base'
 import PluginApp from '../device/PluginApp'
 
@@ -28,19 +27,20 @@ class Plugin extends Base {
   }
 
   menuName () {
-    return i18n.__('Plugin Menu Name')
+    return i18n.__('ResetDevice Menu Name')
   }
 
-  quickName () {
-    return i18n.__('Plugin Quick Name')
+  menuDes () {
+    return i18n.__('ResetDevice Description')
   }
 
   menuIcon () {
-    return ActionSettings
-  }
-
-  appBarStyle () {
-    return 'colored'
+    const Pic = props => (
+      <div {...props}>
+        <img src="./assets/images/ic-restore.png" alt="" width={44} height={48} />
+      </div>
+    )
+    return Pic
   }
 
   renderContent ({ openSnackBar }) {

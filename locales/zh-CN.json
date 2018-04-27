@@ -474,49 +474,8 @@
   "New Firmware Version Detected %s": "发现新的固件: %s",
   "New Firmware Version Detected Text": "点击去安装该固件。",
 
-  "==== view/Account.jsx ====": "",
-  "Account Menu Name": "我",
-
-  "==== view/AdminUsers.jsx ====": "",
-  "AdminUsers Menu Name": "用户管理",
-  "AdminUsers Quick Name": "用户管理",
-  "AdminUsers Title": "用户管理",
-
-  "==== view/Assistant.jsx ====": "",
-  "Assistant Menu Name": "智能助理",
-  "Assistant Quick Name": "智能助理",
-
   "==== view/Base.jsx ====": "",
   "Error in Base Text": "加载页面失败",
-
-  "==== view/ClientUpdate.jsx ====": "",
-  "ClientUpdate Menu Name": "客户端升级",
-  "ClientUpdate Quick Name": "客户端升级",
-
-  "==== view/Device.jsx ====": "",
-  "Device Menu Name": "设备信息",
-  "Device Quick Name": "设备",
-
-  "==== view/Docker.jsx ====": "",
-  "Docker Menu Name": "Docker",
-
-  "==== view/Download.jsx ====": "",
-  "Download Menu Name": "BT下载",
-  "Download Quick Name": "正在下载",
-  "Download Title %s": "正在下载（%s）",
-
-  "==== view/FanControl.jsx ====": "",
-  "FanControl Menu Name": "风扇控制",
-  "FanControl Quick Name": "风扇",
-
-  "==== view/FinishedList.jsx ====": "",
-  "FinishedList Menu Name": "已完成",
-  "FinishedList Quick Name": "已完成",
-  "FinishedList Title %s": "已完成（%s）",
-
-  "==== view/FirmwareUpdate.jsx ====": "",
-  "FirmwareUpdate Menu Name": "固件升级",
-  "FirmwareUpdate Quick Name": "固件升级",
 
   "==== view/Home.jsx ====": "",
   "Home Menu Name": "全部文件",
@@ -545,9 +504,20 @@
   "Download": "下载",
   "Delete": "删除",
 
-  "==== view/InstalledApps.jsx ====": "",
-  "InstalledApps Menu Name": "已安装应用",
+  "==== view/Public.jsx ====": "",
+  "Public Drive": "共享盘",
+  "Public Menu Name": "共享盘",
+  "Public Quick Name": "共享盘",
+  "No Public Drive": "没有可用的共享盘",
+  "Jump to Create": "去创建",
 
+  "==== view/Photo.jsx ====": "",
+  "Photo Menu Name": "我的图片",
+  "Photo Quick Name": "图片",
+  "Photo Title and Count %s": {
+    "zero": "我的图片",
+    "other": "我的图片（%s）"
+  },
   "Date Unknown Text": "神秘时间",
   "Shift Tips": "按住Shifit并点击，即可一次选择多项内容",
   "Remove Media Success %s": "移除了%s张照片",
@@ -564,48 +534,6 @@
   "Upload Media Failed": "上传失败",
   "Upload": "上传",
 
-  "==== view/Networking.jsx ====": "",
-  "Networking Menu Name": "网络设置",
-  "Networking Quick Name": "网络",
-
-  "==== view/Plugin.jsx ====": "",
-  "Plugin Menu Name": "服务",
-  "Plugin Quick Name": "服务",
-
-  "==== view/Power.jsx ====": "",
-  "Power Menu Name": "电源管理",
-
-  "==== view/Public.jsx ====": "",
-  "Public Drive": "共享盘",
-  "Public Menu Name": "共享盘",
-  "Public Quick Name": "共享盘",
-  "No Public Drive": "没有可用的共享盘",
-  "Jump to Create": "去创建",
-
-  "==== view/Settings.jsx ====": "",
-  "Settings Menu Name": "功能设置",
-  "Settings Quick Name": "设置",
-
-  "==== view/Share.jsx ====": "",
-  "Share Menu Name": "公共盘",
-  "Share Title": "公共盘",
-
-  "==== view/TimeDate.jsx ====": "",
-  "TimeDate Menu Name": "时间与日期",
-  "TimeDate Quick Name": "时间",
-
-  "==== view/Transmission.jsx ====": "",
-  "Transmission Menu Name": "传输列表",
-  "Transmission Title": "传输列表",
-
-  "==== view/Photo.jsx ====": "",
-  "Photo Menu Name": "我的图片",
-  "Photo Quick Name": "图片",
-  "Photo Title and Count %s": {
-    "zero": "我的图片",
-    "other": "我的图片（%s）"
-  },
-
   "==== view/Docs.jsx ====": "",
   "Docs Menu Name": "我的文本",
 
@@ -617,6 +545,59 @@
 
   "==== view/USB.jsx ====": "",
   "USB Menu Name": "USB存储",
+
+  "==== view/Downloading.jsx ====": "",
+  "Downloading Menu Name": "正在下载",
+
+  "==== view/Uploading.jsx ====": "",
+  "Uploading Menu Name": "正在上传",
+
+  "==== view/Finished.jsx ====": "",
+  "Finished Menu Name": "传输完成",
+
+  "==== view/Device.jsx ====": "",
+  "Device Menu Name": "设备信息",
+  "Device Description": "NAS设备信息详情",
+
+  "==== view/DiskInfo.jsx ====": "",
+  "Disk Menu Name": "磁盘信息",
+  "Disk Description": "磁盘信息及格式化",
+
+  "==== view/Networking.jsx ====": "",
+  "Networking Menu Name": "网络设置",
+  "Networking Description": "设备网络状态设置",
+
+  "==== view/Sleep.jsx ====": "",
+  "SleepMode Menu Name": "睡眠模式",
+  "SleepMode Description": "关灯减噪及定时",
+
+  "==== view/ClientUpdate.jsx ====": "",
+  "ClientUpdate Menu Name": "客户端升级",
+  "ClientUpdate Description": "客户端软件版本升级",
+
+  "==== view/FirmwareUpdate.jsx ====": "",
+  "FirmwareUpdate Menu Name": "固件升级",
+  "FirmwareUpdate Description": "设备固件升级设置",
+
+  "==== view/LANPassword ====": "",
+  "LANPassword Menu Name": "离线密码",
+  "LANPassword Description": "离线密码设置",
+
+  "==== view/Power.jsx ====": "",
+  "Power Menu Name": "设备重启",
+  "Power Description": "重启NAS设备",
+
+  "==== view/Samba.jsx ====": "",
+  "Samba Menu Name": "SAMBA",
+  "Samba Description": "SAMBA设置",
+
+  "==== view/DLNA.jsx ====": "",
+  "DLNA Menu Name": "DLNA",
+  "DLNA Description": "DLNA设置",
+
+  "==== view/ResetDevice.jsx ====": "",
+  "ResetDevice Menu Name": "解绑及恢复出厂",
+  "ResetDevice Description": "可选保存数据",
 
   "==== file/ErrorDialogInTrans.jsx ====": "",
   "EEXIST": "文件命名冲突",
@@ -716,6 +697,7 @@
   "Pause": "暂停",
 
   "==== file/TransmissionContainer.jsx ====": "",
+  "Transmission Process": "传输总进度",
   "Running Task Title %s": "传输中（%s）",
   "Resume All": "全部开始",
   "Pause All": "全部暂停",
@@ -858,6 +840,8 @@
   "Detail": "详情",
   "Change Device": "切换设备",
   "Files Menu Name": "文件管理",
+  "Transmission Menu Name": "传输列表",
+  "Settings Menu Name": "功能设置",
 
   "==== nav/FileMenu.jsx ====": "",
   "File Menu Title": "N2家庭",

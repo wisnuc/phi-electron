@@ -1,6 +1,5 @@
 import React from 'react'
 import i18n from 'i18n'
-import ActionSettingsEthernet from 'material-ui/svg-icons/action/settings-ethernet'
 import Base from './Base'
 import NetworkInfo from '../device/NetworkInfo'
 
@@ -18,24 +17,20 @@ class Ethernet extends Base {
   }
 
   menuName () {
-    return i18n.__('Networking Menu Name')
+    return i18n.__('LANPassword Menu Name')
+  }
+
+  menuDes () {
+    return i18n.__('LANPassword Description')
   }
 
   menuIcon () {
     const Pic = props => (
       <div {...props}>
-        <img src="./assets/images/ic-network.png" alt="" width={48} height={48} />
+        <img src="./assets/images/ic-offlinepassword.png" alt="" width={42} height={49} />
       </div>
     )
     return Pic
-  }
-
-  quickName () {
-    return i18n.__('Networking Quick Name')
-  }
-
-  appBarStyle () {
-    return 'colored'
   }
 
   renderContent ({ openSnackBar }) {

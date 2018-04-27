@@ -22,12 +22,18 @@ import Finished from '../view/Finished'
 
 import Settings from '../view/Settings'
 import Device from '../view/Device'
-import FirmwareUpdate from '../view/FirmwareUpdate'
+import DiskInfo from '../view/DiskInfo'
 import Networking from '../view/Networking'
+import Sleep from '../view/Sleep'
 import ClientUpdate from '../view/ClientUpdate'
+import FirmwareUpdate from '../view/FirmwareUpdate'
+import LANPassword from '../view/LANPassword'
+import Power from '../view/Power'
+import Samba from '../view/Samba'
+import DLNA from '../view/DLNA'
+import ResetDevice from '../view/ResetDevice'
 
 import DeviceSelect from '../login/DeviceSelect'
-
 import Fruitmix from '../common/fruitmix'
 import WindowAction from '../common/WindowAction'
 import { FileManage, TransIcon, DeviceChangeIcon, FuncIcon } from '../common/Svg'
@@ -60,9 +66,16 @@ class NavViews extends React.Component {
 
       { name: 'settings', View: Settings },
       { name: 'device', View: Device },
-      { name: 'firmwareUpdate', View: FirmwareUpdate },
+      { name: 'diskInfo', View: DiskInfo },
       { name: 'networking', View: Networking },
-      { name: 'clientUpdate', View: ClientUpdate }
+      { name: 'sleep', View: Sleep },
+      { name: 'clientUpdate', View: ClientUpdate },
+      { name: 'firmwareUpdate', View: FirmwareUpdate },
+      { name: 'lanPassword', View: LANPassword },
+      { name: 'power', View: Power },
+      { name: 'sambe', View: Samba },
+      { name: 'dlna', View: DLNA },
+      { name: 'resetDevice', View: ResetDevice }
     ])
 
     this.navTo = (nav, target) => {

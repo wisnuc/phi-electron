@@ -13,21 +13,17 @@ class Update extends Base {
     return i18n.__('ClientUpdate Menu Name')
   }
 
+  menuDes () {
+    return i18n.__('ClientUpdate Description')
+  }
+
   menuIcon () {
     const Pic = props => (
       <div {...props}>
-        <img src="./assets/images/ic-update.png" alt="" width={48} height={48} />
+        <img src="./assets/images/ic-update.png" alt="" width={44} height={48} />
       </div>
     )
     return Pic
-  }
-
-  quickName () {
-    return i18n.__('ClientUpdate Quick Name')
-  }
-
-  appBarStyle () {
-    return 'colored'
   }
 
   renderContent ({ openSnackBar }) {

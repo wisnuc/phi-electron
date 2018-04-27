@@ -19,7 +19,7 @@ class MenuCard extends Button {
             <div style={{ fontSize: 16, color: '#525a60' }}>
               { name }
             </div>
-            <div style={{ height: 2 }} />
+            <div style={{ height: 10 }} />
             <div style={{ fontSize: 12, color: '#888a8c' }}>
               { des }
             </div>
@@ -47,7 +47,7 @@ class Menu extends React.Component {
           }}
         >
           {
-            [...list, ...list].map((key, i) => (
+            [...list].map((key, i) => (
               <MenuCard
                 key={key + i.toString()}
                 Icon={views[key].menuIcon()}

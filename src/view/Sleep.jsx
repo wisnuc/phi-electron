@@ -1,37 +1,48 @@
 import React from 'react'
 import i18n from 'i18n'
-import ActionPowerSettingsNew from 'material-ui/svg-icons/action/power-settings-new'
 import Base from './Base'
-import PowerApp from '../device/PowerApp'
+import NetworkInfo from '../device/NetworkInfo'
 
-class Power extends Base {
+class Ethernet extends Base {
+  willReceiveProps (nextProps) {
+    this.handleProps(nextProps.selectedDevice, ['net'])
+  }
+
+  navEnter () {
+    this.ctx.props.selectedDevice.request('net')
+  }
+
   navGroup () {
-    return 'device'
+    return 'settings'
   }
 
   menuName () {
-    return i18n.__('Power Menu Name')
+    return i18n.__('SleepMode Menu Name')
+  }
+
+  menuDes () {
+    return i18n.__('SleepMode Description')
   }
 
   menuIcon () {
-    return ActionPowerSettingsNew
-  }
-
-  appBarStyle () {
-    return 'colored'
+    const Pic = props => (
+      <div {...props}>
+        <img src="./assets/images/ic-sleepmode.png" alt="" width={44} height={48} />
+      </div>
+    )
+    return Pic
   }
 
   renderContent ({ openSnackBar }) {
     return (
-      <PowerApp
-        nav={this.ctx.props.nav}
+      <NetworkInfo
+        net={this.state.net}
+        primaryColor={this.groupPrimaryColor()}
         apis={this.ctx.props.apis}
         openSnackBar={openSnackBar}
-        primaryColor={this.groupPrimaryColor()}
-        selectedDevice={this.ctx.props.selectedDevice}
       />
     )
   }
 }
 
-export default Power
+export default Ethernet

@@ -41,25 +41,17 @@ class FirmwareUpdate extends Base {
     return i18n.__('FirmwareUpdate Menu Name')
   }
 
-  quickName () {
-    return i18n.__('FirmwareUpdate Quick Name')
+  menuDes () {
+    return i18n.__('FirmwareUpdate Description')
   }
 
   menuIcon () {
     const Pic = props => (
       <div {...props}>
-        <img src="./assets/images/ic-firmwareupdate.png" alt="" width={48} height={48} />
+        <img src="./assets/images/ic-firmwareupdate.png" alt="" width={44} height={48} />
       </div>
     )
     return Pic
-  }
-
-  appBarStyle () {
-    return 'colored'
-  }
-
-  detailIcon () {
-    return ListIcon
   }
 
   render ({ openSnackBar }) {

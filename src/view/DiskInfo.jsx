@@ -1,6 +1,5 @@
 import React from 'react'
 import i18n from 'i18n'
-import ActionDns from 'material-ui/svg-icons/action/dns'
 import Base from './Base'
 import DeviceInfo from '../device/DeviceInfo'
 
@@ -34,28 +33,20 @@ class Device extends Base {
   }
 
   menuName () {
-    return i18n.__('Device Menu Name')
+    return i18n.__('Disk Menu Name')
   }
 
   menuDes () {
-    return i18n.__('Device Description')
+    return i18n.__('Disk Description')
   }
 
   menuIcon () {
     const Pic = props => (
       <div {...props}>
-        <img src="./assets/images/ic-deviceinfo.png" alt="" width={48} height={48} />
+        <img src="./assets/images/ic-diskinfo.png" alt="" width={44} height={45} />
       </div>
     )
     return Pic
-  }
-
-  quickName () {
-    return i18n.__('Device Quick Name')
-  }
-
-  appBarStyle () {
-    return 'colored'
   }
 
   renderContent ({ openSnackBar }) {
