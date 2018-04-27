@@ -598,6 +598,7 @@
   "==== view/ResetDevice.jsx ====": "",
   "ResetDevice Menu Name": "解绑及恢复出厂",
   "ResetDevice Description": "可选保存数据",
+  "ResetDevice Text": "设备将会还原回出厂状态，并将与斐讯账号解绑，硬盘中的数据不会受影响，请确认是否继续",
 
   "==== file/ErrorDialogInTrans.jsx ====": "",
   "EEXIST": "文件命名冲突",

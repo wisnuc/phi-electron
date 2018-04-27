@@ -1,17 +1,9 @@
 import React from 'react'
 import i18n from 'i18n'
 import Base from './Base'
-import NetworkInfo from '../device/NetworkInfo'
+import SleepMode from '../settings/SleepMode'
 
-class Ethernet extends Base {
-  willReceiveProps (nextProps) {
-    this.handleProps(nextProps.selectedDevice, ['net'])
-  }
-
-  navEnter () {
-    this.ctx.props.selectedDevice.request('net')
-  }
-
+class Sleep extends Base {
   navGroup () {
     return 'settings'
   }
@@ -35,9 +27,7 @@ class Ethernet extends Base {
 
   renderContent ({ openSnackBar }) {
     return (
-      <NetworkInfo
-        net={this.state.net}
-        primaryColor={this.groupPrimaryColor()}
+      <SleepMode
         apis={this.ctx.props.apis}
         openSnackBar={openSnackBar}
       />
@@ -45,4 +35,4 @@ class Ethernet extends Base {
   }
 }
 
-export default Ethernet
+export default Sleep

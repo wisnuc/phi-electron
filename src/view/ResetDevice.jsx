@@ -1,27 +1,9 @@
-import React from 'react'
 import i18n from 'i18n'
+import React from 'react'
 import Base from './Base'
-import PluginApp from '../device/PluginApp'
+import Reset from '../settings/Reset'
 
-class Plugin extends Base {
-  constructor (ctx) {
-    super(ctx)
-
-    this.refresh = () => {
-      this.ctx.props.apis.request('samba')
-      this.ctx.props.apis.request('dlna')
-      this.ctx.props.apis.request('bt')
-    }
-  }
-
-  willReceiveProps (nextProps) {
-    this.handleProps(nextProps.apis, ['samba', 'dlna', 'bt'])
-  }
-
-  navEnter () {
-    this.refresh()
-  }
-
+class ResetDevice extends Base {
   navGroup () {
     return 'settings'
   }
@@ -45,17 +27,12 @@ class Plugin extends Base {
 
   renderContent ({ openSnackBar }) {
     return (
-      <PluginApp
-        primaryColor={this.groupPrimaryColor()}
-        openSnackBar={openSnackBar}
-        dlna={this.state.dlna}
-        samba={this.state.samba}
-        bt={this.state.bt}
+      <Reset
         apis={this.ctx.props.apis}
-        refresh={this.refresh}
+        openSnackBar={openSnackBar}
       />
     )
   }
 }
 
-export default Plugin
+export default ResetDevice

@@ -305,14 +305,31 @@ class NavViews extends React.Component {
   }
 
   renderSettings () {
-    if (this.state.nav !== 'settings') return this.renderView()
+    if (this.state.nav === 'settings') {
+      return (
+        <div style={{ height: '100%', width: '100%', position: 'relative' }}>
+          <SettingsMenu
+            views={this.views}
+            nav={this.state.nav}
+            navTo={this.navTo}
+          />
+        </div>
+      )
+    }
+    const title = this.views[this.state.nav].menuName()
     return (
-      <div style={{ height: '100%', width: '100%', position: 'relative' }}>
-        <SettingsMenu
-          views={this.views}
-          nav={this.state.nav}
-          navTo={this.navTo}
-        />
+      <div style={{ height: '100%', width: '100%' }}>
+        <div
+          style={{ height: 50, width: '100%', backgroundColor: '#e1edfe', display: 'flex', alignItems: 'center' }}
+          onClick={() => this.navTo('settings')}
+        >
+          <div style={{ fontSize: 20, color: '#525a60', marginLeft: 40 }}>
+            { title }
+          </div>
+        </div>
+        <div style={{ height: 'calc(100% - 50px)', width: '100%' }}>
+          { this.renderView() }
+        </div>
       </div>
     )
   }
