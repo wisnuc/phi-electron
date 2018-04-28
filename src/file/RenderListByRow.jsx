@@ -15,7 +15,7 @@ import { FolderIcon, ShareDisk } from '../common/Svg'
 import FlatButton from '../common/FlatButton'
 import { formatDate, formatMtime } from '../common/datetime'
 
-const checkStyle = { width: 16, height: 16, marginLeft: 14 }
+const checkStyle = { width: 16, height: 16, marginLeft: 12 }
 
 class Row extends React.PureComponent {
   render () {
@@ -92,7 +92,7 @@ class Row extends React.PureComponent {
           onDoubleClick={e => this.props.onRowDoubleClick(e, index)}
           onMouseDown={e => onRowMouseDown(e, index)}
         >
-          <div style={{ width: 40 }}>
+          <div style={{ width: 36 }}>
             {
               isSelected
                 ? <ToggleCheckBox style={Object.assign({ color: '#31a0f5' }, checkStyle)} />
@@ -102,7 +102,7 @@ class Row extends React.PureComponent {
 
           {/* file type may be: folder, public, directory, file, unsupported */}
           <div
-            style={{ width: 24 }}
+            style={{ width: 32 }}
             onMouseDown={e => onContentMouseDown(e, index)}
           >
             {
@@ -115,9 +115,9 @@ class Row extends React.PureComponent {
                     : <ErrorIcon style={{ color: 'rgba(0,0,0,0.54)', width: 24, height: 24 }} />
             }
           </div>
-          <div style={{ width: 16 }} />
+          <div style={{ width: 12 }} />
 
-          <div style={{ width: 'calc(100% - 469px)', display: 'flex', alignItems: 'center' }} >
+          <div style={{ width: 'calc(100% - 470px)', display: 'flex', alignItems: 'center' }} >
             <div
               style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', color: '#525a60', letterSpacing: 1.4 }}
               onMouseDown={e => onContentMouseDown(e, index)}

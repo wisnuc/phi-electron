@@ -94,7 +94,7 @@ class ScrollBar extends React.PureComponent {
         >
           <List
             {...this.props}
-            style={Object.assign({ outline: 'none' }, this.props.style)}
+            style={Object.assign({ outline: 'none', overflowY: 'scroll' }, this.props.style)}
             ref={ref => (this.refList = ref)}
             width={width + 16}
             onScroll={({ scrollTop }) => this.onScroll((height - barH) * scrollTop / (allHeight - height), scrollTop)}

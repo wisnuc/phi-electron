@@ -1,13 +1,14 @@
 import React from 'react'
 import i18n from 'i18n'
 import { ipcRenderer } from 'electron'
-import { List, AutoSizer } from 'react-virtualized'
+import { AutoSizer } from 'react-virtualized'
 import { Paper, Menu, MenuItem } from 'material-ui'
 
 import RunningTask from './RunningTask'
 import FinishedTask from './FinishedTask'
 import ErrorDialogInTrans from './ErrorDialogInTrans'
 import { StartAllIcon, PauseAllIcon, DeleteAllIcon } from '../common/Svg'
+import ScrollBar from '../common/ScrollBar'
 import { LIButton } from '../common/IconButton'
 import DialogOverlay from '../common/DialogOverlay'
 import PureDialog from '../common/PureDialog'
@@ -269,7 +270,7 @@ class TrsContainer extends React.Component {
     const { percent, speed } = this.calcTotalProcess()
 
     return (
-      <div style={{ height: 50, width: '100%', display: 'flex', alignItems: 'center', backgroundColor: '#fafbfc' }}>
+      <div style={{ height: 50, width: 'calc(100% - 20px)', display: 'flex', alignItems: 'center', backgroundColor: '#fafbfc' }}>
         <div style={{ width: 100, marginLeft: 20, color: '#525a60', letterSpacing: 1.4 }}>
           { type === 'u' ? i18n.__('Uploading Process Summary') : i18n.__('Downloading Process Summary')}
         </div>
@@ -414,18 +415,29 @@ class TrsContainer extends React.Component {
 
     /* rowRenderer */
     const rowRenderer = ({ key, index, style }) => (
-      <div key={key} style={style}>
-        { list[index] }
+      <div key={key} style={Object.assign({ display: 'flex' }, style)}>
+        <div style={{ height: '100%', width: 'calc(100% - 20px)' }}> { list[index] } </div>
+        <div style={{ width: 20, height: '100%' }} />
       </div>
     )
+
     return (
-      <div style={{ height: '100%', width: '100%', padding: 20, boxSizing: 'border-box', position: 'relative' }}>
+      <div
+        style={{
+          height: '100%',
+          width: '100%',
+          padding: '20px 0px 0px 20px',
+          boxSizing: 'border-box',
+          position: 'relative'
+        }}
+      >
         {/* Process Summary */}
         { (type === 'd' || type === 'u') && this.renderProcessSum({ allPaused, type, userTasks }) }
 
         <AutoSizer>
           {({ height, width }) => (
-            <List
+            <ScrollBar
+              allHeight={rowHeight * rowCount}
               height={height - 50}
               width={width}
               rowHeight={rowHeight}
