@@ -1,16 +1,13 @@
 import React from 'react'
-import Radium from 'radium'
+import { Button } from '../common/Buttons'
 
-const backgroundColor = '#e1edfe'
-
-@Radium
-class MenuItem extends React.PureComponent {
+class MenuItem extends Button {
   render () {
-    const { text, primaryColor, selected } = this.props
+    const { text, selected } = this.props
 
-    const iconColor = selected ? primaryColor : 'rgba(0,0,0,0.54)'
-    const fontColor = selected ? primaryColor : 'rgba(0,0,0,0.87)'
     const Icon = this.props.icon
+
+    const backgroundColor = selected ? '#FFF' : this.state.hover ? '#BBDEFB' : undefined
 
     return (
       <div
@@ -19,15 +16,14 @@ class MenuItem extends React.PureComponent {
           height: '100%',
           display: 'flex',
           alignItems: 'center',
-          ':hover': { backgroundColor: '#BBDEFB' },
-          backgroundColor: selected ? '#FFF' : backgroundColor
+          backgroundColor
         }}
-        onClick={this.props.onClick}
+        {...this.funcs}
       >
         <div style={{ flexGrow: 1 }} />
-        <Icon style={{ width: 24, height: 24, color: iconColor }} />
+        <Icon style={{ width: 30, height: 30 }} />
         <div style={{ flex: '0 0 8px' }} />
-        <div style={{ fontSize: 14, color: fontColor, fontWeight: 500 }}>
+        <div style={{ fontSize: 16, color: '#525a60' }}>
           { text }
         </div>
         <div style={{ flex: '0 0 16px' }} />
@@ -44,14 +40,14 @@ class NavDrawer extends React.Component {
     const primaryColor = views[nav].primaryColor()
 
     return (
-      <div style={{ display: 'flex', alignItems: 'center', height: '100%', width: '100%', backgroundColor }}>
+      <div style={{ display: 'flex', alignItems: 'center', height: '100%', width: '100%', backgroundColor: '#e1edfe' }}>
         {
           Object.keys(views)
             .filter(key => views[key].navGroup() === group)
             .map(key => (
               <MenuItem
                 key={key}
-                icon={views[key].menuIcon().icon}
+                icon={views[key].menuIcon()}
                 text={views[key].menuName()}
                 primaryColor={primaryColor}
                 selected={key === nav}

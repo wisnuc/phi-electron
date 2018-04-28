@@ -1,6 +1,5 @@
 import React from 'react'
 import i18n from 'i18n'
-import ActionDns from 'material-ui/svg-icons/action/dns'
 import Base from './Base'
 import DeviceInfo from '../device/DeviceInfo'
 

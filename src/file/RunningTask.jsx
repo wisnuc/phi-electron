@@ -1,16 +1,11 @@
-import React from 'react'
 import i18n from 'i18n'
-import DeleteSvg from 'material-ui/svg-icons/action/delete'
-import FileSvg from 'material-ui/svg-icons/editor/insert-drive-file'
-import FolderSvg from 'material-ui/svg-icons/file/folder'
-import PlaySvg from 'material-ui/svg-icons/av/play-arrow'
-import PauseSvg from 'material-ui/svg-icons/av/pause'
+import React from 'react'
 import InfoSvg from 'material-ui/svg-icons/action/info'
 import WarningIcon from 'material-ui/svg-icons/alert/warning'
-import DownloadSvg from 'material-ui/svg-icons/file/file-download'
-import UploadSvg from 'material-ui/svg-icons/file/file-upload'
 import MultiSvg from 'material-ui/svg-icons/content/content-copy'
-import { IconButton } from 'material-ui'
+import renderFileIcon from '../common/renderFileIcon'
+import { FolderIcon, TaskStartIcon, TaskPauseIcon, TaskDeleteIcon } from '../common/Svg'
+import { LIButton } from '../common/IconButton'
 
 const svgStyle = { color: '#000', opacity: 0.54 }
 class RunningTask extends React.Component {
@@ -43,17 +38,18 @@ class RunningTask extends React.Component {
     }
   }
 
-  getStatus (task) {
+  statusOrSpeed (task) {
     if (task.state === 'failed') return i18n.__('Task Failed')
     if (task.paused) return i18n.__('Task Paused')
+    if (task.state === 'uploading' || task.state === 'downloading') return this.formatSpeed(task.speed)
     if (task.state === 'visitless') return i18n.__('Task Visitless')
     if (task.state === 'hashing') return i18n.__('Task Hashing')
     if (task.state === 'diffing') return i18n.__('Task Diffing')
     if (task.state === 'uploadless') return i18n.__('Task Uploadless')
-    if (task.state === 'uploading') return i18n.__('Task Uploading')
     if (task.state === 'downloadless') return i18n.__('Task Downloadless')
-    if (task.state === 'downloading') return i18n.__('Task Downloading')
     if (task.state === 'finish') return i18n.__('Task Finished')
+    // if (task.state === 'downloading') return i18n.__('Task Downloading')
+    // if (task.state === 'uploading') return i18n.__('Task Uploading')
     return i18n.__('Task Unknown State')
   }
 
@@ -90,19 +86,6 @@ class RunningTask extends React.Component {
     return `${h} : ${m} : ${s}`
   }
 
-  renderSizeAndSpeed (task) {
-    const speed = this.props.task.paused ? '' : this.formatSpeed(task.speed)
-    const finishCount = task.finishCount > 0 ? task.finishCount : 0
-    const uploaded = task.count === 1 ? this.formatSize(task.completeSize) : `${finishCount}/${task.count}`
-    return (
-      <div style={{ height: 20, width: 200, display: 'flex', alignItems: 'center' }}>
-        <div> { uploaded } </div>
-        <div style={{ flexGrow: 1 }} />
-        <div> { speed } </div>
-      </div>
-    )
-  }
-
   renderPercent (task) {
     if (!task.size) return '0%'
     const percent = (Math.min(task.completeSize / task.size, 1) * 100).toFixed(2)
@@ -112,97 +95,84 @@ class RunningTask extends React.Component {
   render () {
     console.log('RunningTask.jsx', this.props)
     const { index, task } = this.props
-    const pColor = task.paused ? 'rgba(0,0,0,.12)' : '#89c2f2'
+    const pColor = task.paused ? 'rgba(0,0,0,.12)' : '#31a0f5'
     let pWidth = task.completeSize / task.size * 100
     if (pWidth === Infinity || !pWidth) pWidth = 0
     const backgroundColor = this.state.isSelected ? '#f4f4f4' : index % 2 ? '#fafbfc' : '#FFF'
 
+    const finishCount = task.finishCount > 0 ? task.finishCount : 0
+    const finishedSize = task.count === 1
+      ? `${this.formatSize(task.completeSize)}/${this.formatSize(task.size)}` : `${finishCount}/${task.count}`
+
     return (
       <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          height: 60,
-          backgroundColor
-        }}
+        style={{ display: 'flex', alignItems: 'center', height: 60, backgroundColor }}
         onClick={this.selectTaskItem}
       >
-        {/* task type */}
-        <div style={{ width: 34, paddingLeft: 20 }}>
-          { task.trsType === 'download' ? <DownloadSvg style={svgStyle} /> : <UploadSvg style={svgStyle} /> }
-        </div>
-
         {/* task item type */}
-        <div style={{ flex: '0 0 32px' }}>
-          { task.entries.length > 1 ? <MultiSvg style={svgStyle} />
-            : task.taskType === 'file' ? <FileSvg style={svgStyle} /> : <FolderSvg style={svgStyle} /> }
+        <div style={{ width: 33, paddingLeft: 17, display: 'flex', alignItems: 'center' }}>
+          {
+            task.entries.length > 1 ? <MultiSvg style={svgStyle} />
+              : task.taskType === 'file' ? renderFileIcon(task.name, null, 30)
+                : <FolderIcon style={{ width: 30, height: 30 }} />
+          }
         </div>
 
         {/* task item name */}
-        <div style={{ display: 'flex', flexGrow: 1, alignItems: 'center' }} >
-          <div
-            style={{
-              maxWidth: 264,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap'
-            }}
-          >
-            { task.name }
+        <div style={{ width: 'calc(100% - 512px)', padding: '10px 0 10px 12px' }} >
+          <div style={{ display: 'flex', alignItems: 'center', height: 20, color: '#525a60' }} >
+            <div style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', color: '#525a60', letterSpacing: 1.4 }}>
+              { task.name }
+            </div>
           </div>
-          <div>
-            { task.entries.length > 1 && i18n.__('And Other %s Items', task.entries.length)}
+          <div style={{ display: 'flex', alignItems: 'center', height: 20, fontSize: 12, letterSpacing: 1.2, color: '#888a8c' }} >
+            { finishedSize }
           </div>
         </div>
 
         {/* progress bar */}
-        <div style={{ flex: '0 0 240px' }}>
-          <div
-            style={{
-              display: 'flex',
-              width: 200,
-              height: 6,
-              marginRight: 12,
-              borderRadius: 2,
-              backgroundColor: 'rgba(0,0,0,.12)'
-            }}
-          >
-            <div style={{ backgroundColor: pColor, width: `${pWidth}%` }} />
+        <div style={{ width: 280, padding: '10px 0' }} >
+          <div style={{ display: 'flex', alignItems: 'center', height: 20 }} >
+            <div style={{ display: 'flex', width: 280, height: 4, borderRadius: 2, backgroundColor: 'rgba(0,0,0,.05)' }} >
+              <div style={{ backgroundColor: pColor, width: `${pWidth}%` }} />
+            </div>
           </div>
-
-          {/* Uploaded size and speed */}
-          { this.renderSizeAndSpeed(task) }
+          <div style={{ display: 'flex', alignItems: 'center', height: 20, fontSize: 12, letterSpacing: 1.2, color: '#888a8c' }} >
+            <div>
+              { this.statusOrSpeed(task) }
+            </div>
+            <div style={{ flexGrow: 1 }} />
+            <div>
+              { this.formatSeconds(task.restTime) }
+            </div>
+          </div>
         </div>
 
-        {/* percent */}
-        <div style={{ flex: '0 0 80px' }}>{ this.renderPercent(task) }</div>
-
-        {/* task restTime */}
-        <div style={{ flex: '0 0 120px' }}>{ this.formatSeconds(task.restTime) }</div>
-
-        {/* Status */}
-        <div style={{ flex: '0 0 100px' }}>{ this.getStatus(task) }</div>
-
         {/* Pause, resume and delete task */}
-        <div style={{ flex: i18n.getLocale() === 'zh-CN' ? '0 0 120px' : '0 0 132px', display: 'flex', alignItems: 'center' }} >
+        <div style={{ width: 170, display: 'flex', alignItems: 'center' }} >
+          <div style={{ width: 60 }} />
           {
             task.state === 'failed'
               ? (
-                <IconButton onClick={this.checkError} tooltip={i18n.__('Detail')}>
+                <LIButton onClick={this.checkError} tooltip={i18n.__('Detail')} >
                   { task.errors.length ? <InfoSvg color="#F44336" /> : <WarningIcon color="#FB8C00" /> }
-                </IconButton>
+                </LIButton>
               )
               : (
-                <IconButton iconStyle={svgStyle} onClick={this.toggleTask} tooltip={task.paused ? i18n.__('Resume') : i18n.__('Pause')}>
-                  { task.paused ? <PlaySvg /> : <PauseSvg /> }
-                </IconButton>
+                <LIButton onClick={this.toggleTask} tooltip={task.paused ? i18n.__('Resume') : i18n.__('Pause')} >
+                  { task.paused ? <TaskStartIcon /> : <TaskPauseIcon /> }
+                </LIButton>
               )
           }
+          <div style={{ width: 10 }} />
           {
             task.paused &&
-              <IconButton iconStyle={svgStyle} onClick={this.props.delete} tooltip={i18n.__('Delete')}>
-                <DeleteSvg />
-              </IconButton>
+              <LIButton
+                onClick={this.props.delete}
+                tooltip={i18n.__('Delete')}
+              >
+                <TaskDeleteIcon />
+              </LIButton>
           }
         </div>
       </div>

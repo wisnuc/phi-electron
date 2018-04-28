@@ -698,7 +698,8 @@
   "Pause": "暂停",
 
   "==== file/TransmissionContainer.jsx ====": "",
-  "Transmission Process": "传输总进度",
+  "Downloading Process Summary": "总下载进度",
+  "Uploading Process Summary": "总上传进度",
   "Running Task Title %s": "传输中（%s）",
   "Resume All": "全部开始",
   "Pause All": "全部暂停",

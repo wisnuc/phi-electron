@@ -3,16 +3,15 @@ import i18n from 'i18n'
 import { ipcRenderer } from 'electron'
 import { List, AutoSizer } from 'react-virtualized'
 import { Paper, Menu, MenuItem } from 'material-ui'
-import DeleteSvg from 'material-ui/svg-icons/action/delete'
-import PlaySvg from 'material-ui/svg-icons/av/play-arrow'
-import PauseSvg from 'material-ui/svg-icons/av/pause'
 
 import RunningTask from './RunningTask'
 import FinishedTask from './FinishedTask'
 import ErrorDialogInTrans from './ErrorDialogInTrans'
-import FlatButton from '../common/FlatButton'
+import { StartAllIcon, PauseAllIcon, DeleteAllIcon } from '../common/Svg'
+import { LIButton } from '../common/IconButton'
 import DialogOverlay from '../common/DialogOverlay'
 import PureDialog from '../common/PureDialog'
+import FlatButton from '../common/FlatButton'
 
 class TrsContainer extends React.Component {
   constructor (props) {
@@ -264,53 +263,58 @@ class TrsContainer extends React.Component {
     return ({ percent, speed: `${this.formatSize(speed)}/s` })
   }
 
-  renderProcessSum ({ allPaused, userTasks }) {
-    const pColor = 'rgba(0,0,0,.54)'
-    const bColor = 'rgba(0,0,0,.12)'
+  renderProcessSum ({ allPaused, type, userTasks }) {
+    const pColor = allPaused ? '#9da1a6' : '#31a0f5'
+    const bColor = 'rgba(0,0,0,.05)'
     const { percent, speed } = this.calcTotalProcess()
 
     return (
       <div style={{ height: 50, width: '100%', display: 'flex', alignItems: 'center', backgroundColor: '#fafbfc' }}>
-        <div style={{ width: 100, marginLeft: 20 }}>
-          { i18n.__('Transmission Process') }
+        <div style={{ width: 100, marginLeft: 20, color: '#525a60', letterSpacing: 1.4 }}>
+          { type === 'u' ? i18n.__('Uploading Process Summary') : i18n.__('Downloading Process Summary')}
         </div>
         {/* progress bar */}
         <div style={{ display: 'flex', width: 320, height: 6, borderRadius: 3, backgroundColor: bColor }} >
           <div style={{ backgroundColor: pColor, width: `${percent}%`, borderRadius: 3 }} />
         </div>
 
-        <div style={{ width: 24 }} />
+        <div style={{ width: 14 }} />
         {/* total speed */}
-        <div style={{ fontSize: 14 }}>
-          { speed }
+        <div style={{ fontSize: 14, letterSpacing: 1.4, color: '#888a8c' }}>
+          { allPaused ? '--' : speed }
         </div>
         <div style={{ flexGrow: 1 }} />
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', width: 110 }}>
           {
             allPaused
               ? (
-                <FlatButton
-                  label={i18n.__('Resume All')}
+                <LIButton
                   disabled={!userTasks.length}
-                  icon={<PlaySvg style={{ color: '#000', opacity: 0.54 }} />}
                   onClick={() => this.handleAll(userTasks, 'RESUME')}
-                />
+                  tooltip={i18n.__('Resume All')}
+                >
+                  <StartAllIcon />
+                </LIButton>
               )
               : (
-                <FlatButton
-                  label={i18n.__('Pause All')}
+                <LIButton
                   disabled={!userTasks.length}
-                  icon={<PauseSvg style={{ color: '#000', opacity: 0.54 }} />}
                   onClick={() => this.handleAll(userTasks, 'PAUSE')}
-                />
+                  tooltip={i18n.__('Pause All')}
+                >
+                  <PauseAllIcon />
+                </LIButton>
               )
           }
-          <FlatButton
-            label={i18n.__('Clear All')}
+          <div style={{ width: 10 }} />
+          <LIButton
             disabled={!userTasks.length}
-            icon={<DeleteSvg style={{ color: '#000', opacity: 0.54 }} />}
             onClick={() => this.toggleDialog('clearRunningDialog')}
-          />
+            tooltip={i18n.__('Clear All')}
+          >
+            <DeleteAllIcon />
+          </LIButton>
+          <div style={{ width: 40 }} />
         </div>
       </div>
     )
@@ -374,7 +378,7 @@ class TrsContainer extends React.Component {
               <FlatButton
                 label={i18n.__('Clear All Record')}
                 disabled={!finishTasks.length}
-                icon={<DeleteSvg style={{ color: '#000', opacity: 0.54 }} />}
+                icon={<DeleteAllIcon style={{ color: '#000', opacity: 0.54 }} />}
                 onClick={() => this.toggleDialog('clearFinishedDialog')}
               />
             </div>
@@ -417,7 +421,7 @@ class TrsContainer extends React.Component {
     return (
       <div style={{ height: '100%', width: '100%', padding: 20, boxSizing: 'border-box', position: 'relative' }}>
         {/* Process Summary */}
-        { (type === 'd' || type === 'u') && this.renderProcessSum({ allPaused, userTasks }) }
+        { (type === 'd' || type === 'u') && this.renderProcessSum({ allPaused, type, userTasks }) }
 
         <AutoSizer>
           {({ height, width }) => (

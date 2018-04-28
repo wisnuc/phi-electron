@@ -1,7 +1,5 @@
-import React from 'react'
 import i18n from 'i18n'
-import ListIcon from 'material-ui/svg-icons/action/list'
-
+import React from 'react'
 import Base from './Base'
 import FirmwareUpdateApp from '../device/FirmwareUpdateApp'
 

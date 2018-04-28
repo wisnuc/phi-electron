@@ -1,7 +1,7 @@
 import React from 'react'
 import i18n from 'i18n'
 import { ipcRenderer } from 'electron'
-import ActionSwapVerticalCircle from 'material-ui/svg-icons/action/swap-vertical-circle'
+import { FinishedIcon } from '../common/Svg'
 import TrsContainer from '../file/TransmissionContainer'
 import Base from './Base'
 
@@ -19,16 +19,7 @@ class Transmission extends Base {
   }
 
   menuIcon () {
-    return ({
-      icon: ActionSwapVerticalCircle,
-      gif: {
-        raw: './assets/images/transmission_raw.gif',
-        hover: './assets/images/transmission_hover.gif',
-        selected: './assets/images/transmission_selected.gif',
-        selected_dark: './assets/images/transmission_selected_dark.gif',
-        selected_hover: './assets/images/transmission_selected_hover.gif'
-      }
-    })
+    return FinishedIcon
   }
 
   appBarStyle () {

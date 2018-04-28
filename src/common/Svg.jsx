@@ -527,3 +527,68 @@ export const MyVideoIcon = props => (
     <polygon points="11 21 21 15 11 9 11 21" />
   </SvgIcon>
 )
+
+export const UploadingIcon = props => (
+  <SvgIcon viewBox="0 0 30 30" {...props}>
+    <circle fill="#8a69ed" cx="15" cy="15" r="12" />
+    <polygon fill="#fff" points="10.71 15.71 14 12.41 14 19 16 19 16 12.41 19.29 15.71 20.71 14.29 15 8.59 9.29 14.29 10.71 15.71" />
+    <rect fill="#fff" opacity="0.7" x="14" y="20" width="2" height="2" transform="translate(30 42) rotate(180)" />
+  </SvgIcon>
+)
+
+export const DownloadingIcon = props => (
+  <SvgIcon viewBox="0 0 30 30" {...props}>
+    <circle fill="#4dbc72" cx="15" cy="15" r="12" />
+    <polygon fill="#fff" points="19.29 14.29 16 17.59 16 11 14 11 14 17.59 10.71 14.29 9.29 15.71 15 21.41 20.71 15.71 19.29 14.29" />
+    <rect fill="#fff" opacity="0.8" x="14" y="8" width="2" height="2" />
+  </SvgIcon>
+)
+
+export const FinishedIcon = props => (
+  <SvgIcon viewBox="0 0 30 30" {...props}>
+    <circle fill="#37a7f4" cx="15" cy="15" r="12" />
+    <polygon fill="#fff" points="13.5 19.91 8.29 14.71 9.71 13.29 13.5 17.09 18.13 12.46 19.54 13.87 13.5 19.91" />
+    <rect fill="#fff" opacity="0.8" x="19.21" y="10.74" width="2.09" height="2" transform="translate(-2.37 17.76) rotate(-45)" />
+  </SvgIcon>
+)
+
+export const StartAllIcon = props => (
+  <SvgIcon viewBox="0 0 30 30" {...props}>
+    <path d="M15,5A10,10,0,1,0,25,15,10,10,0,0,0,15,5ZM12,19V11l8,4Z" />
+  </SvgIcon>
+)
+
+export const PauseAllIcon = props => (
+  <SvgIcon viewBox="0 0 30 30" {...props}>
+    <path d="M15,5A10,10,0,1,0,25,15,10,10,0,0,0,15,5ZM14,19H12V11h2Zm4,0H16V11h2Z" transform="translate(0)" />
+  </SvgIcon>
+)
+
+export const DeleteAllIcon = props => (
+  <SvgIcon viewBox="0 0 30 30" {...props}>
+    <path d="M15,5A10,10,0,1,0,25,15,10,10,0,0,0,15,5Zm4.24,12.83-1.41,1.41L15,16.41l-2.83,2.83-1.41-1.41L13.59,15l-2.83-2.83,1.41-1.41L15,13.59l2.83-2.83,1.41,1.41L16.41,15Z" />
+  </SvgIcon>
+)
+
+export const TaskStartIcon = props => (
+  <SvgIcon viewBox="0 0 30 30" {...props}>
+    <path d="M10.25,9.42,20.17,15l-9.92,5.58V9.42M8.25,6V24l16-9Z" />
+  </SvgIcon>
+)
+
+export const TaskPauseIcon = props => (
+  <SvgIcon viewBox="0 0 30 30" {...props}>
+    <rect x="10" y="7" width="2" height="16" />
+    <rect x="18" y="7" width="2" height="16" />
+  </SvgIcon>
+)
+
+export const TaskDeleteIcon = props => (
+  <SvgIcon viewBox="0 0 30 30" {...props}>
+    <rect x="12" y="14" width="2" height="6" />
+    <rect x="6" y="9" width="18" height="2" />
+    <rect x="16" y="14" width="2" height="6" />
+    <rect x="12" y="6" width="6" height="2" />
+    <polygon points="20 22 10 22 10 12 8 12 8 24 22 24 22 12 20 12 20 22" />
+  </SvgIcon>
+)
