@@ -6,6 +6,7 @@ import { ipcRenderer } from 'electron'
 
 import FileMenu from './FileMenu'
 import TransMenu from './TransMenu'
+import TransCount from './TransCount'
 import SettingsMenu from './SettingMenu'
 
 import Home from '../view/Home'
@@ -228,6 +229,18 @@ class NavViews extends React.Component {
             </div>
           ))
         }
+        {/* Trans Count */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 20,
+            left: 420,
+            width: 30,
+            height: 30
+          }}
+        >
+          <TransCount />
+        </div>
       </div>
     )
   }
