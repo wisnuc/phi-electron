@@ -49,7 +49,7 @@ class ContextMenu extends PureComponent {
       left: this.state.left,
       backgroundColor: 'white',
       overflow: 'hidden',
-      border: 'solid 1px #d9d9d9',
+      boxShadow: '0px 10px 20px 0 rgba(23, 99, 207, 0.1)',
       display: 'inline-block',
       transition: 'all 125ms cubic-bezier(0.0, 0.0, 0.2, 1)'
     }
