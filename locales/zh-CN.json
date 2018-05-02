@@ -568,6 +568,10 @@
   "==== view/Sleep.jsx ====": "",
   "SleepMode Menu Name": "睡眠模式",
   "SleepMode Description": "关灯减噪及定时",
+  "Sleep Duration": "睡眠时段",
+  "Sleep Mode": "睡眠模式",
+  "Sleep Mode Text": "进入睡眠模式后会关闭灯光并减少噪音，可能会影响部分性能",
+  "Time Switch": "定时开关",
 
   "==== view/ClientUpdate.jsx ====": "",
   "ClientUpdate Menu Name": "客户端升级",

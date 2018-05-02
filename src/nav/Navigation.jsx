@@ -1,8 +1,7 @@
 import i18n from 'i18n'
 import React from 'react'
-import { Snackbar } from 'material-ui'
-
 import { ipcRenderer } from 'electron'
+import { Snackbar, FlatButton } from 'material-ui'
 
 import FileMenu from './FileMenu'
 import TransMenu from './TransMenu'
@@ -37,7 +36,7 @@ import ResetDevice from '../view/ResetDevice'
 import DeviceSelect from '../login/DeviceSelect'
 import Fruitmix from '../common/fruitmix'
 import WindowAction from '../common/WindowAction'
-import { FileManage, TransIcon, DeviceChangeIcon, FuncIcon } from '../common/Svg'
+import { FileManage, TransIcon, DeviceChangeIcon, FuncIcon, BackIcon } from '../common/Svg'
 
 const HEADER_HEIGHT = 110
 
@@ -323,12 +322,17 @@ class NavViews extends React.Component {
     return (
       <div style={{ height: '100%', width: '100%' }}>
         <div
-          style={{ height: 50, width: '100%', backgroundColor: '#e1edfe', display: 'flex', alignItems: 'center' }}
-          onClick={() => this.navTo('settings')}
+          style={{ height: 60, width: 210 }}
         >
-          <div style={{ fontSize: 20, color: '#525a60', marginLeft: 40 }}>
-            { title }
-          </div>
+          <FlatButton
+            label={title}
+            labelStyle={{ height: 60, width: 210, lineHeight: '60px', fontSize: 22, color: '#525a60', marginLeft: 8 }}
+            hoverColor="rgba(0,0,0,.04)"
+            rippleColor="rgba(0,0,0,.3)"
+            icon={<BackIcon style={{ width: 20, height: 20 }} />}
+            onClick={() => this.navTo('settings')}
+            style={{ height: 60, width: 210, borderRadius: '0 30px 30px 0' }}
+          />
         </div>
         <div style={{ height: 'calc(100% - 50px)', width: '100%' }}>
           { this.renderView() }

@@ -16,7 +16,7 @@ class SleepMode extends React.Component {
   renderRow ({ type, enabled, func }) {
     return (
       <div style={{ height: 56, width: '100%', display: 'flex', alignItems: 'center' }} key={type}>
-        <div style={{ display: 'flex', alignItems: 'center', color: '#525a60' }}>
+        <div style={{ width: 150, textAlign: 'right', color: '#525a60' }}>
           { type }
         </div>
         <div style={{ flexGrow: 1 }} />
@@ -32,7 +32,7 @@ class SleepMode extends React.Component {
   renderTimeDur () {
     return (
       <div style={{ height: 56, width: '100%', display: 'flex', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', color: '#525a60' }}>
+        <div style={{ width: 150, textAlign: 'right', color: '#525a60' }}>
           { i18n.__('Sleep Duration') }
         </div>
         <div style={{ flexGrow: 1 }} />
@@ -61,17 +61,17 @@ class SleepMode extends React.Component {
       }
     ]
     return (
-      <div style={{ width: '100%', height: '100%', boxSizing: 'border-box', paddingBottom: 200 }} className="flexCenter" >
-        <div style={{ width: 280 }}>
+      <div style={{ width: '100%', height: '100%' }} className="flexCenter" >
+        <div style={{ width: 480, paddingRight: 160, paddingBottom: 60 }}>
           { this.renderRow(settings[0]) }
 
-          <div style={{ width: 280, color: '#888a8c' }}>
+          <div style={{ width: 320, color: '#888a8c', paddingLeft: 160 }}>
             { i18n.__('Sleep Mode Text') }
           </div>
 
-          <div style={{ height: 5 }} />
-          <Divider color="#f2f2f2" />
-          <div style={{ height: 5 }} />
+          <div style={{ height: 10 }} />
+          <Divider color="#f2f2f2" style={{ marginLeft: 160 }} />
+          <div style={{ height: 10 }} />
 
           { this.renderRow(settings[1]) }
 
@@ -79,7 +79,7 @@ class SleepMode extends React.Component {
 
           <div style={{ height: 30 }} />
 
-          <div style={{ width: 240, height: 40, margin: '0 auto' }}>
+          <div style={{ width: 240, height: 40, margin: '0 auto', paddingLeft: 160 }}>
             <RRButton
               label={i18n.__('Save')}
               onClick={this.save}
