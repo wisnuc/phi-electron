@@ -159,25 +159,25 @@ class NavViews extends React.Component {
   renderHeader () {
     const navs = [
       {
-        selected: this.views[this.state.nav].navGroup() === 'file',
+        selected: !this.state.changeDevice && this.views[this.state.nav].navGroup() === 'file',
         Icon: FileManage,
         text: i18n.__('Files Menu Name'),
         fn: () => this.navGroup('file')
       },
       {
-        selected: this.views[this.state.nav].navGroup() === 'transmission',
+        selected: !this.state.changeDevice && this.views[this.state.nav].navGroup() === 'transmission',
         Icon: TransIcon,
         text: i18n.__('Transmission Menu Name'),
         fn: () => this.navGroup('transmission')
       },
       {
-        selected: this.views[this.state.nav].navGroup() === 'selectingDevice',
+        selected: !!this.state.changeDevice,
         Icon: DeviceChangeIcon,
         text: i18n.__('Change Device'),
         fn: () => this.setState({ changeDevice: true })
       },
       {
-        selected: this.views[this.state.nav].navGroup() === 'settings',
+        selected: !this.state.changeDevice && this.views[this.state.nav].navGroup() === 'settings',
         Icon: FuncIcon,
         text: i18n.__('Settings Menu Name'),
         fn: () => this.navGroup('settings')
@@ -230,17 +230,7 @@ class NavViews extends React.Component {
           ))
         }
         {/* Trans Count */}
-        <div
-          style={{
-            position: 'absolute',
-            top: 20,
-            left: 420,
-            width: 30,
-            height: 30
-          }}
-        >
-          <TransCount />
-        </div>
+        <div style={{ position: 'absolute', top: 20, left: 420, width: 30, height: 30 }} > <TransCount /> </div>
       </div>
     )
   }

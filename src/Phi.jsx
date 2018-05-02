@@ -138,21 +138,35 @@ class Fruitmix extends React.Component {
 
     return (
       <MuiThemeProvider muiTheme={this.state.theme}>
-        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%' }}>
-          { view }
+        <div style={{ backgroundColor: 'transparent' }}>
+          <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: '#FFF' }}>
+            { view }
 
-          {/* Account */}
-          {
-            this.state.account &&
-              <div style={{ position: 'fixed', top: 12, right: 147, height: 36, WebkitAppRegion: 'no-drag' }}>
-                <Account user={this.state.account} logout={this.logout} />
-              </div>
-          }
+            {/* Account */}
+            {
+              this.state.account &&
+                <div style={{ position: 'fixed', top: 12, right: 147, height: 36, WebkitAppRegion: 'no-drag' }}>
+                  <Account user={this.state.account} logout={this.logout} />
+                </div>
+            }
 
-          {/* No WebkitAppRegion */}
-          <div style={Object.assign({ left: 0, height: 5, width: '100%' }, nodrag)} />
-          <div style={Object.assign({ left: 0, height: 110, width: 5 }, nodrag)} />
-          <div style={Object.assign({ right: 0, height: 110, width: 5 }, nodrag)} />
+            {/* No WebkitAppRegion */}
+            <div style={Object.assign({ left: 0, height: 5, width: '100%' }, nodrag)} />
+            <div style={Object.assign({ left: 0, height: 110, width: 5 }, nodrag)} />
+            <div style={Object.assign({ right: 0, height: 110, width: 5 }, nodrag)} />
+          </div>
+          {/*
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              right: 0,
+              width: 4,
+              height: '100%',
+              backgroundImage: 'linear-gradient(to right, rgba(0,0,0,.1), transparent)'
+            }}
+          />
+          */}
         </div>
       </MuiThemeProvider>
     )
