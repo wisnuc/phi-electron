@@ -82,7 +82,7 @@ class ScrollBar extends React.PureComponent {
       position: 'absolute',
       top: 0,
       right: 0,
-      width: this.state.hover ? 8 : 3,
+      width: this.state.hover ? 10 : 3,
       borderRadius: 4,
       transition: 'opacity 225ms',
       display: barH < height ? '' : 'none'
@@ -100,9 +100,13 @@ class ScrollBar extends React.PureComponent {
             onScroll={({ scrollTop }) => this.onScroll((height - barH) * scrollTop / (allHeight - height), scrollTop)}
           />
         </div>
+        {/* scrollBar hover area */}
+        <div
+          style={Object.assign({ backgroundColor: 'transparent', height }, barStyle, { width: 10 })}
+          onMouseMove={this.onHover}
+        />
         {/* scrollBar background */}
         <div
-          ref={ref => (this.refBg = ref)}
           style={Object.assign({ backgroundColor: 'rgba(0,0,0,.1)', height }, barStyle)}
           onMouseMove={this.onHover}
         />

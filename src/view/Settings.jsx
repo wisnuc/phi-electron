@@ -18,14 +18,6 @@ class Settings extends Base {
     return ActionSettings
   }
 
-  quickName () {
-    return i18n.__('Settings Quick Name')
-  }
-
-  appBarStyle () {
-    return 'colored'
-  }
-
   renderContent ({ openSnackBar }) {
     return (
       <SettingsApp
