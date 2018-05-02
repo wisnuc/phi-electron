@@ -1,7 +1,6 @@
 import React from 'react'
 import i18n from 'i18n'
-import { teal600, lightBlue600, lightGreen700, blueGrey400, blueGrey500, deepPurple500, pinkA200
-} from 'material-ui/styles/colors'
+import { pinkA200 } from 'material-ui/styles/colors'
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu'
 import ErrorIcon from 'material-ui/svg-icons/alert/error'
 import { IconButton } from 'material-ui'
@@ -54,35 +53,7 @@ class Base extends EventEmitter {
   }
 
   groupPrimaryColor () {
-    const group = this.navGroup()
-    switch (group) {
-      case 'file':
-        return teal600
-      case 'box':
-        return teal600
-      case 'transmission':
-        return teal600
-      case 'group':
-        return teal600
-      case 'media':
-        return lightBlue600
-      case 'public':
-        return lightGreen700
-      case 'physical':
-        return lightGreen700
-      case 'docker':
-        return blueGrey500
-      case 'settings':
-        return blueGrey400
-      case 'device':
-        return deepPurple500
-      case 'update':
-        return blueGrey400
-      case 'user':
-        return deepPurple500
-      default:
-        return teal600
-    }
+    return '#31a0f5'
   }
 
   groupAccentColor () {

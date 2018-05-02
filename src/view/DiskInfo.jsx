@@ -1,9 +1,9 @@
-import React from 'react'
 import i18n from 'i18n'
+import React from 'react'
 import Base from './Base'
-import DeviceInfo from '../device/DeviceInfo'
+import Disk from '../settings/Disk'
 
-class Device extends Base {
+class DiskInfo extends Base {
   constructor (ctx) {
     super(ctx)
 
@@ -51,14 +51,13 @@ class Device extends Base {
 
   renderContent ({ openSnackBar }) {
     return (
-      <DeviceInfo
+      <Disk
         {...this.state}
         selectedDevice={this.ctx.props.selectedDevice}
-        primaryColor={this.groupPrimaryColor()}
         openSnackBar={openSnackBar}
       />
     )
   }
 }
 
-export default Device
+export default DiskInfo

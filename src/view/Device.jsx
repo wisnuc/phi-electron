@@ -1,7 +1,7 @@
 import React from 'react'
 import i18n from 'i18n'
 import Base from './Base'
-import DeviceInfo from '../device/DeviceInfo'
+import DeviceInfo from '../settings/DeviceInfo'
 
 class Device extends Base {
   constructor (ctx) {
