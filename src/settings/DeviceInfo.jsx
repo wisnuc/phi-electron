@@ -278,12 +278,12 @@ class DeviceInfo extends React.PureComponent {
     ]
 
     const listData = [
-      { title: 'Device Model', value: 'N2' },
-      { title: 'Current IP', value: '192.168.2.23' },
-      { title: 'MAC Address', value: '20:25:45:31:13' },
-      { title: 'Client Version', value: '1.0.13' },
-      { title: 'Hardware Version', value: '1.0.0.9' },
-      { title: 'Firmware Version', value: '20.2.0.1' }
+      { title: i18n.__('Device Model'), value: 'N2' },
+      { title: i18n.__('Current IP'), value: '192.168.2.23' },
+      { title: i18n.__('Mac Address'), value: '20:25:45:31:13' },
+      { title: i18n.__('Client Version'), value: '1.0.13' },
+      { title: i18n.__('Hardware Version'), value: '1.0.0.9' },
+      { title: i18n.__('Firmware Version'), value: '20.2.0.1' }
     ]
 
     return (

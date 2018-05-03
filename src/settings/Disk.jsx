@@ -37,7 +37,7 @@ class Disk extends React.PureComponent {
           <div style={{ height: 20, color: '#505259', fontSize: 16 }} className="flexCenter">
             { title }
           </div>
-          <div style={{ height: 20, marginTop: 10, color: '#85868c' }} className="flexCenter">
+          <div style={{ height: 20, color: '#85868c' }} className="flexCenter">
             { text }
           </div>
         </div>

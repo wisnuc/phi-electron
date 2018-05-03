@@ -372,6 +372,12 @@
   "Memory Available": "可用内存",
   "Serial Number": "硬件序列号",
   "Mac Address": "MAC地址",
+  "Device Model": "设备型号",
+  "Current IP": "当前IP地址",
+  "Client Version": "客户端版本",
+  "Hardware Version": "硬件版本",
+  "Firmware Version": "固件版本",
+  "Memory": "内存",
 
   "==== device/Fan.jsx ====": "",
   "Fan Scale": "马达动力",
@@ -560,6 +566,21 @@
   "==== view/DiskInfo.jsx ====": "",
   "Disk Menu Name": "磁盘信息",
   "Disk Description": "磁盘信息及格式化",
+  "Format Disk": "格式化磁盘",
+  "Eject USB": "安全弹出",
+  "Storage Space": "磁盘存储空间",
+  "Storage Usage %s %s": "已使用%s/共%s",
+  "USB Storage Title": "USB存储空间",
+  "Current Mode %s": "当前组盘模式：%s 模式",
+  "Disk Not Found": "未发现",
+  "Disk Found": "已接入",
+  "Unknown Model": "未知品牌",
+  "Unknown Size": "未知容量",
+  "Picture": "图片",
+  "Music": "音乐",
+  "Document": "文档",
+  "Others": "其他",
+  "Video": "视频",
 
   "==== view/Networking.jsx ====": "",
   "Networking Menu Name": "网络设置",
@@ -848,10 +869,5 @@
   "Settings Menu Name": "功能设置",
 
   "==== nav/FileMenu.jsx ====": "",
-  "File Menu Title": "N2家庭",
-  "All Files": "全部文件",
-  "Photos": "我的照片",
-  "Audio": "我的音乐",
-  "Docs": "我的文本",
-  "Video": "我的视频"
+  "File Menu Title": "N2家庭"
 }
