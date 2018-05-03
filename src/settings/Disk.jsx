@@ -1,17 +1,17 @@
 import React from 'react'
 import i18n from 'i18n'
-import prettysize from 'prettysize'
-import { Divider, IconButton } from 'material-ui'
+// import prettysize from 'prettysize'
+import { IconButton } from 'material-ui'
 import DiskModeGuide from '../login/DiskModeGuide'
 import Dialog from '../common/PureDialog'
-import { HelpIcon, BackIcon } from '../common/Svg'
+import { HelpIcon } from '../common/Svg'
 import { RRButton } from '../common/Buttons'
 
 class Disk extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
-      showGuide: false,
+      showGuide: false
     }
   }
 
@@ -84,8 +84,8 @@ class Disk extends React.PureComponent {
     const progressTitle = i18n.__('Storage Space')
     const storageUsage = i18n.__('Storage Usage %s %s', '500GB', '1024GB')
     const USBUsage = i18n.__('Storage Usage %s %s', '2.5GB', '8GB')
-    const iconStyle = { width: 16, height: 16, fill: '#31a0f5' }
-    const buttonStyle = { width: 24, height: 24, padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }
+    const iconStyle = { width: 20, height: 20, fill: '#31a0f5' }
+    const buttonStyle = { width: 24, height: 24, padding: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }
     return (
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
         <div style={{ height: 20 }} />

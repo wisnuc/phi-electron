@@ -42,6 +42,7 @@ class ListSelect extends EventEmitter {
       shift: false,
       hover: -1,
       specified: -1,
+      modify: -1,
       selected: []
     })
 
@@ -79,8 +80,9 @@ class ListSelect extends EventEmitter {
   // select and specify one
   leftClick (index) {
     this.setState({
+      specified: index,
       selected: index === -1 ? [] : [index],
-      specified: index
+      modify: (this.state.selected && this.state.selected.length === 1 && this.state.selected[0] === index) ? index : -1
     })
   }
 

@@ -9,6 +9,7 @@ import ArrowUpward from 'material-ui/svg-icons/navigation/arrow-upward'
 import ArrowDownward from 'material-ui/svg-icons/navigation/arrow-downward'
 import CheckIcon from 'material-ui/svg-icons/navigation/check'
 import { AutoSizer } from 'react-virtualized'
+import Name from './Name'
 import ScrollBar from '../common/ScrollBar'
 import renderFileIcon from '../common/renderFileIcon'
 import { FolderIcon, ShareDisk } from '../common/Svg'
@@ -44,6 +45,8 @@ class Row extends React.PureComponent {
 
     const isSelected = select.selected.includes(index)
 
+    const isOnModify = select.modify === index
+
     /* render drive list */
     let users = []
     if (inPublicRoot) users = this.props.apis.users && this.props.apis.users.data
@@ -59,7 +62,7 @@ class Row extends React.PureComponent {
 
     const onContentMouseDown = (e, i) => {
       e.stopPropagation()
-      if (!isSelected) this.props.onRowClick(e, i)
+      // if (!isSelected) this.props.onRowClick(e, i)
       this.props.rowDragStart(e, i)
     }
 
@@ -118,12 +121,11 @@ class Row extends React.PureComponent {
           <div style={{ width: 12 }} />
 
           <div style={{ width: 'calc(100% - 470px)', display: 'flex', alignItems: 'center' }} >
-            <div
-              style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', color: '#525a60', letterSpacing: 1.4 }}
+            <Name
+              name={entry.name}
+              modify={isOnModify}
               onMouseDown={e => onContentMouseDown(e, index)}
-            >
-              { entry.name }
-            </div>
+            />
           </div>
           <div style={{ width: 20 }} />
 

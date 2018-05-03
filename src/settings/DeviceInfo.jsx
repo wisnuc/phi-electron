@@ -1,18 +1,9 @@
 import React from 'react'
 import i18n from 'i18n'
-import prettysize from 'prettysize'
+// import prettysize from 'prettysize'
 import { TextField, Divider, IconButton, CircularProgress } from 'material-ui'
-import TV from 'material-ui/svg-icons/hardware/tv'
-import CPU from 'material-ui/svg-icons/hardware/memory'
-import ActionDns from 'material-ui/svg-icons/action/dns'
 import DoneIcon from 'material-ui/svg-icons/action/done'
-import Memory from 'material-ui/svg-icons/device/sd-storage'
 import ModeEdit from 'material-ui/svg-icons/editor/mode-edit'
-import StorageIcon from 'material-ui/svg-icons/device/storage'
-
-import { RAIDIcon } from '../common/Svg'
-
-const phaseData = value => prettysize(parseInt(value, 10) * 1024)
 
 class DeviceInfo extends React.PureComponent {
   constructor (props) {
@@ -211,70 +202,12 @@ class DeviceInfo extends React.PureComponent {
   render () {
     if (!this.props.device || !this.props.storage || !this.props.boot || !this.props.info) return <div />
 
-    const { cpuInfo, memInfo, ws215i } = this.props.device
-    const volume = this.props.storage.volumes.find(v => v.fileSystemUUID === this.props.boot.current)
-
-    /* File System */
-    const fsIcon = RAIDIcon
-    const fsTitles = [
-      i18n.__('FileSystem Type'),
-      i18n.__('Num of Disks'),
-      i18n.__('Disk Array Mode')
-    ]
-    const fsValues = [
-      volume.fileSystemType.toUpperCase(),
-      volume.total,
-      volume.usage.data.mode.toUpperCase()
-    ]
-
-    /* storage */
-    const storageIcon = StorageIcon
-    const storageTitles = [
-      i18n.__('Total Capacity'),
-      i18n.__('User Data Size'),
-      i18n.__('Avail Size')
-    ]
-
-    const storageValues = [
-      prettysize(volume.usage.overall.deviceSize),
-      prettysize(volume.usage.data.size),
-      prettysize(volume.usage.overall.free)
-    ]
-
-    /* CPU */
-    const cpuIcon = CPU
-
-    const cpuTitles = [
-      i18n.__('CPU Num'),
-      i18n.__('CPU Name'),
-      i18n.__('CPU Cache')
-    ]
-
-    const cpuValues = [
-      cpuInfo.length,
-      cpuInfo[0].modelName,
-      phaseData(cpuInfo[0].cacheSize)
-    ]
-
-    /* Memory */
-    const memTitles = [
-      i18n.__('Memory Total'),
-      i18n.__('Memory Free'),
-      i18n.__('Memory Available')
-    ]
-
-    const menIcon = Memory
-
-    const memValues = [
-      phaseData(memInfo.memTotal),
-      phaseData(memInfo.memFree),
-      phaseData(memInfo.memAvailable)
-    ]
+    const { cpuInfo, memInfo } = this.props.device
 
     const graphData = [
       { title: 'CPU1', model: cpuInfo[0].modelName, usage: 0.33, color: '#31a0f5' },
       { title: 'CPU2', model: cpuInfo[1].modelName, usage: 0.43, color: '#5fc315' },
-      { title: i18n.__('Memory'), model: '1GB DDR3 16000MHz', usage: 0.5, color: '#ffb400' }
+      { title: i18n.__('Memory'), model: '1GB DDR3 16000MHz', usage: memInfo.memAvailable / memInfo.memTotal, color: '#ffb400' }
     ]
 
     const listData = [

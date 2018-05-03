@@ -105,6 +105,10 @@ class NavViews extends React.Component {
             break
         }
       }
+
+      if (this.state.nav !== 'settings' && this.views[this.state.nav].navGroup() === 'settings') {
+        this.navTo('settings')
+      }
     }
 
     this.init = () => {

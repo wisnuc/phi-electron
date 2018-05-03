@@ -50,7 +50,7 @@ class FileContent extends React.Component {
       e.preventDefault() // important, to prevent other event
       e.stopPropagation()
 
-      console.log('this.onRowClick', this.selectBox, index)
+      console.log('this.onRowClick', this.selectBox, index, this.props.select)
       /* disabled in select box mode */
       if (this.selectBox) return
 
