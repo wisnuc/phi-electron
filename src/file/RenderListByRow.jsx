@@ -122,8 +122,12 @@ class Row extends React.PureComponent {
 
           <div style={{ width: 'calc(100% - 470px)', display: 'flex', alignItems: 'center' }} >
             <Name
-              name={entry.name}
+              refresh={() => this.props.refresh({ noloading: true })}
+              entry={entry}
+              entries={this.props.entries}
               modify={isOnModify}
+              apis={this.props.apis}
+              path={this.props.path}
               onMouseDown={e => onContentMouseDown(e, index)}
             />
           </div>

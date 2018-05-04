@@ -79,10 +79,26 @@ class ListSelect extends EventEmitter {
 
   // select and specify one
   leftClick (index) {
+    /* handle modify name status */
+    clearTimeout(this.timer)
+    let modify = -1
+
+    /* not double click, the only selected item clicked */
+    if (this.isDClick !== index && this.state.selected && this.state.selected.length === 1 && this.state.selected[0] === index) {
+      modify = index
+    }
+
+    this.isDClick = index
+
+    this.timer = setTimeout(() => {
+      this.isDClick = -1
+      this.setState({ modify })
+    }, 1000)
+
     this.setState({
+      modify: -1,
       specified: index,
-      selected: index === -1 ? [] : [index],
-      modify: (this.state.selected && this.state.selected.length === 1 && this.state.selected[0] === index) ? index : -1
+      selected: index === -1 ? [] : [index]
     })
   }
 

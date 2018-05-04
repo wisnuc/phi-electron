@@ -143,6 +143,9 @@ class FileContent extends React.Component {
 
     this.selectEnd = (event) => {
       console.log('this.selectEnd', this.selectBox)
+      document.removeEventListener('mousemove', this.exSelect)
+      document.removeEventListener('mouseup', this.selectEnd, true)
+
       if (!this.selectBox) return
 
       const s = this.refSelectBox.style
@@ -154,8 +157,6 @@ class FileContent extends React.Component {
       this.selectBox = null
       this.preScrollTop = 0
       this.scrollTop = 0
-      document.removeEventListener('mousemove', this.exSelect)
-      document.removeEventListener('mouseup', this.selectEnd)
     }
 
     /* draw select box */
