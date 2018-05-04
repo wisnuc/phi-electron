@@ -52,6 +52,10 @@ class TrsContainer extends React.Component {
       ipcRenderer.send('FINISH_TASK', [uuid])
     }
 
+    this.delete = (tasks) => {
+      this.setState({ deleteRunningDialog: true, tasks })
+    }
+
     /* type: 'PAUSE', 'RESUME', 'DELETE' */
     this.handleAll = (tasks, type) => {
       ipcRenderer.send(`${type}_TASK`, tasks.map(t => t.uuid))
@@ -215,7 +219,7 @@ class TrsContainer extends React.Component {
           task={task}
           pause={this.pause}
           resume={this.resume}
-          delete={() => this.toggleDialog('deleteRunningDialog')}
+          delete={this.delete}
           openErrorDialog={this.openErrorDialog}
         />
       )))
@@ -296,7 +300,6 @@ class TrsContainer extends React.Component {
                   <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
                     <FlatButton
                       primary
-                      keyboardFocused
                       label={i18n.__('Cancel')}
                       onClick={() => this.toggleDialog('deleteRunningDialog')}
                     />
@@ -331,7 +334,6 @@ class TrsContainer extends React.Component {
                   <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
                     <FlatButton
                       primary
-                      keyboardFocused
                       label={i18n.__('Cancel')}
                       onClick={() => this.toggleDialog('clearRunningDialog')}
                     />
@@ -368,7 +370,6 @@ class TrsContainer extends React.Component {
                       label={i18n.__('Cancel')}
                       primary
                       onClick={() => this.toggleDialog('clearFinishedDialog')}
-                      keyboardFocused
                     />
                     <FlatButton
                       label={i18n.__('Clear')}

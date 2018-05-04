@@ -160,7 +160,7 @@ class RunningTask extends React.Component {
           {
             task.paused &&
               <LIButton
-                onClick={this.props.delete}
+                onClick={() => this.props.delete([task])}
                 tooltip={i18n.__('Delete')}
               >
                 <TaskDeleteIcon />
