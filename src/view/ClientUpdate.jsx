@@ -2,7 +2,7 @@ import React from 'react'
 import i18n from 'i18n'
 import { ipcRenderer } from 'electron'
 import Base from './Base'
-import UpdateApp from '../control/ClientUpdateApp'
+import UpdateApp from '../settings/ClientUpdateApp'
 
 class Update extends Base {
   navGroup () {

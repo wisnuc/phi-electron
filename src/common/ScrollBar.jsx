@@ -33,7 +33,7 @@ class ScrollBar extends React.PureComponent {
     this.onScroll = (top, scrollTop) => {
       this.scrollTop = scrollTop
       if (!this.refBar) return
-      this.onHover()
+      // this.onHover()
       this.refBar.style.top = `${top}px`
       if (this.props.onScroll) this.props.onScroll({ scrollTop })
     }
