@@ -121,12 +121,12 @@ class Disk extends React.PureComponent {
               </div>
             </div>
             {
-              disks.map(({ pos, status, model, size }) => (
+              disks.map(({ pos, status, model, size }, index) => (
                 <div
                   style={{
                     width: 500,
                     height: 110,
-                    marginTop: 20,
+                    marginTop: index ? 20 : 10,
                     backgroundColor: '#f5f7fa',
                     display: 'flex',
                     alignItems: 'center'
@@ -175,7 +175,7 @@ class Disk extends React.PureComponent {
             style={{
               width: '100%',
               height: 20,
-              marginTop: 20,
+              marginTop: 10,
               backgroundColor: '#f5f7fa'
             }}
           >

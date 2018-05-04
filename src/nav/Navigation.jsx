@@ -88,6 +88,13 @@ class NavViews extends React.Component {
       }
     }
 
+    this.navToDrive = (driveUUID, dirUUID) => {
+      const drives = this.props.apis.drives.data // no drives ?
+      const drive = drives.find(d => d.uuid === driveUUID)
+      if (drive.tag === 'home') this.navTo('home', { driveUUID, dirUUID })
+      else if (drive.tag === 'public') this.navTo('public', { driveUUID, dirUUID })
+    }
+
     this.navGroup = (group) => {
       if (this.state.changeDevice) this.setState({ changeDevice: false })
       if (!this.state.nav || this.views[this.state.nav].navGroup() !== group) {
@@ -241,6 +248,7 @@ class NavViews extends React.Component {
   renderView () {
     return this.views[this.state.nav].render({
       navTo: this.navTo,
+      navToDrive: this.navToDrive,
       openSnackBar: this.openSnackBar,
       getDetailStatus: () => false
     })

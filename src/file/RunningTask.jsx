@@ -20,11 +20,6 @@ class RunningTask extends React.Component {
       this.setState({ isSelected })
     }
 
-    this.selectTaskItem = (e) => {
-      const event = e.nativeEvent
-      this.props.select('running', this.props.task.uuid, this.state.isSelected, null, event)
-    }
-
     this.toggleTask = () => {
       const task = this.props.task
       if (task.paused) this.props.resume(task.uuid)
@@ -105,10 +100,7 @@ class RunningTask extends React.Component {
       ? `${this.formatSize(task.completeSize)}/${this.formatSize(task.size)}` : `${finishCount}/${task.count}`
 
     return (
-      <div
-        style={{ display: 'flex', alignItems: 'center', height: 60, backgroundColor }}
-        onClick={this.selectTaskItem}
-      >
+      <div style={{ display: 'flex', alignItems: 'center', height: 60, backgroundColor }} >
         {/* task item type */}
         <div style={{ width: 33, paddingLeft: 17, display: 'flex', alignItems: 'center' }}>
           {
@@ -119,7 +111,7 @@ class RunningTask extends React.Component {
         </div>
 
         {/* task item name */}
-        <div style={{ width: 'calc(100% - 512px)', padding: '10px 0 10px 12px' }} >
+        <div style={{ width: 'calc(100% - 516px)', padding: '10px 0 10px 12px' }} >
           <div style={{ display: 'flex', alignItems: 'center', height: 20, color: '#525a60' }} >
             <div style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', color: '#525a60', letterSpacing: 1.4 }}>
               { task.name }
@@ -149,7 +141,7 @@ class RunningTask extends React.Component {
         </div>
 
         {/* Pause, resume and delete task */}
-        <div style={{ width: 170, display: 'flex', alignItems: 'center' }} >
+        <div style={{ width: 174, display: 'flex', alignItems: 'center' }} >
           <div style={{ width: 60 }} />
           {
             task.state === 'failed'

@@ -1,16 +1,13 @@
-import React, { Component } from 'react'
+import React from 'react'
 import i18n from 'i18n'
-import FolderSvg from 'material-ui/svg-icons/file/folder'
-import FileSvg from 'material-ui/svg-icons/editor/insert-drive-file'
-import WarningIcon from 'material-ui/svg-icons/alert/warning'
-import DownloadSvg from 'material-ui/svg-icons/file/file-download'
-import UploadSvg from 'material-ui/svg-icons/file/file-upload'
 import MultiSvg from 'material-ui/svg-icons/content/content-copy'
-import IconButton from '../common/IconButton'
+import renderFileIcon from '../common/renderFileIcon'
+import { FolderIcon, OpenFolderIcon, TaskDeleteIcon } from '../common/Svg'
+import { LIButton } from '../common/IconButton'
 
 const svgStyle = { color: '#000', opacity: 0.54 }
 
-class FinishedTask extends Component {
+class FinishedTask extends React.Component {
   constructor (props) {
     super(props)
 
@@ -20,29 +17,23 @@ class FinishedTask extends Component {
 
     this.createDate = new Date()
 
-    this.updateDom = (isSelected) => {
-      this.setState({ isSelected })
-    }
-
-    this.selectFinishItem = (e) => {
-      const event = e.nativeEvent
-      this.props.select('finish', this.props.task.uuid, this.state.isSelected, null, event)
-    }
-
-    this.openFileLocation = () => {
-      if (this.props.task.trsType === 'download') setImmediate(this.props.open)
-      else setImmediate(this.props.openInDrive)
-    }
-
-    this.checkError = () => {
-      const errors = this.props.task.errors || []
-      const warnings = this.props.task.warnings || []
-      this.props.openErrorDialog([...errors, ...warnings], true)
+    this.openFileLocation = (task) => {
+      if (this.props.task.trsType === 'download') setImmediate(() => this.props.open(task))
+      else setImmediate(() => this.props.openInDrive(task))
     }
   }
 
   shouldComponentUpdate (nextProps, nextState) {
     return (this.state !== nextState)
+  }
+
+  formatSize (s) {
+    const size = parseFloat(s, 10)
+    if (!size) return `${0} KB`
+    if (size < 1024) return `${size.toFixed(2)} B`
+    else if (size < (1024 * 1024)) return `${(size / 1024).toFixed(2)} KB`
+    else if (size < (1024 * 1024 * 1024)) return `${(size / 1024 / 1024).toFixed(2)} MB`
+    return `${(size / 1024 / 1024 / 1024).toFixed(2)} GB`
   }
 
   getFinishDate (d) {
@@ -61,61 +52,51 @@ class FinishedTask extends Component {
   }
 
   render () {
-    const task = this.props.task
-    return (
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          padding: '0 88px',
-          height: 56,
-          fontSize: 14,
-          color: 'rgba(0,0,0,0.87)',
-          backgroundColor: this.state.isSelected ? '#f4f4f4' : ''
-        }}
-        role="presentation"
-        onMouseUp={this.selectFinishItem}
-        onDoubleClick={this.openFileLocation}
-      >
-        {/* task type */}
-        <div style={{ flex: '0 0 48px' }}>
-          { task.trsType === 'download' ? <DownloadSvg style={svgStyle} /> : <UploadSvg style={svgStyle} /> }
-        </div>
+    console.log('Finished', this.props)
+    const { index, task } = this.props
+    const backgroundColor = this.state.isSelected ? '#f4f4f4' : index % 2 ? '#fafbfc' : '#FFF'
 
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', height: 60, backgroundColor }} >
         {/* task item type */}
-        <div style={{ flex: '0 0 32px' }}>
-          { task.entries.length > 1 ? <MultiSvg style={svgStyle} /> : task.taskType === 'file' ? <FileSvg style={svgStyle} /> : <FolderSvg style={svgStyle} /> }
+        <div style={{ width: 33, paddingLeft: 17, display: 'flex', alignItems: 'center' }}>
+          {
+            task.entries.length > 1 ? <MultiSvg style={svgStyle} />
+              : task.taskType === 'file' ? renderFileIcon(task.name, null, 30)
+                : <FolderIcon style={{ width: 30, height: 30 }} />
+          }
         </div>
 
         {/* task item name */}
-        <div style={{ display: 'flex', flexGrow: 1, alignItems: 'center' }}>
-          <div
-            style={{
-              maxWidth: 540,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap'
-            }}
-          >
+        <div style={{ width: 'calc(100% - 588px)', padding: '20px 0 20px 12px', display: 'flex', alignItems: 'center', height: 60 }} >
+          <div style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', color: '#525a60', letterSpacing: 1.4 }}>
             { task.name }
-          </div>
-          <div>
-            { task.entries.length > 1 && i18n.__('And Other %s Items', task.entries.length)}
           </div>
         </div>
 
-        <div style={{ flex: '0 0 32px' }} />
-        {/* task finishDate */}
-        <div style={{ flex: '0 0 288px', color: 'rgba(0, 0, 0, 0.54)' }} >
+        {/* progress bar */}
+        <div style={{ width: 215, color: '#888a8c', fontSize: 12 }} >
+          { this.formatSize(task.size) }
+        </div>
+
+        {/* progress bar */}
+        <div style={{ width: 140, color: '#888a8c', fontSize: 12 }} >
           { this.getFinishDate(task.finishDate) }
         </div>
-        <div style={{ flex: '0 0 60px', display: 'flex', alignItems: 'center', marginRight: 8 }}>
-          {
-            task.warnings && !!task.warnings.length &&
-            <IconButton onClick={this.checkError} tooltip={i18n.__('Detail')}>
-              <WarningIcon color="#FB8C00" />
-            </IconButton>
-          }
+
+        {/* Pause, resume and delete task */}
+        <div style={{ width: 170, display: 'flex', alignItems: 'center' }} >
+          <div style={{ width: 57 }} />
+          <LIButton onClick={() => this.openFileLocation(task)} tooltip={task.paused ? i18n.__('Resume') : i18n.__('Pause')} >
+            <OpenFolderIcon />
+          </LIButton>
+          <div style={{ width: 10 }} />
+          <LIButton
+            onClick={() => this.props.handleAll([task], 'DELETE')}
+            tooltip={i18n.__('Delete')}
+          >
+            <TaskDeleteIcon />
+          </LIButton>
         </div>
       </div>
     )

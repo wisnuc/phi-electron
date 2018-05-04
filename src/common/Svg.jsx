@@ -592,3 +592,9 @@ export const TaskDeleteIcon = props => (
     <polygon points="20 22 10 22 10 12 8 12 8 24 22 24 22 12 20 12 20 22" />
   </SvgIcon>
 )
+
+export const OpenFolderIcon = props => (
+  <SvgIcon viewBox="0 0 30 30" {...props}>
+    <path d="M16,9,14,7H6V23H24V9ZM13.17,9l1.42,1.41.58.59H22v2H8V9ZM8,21V15H22v6Z"/>
+  </SvgIcon>
+)

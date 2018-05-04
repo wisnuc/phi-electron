@@ -5,6 +5,8 @@ import { TextField, Divider, IconButton, CircularProgress } from 'material-ui'
 import DoneIcon from 'material-ui/svg-icons/action/done'
 import ModeEdit from 'material-ui/svg-icons/editor/mode-edit'
 
+const parseData = value => parseInt(value, 10) * 1024
+
 class DeviceInfo extends React.PureComponent {
   constructor (props) {
     super(props)
@@ -103,7 +105,7 @@ class DeviceInfo extends React.PureComponent {
         <div style={{ fontSize: 20, color: '#525a60' }}>
           { title }
         </div>
-        <div style={{ width: 180, fontSize: 12, color: '#85868c', marginTop: 10 }}>
+        <div style={{ width: 180, fontSize: 12, color: '#85868c', marginTop: 10, height: 32 }}>
           { model }
         </div>
         <div style={{ fontSize: 16, color: '#85868c', marginTop: 10 }}>
@@ -204,10 +206,12 @@ class DeviceInfo extends React.PureComponent {
 
     const { cpuInfo, memInfo } = this.props.device
 
+    const memUsage = Math.round(parseData(memInfo.memAvailable) / parseData(memInfo.memTotal) * 100) / 100
+
     const graphData = [
       { title: 'CPU1', model: cpuInfo[0].modelName, usage: 0.33, color: '#31a0f5' },
       { title: 'CPU2', model: cpuInfo[1].modelName, usage: 0.43, color: '#5fc315' },
-      { title: i18n.__('Memory'), model: '1GB DDR3 16000MHz', usage: memInfo.memAvailable / memInfo.memTotal, color: '#ffb400' }
+      { title: i18n.__('Memory'), model: '1GB DDR3 16000MHz', usage: memUsage, color: '#ffb400' }
     ]
 
     const listData = [
