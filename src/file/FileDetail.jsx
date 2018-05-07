@@ -1,12 +1,10 @@
-import React from 'react'
 import i18n from 'i18n'
+import React from 'react'
 import prettysize from 'prettysize'
-import { Divider } from 'material-ui'
+import { Divider, IconButton } from 'material-ui'
 import FileFolder from 'material-ui/svg-icons/file/folder'
 import ContentCopy from 'material-ui/svg-icons/content/content-copy'
-import ErrorIcon from 'material-ui/svg-icons/alert/error'
-import Thumb from './Thumb'
-import renderFileIcon from '../common/renderFileIcon'
+import CloseIcon from 'material-ui/svg-icons/navigation/close'
 
 const phaseDate = (time) => {
   const a = new Date(time)
@@ -67,8 +65,8 @@ class FileDetail extends React.PureComponent {
             return (
               <div
                 style={{
-                  height: 32,
-                  color: 'rgba(0, 0, 0, 0.54)',
+                  height: 40,
+                  color: '#525a60',
                   display: 'flex',
                   alignItems: 'center',
                   width: '100%'
@@ -79,46 +77,20 @@ class FileDetail extends React.PureComponent {
                 <input
                   onChange={() => {}}
                   value={values[index]}
-                  style={{ width: 200, border: 0, padding: 3, fontSize: 14, color: 'rgba(0, 0, 0, 0.54)', backgroundColor: '#FAFAFA' }}
+                  style={{
+                    width: 200,
+                    border: 0,
+                    padding: 3,
+                    fontSize: 14,
+                    color: '#888a8c',
+                    textAlign: 'right',
+                    backgroundColor: '#FFF'
+                  }}
                 />
               </div>
             )
           })
         }
-      </div>
-    )
-  }
-
-  renderTitle (detailFile) {
-    const { name, type, metadata } = detailFile
-    return (
-      <div
-        key={name}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          height: 32,
-          fontSize: 20,
-          fontWeight: 500,
-          color: '#FFFFFF'
-        }}
-      >
-        <div style={{ flex: '0 0 24px', display: 'flex', alignItems: 'center' }}>
-          {
-            type === 'public' || type === 'directory'
-              ? <FileFolder style={{ color: '#FFFFFF' }} />
-              : type === 'file'
-                ? renderFileIcon(name, metadata, 24, false, true) // name, metadata, size, dark, white
-                : <ErrorIcon style={{ color: '#FFFFFF' }} />
-          }
-        </div>
-        <div style={{ flex: '0 0 16px' }} />
-        <input
-          value={name}
-          onChange={() => {}}
-          style={{ flexGrow: 1, border: 0, padding: 3, fontSize: 20, fontWeight: 500, backgroundColor: 'transparent', color: '#FFFFFF' }}
-        />
-        <div style={{ flex: '0 0 24px' }} />
       </div>
     )
   }
@@ -239,7 +211,7 @@ class FileDetail extends React.PureComponent {
       return this.renderMultiFiles(detailFile)
     }
 
-    const { metadata, hash } = detailFile
+    const { metadata } = detailFile
     let exifDateTime = ''
     let exifModel = ''
     let height = ''
@@ -271,43 +243,40 @@ class FileDetail extends React.PureComponent {
       getResolution(height, width)
     ]
 
+    const { name } = detailFile
     return (
-      <div style={{ height: '100%', overflowY: 'auto', overflowX: 'hidden' }}>
-        <div style={{ height: 128, backgroundColor: primaryColor, filter: 'brightness(0.9)' }}>
-          <div style={{ height: 64 }} />
-          {/* header */}
-          <div style={{ height: 64, marginLeft: 24 }} >
-            <div style={{ height: 16 }} />
-            { this.renderTitle(detailFile) }
+      <div style={{ width: 280, margin: '0 20px 20px 20px' }}>
+        <div style={{ height: 59, display: 'flex', alignItems: 'center' }} className="title">
+          <div
+            key={name}
+            style={{ display: 'flex', alignItems: 'center', height: 59 }}
+          >
+            <input
+              value={name}
+              onChange={() => {}}
+              style={{ flexGrow: 1, border: 0, padding: 3, fontSize: 20, color: '#525a60' }}
+            />
           </div>
+          <div style={{ flexGrow: 1 }} />
+          <IconButton
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 29,
+              height: 29,
+              padding: 4
+            }}
+            iconStyle={{ width: 21, height: 21, fill: '#525a60' }}
+            onClick={this.props.onRequestClose}
+          >
+            <CloseIcon />
+          </IconButton>
         </div>
-
-        {/* picture */}
-        {
-          metadata && hash &&
-            <div
-              style={{
-                margin: 24,
-                width: 312,
-                height: 234,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              <Thumb
-                digest={hash}
-                ipcRenderer={this.props.ipcRenderer}
-                height={234}
-                width={312}
-                full
-              />
-            </div>
-        }
-        { metadata && hash && <Divider /> }
-
+        <Divider style={{ width: 280 }} className="divider" />
+        <div style={{ height: 20 }} />
         {/* data */}
-        <div style={{ width: 312, padding: 24, display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
           { this.renderList(Titles, Values) }
         </div>
       </div>

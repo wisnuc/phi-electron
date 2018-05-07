@@ -71,15 +71,7 @@ class Account extends React.Component {
           onRequestClose={() => this.setState({ open: false })}
           style={{ WebkitAppRegion: 'no-drag', boxShadow: '0px 10px 20px 0 rgba(23, 99, 207, 0.1)' }}
         >
-          <Menu
-            style={{
-              width: 125,
-              maxWidth: 125,
-              height: 130,
-              overflow: 'hidden',
-              transition: 'all 225ms'
-            }}
-          >
+          <Menu style={{ width: 125, maxWidth: 125, height: 130, overflow: 'hidden' }} >
             {
               items.map((props, index) => (
                 <MenuItem
@@ -94,7 +86,6 @@ class Account extends React.Component {
                     minHeight: 40,
                     lineHeight: '40px'
                   }}
-
                 />
               ))
             }

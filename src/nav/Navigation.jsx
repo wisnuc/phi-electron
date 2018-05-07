@@ -249,8 +249,7 @@ class NavViews extends React.Component {
     return this.views[this.state.nav].render({
       navTo: this.navTo,
       navToDrive: this.navToDrive,
-      openSnackBar: this.openSnackBar,
-      getDetailStatus: () => false
+      openSnackBar: this.openSnackBar
     })
   }
 

@@ -22,7 +22,14 @@ class FileUploadButton extends React.Component {
 
   render () {
     const color = '#7d868f'
+
     const iconStyle = { fill: color, width: 30, height: 30 }
+
+    const iStyle = { marginLeft: 36, marginTop: 10, fill: color, width: 24, height: 24 }
+    const items = [
+      { primaryText: i18n.__('Upload File'), leftIcon: <UploadFile style={iStyle} />, onClick: () => this.upload('file') },
+      { primaryText: i18n.__('Upload Folder'), leftIcon: <UploadFold style={iStyle} />, onClick: () => this.upload('directory') }
+    ]
     return (
       <div>
         <FlatButton
@@ -39,19 +46,25 @@ class FileUploadButton extends React.Component {
           targetOrigin={{ horizontal: 'left', vertical: 'top' }}
           onRequestClose={() => this.setState({ open: false })}
         >
-          <Menu style={{ minWidth: 240 }}>
-            <MenuItem
-              primaryText={i18n.__('Upload Folder')}
-              leftIcon={<UploadFold />}
-              onClick={() => this.upload('directory')}
-              style={{ fontSize: 13 }}
-            />
-            <MenuItem
-              primaryText={i18n.__('Upload File')}
-              leftIcon={<UploadFile />}
-              onClick={() => this.upload('file')}
-              style={{ fontSize: 13 }}
-            />
+          <Menu style={{ width: 138, maxWidth: 138, height: 90, overflow: 'hidden' }} >
+            {
+              items.map((props, index) => (
+                <MenuItem
+                  {...props}
+                  key={index.toString()}
+                  style={{
+                    marginLeft: -24,
+                    marginTop: !index ? -3 : 0,
+                    fontSize: 14,
+                    color: '#292936',
+                    height: 40,
+                    minHeight: 40,
+                    lineHeight: '40px'
+                  }}
+                />
+              ))
+            }
+            <div style={{ height: 5, width: '100%' }} />
           </Menu>
         </Popover>
       </div>

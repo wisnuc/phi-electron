@@ -104,7 +104,7 @@ class TransitionItem extends React.Component {
         >
           <EventListener target="window" onKeyUp={this.handleKeyUp} />
           <Paper zDepth={0}>
-            {this.props.children}
+            { this.props.children }
           </Paper>
         </div>
         <div

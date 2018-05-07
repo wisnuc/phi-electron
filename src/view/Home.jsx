@@ -14,7 +14,7 @@ import RenameDialog from '../file/RenameDialog'
 import NewFolderDialog from '../file/NewFolderDialog'
 import FileUploadButton from '../file/FileUploadButton'
 import ContextMenu from '../common/ContextMenu'
-import DialogOverlay from '../common/DialogOverlay'
+import DialogOverlay from '../common/PureDialog'
 import FlatButton from '../common/FlatButton'
 import MenuItem from '../common/MenuItem'
 import sortByType from '../common/sort'
@@ -806,6 +806,7 @@ class Home extends Base {
         <DialogOverlay open={!!this.state.createNewFolder} onRequestClose={() => this.toggleDialog('createNewFolder')}>
           { this.state.createNewFolder &&
             <NewFolderDialog
+              onRequestClose={() => this.toggleDialog('createNewFolder')}
               apis={this.ctx.props.apis}
               path={this.state.path}
               entries={this.state.entries}
@@ -817,6 +818,7 @@ class Home extends Base {
         <DialogOverlay open={!!this.state.rename} onRequestClose={() => this.toggleDialog('rename')}>
           { this.state.rename &&
             <RenameDialog
+              onRequestClose={() => this.toggleDialog('rename')}
               apis={this.ctx.props.apis}
               path={this.state.path}
               entries={this.state.entries}
@@ -828,6 +830,7 @@ class Home extends Base {
 
         <DialogOverlay open={!!this.state.move} onRequestClose={() => this.toggleDialog('move')}>
           { this.state.move && <MoveDialog
+            onRequestClose={() => this.toggleDialog('move')}
             title={this.title}
             apis={this.ctx.props.apis}
             path={this.state.path}
@@ -844,6 +847,7 @@ class Home extends Base {
 
         <DialogOverlay open={!!this.state.copy} onRequestClose={() => this.toggleDialog('copy')}>
           { this.state.copy && <MoveDialog
+            onRequestClose={() => this.toggleDialog('copy')}
             title={this.title}
             apis={this.ctx.props.apis}
             path={this.state.path}
@@ -860,6 +864,7 @@ class Home extends Base {
 
         <DialogOverlay open={!!this.state.share} onRequestClose={() => this.toggleDialog('share')}>
           { this.state.share && <MoveDialog
+            onRequestClose={() => this.toggleDialog('share')}
             title={this.title}
             apis={this.ctx.props.apis}
             path={this.state.path}
@@ -874,7 +879,7 @@ class Home extends Base {
           /> }
         </DialogOverlay>
 
-        <DialogOverlay open={!!this.state.delete}>
+        <DialogOverlay open={!!this.state.delete} onRequestClose={() => this.toggleDialog('delete')}>
           {
             this.state.delete &&
             <div style={{ width: 280, padding: '24px 24px 0px 24px' }}>
@@ -894,8 +899,9 @@ class Home extends Base {
             </div>
           }
         </DialogOverlay>
+
         {/* used in Public drives */}
-        <DialogOverlay open={!!this.state.noAccess}>
+        <DialogOverlay open={!!this.state.noAccess} onRequestClose={() => this.toggleDialog('noAccess')} >
           {
             this.state.noAccess &&
             <div style={{ width: 280, padding: '24px 24px 0px 24px' }}>
@@ -907,11 +913,27 @@ class Home extends Base {
             </div>
           }
         </DialogOverlay>
+
+        <DialogOverlay open={!!this.state.detail} onRequestClose={() => this.toggleDialog('detail')}>
+          {
+            this.state.detail &&
+            <FileDetail
+              onRequestClose={() => this.toggleDialog('detail')}
+              key={this.state.path.slice(-1)[0].uuid}
+              detailIndex={this.select.state.selected}
+              counter={this.state.counter}
+              entries={this.state.entries}
+              path={this.state.path}
+              ipcRenderer={ipcRenderer}
+              primaryColor={this.groupPrimaryColor()}
+            />
+          }
+        </DialogOverlay>
       </div>
     )
   }
 
-  renderMenu (open, toggleDetail, getDetailStatus) {
+  renderMenu (open) {
     const itemSelected = this.state.select && this.state.select.selected && this.state.select.selected.length
     const multiSelected = this.state.select && this.state.select.selected && (this.state.select.selected.length > 1)
     return (
@@ -1014,8 +1036,8 @@ class Home extends Base {
                 />
                 <Divider style={{ marginLeft: 10, marginTop: 2, marginBottom: 2, width: 'calc(100% - 20px)' }} />
                 <MenuItem
-                  primaryText={getDetailStatus() ? i18n.__('Close Detail') : i18n.__('Open Detail')}
-                  onClick={toggleDetail}
+                  primaryText={i18n.__('Open Detail')}
+                  onClick={() => this.setState({ detail: true })}
                 />
               </div>
             )
@@ -1024,7 +1046,7 @@ class Home extends Base {
     )
   }
 
-  renderContent ({ toggleDetail, openSnackBar, navTo, getDetailStatus }) {
+  renderContent ({ openSnackBar, navTo }) {
     return (
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
         <FileContent
@@ -1048,7 +1070,7 @@ class Home extends Base {
           setGridData={this.setGridData}
         />
 
-        { this.renderMenu(this.state.contextMenuOpen, toggleDetail, getDetailStatus) }
+        { this.renderMenu(this.state.contextMenuOpen) }
 
         { this.renderDialogs(openSnackBar, navTo) }
 
