@@ -1,8 +1,8 @@
 import i18n from 'i18n'
 import React from 'react'
-import { Popover, Menu, MenuItem } from 'material-ui'
+import { Popover, MenuItem } from 'material-ui'
 import ADD from 'material-ui/svg-icons/navigation/arrow-drop-down'
-import { UploadFile, UploadFold } from '../common/Svg'
+import { PersonIcon, UsersIcon, LogoutIcon } from '../common/Svg'
 
 class Account extends React.Component {
   constructor (props) {
@@ -25,11 +25,11 @@ class Account extends React.Component {
   render () {
     const color = 'rgba(255, 255, 255, 0.7)'
 
-    const iconStyle = { marginLeft: 36, marginTop: 10 }
+    const iconStyle = { marginLeft: 30, marginTop: 5, width: 30, height: 30, fill: '#7d868f' }
     const items = [
-      { primaryText: i18n.__('Account Settings'), leftIcon: <UploadFold style={iconStyle} />, onClick: () => {} },
-      { primaryText: i18n.__('Users Management'), leftIcon: <UploadFile style={iconStyle} />, onClick: () => {} },
-      { primaryText: i18n.__('Log Out'), leftIcon: <UploadFile style={iconStyle} />, onClick: this.props.logout }
+      { primaryText: i18n.__('Account Settings'), leftIcon: <PersonIcon style={iconStyle} />, onClick: () => {} },
+      { primaryText: i18n.__('Users Management'), leftIcon: <UsersIcon style={iconStyle} />, onClick: () => {} },
+      { primaryText: i18n.__('Log Out'), leftIcon: <LogoutIcon style={iconStyle} />, onClick: this.props.logout }
     ]
     return (
       <div
@@ -83,7 +83,7 @@ class Account extends React.Component {
                     WebkitAppRegion: 'no-drag',
                     marginTop: !index ? 5 : 0,
                     fontSize: 14,
-                    color: '#292936',
+                    color: '#505259',
                     height: 40,
                     minHeight: 40,
                     lineHeight: '40px'
