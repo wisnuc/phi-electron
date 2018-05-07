@@ -9,6 +9,7 @@ import DriversDetail from '../control/DriversDetail'
 import NewDriveDialog from '../control/NewDriveDialog'
 import sortByType from '../common/sort'
 import DialogOverlay from '../common/DialogOverlay'
+import { PublicIcon } from '../common/Svg'
 
 class Public extends Home {
   constructor (ctx) {
@@ -82,10 +83,12 @@ class Public extends Home {
       const path = [{ name: i18n.__('Public Drive'), uuid: null, type: 'publicRoot' }]
       const entries = this.state.drives.filter(drive => drive.type === 'public' && drive.tag !== 'built-in')
       entries.forEach(item => Object.assign(item, { name: item.label }))
+      if (entries.length < 3) entries.push({ name: i18n.__('Add Public Drive'), type: 'addDrive', uuid: 'addDrive' })
       const select = this.select.reset(entries.length)
 
       this.force = false
 
+      /* history */
       const pos = { type: 'publicRoot' }
       if (this.history.get().curr === -1) this.history.add(pos)
 
@@ -130,12 +133,7 @@ class Public extends Home {
   }
 
   menuIcon () {
-    const Pic = props => (
-      <div {...props}>
-        <img src="./assets/images/ic-commondisk.png" alt="" width={28} height={28} />
-      </div>
-    )
-    return Pic
+    return PublicIcon
   }
 
   /* renderers */
@@ -203,6 +201,7 @@ class Public extends Home {
   }
 
   renderContent ({ toggleDetail, openSnackBar, getDetailStatus }) {
+    console.log('public', this.state)
     return (
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
         {
@@ -228,6 +227,7 @@ class Public extends Home {
               setScrollTop={this.setScrollTop}
               setGridData={this.setGridData}
               inPublicRoot={this.state.inRoot}
+              openNewDrive={() => this.setState({ newDrive: true })}
             />
         }
 

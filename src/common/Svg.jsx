@@ -595,6 +595,25 @@ export const TaskDeleteIcon = props => (
 
 export const OpenFolderIcon = props => (
   <SvgIcon viewBox="0 0 30 30" {...props}>
-    <path d="M16,9,14,7H6V23H24V9ZM13.17,9l1.42,1.41.58.59H22v2H8V9ZM8,21V15H22v6Z"/>
+    <path d="M16,9,14,7H6V23H24V9ZM13.17,9l1.42,1.41.58.59H22v2H8V9ZM8,21V15H22v6Z" />
+  </SvgIcon>
+)
+
+export const PublicIcon = props => (
+  <SvgIcon viewBox="0 0 30 30" {...props}>
+    <polygon fill="#12b0db" points="22.17 22.17 22.07 22.07 15.01 17.01 7.86 22.14 7.83 22.17 15 29.34 22.17 22.17" />
+    <polygon fill="#ff7800" points="22.17 22.14 22.07 22.07 22.17 22.17 29.34 15 22.17 7.83 17.04 14.99 22.17 22.14" />
+    <polygon fill="#1268ff" points="12.99 14.99 7.92 7.92 7.83 7.83 0.66 15 7.83 22.17 7.86 22.14 12.99 14.99" />
+    <polygon fill="#fcab2a" points="7.86 7.83 15.01 12.96 22.17 7.83 15 0.66 7.83 7.83 7.92 7.92 7.86 7.83" />
+    <polygon fill="#c98428" points="7.86 7.83 15.01 12.96 22.17 7.83 15 10.47 7.83 7.83 7.92 7.92 7.86 7.83" />
+    <polygon fill="#0d87a3" points="22.14 22.14 14.99 17.01 7.83 22.14 15 19.5 22.17 22.14 22.07 22.05 22.14 22.14" />
+    <polygon fill="#1253b2" points="7.83 22.14 12.96 14.99 7.83 7.83 10.47 15 7.83 22.17 7.92 22.07 7.83 22.14" />
+    <polygon fill="#b25910" points="22.17 7.86 17.04 15.01 22.17 22.17 19.53 15 22.17 7.83 22.07 7.92 22.17 7.86" />
+  </SvgIcon>
+)
+
+export const AddDriveIcon = props => (
+  <SvgIcon viewBox="0 0 30 30" {...props}>
+    <path d="M15,5A10,10,0,1,0,25,15,10,10,0,0,0,15,5Zm5,11H16v4H14V16H10V14h4V10h2v4h4Z" />
   </SvgIcon>
 )

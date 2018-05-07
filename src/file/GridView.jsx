@@ -1,10 +1,11 @@
 import React from 'react'
 import { AutoSizer } from 'react-virtualized'
 
+import AddDrive from './AddDrive'
 import Thumb from './Thumb'
 import ScrollBar from '../common/ScrollBar'
 import renderFileIcon from '../common/renderFileIcon'
-import { AllFileIcon } from '../common/Svg'
+import { AllFileIcon, PublicIcon } from '../common/Svg'
 
 class Row extends React.Component {
   shouldComponentUpdate (nextProps) {
@@ -26,8 +27,20 @@ class Row extends React.Component {
               const { index, entry } = item
               const selected = select.selected.findIndex(s => s === index) > -1
               const hover = select.hover === index && !selected
-              const backgroundColor = selected ? '#e2f1fd' : hover ? '#FFF' : '#f3f8ff'
+              const focus = !select.selected.length && select.specified === index
+              const backgroundColor = selected ? '#f4fafe' : hover ? '#f9fcfe' : '#FFF'
+              const borderColor = selected ? '#a3d3f8' : hover ? '#d1e9fb' : focus ? '#a3d3f8' : ''
               // const onDropping = entry.type === 'directory' && select.rowDrop(index)
+              if (entry.type === 'addDrive') {
+                return (
+                  <AddDrive
+                    {...this.props}
+                    item={item}
+                    key={index}
+                    onClick={this.props.openNewDrive}
+                  />
+                )
+              }
               return (
                 <div
                   style={{
@@ -38,7 +51,7 @@ class Row extends React.Component {
                     marginBottom: 10,
                     backgroundColor,
                     boxSizing: 'border-box',
-                    border: selected ? '1px solid var(--dodger-blue)' : '',
+                    border: borderColor ? `1px solid ${borderColor}` : '',
                     boxShadow: hover ? '0px 5px 10px 0 rgba(97, 107, 120, 0.08)' : ''
                   }}
                   role="presentation"
@@ -55,22 +68,23 @@ class Row extends React.Component {
                   <div
                     draggable={false}
                     className="flexCenter"
-                    style={{ height: 80, width: 108, margin: selected ? '15px auto 0 auto' : '16px auto 0 auto', overflow: 'hidden' }}
+                    style={{ height: 80, width: 108, margin: borderColor ? '15px auto 0 auto' : '16px auto 0 auto', overflow: 'hidden' }}
                   >
                     {
-                      entry.type === 'file'
-                        ? ((rowSum < 500 || !isScrolling) && entry.metadata
-                          ? (
-                            <Thumb
-                              full
-                              bgColor="#f3f8ff"
-                              digest={entry.hash}
-                              ipcRenderer={this.props.ipcRenderer}
-                              height={80}
-                              width={108}
-                            />
-                          ) : renderFileIcon(entry.name, entry.metadata, 50)
-                        ) : <AllFileIcon style={{ width: 50, height: 50, fill: '#ffa93e' }} />
+                      entry.type === 'public' ? <PublicIcon style={{ width: 50, height: 50, fill: '#ffa93e' }} />
+                        : entry.type === 'file'
+                          ? ((rowSum < 500 || !isScrolling) && entry.metadata
+                            ? (
+                              <Thumb
+                                full
+                                bgColor="#f3f8ff"
+                                digest={entry.hash}
+                                ipcRenderer={this.props.ipcRenderer}
+                                height={80}
+                                width={108}
+                              />
+                            ) : renderFileIcon(entry.name, entry.metadata, 50)
+                          ) : <AllFileIcon style={{ width: 50, height: 50, fill: '#ffa93e' }} />
                     }
                   </div>
 

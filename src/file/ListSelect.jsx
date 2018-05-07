@@ -195,9 +195,9 @@ class ListSelect extends EventEmitter {
   }
 
   rowColor (index) {
-    if (this.state.selected.includes(index)) return '#e2f1fd'
-    else if (this.shiftInRange(index) || (index === this.state.hover && !this.dragging.length)) return '#FFF'
-    return index % 2 ? '#eef3fa' : ''
+    if (this.state.selected.includes(index)) return '#f9fcfe'
+    else if (this.shiftInRange(index) || (index === this.state.hover && !this.dragging.length)) return 'rgba(249, 252, 254, 0.5)'
+    return '#FFF'
   }
 
   rowBorder (index) {

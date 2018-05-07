@@ -120,7 +120,9 @@ class FileContent extends React.Component {
 
     this.selectStart = (event, scrollTop) => {
       console.log('this.selectStart', event, scrollTop)
-      if (this.props.noGridSelect) return
+      /* disabled in public root */
+      if (this.props.inPublicRoot) return
+
       if (event.nativeEvent.button !== 0) return
       if (this.selectBox) {
         this.selectEnd(event)
@@ -366,11 +368,11 @@ class FileContent extends React.Component {
 
     /* got list */
     return (
-      <div style={{ width: '100%', height: '100%', backgroundColor: '#f3f8ff', position: 'relatvie' }}>
+      <div style={{ width: '100%', height: '100%', backgroundColor: '#FFF', position: 'relatvie' }}>
         <EventListener target="window" onResize={this.handleResize} />
         {/* render list */}
         {
-          this.props.gridView
+          this.props.gridView || this.props.inPublicRoot
             ? <GridView
               {...this.props}
               onRowClick={this.onRowClick}
