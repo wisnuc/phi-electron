@@ -1,6 +1,6 @@
 import i18n from 'i18n'
 import React from 'react'
-import { Popover, Menu, MenuItem, IconButton } from 'material-ui'
+import { Popover, Menu, MenuItem } from 'material-ui'
 import ADD from 'material-ui/svg-icons/navigation/arrow-drop-down'
 import { UploadFile, UploadFold } from '../common/Svg'
 
@@ -22,8 +22,24 @@ class Account extends React.Component {
 
   render () {
     const color = 'rgba(255, 255, 255, 0.7)'
+
+    const iconStyle = { marginLeft: 36, marginTop: 10 }
+    const items = [
+      { primaryText: i18n.__('Account Settings'), leftIcon: <UploadFold style={iconStyle} />, onClick: () => {} },
+      { primaryText: i18n.__('Users Management'), leftIcon: <UploadFile style={iconStyle} />, onClick: () => {} },
+      { primaryText: i18n.__('Log Out'), leftIcon: <UploadFile style={iconStyle} />, onClick: this.props.logout }
+    ]
     return (
-      <div style={{ display: 'flex', alignItems: 'center', height: 30 }}>
+      <div
+        style={{
+          height: 30,
+          display: 'flex',
+          alignItems: 'center',
+          cursor: 'pointer',
+          WebkitAppRegion: 'no-drag'
+        }}
+        onClick={this.openPop}
+      >
         <div>
           <img src="./assets/images/avator-default.png" alt="" width={30} height={30} />
         </div>
@@ -31,7 +47,7 @@ class Account extends React.Component {
           { 'Brown' }
         </div>
 
-        <IconButton
+        <div
           style={{
             width: 26,
             height: 26,
@@ -41,11 +57,9 @@ class Account extends React.Component {
             alignItems: 'center',
             justifyContent: 'center'
           }}
-          onClick={this.openPop}
-          iconStyle={{ width: 20, height: 20, color }}
         >
-          <ADD />}
-        </IconButton>
+          <ADD color={color} />
+        </div>
 
         <div style={{ height: 12, width: 1, backgroundColor: color, opacity: 0.3 }} />
         <Popover
@@ -55,26 +69,36 @@ class Account extends React.Component {
           anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
           targetOrigin={{ horizontal: 'left', vertical: 'top' }}
           onRequestClose={() => this.setState({ open: false })}
+          style={{ WebkitAppRegion: 'no-drag', boxShadow: '0px 10px 20px 0 rgba(23, 99, 207, 0.1)' }}
         >
-          <Menu style={{ minWidth: 240 }}>
-            <MenuItem
-              primaryText={i18n.__('Account Settings')}
-              leftIcon={<UploadFold />}
-              onClick={() => {}}
-              style={{ fontSize: 13 }}
-            />
-            <MenuItem
-              primaryText={i18n.__('Users Management')}
-              leftIcon={<UploadFile />}
-              onClick={() => {}}
-              style={{ fontSize: 13 }}
-            />
-            <MenuItem
-              primaryText={i18n.__('Log Out')}
-              leftIcon={<UploadFile />}
-              onClick={this.props.logout}
-              style={{ fontSize: 13 }}
-            />
+          <Menu
+            style={{
+              width: 125,
+              maxWidth: 125,
+              height: 130,
+              overflow: 'hidden',
+              transition: 'all 225ms'
+            }}
+          >
+            {
+              items.map((props, index) => (
+                <MenuItem
+                  {...props}
+                  key={index.toString()}
+                  style={{
+                    marginLeft: -24,
+                    marginTop: !index ? -3 : 0,
+                    fontSize: 14,
+                    color: '#292936',
+                    height: 40,
+                    minHeight: 40,
+                    lineHeight: '40px'
+                  }}
+
+                />
+              ))
+            }
+            <div style={{ height: 5, width: '100%' }} />
           </Menu>
         </Popover>
       </div>

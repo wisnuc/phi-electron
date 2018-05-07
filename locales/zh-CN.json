@@ -221,6 +221,8 @@
   "Change Username": "修改用户名",
   "Change Password": "修改密码",
   "Avatar Edit Text": "请绑定微信，将会自动获取您的微信头像。",
+  "Account Settings": "个人设置",
+  "Users Management": "用户管理",
 
   "==== control/ResetPassword.jsx ====": "",
   "Authentication Success Text": "微信认证成功",
