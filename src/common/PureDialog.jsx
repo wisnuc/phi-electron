@@ -89,6 +89,7 @@ class TransitionItem extends React.Component {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          WebkitAppRegion: 'no-drag',
           transition: 'all 0ms cubic-bezier(0.23, 1, 0.32, 1)'
         }}
       >

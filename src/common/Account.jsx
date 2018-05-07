@@ -7,17 +7,19 @@ import { UploadFile, UploadFold } from '../common/Svg'
 class Account extends React.Component {
   constructor (props) {
     super(props)
-    this.state = { open: false }
-
-    this.upload = (type) => {
-      this.props.upload(type)
-      this.setState({ open: false })
-    }
+    this.state = { open: false, show: false }
 
     this.openPop = (e) => {
       e.preventDefault()
-      this.setState({ open: true, anchorEl: e.currentTarget })
+      clearTimeout(this.timer)
+      this.setState({ open: true, show: false, anchorEl: e.currentTarget })
+      /* hide the status of position move */
+      this.timer = setTimeout(() => this.setState({ show: true }))
     }
+  }
+
+  componetWillUnmount () {
+    clearTimeout(this.timer)
   }
 
   render () {
@@ -64,14 +66,13 @@ class Account extends React.Component {
         <div style={{ height: 12, width: 1, backgroundColor: color, opacity: 0.3 }} />
         <Popover
           open={this.state.open}
-          animated
           anchorEl={this.state.anchorEl}
           anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
           targetOrigin={{ horizontal: 'left', vertical: 'top' }}
           onRequestClose={() => this.setState({ open: false })}
-          style={{ WebkitAppRegion: 'no-drag', boxShadow: '0px 10px 20px 0 rgba(23, 99, 207, 0.1)' }}
+          style={{ boxShadow: '0px 10px 20px 0 rgba(23, 99, 207, 0.1)', opacity: this.state.show ? 1 : 0 }}
         >
-          <Menu style={{ width: 125, maxWidth: 125, height: 130, overflow: 'hidden' }} >
+          <div style={{ width: 125, maxWidth: 125, height: 130, overflow: 'hidden' }} >
             {
               items.map((props, index) => (
                 <MenuItem
@@ -79,7 +80,8 @@ class Account extends React.Component {
                   key={index.toString()}
                   style={{
                     marginLeft: -24,
-                    marginTop: !index ? -3 : 0,
+                    WebkitAppRegion: 'no-drag',
+                    marginTop: !index ? 5 : 0,
                     fontSize: 14,
                     color: '#292936',
                     height: 40,
@@ -90,7 +92,7 @@ class Account extends React.Component {
               ))
             }
             <div style={{ height: 5, width: '100%' }} />
-          </Menu>
+          </div>
         </Popover>
       </div>
     )
