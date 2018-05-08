@@ -3,11 +3,13 @@ import i18n from 'i18n'
 import UUID from 'uuid'
 import { CircularProgress, RaisedButton } from 'material-ui'
 import OpenIcon from 'material-ui/svg-icons/action/open-with'
-import DownloadIcon from 'material-ui/svg-icons/file/file-download'
 import PDFView from './PDF'
 import DialogOverlay from '../common/DialogOverlay'
 import FlatButton from '../common/FlatButton'
 import PhotoDetail from '../photo/PhotoDetail'
+import { DownloadFileIcon, CloseIcon } from '../common/Svg'
+import { LIButton } from '../common/IconButton'
+import { OLButton } from '../common/Buttons'
 
 class Preview extends React.Component {
   constructor (props) {
@@ -244,34 +246,24 @@ class Preview extends React.Component {
     // debug('this.props renderOtherFiles', this.props)
     return (
       <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'column',
-          height: 144,
-          width: 360,
-          backgroundColor: '#424242',
-          borderRadius: '20px'
-        }}
+        style={{ height: 110, width: 280, padding: '0 20px 20px 20px', backgroundColor: '#FFF' }}
         onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
       >
-        <div style={{ color: '#FFFFFF', fontSize: 20, fontWeight: 500 }}>
-          { i18n.__('Can Not Preview Text')}
+        <div style={{ height: 60, display: 'flex', alignItems: 'center' }}>
+          <div style={{ color: '#525a60', fontSize: 20, width: 215 }} className="text">
+            { this.props.item.name }
+          </div>
+
+          <LIButton onClick={() => { this.props.download(); this.props.close() }}>
+            <DownloadFileIcon />
+          </LIButton>
+          <LIButton onClick={this.props.close}>
+            <CloseIcon />
+          </LIButton>
         </div>
-        <div style={{ height: 8 }} />
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <RaisedButton
-            label={i18n.__('Download')}
-            primary
-            style={{ margin: 12 }}
-            icon={<DownloadIcon />}
-            onClick={() => { this.props.download(); this.props.close() }}
-          />
-          <RaisedButton
+          <OLButton
             label={i18n.__('Open via Local App')}
-            style={{ margin: 12 }}
-            icon={<OpenIcon />}
             onClick={this.openByLocal}
           />
         </div>

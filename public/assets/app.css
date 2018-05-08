@@ -141,6 +141,12 @@ img[src=""] {
 	background-color: #f2f2f2!important;
 }
 
+.text {
+	overflow: hidden;
+	textOverflow: ellipsis;
+	whiteSpace: nowrap;
+}
+
 .arrow_box {
 	position: relative;
 	display: flex;

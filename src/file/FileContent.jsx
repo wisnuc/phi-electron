@@ -405,7 +405,7 @@ class FileContent extends React.Component {
 
         {/* preview picture */}
         {
-          this.state.seqIndex > -1 && this.props.entries(this.state.seqIndex) && this.props.entries(this.state.seqIndex).metadata &&
+          this.state.seqIndex > -1 && this.props.entries[this.state.seqIndex] && this.props.entries[this.state.seqIndex].metadata &&
             <ContainerOverlay
               onRequestClose={() => this.setState({ preview: false })}
               open={this.state.preview}
@@ -424,7 +424,7 @@ class FileContent extends React.Component {
 
         {/* preview other files */}
         {
-          this.state.seqIndex > -1 && this.props.entries(this.state.seqIndex) && !this.props.entries(this.state.seqIndex).metadata &&
+          this.state.seqIndex > -1 && this.props.entries[this.state.seqIndex] && !this.props.entries[this.state.seqIndex].metadata &&
             <SingleView
               onRequestClose={() => this.setState({ preview: false })}
               open={this.state.preview}

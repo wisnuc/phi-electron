@@ -182,6 +182,37 @@ export class ModeSelect extends Button {
   }
 }
 
+/* open in local app Button */
+export class OLButton extends Button {
+  render () {
+    const { label, onClick, disabled } = this.props
+    const color = disabled ? 'var(--light-grey-text)' : '#525a60'
+    const backgroundColor = disabled || (!this.state.hover) ? '#FFF' : '#f2f5fa'
+    const borderColor = disabled || (!this.state.hover) ? '#dae0e6' : 'var(--dodger-blue)'
+
+    return (
+      <div
+        onClick={onClick}
+        onMouseMove={() => this.setState({ hover: true })}
+        onMouseLeave={() => this.setState({ hover: false })}
+        style={{
+          height: 50,
+          width: 280,
+          color,
+          backgroundColor,
+          position: 'relative',
+          boxSizing: 'border-box',
+          border: `solid 1px ${borderColor}`
+        }}
+        className="flexCenter"
+        {...this.funcs}
+      >
+        { label }
+      </div>
+    )
+  }
+}
+
 /* Menu Button in Home */
 export class MenuButton extends Button {
   render () {

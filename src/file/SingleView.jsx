@@ -27,7 +27,6 @@ class ContainerOverlayInline extends React.Component {
 
     /* animation */
     this.animation = (status) => {
-      const transformItem = this.refReturn
       const root = this.refRoot
       const overlay = this.refOverlay
       const time = 0.2
@@ -35,13 +34,11 @@ class ContainerOverlayInline extends React.Component {
 
       if (status === 'In') {
         TweenMax.from(overlay, time, { opacity: 0, ease })
-        TweenMax.from(transformItem, time, { rotation: 180, opacity: 0, ease })
         TweenMax.from(root, time, { opacity: 0, ease })
       }
 
       if (status === 'Out') {
         TweenMax.to(overlay, time, { opacity: 0, ease })
-        TweenMax.to(transformItem, time, { rotation: 180, opacity: 0, ease })
         TweenMax.to(root, time, { opacity: 0, ease })
       }
     }
@@ -114,7 +111,7 @@ class ContainerOverlayInline extends React.Component {
             width: '100%',
             top: 0,
             left: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.87)'
+            backgroundColor: 'rgba(0, 0, 0, 0.4)'
           }}
         />
 
@@ -140,9 +137,9 @@ class ContainerOverlayInline extends React.Component {
                 style={{
                   position: 'absolute',
                   top: 0,
-                  left: index ? index === 1 ? 0 : '20%' : '-20%',
-                  opacity: index === 1 ? 1 : 0,
-                  zIndex: index === 1 ? 1 : 0,
+                  left: 0,
+                  opacity: 1,
+                  zIndex: 1,
                   height: '100%',
                   width: '100%',
                   transition: 'all 200ms cubic-bezier(0.0, 0.0, 0.2, 1)'

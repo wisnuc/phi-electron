@@ -390,11 +390,14 @@ export const MaxIcon = props => (
     <path fill="#FFF" fillRule="evenodd" d="M0 14V0h16v14H0zM14 2H2v2h12V2zM2 6v6h12V6H2z" opacity=".702" />
   </SvgIcon>
 )
+
+/*
 export const CloseIcon = props => (
   <SvgIcon viewBox="0 0 16 16" {...props}>
     <path fill="#FFF" fillRule="evenodd" d="M15.071 13.657l-1.414 1.414L8 9.414l-5.657 5.657-1.415-1.414L6.586 8 .928 2.343 2.343.929 8 6.586 13.657.929l1.414 1.414L9.414 8l5.657 5.657z" opacity=".702" />
   </SvgIcon>
 )
+*/
 
 export const RefreshIcon = props => (
   <SvgIcon viewBox="0 0 20 20" {...props}>
@@ -637,5 +640,18 @@ export const LogoutIcon = props => (
   <SvgIcon viewBox="0 0 30 30" {...props}>
     <polygon points="19 21 17 21 17 10 10.4 7 19 7 19 11 21 11 21 5 6 5 6 7 6 21 6 23 17 27 17 23 21 23 21 17 19 17 19 21" />
     <polygon points="25.414 14 22 11 22 13 18 13 18 15 22 15 22 17 25.414 14" />
+  </SvgIcon>
+)
+
+export const DownloadFileIcon = props => (
+  <SvgIcon viewBox="0 0 30 30" {...props}>
+    <polygon points="18.71 14.21 17.29 12.79 16 14.09 16 9.5 14 9.5 14 14.09 12.71 12.79 11.29 14.21 15 17.91 18.71 14.21" />
+    <rect x="11" y="19.03" width="8" height="1.81" />
+  </SvgIcon>
+)
+
+export const CloseIcon = props => (
+  <SvgIcon viewBox="0 0 30 30" {...props}>
+    <polygon points="19.71 11.71 18.29 10.29 15 13.59 11.71 10.29 10.29 11.71 13.59 15 10.29 18.29 11.71 19.71 15 16.41 18.29 19.71 19.71 18.29 16.41 15 19.71 11.71" />
   </SvgIcon>
 )
