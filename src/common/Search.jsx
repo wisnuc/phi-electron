@@ -1,4 +1,3 @@
-import i18n from 'i18n'
 import React from 'react'
 import { TextField } from 'material-ui'
 import SearchIcon from 'material-ui/svg-icons/action/search'
@@ -24,9 +23,6 @@ class Search extends Button {
 
   render () {
     const searchHint = '搜索全部文件'
-    const backgroundImage = this.state.hover
-      ? 'linear-gradient(135deg, #a36fff, #3d3dfa)'
-      : 'linear-gradient(135deg, #c29fff, #7a7afc)'
 
     return (
       <div
@@ -35,14 +31,13 @@ class Search extends Button {
           alignItems: 'center',
           height: 34,
           width: 280,
-          backgroundColor: '#edf2fa',
+          backgroundColor: '#f0f0f0',
           borderRadius: 17
         }}
       >
-        <SearchIcon style={{ fill: '#525a60', opacity: 0.5, margin: '0 10px' }} />
         <TextField
           name="search-input"
-          style={{ width: 170 }}
+          style={{ width: 215, marginLeft: 20, color: '#505259' }}
           underlineStyle={{ display: 'none' }}
           hintText={searchHint}
           hintStyle={{ color: 'var(--light-grey-text)', fontSize: 14 }}
@@ -50,21 +45,10 @@ class Search extends Button {
           errorText={this.state.errorText}
           onChange={e => this.handleChange(e.target.value)}
         />
-        <div
+        <SearchIcon
           {...this.funcs}
-          style={{
-            width: 66,
-            height: 34,
-            color: '#FFF',
-            cursor: 'pointer',
-            borderRadius: '0 17px 17px 0',
-            boxSizing: 'border-box',
-            backgroundImage
-          }}
-          className="flexCenter"
-        >
-          { i18n.__('Search') }
-        </div>
+          style={{ fill: '#525a60', opacity: 0.5, margin: '0 10px' }}
+        />
       </div>
     )
   }
