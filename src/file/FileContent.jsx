@@ -5,6 +5,7 @@ import { CircularProgress } from 'material-ui'
 import UploadIcon from 'material-ui/svg-icons/file/cloud-upload'
 import ErrorIcon from 'material-ui/svg-icons/alert/error'
 import ContainerOverlay from './ContainerOverlay'
+import SingleView from './SingleView'
 import RenderListByRow from './RenderListByRow'
 import GridView from './GridView'
 
@@ -402,21 +403,43 @@ class FileContent extends React.Component {
             />
         }
 
-        {/* preview file */}
-        <ContainerOverlay
-          onRequestClose={() => this.setState({ preview: false })}
-          open={this.state.preview}
-          items={this.props.entries}
-          seqIndex={this.state.seqIndex}
-          ipcRenderer={this.props.ipcRenderer}
-          setAnimation={this.props.setAnimation}
-          memoize={this.props.memoize}
-          download={this.props.download}
-          primaryColor={this.props.primaryColor}
-          path={this.props.path}
-          select={this.props.select.touchTap}
-          apis={this.props.apis}
-        />
+        {/* preview picture */}
+        {
+          this.state.seqIndex > -1 && this.props.entries(this.state.seqIndex) && this.props.entries(this.state.seqIndex).metadata &&
+            <ContainerOverlay
+              onRequestClose={() => this.setState({ preview: false })}
+              open={this.state.preview}
+              items={this.props.entries}
+              seqIndex={this.state.seqIndex}
+              ipcRenderer={this.props.ipcRenderer}
+              setAnimation={this.props.setAnimation}
+              memoize={this.props.memoize}
+              download={this.props.download}
+              primaryColor={this.props.primaryColor}
+              path={this.props.path}
+              select={this.props.select.touchTap}
+              apis={this.props.apis}
+            />
+        }
+
+        {/* preview other files */}
+        {
+          this.state.seqIndex > -1 && this.props.entries(this.state.seqIndex) && !this.props.entries(this.state.seqIndex).metadata &&
+            <SingleView
+              onRequestClose={() => this.setState({ preview: false })}
+              open={this.state.preview}
+              items={this.props.entries}
+              seqIndex={this.state.seqIndex}
+              ipcRenderer={this.props.ipcRenderer}
+              setAnimation={this.props.setAnimation}
+              memoize={this.props.memoize}
+              download={this.props.download}
+              primaryColor={this.props.primaryColor}
+              path={this.props.path}
+              select={this.props.select.touchTap}
+              apis={this.props.apis}
+            />
+        }
 
         {/* selection box */}
         <div
