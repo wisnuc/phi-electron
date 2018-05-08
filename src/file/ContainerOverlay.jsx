@@ -1,8 +1,6 @@
 import React from 'react'
 import i18n from 'i18n'
 import { IconButton } from 'material-ui'
-import ErrorIcon from 'material-ui/svg-icons/alert/error'
-import FileFolder from 'material-ui/svg-icons/file/folder'
 import DownloadIcon from 'material-ui/svg-icons/file/file-download'
 import RenderToLayer from 'material-ui/internal/RenderToLayer'
 import keycode from 'keycode'
@@ -10,7 +8,6 @@ import EventListener from 'react-event-listener'
 import { TweenMax } from 'gsap'
 import ReactTransitionGroup from 'react-transition-group/TransitionGroup'
 import Preview from './Preview'
-import renderFileIcon from '../common/renderFileIcon'
 
 class ContainerOverlayInline extends React.Component {
   constructor (props) {
@@ -100,7 +97,6 @@ class ContainerOverlayInline extends React.Component {
 
     /* animation */
     this.animation = (status) => {
-      const transformItem = this.refReturn
       const root = this.refRoot
       const overlay = this.refOverlay
       const time = 0.2
@@ -108,13 +104,11 @@ class ContainerOverlayInline extends React.Component {
 
       if (status === 'In') {
         TweenMax.from(overlay, time, { opacity: 0, ease })
-        TweenMax.from(transformItem, time, { rotation: 180, opacity: 0, ease })
         TweenMax.from(root, time, { opacity: 0, ease })
       }
 
       if (status === 'Out') {
         TweenMax.to(overlay, time, { opacity: 0, ease })
-        TweenMax.to(transformItem, time, { rotation: 180, opacity: 0, ease })
         TweenMax.to(root, time, { opacity: 0, ease })
       }
     }
@@ -171,9 +165,12 @@ class ContainerOverlayInline extends React.Component {
   }
 
   render () {
-    const { primaryColor } = this.props
+    const hoverColor = 'rgba(0,0,0,.3)'
     const entry = this.props.items[this.currentIndex]
     this.firstFileIndex = this.props.items.findIndex(item => item.type === 'file')
+
+    const iconStyle = { width: 24, height: 24 }
+    const buttonStyle = { width: 30, height: 30, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }
     return (
       <div
         ref={ref => (this.refRoot = ref)}
@@ -200,7 +197,7 @@ class ContainerOverlayInline extends React.Component {
             width: '100%',
             top: 0,
             left: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.87)'
+            backgroundColor: 'rgba(0, 0, 0, 0.85)'
           }}
         />
 
@@ -258,57 +255,47 @@ class ContainerOverlayInline extends React.Component {
                 top: 0,
                 left: 0,
                 width: this.state.detailInfo ? 'calc(100% - 376px)' : 'calc(100% - 16px)',
-                height: 64,
+                height: 80,
                 display: 'flex',
                 alignItems: 'center',
                 background: 'linear-gradient(0deg, rgba(0,0,0,0), rgba(0,0,0,0.54))'
               }}
               onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
             >
-              {/* return Button */}
-              <IconButton
-                onClick={this.close}
-                style={{ margin: 12 }}
-              >
-                <div ref={ref => (this.refReturn = ref)} >
-                  <svg width={24} height={24} viewBox="0 0 24 24" fill="white">
-                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
-                  </svg>
-                </div>
-              </IconButton>
-              {
-                entry.type === 'public' || entry.type === 'directory'
-                  ? <FileFolder style={{ color: 'rgba(0,0,0,0.54)' }} />
-                  : entry.type === 'file'
-                    ? renderFileIcon(entry.name, entry.metadata, 24, true) // name, metadata, size, dark
-                    : <ErrorIcon style={{ color: 'rgba(0,0,0,0.54)' }} />
-              }
-              <div style={{ width: 16 }} />
-              <div
-                style={{
-                  width: 540,
-                  fontSize: 14,
-                  color: '#FFFFFF',
-                  overflow: 'hidden',
-                  whiteSpace: 'nowrap',
-                  textOverflow: 'ellipsis'
-                }}
-              >
+              <div style={{ width: 700, fontSize: 16, color: '#FFFFFF', marginLeft: 20 }} className="text" >
                 { entry.name }
               </div>
-
               <div style={{ flexGrow: 1 }} />
 
               {/* toolbar */}
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <IconButton
-                  tooltip={i18n.__('Download')}
-                  onClick={this.props.download}
-                >
+              <div
+                style={{
+                  width: 120,
+                  height: 40,
+                  marginRight: 20,
+                  display: 'flex',
+                  alignItems: 'center',
+                  backgroundColor: '#000000'
+                }}
+              >
+                <div style={{ width: 10 }} />
+                <IconButton tooltip={i18n.__('Download')} onClick={this.props.download} style={buttonStyle} iconStyle={iconStyle}>
                   <DownloadIcon color="#FFF" />
                 </IconButton>
+
+                <div style={{ width: 5 }} />
+                <IconButton tooltip={i18n.__('Download')} onClick={this.props.download} style={buttonStyle} iconStyle={iconStyle}>
+                  <DownloadIcon color="#FFF" />
+                </IconButton>
+
+                <div style={{ width: 5 }} />
+                {/* return Button */}
+                <IconButton tooltip={i18n.__('Close')} onClick={this.close} style={buttonStyle} iconStyle={iconStyle}>
+                  <svg width={24} height={24} viewBox="0 0 24 24" fill="white">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                  </svg>
+                </IconButton>
               </div>
-              <div style={{ width: 24 }} />
             </div>
           }
 
@@ -319,18 +306,18 @@ class ContainerOverlayInline extends React.Component {
               opacity: this.currentIndex > this.firstFileIndex ? 1 : 0,
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(66, 66, 66, 0.541176)',
+              backgroundColor: 'rgba(0,0,0,.6)',
               position: 'absolute',
-              borderRadius: 28,
+              borderRadius: 36,
               zIndex: 100,
-              width: 56,
-              height: 56,
+              width: 72,
+              height: 72,
               left: '2%'
             }}
-            hoveredStyle={{ backgroundColor: primaryColor }}
+            hoveredStyle={{ backgroundColor: hoverColor }}
             onClick={(e) => { this.changeIndex('left'); e.preventDefault(); e.stopPropagation() }}
           >
-            <svg width={36} height={36} viewBox="0 0 24 24" fill="white">
+            <svg width={48} height={48} viewBox="0 0 24 24" fill="rgba(255,255,255,.6)">
               <path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z" />
             </svg>
           </IconButton>
@@ -342,18 +329,18 @@ class ContainerOverlayInline extends React.Component {
               opacity: this.currentIndex < this.props.items.length - 1 ? 1 : 0,
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(66, 66, 66, 0.541176)',
-              borderRadius: 28,
+              backgroundColor: 'rgba(0,0,0,.6)',
+              borderRadius: 36,
               position: 'absolute',
               zIndex: 100,
-              width: 56,
-              height: 56,
+              width: 72,
+              height: 72,
               right: '2%'
             }}
-            hoveredStyle={{ backgroundColor: primaryColor }}
+            hoveredStyle={{ backgroundColor: hoverColor }}
             onClick={(e) => { this.changeIndex('right'); e.preventDefault(); e.stopPropagation() }}
           >
-            <svg width={36} height={36} viewBox="0 0 24 24" fill="white">
+            <svg width={48} height={48} viewBox="0 0 24 24" fill="rgba(255,255,255,.6)">
               <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z" />
             </svg>
           </IconButton>
@@ -365,7 +352,7 @@ class ContainerOverlayInline extends React.Component {
 
 /*
  * Use RenderToLayer method to move the component to root node
-*/
+ */
 
 class ContainerOverlay extends React.Component {
   renderLayer = () => (
