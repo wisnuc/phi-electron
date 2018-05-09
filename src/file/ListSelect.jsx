@@ -97,7 +97,7 @@ class ListSelect extends EventEmitter {
 
     this.setState({
       modify: -1,
-      specified: index,
+      specified: index !== -1 ? index : this.state.specified,
       selected: index === -1 ? [] : [index]
     })
   }
@@ -201,12 +201,20 @@ class ListSelect extends EventEmitter {
   }
 
   rowBorder (index) {
-    const borderColor = '#31a0f5'
+    let borderColor = '#31a0f5'
     let borderTopColor = '#31a0f5'
     let borderBottomColor = '#31a0f5'
-    if (!this.state.selected.includes(index)) return {} // not selected
-    if (this.state.selected.includes(index - 1)) borderTopColor = 'transparent'
-    if (this.state.selected.includes(index + 1)) borderBottomColor = 'transparent'
+
+    /* not selected, not specified, not hover */
+    if (!this.state.selected.includes(index) && this.state.specified !== index && this.state.hover !== index) return ({})
+    else if (!this.state.selected.includes(index) && this.state.specified !== index && this.state.hover === index) {
+      borderColor = '#d1e9fb'
+      borderTopColor = '#d1e9fb'
+      borderBottomColor = '#d1e9fb'
+    } else {
+      if (this.state.selected.includes(index - 1)) borderTopColor = 'transparent'
+      if (this.state.selected.includes(index + 1)) borderBottomColor = 'transparent'
+    }
     return ({ borderColor, borderTopColor, borderBottomColor })
   }
 

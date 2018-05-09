@@ -156,6 +156,8 @@ export const LogoutIcon = f('icon_logout')
 
 export const DownloadFileIcon = f('icon_windows_downloa')
 
+export const ArrowIcon = f('icon_arrow_down')
+
 export const CheckedIcon = props => (
   <SvgIcon viewBox="0 0 9.5 7.5" {...props}>
     <path fill="none" stroke="#FFF" d="M1.499 2.5l2.001 2 4-4" />

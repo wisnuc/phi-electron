@@ -1,19 +1,14 @@
 import React from 'react'
 import i18n from 'i18n'
 import prettysize from 'prettysize'
-import { Popover, MenuItem, Menu, IconButton } from 'material-ui'
 import ErrorIcon from 'material-ui/svg-icons/alert/error'
 import ToggleCheckBox from 'material-ui/svg-icons/toggle/check-box'
 import ToggleCheckBoxOutlineBlank from 'material-ui/svg-icons/toggle/check-box-outline-blank'
-import ArrowUpward from 'material-ui/svg-icons/navigation/arrow-upward'
-import ArrowDownward from 'material-ui/svg-icons/navigation/arrow-downward'
-import CheckIcon from 'material-ui/svg-icons/navigation/check'
 import { AutoSizer } from 'react-virtualized'
 import Name from './Name'
 import ScrollBar from '../common/ScrollBar'
 import renderFileIcon from '../common/renderFileIcon'
-import { FolderIcon, ShareDisk } from '../common/Svg'
-import FlatButton from '../common/FlatButton'
+import { ArrowIcon, FolderIcon, PublicIcon } from '../common/Svg'
 import { formatDate, formatMtime } from '../common/datetime'
 
 const checkStyle = { width: 16, height: 16, marginLeft: 12 }
@@ -95,7 +90,7 @@ class Row extends React.PureComponent {
           onDoubleClick={e => this.props.onRowDoubleClick(e, index)}
           onMouseDown={e => onRowMouseDown(e, index)}
         >
-          <div style={{ width: 36 }}>
+          <div style={{ width: 36, display: 'flex', alignItems: 'center' }}>
             {
               isSelected
                 ? <ToggleCheckBox style={Object.assign({ color: '#31a0f5' }, checkStyle)} />
@@ -112,7 +107,7 @@ class Row extends React.PureComponent {
               entry.type === 'directory'
                 ? <FolderIcon style={{ color: 'rgba(0,0,0,0.54)', width: 24, height: 24 }} />
                 : entry.type === 'public'
-                  ? <ShareDisk style={{ color: 'rgba(0,0,0,0.54)', width: 24, height: 24 }} />
+                  ? <PublicIcon style={{ color: 'rgba(0,0,0,0.54)', width: 24, height: 24 }} />
                   : entry.type === 'file'
                     ? renderFileIcon(entry.name, entry.metadata, 24)
                     : <ErrorIcon style={{ color: 'rgba(0,0,0,0.54)', width: 24, height: 24 }} />
@@ -251,67 +246,22 @@ class RenderListByRow extends React.Component {
         >
           { h.title }
         </div>
-        <div style={{ marginLeft: 8, marginTop: 6, opacity: 0.7 }}>
-          { this.props.sortType === h.up && <ArrowUpward style={{ height: 16, width: 16, color: '#888a8c' }} /> }
-          { this.props.sortType === h.down && <ArrowDownward style={{ height: 16, width: 16, color: '#888a8c' }} /> }
+        <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+          {
+            this.props.sortType === h.up &&
+            (
+              <ArrowIcon
+                style={{
+                  height: 30,
+                  width: 30,
+                  color: '#505259',
+                  transform: 'rotate(180deg)'
+                }}
+              />
+            )
+          }
+          { this.props.sortType === h.down && <ArrowIcon style={{ height: 30, width: 30, color: '#505259' }} /> }
         </div>
-      </div>
-    )
-  }
-
-  renderPopoverHeader () {
-    const headers = [
-      { title: i18n.__('Date Modified'), up: 'timeUp', down: 'timeDown' },
-      { title: i18n.__('Date Taken'), up: 'takenUp', down: 'takenDown' }
-    ]
-
-    const { sortType, changeSortType } = this.props
-    let h = headers.find(header => (header.up === sortType || header.down === sortType))
-    this.preHeader = h || this.preHeader || headers[0]
-    const isSelected = !!h
-    h = this.preHeader
-
-    return (
-      <div style={{ display: 'flex', alignItems: 'center ', width: 240 }}>
-        <FlatButton
-          label={h.title}
-          labelStyle={{ fontSize: 14, color: 'rgba(0,0,0,0.54)', textTransform: '' }}
-          onClick={this.toggleMenu}
-        />
-        {/* menu */}
-        <Popover
-          open={this.state.open}
-          anchorEl={this.state.anchorEl}
-          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-          targetOrigin={{ horizontal: 'right', vertical: 'top' }}
-          onRequestClose={this.toggleMenu}
-        >
-          <Menu style={{ minWidth: 200 }}>
-            <MenuItem
-              style={{ fontSize: 13 }}
-              leftIcon={this.state.type === i18n.__('Date Modified') ? <CheckIcon /> : <div />}
-              primaryText={i18n.__('Date Modified')}
-              onClick={() => this.handleChange(i18n.__('Date Modified'))}
-            />
-            <MenuItem
-              style={{ fontSize: 13 }}
-              leftIcon={this.state.type === i18n.__('Date Taken') ? <CheckIcon /> : <div />}
-              primaryText={i18n.__('Date Taken')}
-              onClick={() => this.handleChange(i18n.__('Date Taken'))}
-            />
-          </Menu>
-        </Popover>
-
-        {/* direction icon */}
-        <IconButton
-          style={{ height: 36, width: 36, padding: 9, borderRadius: '18px', marginLeft: -8, display: isSelected ? '' : 'none' }}
-          iconStyle={{ height: 18, width: 18, color: 'rgba(0,0,0,0.54)' }}
-          hoveredStyle={{ backgroundColor: 'rgba(153,153,153,0.2)' }}
-          onClick={() => (sortType === h.up || !sortType ? changeSortType(h.down) : changeSortType(h.up))}
-        >
-          { sortType === h.up && <ArrowUpward /> }
-          { sortType === h.down && <ArrowDownward /> }
-        </IconButton>
       </div>
     )
   }
@@ -345,7 +295,7 @@ class RenderListByRow extends React.Component {
           }}
           role="presentation"
         >
-          <div style={{ width: 28, marginLeft: 2, marginRight: 12 }}>
+          <div style={{ width: 28, marginLeft: 2, marginRight: 12, display: 'flex', alignItems: 'center' }}>
             {
               allSelected
                 ? <ToggleCheckBox style={Object.assign({ color: '#31a0f5' }, checkStyle)} onClick={onClick} />
@@ -353,8 +303,8 @@ class RenderListByRow extends React.Component {
             }
           </div>
           { this.renderHeader({ title: i18n.__('File Name'), flexGrow: 1, up: 'nameUp', down: 'nameDown' }) }
-          { this.renderHeader({ title: i18n.__('Size'), width: 130, up: 'sizeUp', down: 'sizeDown' }) }
-          { this.renderPopoverHeader() }
+          { this.renderHeader({ title: i18n.__('Size'), width: 140, up: 'sizeUp', down: 'sizeDown' }) }
+          { this.renderHeader({ title: i18n.__('Date Modified'), width: 230, up: 'timeUp', down: 'timeDown' }) }
         </div>
 
         {/* list content */}

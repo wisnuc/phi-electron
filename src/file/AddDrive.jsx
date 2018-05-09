@@ -34,7 +34,7 @@ class AddDrive extends Button {
           className="flexCenter"
           style={{ height: 80, width: 108, margin: '16px auto 0 auto', overflow: 'hidden' }}
         >
-          <AddDriveIcon style={{ width: 50, height: 50, color: '#ffa93e' }} />
+          <AddDriveIcon style={{ width: 30, height: 30, color: '#7d868f', opacity: 0.5 }} />
         </div>
 
         {/* file name */}

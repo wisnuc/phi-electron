@@ -27,7 +27,7 @@ class Row extends React.Component {
               const { index, entry } = item
               const selected = select.selected.findIndex(s => s === index) > -1
               const hover = select.hover === index && !selected
-              const focus = !select.selected.length && select.specified === index
+              const focus = select.specified === index
               const backgroundColor = selected ? '#f4fafe' : hover ? '#f9fcfe' : '#FFF'
               const borderColor = selected ? '#a3d3f8' : hover ? '#d1e9fb' : focus ? '#a3d3f8' : ''
               // const onDropping = entry.type === 'directory' && select.rowDrop(index)
@@ -51,8 +51,7 @@ class Row extends React.Component {
                     marginBottom: 10,
                     backgroundColor,
                     boxSizing: 'border-box',
-                    border: borderColor ? `1px solid ${borderColor}` : '',
-                    boxShadow: hover ? '0px 5px 10px 0 rgba(97, 107, 120, 0.08)' : ''
+                    border: borderColor ? `1px solid ${borderColor}` : ''
                   }}
                   role="presentation"
                   onClick={e => this.props.onRowClick(e, index)}
