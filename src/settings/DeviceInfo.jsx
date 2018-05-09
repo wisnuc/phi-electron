@@ -169,7 +169,7 @@ class DeviceInfo extends React.PureComponent {
                   style={{ display: 'flex', alignItems: 'center', height: 32, marginLeft: 10, color: '#525a60' }}
                   onClick={() => this.setState({ modify: true })}
                 >
-                  { this.state.label ? this.state.label : this.props.info.name }
+                  { this.state.label ? this.state.label : 'N2' }
                   <div style={{ flexGrow: 1 }} />
                   <ModeEdit color="#31a0f5" style={{ marginRight: 24 }} />
                 </div>
@@ -202,15 +202,12 @@ class DeviceInfo extends React.PureComponent {
   }
 
   render () {
-    if (!this.props.device || !this.props.storage || !this.props.boot || !this.props.info) return <div />
-
-    const { cpuInfo, memInfo } = this.props.device
-
-    const memUsage = Math.round(parseData(memInfo.memAvailable) / parseData(memInfo.memTotal) * 100) / 100
+    // const memUsage = Math.round(parseData(memInfo.memAvailable) / parseData(memInfo.memTotal) * 100) / 100
+    const memUsage = 0.23
 
     const graphData = [
-      { title: 'CPU1', model: cpuInfo[0].modelName, usage: 0.33, color: '#31a0f5' },
-      { title: 'CPU2', model: cpuInfo[1].modelName, usage: 0.43, color: '#5fc315' },
+      { title: 'CPU1', model: 'modelName1', usage: 0.33, color: '#31a0f5' },
+      { title: 'CPU2', model: 'modelName1', usage: 0.43, color: '#5fc315' },
       { title: i18n.__('Memory'), model: '1GB DDR3 16000MHz', usage: memUsage, color: '#ffb400' }
     ]
 

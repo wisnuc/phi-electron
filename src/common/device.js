@@ -47,6 +47,8 @@ class Device extends RequestManager {
       requestAsync: this.requestAsync.bind(this),
       pureRequest: this.pureRequest.bind(this),
       pureRequestAsync: this.pureRequestAsync.bind(this),
+      req: this.req.bind(this),
+      reqAsync: this.reqAsync.bind(this),
       clearRequest: this.clearRequest.bind(this),
       initWizard: this.initWizard.bind(this),
       systemStatus: this.systemStatus.bind(this),
@@ -308,6 +310,30 @@ class Device extends RequestManager {
 
   async pureRequestAsync (name, args) {
     return Promise.promisify(this.pureRequest).bind(this)(name, args)
+  }
+
+  req (name, args, next) {
+    let r
+    let cloud = false
+    switch (name) {
+      case 'phiToken':
+        r = request
+          .get(`http://10.10.9.153:3000/token`)
+          .auth(args.uuid, args.password)
+          .set('Accept', 'application/json')
+        cloud = true
+        break
+
+      default:
+        break
+    }
+
+    if (!r) console.error(`no request handler found for ${name}`)
+    else r.end((err, res) => (typeof next === 'function') && next(err, cloud ? res && res.body && res.body.data : res && res.body))
+  }
+
+  async reqAsync (name, args) {
+    return Promise.promisify(this.req).bind(this)(name, args)
   }
 
   start () {

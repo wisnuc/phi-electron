@@ -18,14 +18,16 @@ class Device extends Base {
   }
 
   willReceiveProps (nextProps) {
-    this.handleProps(nextProps.selectedDevice, ['device', 'storage', 'boot', 'info'])
+    // this.handleProps(nextProps.selectedDevice, ['device', 'storage', 'boot', 'info'])
   }
 
   navEnter () {
+    /*
     this.ctx.props.selectedDevice.request('device')
     this.ctx.props.selectedDevice.request('storage')
     this.ctx.props.selectedDevice.request('boot')
     this.ctx.props.selectedDevice.request('info')
+    */
   }
 
   navGroup () {

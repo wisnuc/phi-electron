@@ -41,7 +41,18 @@ class PhiLogin extends React.Component {
     this.togglePwd = () => this.setState({ showPwd: !this.state.showPwd })
 
     this.login = () => {
+      console.log('this.login', this.props)
       this.setState({ failed: true })
+      return
+      this.setState({ loading: true })
+      this.props.selectedDevice.req('phiToken', { username: this.state.pn, password: this.state.pwd }, (err, res) => {
+        if (err) {
+          console.error('Phi login Error', err)
+          if (err && err.code > 400) this.setState({ failed: true })
+        } else {
+          console.log(res)
+        }
+      })
     }
 
     this.reset = () => {

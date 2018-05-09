@@ -874,7 +874,7 @@
   "Files Menu Name": "文件管理",
   "Transmission Menu Name": "传输列表",
   "Settings Menu Name": "功能设置",
-  "Select Device To Login": "切换设备",
+  "Select Device To Login": "选择要登录的设备",
 
   "==== nav/FileMenu.jsx ====": "",
   "File Menu Title": "N2家庭"

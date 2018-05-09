@@ -5,7 +5,7 @@ import { AutoSizer } from 'react-virtualized'
 import ScrollBar from '../common/ScrollBar'
 import { RSButton } from '../common/Buttons'
 import { RefreshIcon, HelpIcon } from '../common/Svg'
-import { SIButton } from '../common/IconButton'
+import { SIButton, LIButton } from '../common/IconButton'
 import Dialog from '../common/PureDialog'
 import ConnectionHint from './ConnectionHint'
 import ConfirmBind from './ConfirmBind'
@@ -219,7 +219,7 @@ class DeviceSelect extends React.Component {
           <div style={{ flexGrow: 1 }} />
           <SIButton onClick={this.props.refresh} > <RefreshIcon /> </SIButton>
           <div style={{ width: 10 }} />
-          <SIButton onClick={() => this.setState({ showHelp: true })} > <HelpIcon /> </SIButton>
+          <LIButton onClick={() => this.setState({ showHelp: true })} > <HelpIcon /> </LIButton>
           <div style={{ width: 32 }} />
         </div>
         <Divider style={{ marginLeft: 30, width: 'calc(100% - 60px)' }} />
