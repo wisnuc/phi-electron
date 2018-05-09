@@ -267,7 +267,7 @@ class FileDetail extends React.PureComponent {
               height: 29,
               padding: 4
             }}
-            iconStyle={{ width: 21, height: 21, fill: '#525a60' }}
+            iconStyle={{ width: 21, height: 21, color: '#525a60' }}
             onClick={this.props.onRequestClose}
           >
             <CloseIcon />

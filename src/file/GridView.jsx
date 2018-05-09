@@ -71,7 +71,7 @@ class Row extends React.Component {
                     style={{ height: 80, width: 108, margin: borderColor ? '15px auto 0 auto' : '16px auto 0 auto', overflow: 'hidden' }}
                   >
                     {
-                      entry.type === 'public' ? <PublicIcon style={{ width: 50, height: 50, fill: '#ffa93e' }} />
+                      entry.type === 'public' ? <PublicIcon style={{ width: 50, height: 50, color: '#ffa93e' }} />
                         : entry.type === 'file'
                           ? ((rowSum < 500 || !isScrolling) && entry.metadata
                             ? (
@@ -84,7 +84,7 @@ class Row extends React.Component {
                                 width={108}
                               />
                             ) : renderFileIcon(entry.name, entry.metadata, 50)
-                          ) : <AllFileIcon style={{ width: 50, height: 50, fill: '#ffa93e' }} />
+                          ) : <AllFileIcon style={{ width: 50, height: 50, color: '#ffa93e' }} />
                     }
                   </div>
 

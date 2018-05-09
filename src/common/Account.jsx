@@ -25,7 +25,7 @@ class Account extends React.Component {
   render () {
     const color = 'rgba(255, 255, 255, 0.7)'
 
-    const iconStyle = { marginLeft: 30, marginTop: 5, width: 30, height: 30, fill: '#7d868f' }
+    const iconStyle = { marginLeft: 30, marginTop: 5, width: 30, height: 30, color: '#7d868f' }
     const items = [
       { primaryText: i18n.__('Account Settings'), leftIcon: <PersonIcon style={iconStyle} />, onClick: () => {} },
       { primaryText: i18n.__('Users Management'), leftIcon: <UsersIcon style={iconStyle} />, onClick: () => {} },

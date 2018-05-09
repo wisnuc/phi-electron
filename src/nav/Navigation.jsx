@@ -255,9 +255,30 @@ class NavViews extends React.Component {
 
   renderFileGroup () {
     const toolBarStyle = { height: 50, width: '100%', display: 'flex', alignItems: 'center', backgroundColor: '#f8f8f8' }
-    const titleStyle = { height: 70, width: '100%', display: 'flex', alignItems: 'center', backgroundColor: '#FFF' }
+    const titleStyle = { height: 70, width: '100%', display: 'flex', alignItems: 'center' }
     return (
-      <div style={{ display: 'flex', alignItems: 'center', height: '100%', width: '100%', position: 'relative' }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          height: '100%',
+          width: '100%',
+          position: 'relative',
+          backgroundColor: '#FFF'
+        }}
+      >
+        {/* shadow of FileMenu */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 220,
+            width: 20,
+            height: '100%',
+            backgroundImage: 'linear-gradient(to right, rgba(23,99,207,.03), transparent)'
+          }}
+        />
+
         <div style={{ height: '100%', width: 220 }}>
           <FileMenu
             views={this.views}
@@ -279,19 +300,17 @@ class NavViews extends React.Component {
           </div>
         </div>
 
-        {/* shadow of FileMenu */}
-        {/*
+        {/* shadow of FileMenu toolbar part */}
         <div
           style={{
             position: 'absolute',
-            top: 50,
+            top: 0,
             left: 220,
-            width: 10,
-            height: '100%',
-            backgroundImage: 'linear-gradient(to right, rgba(23,99,207,.03), #f3f8ff)'
+            width: 20,
+            height: 50,
+            backgroundImage: 'linear-gradient(to right, rgba(23,99,207,.03), transparent)'
           }}
         />
-        */}
 
         {/* drag item */}
         { this.views[this.state.nav].renderDragItems() }

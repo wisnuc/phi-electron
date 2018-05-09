@@ -23,9 +23,9 @@ class FileUploadButton extends React.Component {
   render () {
     const color = '#7d868f'
 
-    const iconStyle = { fill: color, width: 30, height: 30 }
+    const iconStyle = { color, width: 30, height: 30 }
 
-    const iStyle = { marginLeft: 30, marginTop: 5, fill: color, width: 30, height: 30 }
+    const iStyle = { marginLeft: 30, marginTop: 5, color, width: 30, height: 30 }
     const items = [
       { primaryText: i18n.__('Upload File'), leftIcon: <UploadFile style={iStyle} />, onClick: () => this.upload('file') },
       { primaryText: i18n.__('Upload Folder'), leftIcon: <UploadFold style={iStyle} />, onClick: () => this.upload('directory') }

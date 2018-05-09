@@ -47,7 +47,7 @@ class Search extends Button {
         />
         <SearchIcon
           {...this.funcs}
-          style={{ fill: '#525a60', opacity: 0.5, margin: '0 10px' }}
+          style={{ color: '#525a60', opacity: 0.5, margin: '0 10px' }}
         />
       </div>
     )

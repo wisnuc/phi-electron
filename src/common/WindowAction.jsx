@@ -5,14 +5,14 @@ import { MinIcon, MaxIcon, CloseIcon } from '../common/Svg'
 
 const styles = {
   smallIcon: {
-    width: 16,
-    height: 16,
-    fill: '#FFF'
+    width: 30,
+    height: 30,
+    color: '#FFF'
   },
   small: {
-    width: 32,
-    height: 32,
-    padding: 4,
+    width: 30,
+    height: 30,
+    padding: 0,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'

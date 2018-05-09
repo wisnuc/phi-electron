@@ -251,7 +251,7 @@ export class MenuButton extends Button {
           }}
           {...this.funcs}
         >
-          <Icon style={{ margin: '0 30px', width: 30, height: 30, fill: iconColor }} />
+          <Icon style={{ margin: '0 30px', width: 30, height: 30, color: iconColor }} />
           <div style={{ color: textColor }}> { text } </div>
         </div>
       </div>
@@ -265,10 +265,10 @@ export class LIButton extends Button {
     const { style, iconStyle, disabled, children } = this.props
 
     const cursor = disabled ? 'default' : 'pointer'
-    const fill = !disabled && (this.state.hover || this.state.pressed) ? 'var(--dodger-blue)' : ' var(--grey-text)'
+    const color = !disabled && (this.state.hover || this.state.pressed) ? 'var(--dodger-blue)' : ' var(--grey-text)'
     const opacity = disabled ? 0.5 : 1
     const buttonStyle = Object.assign({ width: 32, height: 32, padding: 4, cursor }, style)
-    const iStyle = Object.assign({ width: 24, height: 24, fill, opacity }, iconStyle)
+    const iStyle = Object.assign({ width: 24, height: 24, color, opacity }, iconStyle)
 
     return (
       <div {...this.funcs} style={buttonStyle} className="flexCenter">
@@ -284,9 +284,9 @@ export class SIButton extends Button {
     const { style, icon, iconStyle, disabled } = this.props
 
     const cursor = disabled ? 'default' : 'pointer'
-    const fill = !disabled && (this.state.hover || this.state.pressed) ? 'var(--dodger-blue)' : ' var(--grey-text)'
+    const color = !disabled && (this.state.hover || this.state.pressed) ? 'var(--dodger-blue)' : ' var(--grey-text)'
     const buttonStyle = Object.assign({ width: 24, height: 24, padding: 2, cursor }, style)
-    const iStyle = Object.assign({ width: 20, height: 20, fill }, iconStyle)
+    const iStyle = Object.assign({ width: 20, height: 20, color }, iconStyle)
 
     return (
       <div {...this.funcs} style={buttonStyle} className="flexCenter">
@@ -302,9 +302,9 @@ export class ILButton extends Button {
     const { style, icon, iconStyle, disabled } = this.props
 
     const cursor = disabled ? 'default' : 'pointer'
-    const fill = this.state.hover || this.state.pressed ? 'var(--dodger-blue)' : ' var(--grey-text)'
+    const color  = this.state.hover || this.state.pressed ? 'var(--dodger-blue)' : ' var(--grey-text)'
     const buttonStyle = Object.assign({ width: 32, height: 32, padding: 4, cursor, display: 'inline-block' }, style)
-    const iStyle = Object.assign({ width: 24, height: 24, fill }, iconStyle)
+    const iStyle = Object.assign({ width: 24, height: 24, color }, iconStyle)
 
     return (
       <div {...this.funcs} style={buttonStyle} >

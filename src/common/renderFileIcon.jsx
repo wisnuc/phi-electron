@@ -1,8 +1,5 @@
 import React from 'react'
-import {
-  PhotoIcon, TXTIcon, WORDIcon, EXCELIcon, PPTIcon, PDFIcon, VideoIcon, AudioIcon,
-  JPGIcon, PNGIcon, GIFIcon, MOVIcon, MP4Icon, TypeUnknownIcon
-} from '../common/Svg'
+import { PhotoIcon, TXTIcon, WORDIcon, EXCELIcon, PPTIcon, PDFIcon, VideoIcon, AudioIcon, TypeUnknownIcon } from '../common/Svg'
 
 const renderFileIcon = (name, metadata, setSize, dark, white) => {
   /* PDF, TXT, Word, Excel, PPT */
@@ -37,40 +34,9 @@ const renderFileIcon = (name, metadata, setSize, dark, white) => {
   // debug('renderFileIcon', name, metadata, extension, iconArray, type)
   if (!iconArray[type]) type = 'OTHER'
 
-  let { Icon, color } = iconArray[type]
+  let { color } = iconArray[type]
+  const { Icon } = iconArray[type]
   const size = setSize || 24
-
-  /* media */
-
-  if (metadata && metadata.m) {
-    switch (metadata.m) {
-      case 'JPEG':
-        Icon = JPGIcon
-        color = '#ea4335'
-        break
-      case 'PNG':
-        Icon = PNGIcon
-        color = '#ea4335'
-        break
-      case 'GIF':
-        Icon = GIFIcon
-        color = '#ea4335'
-        break
-      case 'MOV':
-        Icon = MOVIcon
-        color = '#f44336'
-        break
-      case 'MP4':
-        Icon = MP4Icon
-        color = '#f44336'
-        break
-      case '3GP':
-        Icon = MP4Icon
-        color = '#f44336'
-        break
-      default:
-    }
-  }
 
   /* when background is dark, icon color should adjust to white */
   if (white) color = '#FFFFFF'

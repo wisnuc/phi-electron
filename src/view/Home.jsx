@@ -8,7 +8,6 @@ import NavigationMenu from 'material-ui/svg-icons/navigation/menu'
 import Base from './Base'
 import FileDetail from '../file/FileDetail'
 import ListSelect from '../file/ListSelect'
-import MoveDialog from '../file/MoveDialog'
 import FileContent from '../file/FileContent'
 import RenameDialog from '../file/RenameDialog'
 import NewFolderDialog from '../file/NewFolderDialog'
@@ -718,7 +717,7 @@ class Home extends Base {
     const { select } = this.state
     const itemSelected = select && select.selected && select.selected.length
     const color = '#7d868f'
-    const iconStyle = { fill: color, width: 30, height: 30 }
+    const iconStyle = { color, width: 30, height: 30 }
     return (
       <div style={style}>
         <div style={{ width: 24 }} />
@@ -826,57 +825,6 @@ class Home extends Base {
               openSnackBar={openSnackBar}
               refresh={this.refresh}
             /> }
-        </DialogOverlay>
-
-        <DialogOverlay open={!!this.state.move} onRequestClose={() => this.toggleDialog('move')}>
-          { this.state.move && <MoveDialog
-            onRequestClose={() => this.toggleDialog('move')}
-            title={this.title}
-            apis={this.ctx.props.apis}
-            path={this.state.path}
-            entries={this.state.entries}
-            select={this.state.select}
-            openSnackBar={openSnackBar}
-            primaryColor={this.groupPrimaryColor()}
-            refresh={this.refresh}
-            navTo={navTo}
-            type="move"
-            operation="move"
-          /> }
-        </DialogOverlay>
-
-        <DialogOverlay open={!!this.state.copy} onRequestClose={() => this.toggleDialog('copy')}>
-          { this.state.copy && <MoveDialog
-            onRequestClose={() => this.toggleDialog('copy')}
-            title={this.title}
-            apis={this.ctx.props.apis}
-            path={this.state.path}
-            entries={this.state.entries}
-            select={this.state.select}
-            openSnackBar={openSnackBar}
-            primaryColor={this.groupPrimaryColor()}
-            refresh={this.refresh}
-            navTo={navTo}
-            type="copy"
-            operation="copy"
-          /> }
-        </DialogOverlay>
-
-        <DialogOverlay open={!!this.state.share} onRequestClose={() => this.toggleDialog('share')}>
-          { this.state.share && <MoveDialog
-            onRequestClose={() => this.toggleDialog('share')}
-            title={this.title}
-            apis={this.ctx.props.apis}
-            path={this.state.path}
-            entries={this.state.entries}
-            select={this.state.select}
-            openSnackBar={openSnackBar}
-            primaryColor={this.groupPrimaryColor()}
-            refresh={this.refresh}
-            navTo={navTo}
-            type="share"
-            operation="copy"
-          /> }
         </DialogOverlay>
 
         <DialogOverlay open={!!this.state.delete} onRequestClose={() => this.toggleDialog('delete')}>
