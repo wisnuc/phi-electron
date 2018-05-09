@@ -957,12 +957,12 @@ class Home extends Base {
                 />
                 <Divider style={{ marginLeft: 10, marginTop: 2, marginBottom: 2, width: 'calc(100% - 20px)' }} />
                 <MenuItem
-                  primaryText={i18n.__('Copy to')}
-                  onClick={() => this.toggleDialog('copy')}
+                  primaryText={i18n.__('Copy')}
+                  onClick={() => {}}
                 />
                 <MenuItem
-                  primaryText={i18n.__('Move to')}
-                  onClick={() => this.toggleDialog('move')}
+                  primaryText={i18n.__('Cut')}
+                  onClick={() => {}}
                 />
                 {
                   !multiSelected && this.state.entries[this.state.select.selected[0]].type === 'file' &&
@@ -984,7 +984,7 @@ class Home extends Base {
                 />
                 <Divider style={{ marginLeft: 10, marginTop: 2, marginBottom: 2, width: 'calc(100% - 20px)' }} />
                 <MenuItem
-                  primaryText={i18n.__('Open Detail')}
+                  primaryText={i18n.__('Properties')}
                   onClick={() => this.setState({ detail: true })}
                 />
               </div>

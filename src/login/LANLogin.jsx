@@ -43,7 +43,8 @@ class LANLogin extends React.Component {
     this.login = () => {
       const user = this.props.selectedDevice.users.data[0]
       const { uuid } = user
-      const password = 'alice'
+      const password = 'w'
+      console.log('uuid pwd', uuid, password)
       this.props.selectedDevice.request('token', { uuid, password }, (err, data) => {
         if (err) console.error(`login err: ${err}`)
         else {
