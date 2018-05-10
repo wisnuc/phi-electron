@@ -26,7 +26,7 @@ class LoginApp extends React.Component {
     this.refresh = () => {
       this.setState({
         dev: null,
-        list: null,
+        // list: null,
         confirm: false,
         loading: true,
         format: ''

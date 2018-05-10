@@ -208,7 +208,7 @@ class Media extends Base {
   }
 
   willReceiveProps (nextProps) {
-    this.handleProps(nextProps.apis, ['media'])
+    this.handleProps(nextProps.apis, ['media', 'blacklist'])
     this.media = this.processMedia(this.state.media, this.state.blacklist)
   }
 
@@ -216,6 +216,7 @@ class Media extends Base {
     this.timeFlag = (new Date()).getTime()
     // this.ctx.props.apis.request('blacklist')
     this.ctx.props.apis.request('media')
+    this.ctx.props.apis.request('blacklist')
   }
 
   navLeave () {

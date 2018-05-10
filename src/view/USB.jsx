@@ -21,6 +21,10 @@ class USB extends Home {
     )
     return Pic
   }
+
+  render (props) {
+    return this.renderDefaultError(props)
+  }
 }
 
 export default USB
