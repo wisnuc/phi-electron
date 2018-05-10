@@ -13,10 +13,7 @@ export const xcopyMsg = (props) => {
         name = i18n.__('Home Title')
         break
       case 'public':
-        name = node.name !== undefined ? node.name : i18n.__('Share Title')
-        break
-      case 'share':
-        name = i18n.__('Share Title')
+        name = node.name !== undefined ? node.name : i18n.__('Public Drive')
         break
       default:
         name = node.name

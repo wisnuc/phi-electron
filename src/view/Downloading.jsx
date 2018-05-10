@@ -22,26 +22,6 @@ class Transmission extends Base {
     return DownloadingIcon
   }
 
-  appBarStyle () {
-    return 'colored'
-  }
-
-  prominent () {
-    return true
-  }
-
-  hasDetail () {
-    return false
-  }
-
-  detailEnabled () {
-    return false
-  }
-
-  renderTitle ({ style }) {
-    return <div style={Object.assign({}, style, { marginLeft: 184 })}>{ i18n.__('Transmission Title') }</div>
-  }
-
   renderContent ({ navToDrive }) {
     return (
       <div style={{ width: '100%', height: '100%', overflow: 'auto' }}>

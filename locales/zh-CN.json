@@ -512,6 +512,8 @@
   "Sort": "排序",
   "File Name": "文件名",
   "Open": "打开",
+  "Cut": "剪切",
+  "Properties": "属性",
 
   "==== view/Public.jsx ====": "",
   "Public Drive": "共享盘",
@@ -586,6 +588,8 @@
   "Document": "文档",
   "Others": "其他",
   "Video": "视频",
+  "Disk 1": "磁盘1",
+  "Disk 2": "磁盘2",
 
   "==== view/Networking.jsx ====": "",
   "Networking Menu Name": "网络设置",
@@ -681,6 +685,7 @@
 
   "==== file/FinishedTask.jsx ====": "",
   "And Other %s Items": " 等%s个项目",
+  "Finished Task Summary %s": "已完成（%s）",
 
   "==== file/MoveDialog.jsx ====": "",
   "Mkdir Failed": "创建失败",

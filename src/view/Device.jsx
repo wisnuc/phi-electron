@@ -51,14 +51,6 @@ class Device extends Base {
     return Pic
   }
 
-  quickName () {
-    return i18n.__('Device Quick Name')
-  }
-
-  appBarStyle () {
-    return 'colored'
-  }
-
   renderContent ({ openSnackBar }) {
     return (
       <DeviceInfo

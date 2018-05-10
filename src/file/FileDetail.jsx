@@ -34,7 +34,7 @@ const getPath = (path) => {
   const newPath = []
   path.map((item, index) => {
     if (!index) {
-      newPath.push(item.type === 'publicRoot' ? i18n.__('Public Drive') : item.type === 'share' ? i18n.__('Share Title') : i18n.__('Home Title'))
+      newPath.push(item.type === 'publicRoot' ? i18n.__('Public Drive') : i18n.__('Home Title'))
     } else {
       newPath.push(item.name)
     }
