@@ -5,7 +5,7 @@ import { IconButton } from 'material-ui'
 import DiskModeGuide from '../login/DiskModeGuide'
 import Dialog from '../common/PureDialog'
 import { HelpIcon } from '../common/Svg'
-import { RRButton } from '../common/Buttons'
+import { RSButton } from '../common/Buttons'
 
 class Disk extends React.PureComponent {
   constructor (props) {
@@ -84,7 +84,7 @@ class Disk extends React.PureComponent {
     const progressTitle = i18n.__('Storage Space')
     const storageUsage = i18n.__('Storage Usage %s %s', '500GB', '1024GB')
     const USBUsage = i18n.__('Storage Usage %s %s', '2.5GB', '8GB')
-    const iconStyle = { width: 20, height: 20, fill: '#31a0f5' }
+    const iconStyle = { width: 20, height: 20, color: '#31a0f5' }
     const buttonStyle = { width: 24, height: 24, padding: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }
     return (
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
@@ -95,7 +95,7 @@ class Disk extends React.PureComponent {
           <div style={{ width: 100, height: 300, padding: '30px 0' }}>
             {
               data.map(({ color, title }) => (
-                <div style={{ width: 100, height: 60, display: 'flex', alignItems: 'center' }}>
+                <div style={{ width: 100, height: 60, display: 'flex', alignItems: 'center' }} key={title}>
                   <div style={{ width: 8, height: 8, backgroundColor: color }} />
                   <div style={{ fontSize: 12, color: '#505259', marginLeft: 8 }}>
                     { title }
@@ -112,9 +112,10 @@ class Disk extends React.PureComponent {
                 <HelpIcon />
               </IconButton>
               <div style={{ flexGrow: 1 }} />
-              <div style={{ width: 140, height: 40 }}>
-                <RRButton
-                  style={{ width: 140 }}
+              <div style={{ width: 150, height: 40 }}>
+                <RSButton
+                  alt
+                  style={{ width: 100 }}
                   label={i18n.__('Format Disk')}
                   onClick={this.save}
                 />
@@ -162,9 +163,10 @@ class Disk extends React.PureComponent {
               </div>
             </div>
             <div style={{ flexGrow: 1 }} />
-            <div style={{ width: 140, height: 40 }}>
-              <RRButton
-                style={{ width: 140 }}
+            <div style={{ width: 150, height: 40 }}>
+              <RSButton
+                alt
+                style={{ width: 100 }}
                 label={i18n.__('Eject USB')}
                 onClick={this.save}
               />

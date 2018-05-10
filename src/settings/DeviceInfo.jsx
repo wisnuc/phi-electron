@@ -202,22 +202,30 @@ class DeviceInfo extends React.PureComponent {
   }
 
   render () {
-    // const memUsage = Math.round(parseData(memInfo.memAvailable) / parseData(memInfo.memTotal) * 100) / 100
-    const memUsage = 0.23
+    console.log('device this.props', this.props)
+    if (!this.props.boot) return (<div />)
+    const { device } = this.props.boot
+    if (!device) return (<div />)
+
+    const { cpus, deviceModel, hardwareVersion, memory, net, softwareVersion } = device
+    const memUsage = (memory && Math.round(100 - memory.free / memory.total * 100) / 100) || 0
+    const cpuUsage = (cpu) => {
+      const { idle, irq, nice, sys, user } = cpu.times
+      return Math.round(100 - idle / (idle + irq + nice + sys + user) * 100) / 100
+    }
 
     const graphData = [
-      { title: 'CPU1', model: 'modelName1', usage: 0.33, color: '#31a0f5' },
-      { title: 'CPU2', model: 'modelName1', usage: 0.43, color: '#5fc315' },
+      { title: 'CPU1', model: cpus[0].model, usage: cpuUsage(cpus[0]), color: '#31a0f5' },
+      { title: 'CPU2', model: cpus[1].model, usage: cpuUsage(cpus[0]), color: '#5fc315' },
       { title: i18n.__('Memory'), model: '1GB DDR3 16000MHz', usage: memUsage, color: '#ffb400' }
     ]
 
     const listData = [
-      { title: i18n.__('Device Model'), value: 'N2' },
-      { title: i18n.__('Current IP'), value: '192.168.2.23' },
-      { title: i18n.__('Mac Address'), value: '20:25:45:31:13' },
-      { title: i18n.__('Client Version'), value: '1.0.13' },
-      { title: i18n.__('Hardware Version'), value: '1.0.0.9' },
-      { title: i18n.__('Firmware Version'), value: '20.2.0.1' }
+      { title: i18n.__('Device Model'), value: deviceModel },
+      { title: i18n.__('Current IP'), value: net.address },
+      { title: i18n.__('Mac Address'), value: net.mac },
+      { title: i18n.__('Hardware Version'), value: hardwareVersion },
+      { title: i18n.__('Firmware Version'), value: softwareVersion }
     ]
 
     return (

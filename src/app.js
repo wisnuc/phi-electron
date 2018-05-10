@@ -8,12 +8,13 @@ import MDNS from './common/mdns'
 import Phi from './Phi'
 
 /* i18n config */
-const lang = navigator.language
+// const lang = navigator.language
 i18n.configure({
   updateFiles: false,
   locales: ['en-US', 'zh-CN'],
   directory: remote.require('path').resolve('locales'),
-  defaultLocale: /zh/.test(lang) ? 'zh-CN' : 'en-US'
+  defaultLocale: 'zh-CN'
+  // defaultLocale: /zh/.test(lang) ? 'zh-CN' : 'en-US'
 })
 
 /* required by Material UI */
@@ -35,7 +36,10 @@ window.addEventListener('drop', e => e.preventDefault(), true)
 ipcRenderer.on('CONFIG_UPDATE', (event, config) => {
   console.log('CONFIG_UPDATE', config)
   global.config = config
+  /*
   if (config.global && config.global.locales) i18n.setLocale(config.global.locales)
   else i18n.setLocale(/zh/.test(lang) ? 'zh-CN' : 'en-US')
+  */
+  i18n.setLocale('zh-CN')
   render()
 })

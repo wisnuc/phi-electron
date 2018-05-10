@@ -55,7 +55,7 @@
         </svg>
         <span>关于</span>
       </div>
-      <div class="buttonDiv">
+      <div class="buttonDiv" onclick="exit()">
         <svg viewBox="0 0 30 30" class="svg">
           <path d="M18.631,16.769a6,6,0,1,0-7.262,0A9,9,0,0,0,6,25H24A9,9,0,0,0,18.631,16.769Z" />
         </svg>
@@ -76,19 +76,7 @@
     </style>
     <script>
       const { ipcRenderer } = require('electron')
-      ipcRenderer.on('VIDEO_SRC', (event, src) => {
-        const ele = document.getElementById('video')
-          ele.src = src
-          ele.addEventListener('canplay', () => {
-            ele.style.opacity = 1
-          })
-      })
-      const Minimize = () => {
-        ipcRenderer.send('MINI_VIDEO')
-      }
-      const Maximize = () => {
-        ipcRenderer.send('TOGGLEMAX_VIDEO')
-      } 
+      const exit = () => ipcRenderer.send('POWEROFF')
     </script>
   </body>
 </html>

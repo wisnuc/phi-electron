@@ -10,24 +10,23 @@ class Device extends Base {
     this.address = ctx.props.selectedDevice.mdev.address // TODO
 
     this.state = {
-      device: null,
-      storage: null,
-      boot: null,
-      info: null
+      boot: null
     }
+
+    this.refresh = () => this.ctx.props.selectedDevice.request('boot')
   }
 
   willReceiveProps (nextProps) {
-    // this.handleProps(nextProps.selectedDevice, ['device', 'storage', 'boot', 'info'])
+    this.handleProps(nextProps.selectedDevice, ['boot'])
   }
 
   navEnter () {
-    /*
-    this.ctx.props.selectedDevice.request('device')
-    this.ctx.props.selectedDevice.request('storage')
-    this.ctx.props.selectedDevice.request('boot')
-    this.ctx.props.selectedDevice.request('info')
-    */
+    this.refresh()
+    this.timer = setInterval(this.refresh, 1000)
+  }
+
+  navLeave () {
+    clearInterval(this.timer)
   }
 
   navGroup () {
@@ -55,6 +54,7 @@ class Device extends Base {
     return (
       <DeviceInfo
         {...this.state}
+        address={this.address}
         selectedDevice={this.ctx.props.selectedDevice}
         primaryColor={this.groupPrimaryColor()}
         openSnackBar={openSnackBar}

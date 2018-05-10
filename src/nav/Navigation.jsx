@@ -113,7 +113,7 @@ class NavViews extends React.Component {
         }
       }
 
-      if (this.state.nav !== 'settings' && this.views[this.state.nav].navGroup() === 'settings') {
+      if (group === 'settings' && this.state.nav !== 'settings' && this.views[this.state.nav].navGroup() === 'settings') {
         this.navTo('settings')
       }
     }
@@ -359,7 +359,7 @@ class NavViews extends React.Component {
             labelStyle={{ height: 60, width: 210, lineHeight: '60px', fontSize: 22, color: '#525a60', marginLeft: 8 }}
             hoverColor="rgba(0,0,0,.04)"
             rippleColor="rgba(0,0,0,.3)"
-            icon={<BackIcon style={{ width: 20, height: 20 }} />}
+            icon={<BackIcon style={{ color: '#525a60' }} />}
             onClick={() => this.navTo('settings')}
             style={{ height: 60, width: 210, borderRadius: '0 30px 30px 0' }}
           />
