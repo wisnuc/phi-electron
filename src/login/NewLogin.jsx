@@ -84,7 +84,7 @@ class LoginApp extends React.Component {
           overflow: 'hidden'
         }}
       >
-        <DeviceSelect {...props} {...this.state} refresh={this.refresh} manageDisk={this.manageDisk} />
+        <DeviceSelect {...props} {...this.state} refresh={this.refresh} manageDisk={this.manageDisk} type="LAN" />
       </div>
     )
   }

@@ -22,6 +22,7 @@ class DeviceSelect extends React.Component {
     }
 
     this.slDevice = (dev) => {
+      return this.setState({ LANLogin: dev })
       if (dev.address === '10.10.9.153') { // LAN Login
         this.setState({ LANLogin: dev })
       } else if (dev.address === '10.10.9.251') { // User Maint
@@ -208,7 +209,8 @@ class DeviceSelect extends React.Component {
 
     const arr = [...this.props.list]
 
-    const title = this.props.type === 'bind' ? i18n.__('Select Device To Bind') : i18n.__('Select Device To Login')
+    const title = this.props.type === 'bind' ? i18n.__('Select Device To Bind')
+      : this.props.type === 'LAN' ? i18n.__('Select LAN Device To Login') : i18n.__('Select Device To Login')
 
     return (
       <div style={{ width: '100%', height: '100%', backgroundColor: '#f3f8ff' }}>

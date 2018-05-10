@@ -4,7 +4,7 @@ import { Checkbox, Divider, IconButton, TextField } from 'material-ui'
 import VisibilityOff from 'material-ui/svg-icons/action/visibility-off'
 import Visibility from 'material-ui/svg-icons/action/visibility'
 import CloseIcon from 'material-ui/svg-icons/navigation/close'
-import { BackIcon } from '../common/Svg'
+import { BackIcon, EyeOpenIcon, DelPwdIcon } from '../common/Svg'
 
 import { RRButton } from '../common/Buttons'
 
@@ -23,12 +23,12 @@ class LANLogin extends React.Component {
 
     this.onPhoneNumber = (pn) => {
       let pnError = ''
-      if (pn && !Number.isInteger(Number(pn))) pnError = i18n.__('Not Phone Number')
+      // if (pn && !Number.isInteger(Number(pn))) pnError = i18n.__('Not Phone Number')
       this.setState({ pn, pnError })
     }
 
     this.onPassword = (pwd) => {
-      this.setState({ pwd })
+      this.setState({ pwd, pwdError: '' })
     }
 
     this.handleSaveToken = () => {
@@ -41,13 +41,21 @@ class LANLogin extends React.Component {
     this.togglePwd = () => this.setState({ showPwd: !this.state.showPwd })
 
     this.login = () => {
-      const user = this.props.selectedDevice.users.data[0]
+      const users = this.props.selectedDevice.users && this.props.selectedDevice.users.data
+      const user = users && users.find(u => u.username === this.state.pn)
+      if (!user) {
+        this.setState({ pnError: '账户不存在' })
+        return
+      }
       const { uuid } = user
-      const password = 'w'
+      const password = this.state.pwd
       console.log('uuid pwd', uuid, password)
       this.props.selectedDevice.request('token', { uuid, password }, (err, data) => {
-        if (err) console.error(`login err: ${err}`)
-        else {
+        if (err) {
+          console.error(`login err: ${err}`)
+          const msg = (err && err.message === 'Unauthorized') ? i18n.__('Wrong Password') : (err && err.message)
+          this.setState({ pwdError: msg })
+        } else {
           Object.assign(this.props.selectedDevice.mdev, {
             autologin: this.state.autologin,
             saveToken: this.state.saveToken ? data : null,
@@ -71,8 +79,8 @@ class LANLogin extends React.Component {
 
   render () {
     console.log('LANLogin', this.props, this.state)
-    const iconStyle = { width: 18, height: 18, color: '#31a0f5', padding: 0 }
-    const buttonStyle = { width: 26, height: 26, padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }
+    const iconStyle = { width: 30, height: 30, color: '#505259', iconHoverColor: '#31a0f5' }
+    const buttonStyle = { width: 30, height: 30, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }
     return (
       <div style={{ width: 320, zIndex: 100 }} className="paper" >
         <div style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 20 }} className="title">
@@ -81,11 +89,11 @@ class LANLogin extends React.Component {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              padding: 5,
               height: 32,
-              width: 32
+              width: 32,
+              padding: 0
             }}
-            iconStyle={{ width: 22, height: 22, fill: '#525a60' }}
+            iconStyle={{ color: '#525a60' }}
             onClick={this.props.onRequestClose}
           >
             <BackIcon />
@@ -106,7 +114,7 @@ class LANLogin extends React.Component {
           <TextField
             fullWidth
             style={{ marginTop: 12 }}
-            hintText={i18n.__('Phone Number Hint')}
+            hintText={i18n.__('Username Hint')}
             errorStyle={{ position: 'absolute', left: 0, top: -8, height: 18 }}
             type="text"
             errorText={this.state.pnError}
@@ -126,19 +134,20 @@ class LANLogin extends React.Component {
           />
 
           {/* clear password */}
-          <div style={{ position: 'absolute', right: 4, top: 26 }}>
+          <div style={{ position: 'absolute', right: 4, top: 20 }}>
             <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.clearPn}>
-              <CloseIcon />
+              <DelPwdIcon />
             </IconButton>
           </div>
 
           {/* password visibility */}
-          <div style={{ position: 'absolute', right: 4, top: 86 }}>
+          <div style={{ position: 'absolute', right: 4, top: 80 }}>
             <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.togglePwd}>
-              { this.state.showPwd ? <VisibilityOff /> : <Visibility /> }
+              { this.state.showPwd ? <EyeOpenIcon /> : <EyeOpenIcon /> }
             </IconButton>
           </div>
         </div>
+        {/*
         <div style={{ display: 'flex', width: 280, height: 30, alignItems: 'center', margin: '0 auto' }}>
           <Checkbox
             label={i18n.__('Remember Password')}
@@ -159,12 +168,13 @@ class LANLogin extends React.Component {
             onCheck={() => this.handleAutologin()}
           />
         </div>
+        */}
         <div style={{ height: 20 }} />
         <div style={{ width: 240, height: 40, margin: '0 auto' }}>
           <RRButton
             label={i18n.__('Login')}
             onClick={this.login}
-            disabled={this.state.pnError || this.state.pwdError}
+            disabled={this.state.pnError || this.state.pwdError || !this.state.pn || !this.state.pwd}
           />
         </div>
         <div style={{ height: 30 }} />
