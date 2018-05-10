@@ -81,7 +81,7 @@ class Public extends Home {
 
       /* process path and entries, in root */
       const path = [{ name: i18n.__('Public Drive'), uuid: null, type: 'publicRoot' }]
-      const entries = this.state.drives.filter(drive => drive.type === 'public' && drive.tag !== 'built-in')
+      const entries = this.state.drives.filter(drive => drive.type === 'public')
       entries.forEach(item => Object.assign(item, { name: item.label }))
       if (entries.length < 3) entries.push({ name: i18n.__('Add Public Drive'), type: 'addDrive', uuid: 'addDrive' })
       const select = this.select.reset(entries.length)

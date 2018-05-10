@@ -41,7 +41,7 @@ class DeviceSelect extends React.Component {
   }
 
   renderDev (dev, index) {
-    const [stationName, storage, speed, location] = ['斐迅N2办公', '500GB/2TB', '30Mbps/3Mbps', '上海 电信']
+    const [stationName, storage, speed, location] = ['斐讯N2办公', '500GB/2TB', '30Mbps/3Mbps', '上海 电信']
     const data = [
       { des: i18n.__('Device Storage'), val: storage },
       { des: i18n.__('Device Speed'), val: speed },

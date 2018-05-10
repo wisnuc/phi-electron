@@ -27,7 +27,7 @@ class Media extends Base {
     super(ctx)
     this.state = {
       media: null,
-      blacklist: null,
+      blacklist: [],
       selectedItems: [],
       shiftHoverItems: [],
       uploadMedia: false,
@@ -208,13 +208,13 @@ class Media extends Base {
   }
 
   willReceiveProps (nextProps) {
-    this.handleProps(nextProps.apis, ['blacklist', 'media'])
+    this.handleProps(nextProps.apis, ['media'])
     this.media = this.processMedia(this.state.media, this.state.blacklist)
   }
 
   navEnter () {
     this.timeFlag = (new Date()).getTime()
-    this.ctx.props.apis.request('blacklist')
+    // this.ctx.props.apis.request('blacklist')
     this.ctx.props.apis.request('media')
   }
 

@@ -236,6 +236,7 @@ class Fruitmix extends EventEmitter {
         break
 
       case 'adminCreateDrive':
+        console.log('adminCreateDrive', args)
         r = this.apost('drives', {
           label: args.label,
           writelist: args.writelist

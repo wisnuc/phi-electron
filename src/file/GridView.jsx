@@ -1,3 +1,4 @@
+import i18n from 'i18n'
 import React from 'react'
 import { AutoSizer } from 'react-virtualized'
 
@@ -100,7 +101,7 @@ class Row extends React.Component {
                         fontWeight: 500
                       }}
                     >
-                      { entry.name }
+                      { entry.name || (entry.type === 'public' ? i18n.__('Public Drive') : '') }
                     </div>
                   </div>
                 </div>

@@ -101,6 +101,7 @@ class NewDriveDialog extends PureComponent {
           { i18n.__('People Shared') }
         </div>
 
+        {/*
         <div style={{ width: '100%', height: 40, display: 'flex', alignItems: 'center' }} key="all" >
           <Checkbox
             label={i18n.__('All Users')}
@@ -111,6 +112,7 @@ class NewDriveDialog extends PureComponent {
           />
         </div>
         <Divider style={{ color: 'rgba(0, 0, 0, 0.54)' }} />
+        */}
         <div style={{ maxHeight: 40 * 8, overflow: 'auto' }}>
           {
             users.map(user => (
@@ -139,7 +141,7 @@ class NewDriveDialog extends PureComponent {
           <FlatButton
             primary
             label={i18n.__('Create')}
-            disabled={this.state.label.length === 0 || !!this.state.errorText || this.state.loading}
+            disabled={this.state.label.length === 0 || !!this.state.errorText || this.state.loading || !this.state.writelist.length}
             onClick={this.fire}
           />
         </div>
