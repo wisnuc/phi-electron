@@ -1,7 +1,7 @@
 import React from 'react'
 import { TextField } from 'material-ui'
-import SearchIcon from 'material-ui/svg-icons/action/search'
 import { Button } from '../common/Buttons'
+import { SearchIcon } from '../common/Svg'
 
 class Search extends Button {
   constructor (props) {
@@ -23,6 +23,7 @@ class Search extends Button {
 
   render () {
     const searchHint = '搜索全部文件'
+    const color = this.state.hover ? '#31a0f5' : 'rgba(82, 90, 96, 0.5)'
 
     return (
       <div
@@ -47,7 +48,7 @@ class Search extends Button {
         />
         <SearchIcon
           {...this.funcs}
-          style={{ color: '#525a60', opacity: 0.5, margin: '0 10px' }}
+          style={{ color, cursor: 'pointer', margin: '0 10px' }}
         />
       </div>
     )

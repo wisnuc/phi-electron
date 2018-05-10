@@ -18,7 +18,7 @@ import FlatButton from '../common/FlatButton'
 import MenuItem from '../common/MenuItem'
 import sortByType from '../common/sort'
 import { BreadCrumbItem, BreadCrumbSeparator } from '../common/BreadCrumb'
-import { BackwardIcon, ForwardIcon, RefreshAltIcon, DownloadIcon, DeleteIcon, NewFolderIcon, ListIcon, GridIcon, HelpIcon, AllFileIcon } from '../common/Svg'
+import { BackwardIcon, ForwardIcon, RefreshAltIcon, DownloadIcon, DeleteIcon, NewFolderIcon, ListIcon, GridIcon, HelpIcon, AllFileIcon, ArrowIcon } from '../common/Svg'
 import renderFileIcon from '../common/renderFileIcon'
 import { xcopyMsg } from '../common/msg'
 import Search from '../common/Search'
@@ -238,11 +238,11 @@ class Home extends Base {
     this.showContextMenu = (clientX, clientY) => {
       if (this.select.state.ctrl || this.select.state.shift) return
       const containerDom = document.getElementById('content-container')
-      const maxLeft = containerDom.offsetLeft + containerDom.clientWidth - 60
+      const maxLeft = containerDom.offsetLeft + containerDom.clientWidth + 80
       const x = clientX > maxLeft ? maxLeft : clientX
       /* calc positon of menu using height of menu which is related to number of selected items */
       const length = (this.select.state && this.select.state.selected && this.select.state.selected.length) || 0
-      const adjust = !length ? 128 : length > 1 ? 240 : 304
+      const adjust = !length ? 170 : length > 1 ? 140 : 200
       const maxTop = containerDom.offsetTop + containerDom.offsetHeight - adjust + 80
       const y = clientY > maxTop ? maxTop : clientY
       this.setState({
@@ -740,7 +740,7 @@ class Home extends Base {
           label={i18n.__('Download')}
           labelStyle={{ fontSize: 14, marginLeft: 4 }}
           disabled={!itemSelected}
-          icon={<DownloadIcon style={iconStyle} />}
+          icon={<DownloadIcon style={Object.assign({}, iconStyle, { color: !itemSelected ? 'rgba(125, 134, 143, 0.5)' : color })} />}
         />
 
         <FileUploadButton upload={this.upload} />
@@ -750,7 +750,7 @@ class Home extends Base {
           label={i18n.__('Delete')}
           labelStyle={{ fontSize: 14, marginLeft: 4 }}
           disabled={!itemSelected}
-          icon={<DeleteIcon style={iconStyle} />}
+          icon={<DeleteIcon style={Object.assign({}, iconStyle, { color: !itemSelected ? 'rgba(125, 134, 143, 0.5)' : color })} />}
         />
 
         <FlatButton
@@ -770,7 +770,7 @@ class Home extends Base {
         <FlatButton
           label={i18n.__('Help')}
           labelStyle={{ fontSize: 14, marginLeft: 4 }}
-          onClick={() => this.toggleDialog('createNewFolder')}
+          onClick={() => {}}
           icon={<HelpIcon style={iconStyle} />}
         />
         <div style={{ width: 10 }} />
@@ -919,6 +919,17 @@ class Home extends Base {
                 <MenuItem
                   primaryText={i18n.__('Sort')}
                   onClick={(e) => { e.stopPropagation(); e.preventDefault() }}
+                  rightIcon={
+                    <ArrowIcon
+                      style={{
+                        position: 'absolute',
+                        color: '#505259',
+                        marginTop: 5,
+                        right: -16,
+                        transform: 'rotate(270deg)'
+                      }}
+                    />
+                  }
                   menuItems={[
                     <MenuItem
                       style={{ marginTop: -3 }}
@@ -928,10 +939,6 @@ class Home extends Base {
                     <MenuItem
                       primaryText={i18n.__('Date Modified')}
                       onClick={() => this.changeSortType('timeUp')}
-                    />,
-                    <MenuItem
-                      primaryText={i18n.__('Date Taken')}
-                      onClick={() => this.changeSortType('takenUp')}
                     />,
                     <MenuItem
                       style={{ marginBottom: -3 }}
@@ -964,13 +971,6 @@ class Home extends Base {
                   primaryText={i18n.__('Cut')}
                   onClick={() => {}}
                 />
-                {
-                  !multiSelected && this.state.entries[this.state.select.selected[0]].type === 'file' &&
-                    <MenuItem
-                      primaryText={i18n.__('Make a Copy')}
-                      onClick={this.dupFile}
-                    />
-                }
                 {
                   !multiSelected &&
                     <MenuItem

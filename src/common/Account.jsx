@@ -64,6 +64,17 @@ class Account extends React.Component {
         </div>
 
         <div style={{ height: 12, width: 1, backgroundColor: color, opacity: 0.3 }} />
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            display: this.state.open ? '' : 'none',
+            WebkitAppRegion: 'no-drag'
+          }}
+        />
         <Popover
           open={this.state.open}
           anchorEl={this.state.anchorEl}
@@ -80,7 +91,6 @@ class Account extends React.Component {
                   key={index.toString()}
                   style={{
                     marginLeft: -24,
-                    WebkitAppRegion: 'no-drag',
                     marginTop: !index ? 5 : 0,
                     fontSize: 14,
                     color: '#505259',

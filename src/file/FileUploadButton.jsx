@@ -45,6 +45,7 @@ class FileUploadButton extends React.Component {
           anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
           targetOrigin={{ horizontal: 'left', vertical: 'top' }}
           onRequestClose={() => this.setState({ open: false })}
+          style={{ boxShadow: '0px 10px 20px 0 rgba(23,99,207,.1)' }}
         >
           <Menu style={{ width: 138, maxWidth: 138, height: 90, overflow: 'hidden' }} >
             {

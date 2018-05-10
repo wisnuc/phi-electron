@@ -153,6 +153,7 @@ class ListSelect extends EventEmitter {
   // if there is multiple selection, context menu
   rightClick (index) {
     if (this.state.selected.length <= 1) this.leftClick(index)
+    clearTimeout(this.timer)
   }
 
   ctrlRightClick (index) {

@@ -85,7 +85,7 @@ class ContextMenu extends PureComponent {
     }
 
     return (
-      <div style={overlayStyle} onClick={this.props.onRequestClose}>
+      <div style={overlayStyle} onClick={this.props.onRequestClose} onContextMenu={this.props.onRequestClose}>
         <div style={innerStyle}>
           { this.state.stage !== 3 ? this.props.children : this.preChildren}
         </div>

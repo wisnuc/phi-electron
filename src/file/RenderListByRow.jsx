@@ -247,19 +247,7 @@ class RenderListByRow extends React.Component {
           { h.title }
         </div>
         <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
-          {
-            this.props.sortType === h.up &&
-            (
-              <ArrowIcon
-                style={{
-                  height: 30,
-                  width: 30,
-                  color: '#505259',
-                  transform: 'rotate(180deg)'
-                }}
-              />
-            )
-          }
+          { this.props.sortType === h.up && <ArrowIcon style={{ color: '#505259', transform: 'rotate(180deg)' }} /> }
           { this.props.sortType === h.down && <ArrowIcon style={{ height: 30, width: 30, color: '#505259' }} /> }
         </div>
       </div>

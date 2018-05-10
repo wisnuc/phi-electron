@@ -2,7 +2,11 @@ import React from 'react'
 import { SvgIcon } from 'material-ui'
 
 const f = id => props => (
-  <SvgIcon viewBox="0 0 30 30" {...props}>
+  <SvgIcon
+    {...props}
+    viewBox={(props && props.viewBox) || '0 0 30 30'}
+    style={Object.assign({ width: 30, height: 30 }, ((props && props.style) || {}))}
+  >
     <svg className="icon" aria-hidden >
       <use xlinkHref={`#${id}`} />
     </svg>
@@ -157,6 +161,8 @@ export const LogoutIcon = f('icon_logout')
 export const DownloadFileIcon = f('icon_windows_downloa')
 
 export const ArrowIcon = f('icon_arrow_down')
+
+export const SearchIcon = f('icon_search')
 
 export const CheckedIcon = props => (
   <SvgIcon viewBox="0 0 9.5 7.5" {...props}>
