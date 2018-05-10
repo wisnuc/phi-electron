@@ -12,7 +12,7 @@ import Phi from './Phi'
 i18n.configure({
   updateFiles: false,
   locales: ['en-US', 'zh-CN'],
-  directory: remote.require('path').resolve('locales'),
+  directory: remote.require('path').join(remote.app.getAppPath(), 'locales'),
   defaultLocale: 'zh-CN'
   // defaultLocale: /zh/.test(lang) ? 'zh-CN' : 'en-US'
 })
