@@ -74,6 +74,11 @@ class Device extends RequestManager {
     let r
 
     switch (name) {
+      case 'boot':
+        r = request
+          .get(`http://${this.mdev.address}:3000/boot`)
+        break
+
       case 'device':
         r = request
           .get(`http://${this.mdev.address}:3000/control/system`)
@@ -87,11 +92,6 @@ class Device extends RequestManager {
       case 'renameStation':
         r = request
           .patch(`http://${this.mdev.address}:3000/station/info`, { name: args.name })
-        break
-
-      case 'boot':
-        r = request
-          .get(`http://${this.mdev.address}:3000/boot`)
         break
 
       case 'storage':
@@ -315,13 +315,66 @@ class Device extends RequestManager {
   req (name, args, next) {
     let r
     let cloud = false
+    const phiCloudAddress = 'sohon2test.phicomm.com'
     switch (name) {
+      case 'authorizationcode':
+        r = request
+          .get(`http://${phiCloudAddress}/v1/authorization`)
+          .query({ client_id: '2149773', client_secret: 'FA35C1A18F830497AF75BD2636E54CBD', response_type: 'code', scope: 'read' })
+        cloud = true
+        break
+
       case 'phiToken':
         r = request
-          .get(`http://10.10.9.153:3000/token`)
-          .auth(args.uuid, args.password)
-          .set('Accept', 'application/json')
+          .post(`http://${phiCloudAddress}/v1/login`)
+          .query({
+            authorizationcode: 'feixun*123.SH_2149773',
+            phonenumber: args.phonenumber,
+            password: args.password
+          })
         cloud = true
+        break
+
+      case 'stationList':
+        r = request
+          .get(`http://${phiCloudAddress}/StationManager/station`)
+          .set('Content-Type', 'application/json')
+          .set('Authorization', `JWT ${args.token}`)
+        cloud = true
+        break
+
+      case 'bindDevice':
+        r = request
+          .post(`http://${phiCloudAddress}/StationManager/relation/binding`)
+          .set('Content-Type', 'application/json')
+          .set('Authorization', `JWT ${args.token}`)
+          .send({ deviceSN: args.deviceSN })
+        cloud = true
+        break
+
+      case 'getBindState':
+        r = request
+          .get(`http://${phiCloudAddress}/StationManager/relation/binding`)
+          .set('Content-Type', 'application/json')
+          .set('Authorization', `JWT ${args.token}`)
+          .send({ deviceSN: args.deviceSN })
+        cloud = true
+        break
+
+      case 'unbindDevice':
+        r = request
+          .del(`http://${phiCloudAddress}/StationManager/relation/binding`)
+          .set('Content-Type', 'application/json')
+          .set('Authorization', `JWT ${args.token}`)
+          .send({ deviceSN: args.deviceSN })
+        cloud = true
+        break
+
+      case 'boundVolume':
+        r = request
+          .post(`http://${this.mdev.address}:3000/boot/boundVolume`)
+          .set('Content-Type', 'application/json')
+          .send({ target: args.devices, mode: args.mode })
         break
 
       default:
@@ -329,7 +382,27 @@ class Device extends RequestManager {
     }
 
     if (!r) console.error(`no request handler found for ${name}`)
-    else r.end((err, res) => (typeof next === 'function') && next(err, cloud ? res && res.body && res.body.data : res && res.body))
+    else {
+      r.end((err, res) => {
+        if (typeof next === 'function') {
+          let error = err
+          let body
+          if (!error) {
+            body = res && res.body
+            if (cloud && !Object.keys(body).length) {
+              try {
+                body = JSON.parse(res.text)
+              } catch (e) {
+                error = new Error('JSON parse error')
+              }
+            } else {
+              body = res && res.body
+            }
+          }
+          next(err, body)
+        }
+      })
+    }
   }
 
   async reqAsync (name, args) {

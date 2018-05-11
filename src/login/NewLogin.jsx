@@ -25,7 +25,7 @@ class LoginApp extends React.Component {
 
     this.refresh = () => {
       this.setState({
-        dev: null,
+        storage: null,
         // list: null,
         confirm: false,
         loading: true,
@@ -39,16 +39,16 @@ class LoginApp extends React.Component {
 
     this.enterSelectDevice = () => {
       console.log('mdns', this.props.mdns)
-      this.setState({ list: this.props.mdns, loading: true })
+      this.setState({ list: this.props.mdns, loading: true, type: 'LANTOBIND' })
       this.timer = setTimeout(() => this.setState({ loading: false }), 500)
     }
 
-    this.manageDisk = (dev) => {
-      this.setState({ dev })
+    this.manageDisk = (storage) => {
+      this.setState({ storage })
     }
 
     this.backToList = () => {
-      this.setState({ dev: null, LANLogin: null })
+      this.setState({ storage: null, LANLogin: null })
     }
 
     this.format = () => {
@@ -64,12 +64,16 @@ class LoginApp extends React.Component {
     this.saveLANPwd = () => {
       this.setState({ LANPwd: false })
     }
+
+    this.updateList = (list) => {
+      this.setState({ list, loading: true, type: 'BOUND' })
+    }
   }
 
   componentDidMount () {
     document.getElementById('start-bg').style.display = 'none'
     setTimeout(() => this.setState({ hello: false }), 300)
-    this.enterSelectDevice()
+    // this.enterSelectDevice()
   }
 
   renderDeviceSelect (props) {
@@ -84,7 +88,7 @@ class LoginApp extends React.Component {
           overflow: 'hidden'
         }}
       >
-        <DeviceSelect {...props} {...this.state} refresh={this.refresh} manageDisk={this.manageDisk} type="LAN" />
+        <DeviceSelect {...props} {...this.state} refresh={this.refresh} manageDisk={this.manageDisk} />
       </div>
     )
   }
@@ -92,7 +96,8 @@ class LoginApp extends React.Component {
   renderDiskManage (props) {
     return (
       <ManageDisk
-        dev={this.state.dev}
+        {...this.props}
+        storage={this.state.storage}
         backToList={this.backToList}
         onFormatSuccess={this.onFormatSuccess}
       />
@@ -234,12 +239,12 @@ class LoginApp extends React.Component {
     let view = null
 
     if (!this.props.account) {
-      view = <PhiLogin {...props} />
+      view = <PhiLogin {...props} updateList={this.updateList} />
     } else if (this.state.LANPwd) {
       view = this.renderLANPwd()
-    } else if (this.state.dev) {
+    } else if (this.state.storage) {
       view = this.renderDiskManage(props)
-    } else if (!this.state.list) {
+    } else if (!this.state.list || !this.state.list.length) {
       view = this.renderNoBound()
     } else {
       view = this.renderDeviceSelect(props)

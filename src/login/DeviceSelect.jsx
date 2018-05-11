@@ -21,8 +21,50 @@ class DeviceSelect extends React.Component {
       confirm: false
     }
 
+    this.getBindState = (deviceSN, token) => {
+      this.props.selectedDevice.req('getBindState', { deviceSN, token }, (err, res) => {
+        if (err) {
+          this.setState({ error: err })
+        } else {
+          console.log('getBindState', res)
+        }
+      })
+    }
+
+    this.bindDevice = () => {
+      console.log('this.bindDevice', this.state, this.props)
+      const deviceSN = this.props.selectedDevice.boot.data.device.deviceSN
+      const token = this.props.account.token
+      console.log('deviceSN token', deviceSN, token)
+      if (!deviceSN || !token) this.setState({ error: true })
+      else {
+        this.props.selectedDevice.req('bindDevice', { deviceSN, token }, (err, res) => {
+          if (err) {
+            console.error('bindDevice, error', err, res)
+          } else {
+            console.log('bindDevice req success', res)
+            setTimeout(() => this.getBindState(deviceSN, token), 1000)
+          }
+        })
+      }
+    }
+
     this.slDevice = (dev) => {
-      return this.setState({ LANLogin: dev })
+      /* bind volume */
+      const storage = this.props.selectedDevice.boot.data.storage
+      this.setState({ dev, confirm: true }) // First Boot, Bind Device and Formating Disk
+      setTimeout(() => {
+        this.setState({ confirm: false })
+        this.props.manageDisk(storage)
+      }, 2000)
+
+      return
+      /* bind device */
+      this.setState({ dev, confirm: true })
+      setTimeout(() => this.bindDevice(), 1000)
+
+      return
+      this.setState({ LANLogin: dev })
       if (dev.address === '10.10.9.153') { // LAN Login
         this.setState({ LANLogin: dev })
       } else if (dev.address === '10.10.9.251') { // User Maint
@@ -209,8 +251,8 @@ class DeviceSelect extends React.Component {
 
     const arr = [...this.props.list]
 
-    const title = this.props.type === 'bind' ? i18n.__('Select Device To Bind')
-      : this.props.type === 'LAN' ? i18n.__('Select LAN Device To Login') : i18n.__('Select Device To Login')
+    const title = this.props.type === 'LANTOBIND' ? i18n.__('Select Device To Bind')
+      : this.props.type === 'LANTOLOGIN' ? i18n.__('Select LAN Device To Login') : i18n.__('Select Device To Login')
 
     return (
       <div style={{ width: '100%', height: '100%', backgroundColor: '#f3f8ff' }}>

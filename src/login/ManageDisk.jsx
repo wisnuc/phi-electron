@@ -1,6 +1,7 @@
 import i18n from 'i18n'
 import React from 'react'
 import { Divider, IconButton } from 'material-ui'
+import prettysize from 'prettysize'
 
 import DiskModeGuide from './DiskModeGuide'
 import DiskFormating from './DiskFormating'
@@ -19,10 +20,15 @@ class ManageDisk extends React.Component {
       format: '' // 'busy', 'success', 'error'
     }
 
-    this.format = () => {
+    this.format = (target) => {
       this.setState({ format: 'busy' })
-      setTimeout(() => this.setState({ format: 'error' }), 2000)
-      setTimeout(() => this.setState({ format: 'success' }), 4000)
+      const args = { target, mode: this.state.mode }
+      console.log('this.format args', args)
+      this.props.selectedDevice.req('boundVolume', args, (err, res) => {
+        console.log('boundVolume', err, res)
+      })
+      // setTimeout(() => this.setState({ format: 'error' }), 2000)
+      // setTimeout(() => this.setState({ format: 'success' }), 4000)
     }
 
     this.recover = () => {
@@ -31,18 +37,32 @@ class ManageDisk extends React.Component {
   }
 
   renderInitFormat () {
-    const { dev } = this.props
-    console.log('ManageDisk', dev)
-    const iconStyle = { width: 14, height: 14, fill: '#31a0f5' }
+    const { storage } = this.props
+    console.log('ManageDisk', storage)
+    const iconStyle = { width: 20, height: 20, color: '#31a0f5' }
     const buttonStyle = { width: 22, height: 22, padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }
-    const storage = [
-      { pos: '磁盘1', model: '希捷', size: '2.0T', serial: 'BYUHYSTYGFG' },
-      { pos: '磁盘2', model: '希捷', size: '1.0T', serial: 'DKJHFHJISHF' }
+
+    /*
+    const storages = [
+      { pos: '磁盘1', model: '希捷', size: '2.0T' },
+      { pos: '磁盘2', model: '希捷', size: '1.0T' }
     ]
+    */
+
+    const storages = storage.blocks.filter(b => b.isDisk && !b.unformattable).map((blk, index) => {
+      const pos = !index ? i18n.__('Disk 1') : i18n.__('Disk 2')
+      const model = blk.model ? blk.model : i18n.__('Unknown Disk Model')
+      const size = prettysize(blk.size * 512)
+      const name = blk.name
+      return ({ pos, model, size, name })
+    }).slice(0, 2)
+
+    const target = storages.map(b => b.name)
+
     return (
       <div>
         {
-          storage.map(disk => (
+          storages.map(disk => (
             <div
               style={{
                 height: 30,
@@ -56,9 +76,8 @@ class ManageDisk extends React.Component {
             >
               <div style={{ color: '#525a60' }}> { disk.pos } </div>
               <div style={{ flexGrow: 1 }} />
-              <div style={{ width: 32 }}> { disk.model } </div>
-              <div style={{ width: 32 }}> { disk.size } </div>
-              <div style={{ width: 120 }}> { disk.serial } </div>
+              <div style={{ width: 100 }}> { disk.model } </div>
+              <div style={{ width: 84, textAlign: 'right' }}> { disk.size } </div>
             </div>
           ))
         }
@@ -97,7 +116,7 @@ class ManageDisk extends React.Component {
           <RRButton
             disabled={!this.state.mode}
             label={i18n.__('Format Disk in First Boot')}
-            onClick={this.format}
+            onClick={() => this.format(target)}
           />
         </div>
         <div style={{ height: 30 }} />
@@ -182,9 +201,10 @@ class ManageDisk extends React.Component {
   }
 
   render () {
-    const { dev, backToList, onFormatSuccess } = this.props
-    console.log('ManageDisk', dev)
-    const init = dev.address !== '10.10.9.157'
+    const { storage, backToList, onFormatSuccess } = this.props
+    console.log('ManageDisk', storage)
+    // const init = dev.address !== '10.10.9.157'
+    const init = true
     const recover = !!this.state.recover
     const imgSrc = init ? 'pic-finddisk.png' : 'pic-login.png'
     return (

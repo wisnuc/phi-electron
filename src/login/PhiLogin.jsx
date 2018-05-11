@@ -1,3 +1,4 @@
+import md5 from 'md5'
 import React from 'react'
 import i18n from 'i18n'
 import { Checkbox, Divider, IconButton, TextField } from 'material-ui'
@@ -13,9 +14,9 @@ class PhiLogin extends React.Component {
     super(props)
 
     this.state = {
-      pn: '',
+      pn: '13774305827',
       pnError: '',
-      pwd: '',
+      pwd: '123456',
       pwdError: '',
       error: '',
       showPwd: false
@@ -42,17 +43,30 @@ class PhiLogin extends React.Component {
 
     this.login = () => {
       console.log('this.login', this.props)
-      this.setState({ failed: true })
-      return
       this.setState({ loading: true })
-      this.props.selectedDevice.req('phiToken', { username: this.state.pn, password: this.state.pwd }, (err, res) => {
-        if (err) {
-          console.error('Phi login Error', err)
-          if (err && err.code > 400) this.setState({ failed: true })
-        } else {
-          console.log(res)
+      this.props.selectedDevice.req(
+        'phiToken',
+        { phonenumber: this.state.pn, password: md5(this.state.pwd).toUpperCase() },
+        (err, res) => {
+          if (err) {
+            console.error('Phi login Error', err)
+            this.setState({ failed: true })
+          } else {
+            this.token = res.access_token
+            console.log('token', this.token, res)
+            this.props.phiLogin({ phonenumber: this.state.pn, token: this.token })
+            this.props.selectedDevice.req('stationList', { token: this.token }, (e, r) => {
+              if (e || !r.result || !Array.isArray(r.result.list)) {
+                console.error('stationList', e, r)
+                this.setState({ failed: true })
+              } else {
+                console.log('get list success', r.result.list)
+                this.props.updateList(r.result.list)
+              }
+            })
+          }
         }
-      })
+      )
     }
 
     this.reset = () => {
