@@ -118,6 +118,7 @@ class Row extends React.PureComponent {
           <div style={{ width: 'calc(100% - 470px)', display: 'flex', alignItems: 'center' }} >
             <Name
               refresh={() => this.props.refresh({ noloading: true })}
+              openSnackBar={this.props.openSnackBar}
               entry={entry}
               entries={this.props.entries}
               modify={isOnModify}

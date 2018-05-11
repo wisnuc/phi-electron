@@ -21,7 +21,8 @@ class ListSelect extends EventEmitter {
       toggleDrag: this.toggleDrag.bind(this),
       isDrop: this.isDrop.bind(this),
       addByArray: this.addByArray.bind(this),
-      putSelect: this.putSelect.bind(this)
+      putSelect: this.putSelect.bind(this),
+      setModify: this.setModify.bind(this)
     }
   }
 
@@ -47,6 +48,10 @@ class ListSelect extends EventEmitter {
     })
 
     return this.state
+  }
+
+  setModify (index) {
+    this.setState({ selected: [index], modify: index })
   }
 
   addByArray (array, session) {

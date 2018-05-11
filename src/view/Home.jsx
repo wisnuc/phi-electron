@@ -51,7 +51,6 @@ class Home extends Base {
       contextMenuX: -1,
 
       createNewFolder: false,
-      rename: false,
       delete: false,
       move: false,
       copy: false,
@@ -132,6 +131,10 @@ class Home extends Base {
           }
         })
       }
+    }
+
+    this.rename = () => {
+      this.state.select.setModify(this.state.select.selected[0])
     }
 
     this.deleteAsync = async () => {
@@ -518,7 +521,6 @@ class Home extends Base {
       contextMenuY: -1,
       contextMenuX: -1,
       createNewFolder: false,
-      rename: false,
       delete: false,
       move: false,
       copy: false,
@@ -814,19 +816,6 @@ class Home extends Base {
             /> }
         </DialogOverlay>
 
-        <DialogOverlay open={!!this.state.rename} onRequestClose={() => this.toggleDialog('rename')}>
-          { this.state.rename &&
-            <RenameDialog
-              onRequestClose={() => this.toggleDialog('rename')}
-              apis={this.ctx.props.apis}
-              path={this.state.path}
-              entries={this.state.entries}
-              select={this.state.select}
-              openSnackBar={openSnackBar}
-              refresh={this.refresh}
-            /> }
-        </DialogOverlay>
-
         <DialogOverlay open={!!this.state.delete} onRequestClose={() => this.toggleDialog('delete')}>
           {
             this.state.delete &&
@@ -975,7 +964,7 @@ class Home extends Base {
                   !multiSelected &&
                     <MenuItem
                       primaryText={i18n.__('Rename')}
-                      onClick={() => this.toggleDialog('rename')}
+                      onClick={this.rename}
                     />
                 }
                 <MenuItem

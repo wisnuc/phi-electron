@@ -18,7 +18,8 @@ class Name extends React.PureComponent {
       const newValue = sanitize(value)
       const entries = this.props.entries
       if (entries.findIndex(entry => entry.name === value) > -1) {
-        this.setState({ value, errorText: i18n.__('Name Exist Error') })
+        if (value === this.value) this.setState({ value })
+        else this.setState({ value, errorText: i18n.__('Name Exist Error') })
       } else if (value !== newValue) {
         this.setState({ value, errorText: i18n.__('Name Invalid Error') })
       } else {
@@ -41,6 +42,7 @@ class Name extends React.PureComponent {
       apis.request('renameDirOrFile', args, (err) => {
         if (err) {
           this.setState({ errorText: i18n.__('Rename Failed') })
+          this.props.openSnackBar(i18n.__('Rename Failed'))
         } else {
           // this.props.onRequestClose(true)
           // this.props.openSnackBar(i18n.__('Rename Success'))
@@ -57,6 +59,8 @@ class Name extends React.PureComponent {
 
     this.onKeyDown = (e) => {
       if (e.which === 13 && !this.state.errorText && this.state.value.length !== 0 && this.state.value !== this.value) this.fire()
+      else if (e.which === 13 && this.state.errorText) this.props.openSnackBar(i18n.__('Rename Failed'))
+      else if (e.which === 13) this.props.refresh()
     }
 
     this.reset = () => {
