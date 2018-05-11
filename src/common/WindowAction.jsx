@@ -1,7 +1,8 @@
 import React from 'react'
-import { ipcRenderer } from 'electron'
+import { ipcRenderer, remote } from 'electron'
+import EventListener from 'react-event-listener'
 import { IconButton } from 'material-ui'
-import { MinIcon, MaxIcon, CloseIcon } from '../common/Svg'
+import { WinMiniIcon, WinFullIcon, WinNormalIcon, CloseIcon } from '../common/Svg'
 
 const styles = {
   smallIcon: {
@@ -26,17 +27,20 @@ class WindowAction extends React.PureComponent {
     this.hide = () => ipcRenderer.send('HIDE')
     this.toggleMax = () => ipcRenderer.send('TOGGLE_MAX')
     this.minimize = () => ipcRenderer.send('MINIMIZE')
+    this.handleResize = () => this.forceUpdate()
   }
 
   render () {
+    const isMaximized = remote.getCurrentWindow().isMaximized()
     return (
       <div style={{ position: 'fixed', top: 11, right: 17, display: 'flex', alignItems: 'center', WebkitAppRegion: 'no-drag' }}>
+        <EventListener target="window" onResize={this.handleResize} />
         <IconButton style={styles.small} iconStyle={styles.smallIcon} onClick={this.minimize} >
-          <MinIcon />
+          <WinMiniIcon />
         </IconButton>
         <div style={{ width: 12 }} />
         <IconButton style={styles.small} iconStyle={styles.smallIcon} onClick={this.toggleMax} >
-          <MaxIcon />
+          { !isMaximized ? <WinFullIcon /> : <WinNormalIcon /> }
         </IconButton>
         <div style={{ width: 12 }} />
         <IconButton style={styles.small} iconStyle={styles.smallIcon} onClick={this.hide} >
