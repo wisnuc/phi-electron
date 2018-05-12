@@ -371,6 +371,7 @@ class Device extends RequestManager {
         break
 
       case 'boundVolume':
+        console.log('boundVolume', args)
         r = request
           .post(`http://${this.mdev.address}:3000/boot/boundVolume`)
           .set('Content-Type', 'application/json')

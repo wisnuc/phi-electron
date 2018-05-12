@@ -35,7 +35,7 @@ class ConfirmBind extends React.PureComponent {
           {
             status !== 'busy' &&
             <RSButton
-              label={status === 'success' ? i18n.__('OK') : i18n.__('Retry')}
+              label={status === 'success' ? i18n.__('OK') : i18n.__('OK')}
               onClick={() => (status === 'success' ? onSuccess() : onRequestClose())}
               style={{ marginRight: 12 }}
             />

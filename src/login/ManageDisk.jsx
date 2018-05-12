@@ -26,9 +26,9 @@ class ManageDisk extends React.Component {
       console.log('this.format args', args)
       this.props.selectedDevice.req('boundVolume', args, (err, res) => {
         console.log('boundVolume', err, res)
+        if (err) this.setState({ format: 'error', error: err })
+        else this.setState({ format: 'success' })
       })
-      // setTimeout(() => this.setState({ format: 'error' }), 2000)
-      // setTimeout(() => this.setState({ format: 'success' }), 4000)
     }
 
     this.recover = () => {
@@ -252,6 +252,7 @@ class ManageDisk extends React.Component {
           {
             !!this.state.format &&
             <DiskFormating
+              error={this.state.error}
               status={this.state.format}
               onSuccess={onFormatSuccess}
               onRequestClose={() => this.setState({ format: false })}

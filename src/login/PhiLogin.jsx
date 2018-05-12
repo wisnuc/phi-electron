@@ -48,20 +48,19 @@ class PhiLogin extends React.Component {
         'phiToken',
         { phonenumber: this.state.pn, password: md5(this.state.pwd).toUpperCase() },
         (err, res) => {
-          if (err) {
-            console.error('Phi login Error', err)
+          if (err || (res && res.error !== '0')) {
+            console.error('Phi login Error', err || res)
             this.setState({ failed: true })
           } else {
             this.token = res.access_token
             console.log('token', this.token, res)
-            this.props.phiLogin({ phonenumber: this.state.pn, token: this.token })
             this.props.selectedDevice.req('stationList', { token: this.token }, (e, r) => {
-              if (e || !r.result || !Array.isArray(r.result.list)) {
+              if (e || !r.result || !Array.isArray(r.result.list) || r.error !== '0') {
                 console.error('stationList', e, r)
                 this.setState({ failed: true })
               } else {
-                console.log('get list success', r.result.list)
-                this.props.updateList(r.result.list)
+                console.log('get list success', r)
+                this.props.onSuccess({ list: r.result.list, phonenumber: this.state.pn, token: this.token })
               }
             })
           }
@@ -71,11 +70,6 @@ class PhiLogin extends React.Component {
 
     this.reset = () => {
       this.setState({ failed: false, pn: '', pnError: '', pwd: '', pwdError: '' })
-    }
-
-    this.enterLANLogin = () => {
-      this.props.phiLogin({ uuid: '123457', name: 'w' }) // TODO
-      console.log('this.enterLANLogin')
     }
   }
 
@@ -99,7 +93,7 @@ class PhiLogin extends React.Component {
           <div style={{ flexGrow: 1 }} />
           <RSButton label={i18n.__('Cancel')} onClick={this.reset} alt />
           <div style={{ width: 10 }} />
-          <RSButton label={i18n.__('OK')} onClick={this.enterLANLogin} />
+          <RSButton label={i18n.__('OK')} onClick={this.props.enterLANLogin} />
         </div>
       </div>
     )

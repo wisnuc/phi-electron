@@ -44,7 +44,7 @@ class LoginApp extends React.Component {
     }
 
     this.manageDisk = (storage) => {
-      this.setState({ storage })
+      this.setState({ storage, status: 'diskManage' })
     }
 
     this.backToList = () => {
@@ -58,15 +58,28 @@ class LoginApp extends React.Component {
     }
 
     this.onFormatSuccess = () => {
-      this.setState({ LANPwd: true, format: '' })
+      this.setState({ storage: null, LANLogin: null })
+      this.props.phiLogin(null)
+      // this.setState({ status: 'LANPwd' })
+
+      // this.setState({ LANPwd: true, format: '' })
     }
 
     this.saveLANPwd = () => {
       this.setState({ LANPwd: false })
     }
 
-    this.updateList = (list) => {
-      this.setState({ list, loading: false, type: 'BOUND' })
+    this.phiLoginSuccess = ({ list, phonenumber, token }) => {
+      const status = !list.length ? 'phiNoBound' : 'deviceSelect'
+      this.setState({ list, loading: false, type: 'BOUND', status })
+      this.props.phiLogin({ phonenumber, token })
+    }
+
+    this.enterLANLogin = () => {
+      this.props.refreshMdns()
+      this.props.phiLogin({ lan: true })
+      this.setState({ list: [], loading: true, type: 'LANTOLOGIN' })
+      this.timer = setTimeout(() => this.setState({ loading: false, list: this.props.mdns }), 500)
     }
   }
 
@@ -74,6 +87,10 @@ class LoginApp extends React.Component {
     document.getElementById('start-bg').style.display = 'none'
     setTimeout(() => this.setState({ hello: false }), 300)
     // this.enterSelectDevice()
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (!nextProps.account && this.state.status !== 'phiLogin') this.setState({ status: 'phiLogin' })
   }
 
   renderDeviceSelect (props) {
@@ -238,8 +255,34 @@ class LoginApp extends React.Component {
     const props = this.props
     let view = null
 
+    switch (this.state.status) {
+      case 'phiLogin':
+        view = <PhiLogin {...props} onSuccess={this.phiLoginSuccess} />
+        break
+
+      case 'phiNoBound':
+        view = this.renderNoBound()
+        break
+
+      case 'deviceSelect':
+        view = this.renderDeviceSelect(props)
+        break
+
+      case 'diskManage':
+        view = this.renderDiskManage(props)
+        break
+
+      case 'LANPwd':
+        view = this.renderLANPwd()
+        break
+
+      default:
+        break
+    }
+
+    /*
     if (!this.props.account) {
-      view = <PhiLogin {...props} updateList={this.updateList} />
+      view = <PhiLogin {...props} onSuccess={this.phiLoginSuccess} />
     } else if (this.state.LANPwd) {
       view = this.renderLANPwd()
     } else if (this.state.storage) {
@@ -249,6 +292,7 @@ class LoginApp extends React.Component {
     } else {
       view = this.renderDeviceSelect(props)
     }
+    */
 
     return (
       <div

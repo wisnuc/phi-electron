@@ -68,7 +68,7 @@ class DeviceSelect extends React.Component {
 
       console.log('this.slDevice', dev)
       if (this.props.type === 'BOUND') {
-        this.setState({ cloudLogin: dev })
+        // this.setState({ cloudLogin: dev })
       }
 
       if (this.props.type === 'LANTOLOGIN') {
