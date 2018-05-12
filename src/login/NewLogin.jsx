@@ -66,7 +66,7 @@ class LoginApp extends React.Component {
     }
 
     this.updateList = (list) => {
-      this.setState({ list, loading: true, type: 'BOUND' })
+      this.setState({ list, loading: false, type: 'BOUND' })
     }
   }
 

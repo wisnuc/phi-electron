@@ -49,20 +49,17 @@ class ManageDisk extends React.Component {
     ]
     */
 
-    const storages = storage.blocks.filter(b => b.isDisk && !b.unformattable).map((blk, index) => {
-      const pos = !index ? i18n.__('Disk 1') : i18n.__('Disk 2')
-      const model = blk.model ? blk.model : i18n.__('Unknown Disk Model')
-      const size = prettysize(blk.size * 512)
-      const name = blk.name
-      return ({ pos, model, size, name })
-    }).slice(0, 2)
+    const b1 = storage.blocks.find(b => (b.isDisk && !b.unformattable && /ata1/.test(b.path)) || b.serial === 'VBf6bb5791-e1fa9c84')
+    const b2 = storage.blocks.find(b => (b.isDisk && !b.unformattable && /ata2/.test(b.path)) || b.serial === 'VB6167c3a6-cc8f4095')
 
-    const target = storages.map(b => b.name)
+    const target = []
+    if (b1 && b1.name) target.push(b1.name)
+    if (b2 && b2.name) target.push(b2.name)
 
     return (
       <div>
         {
-          storages.map(disk => (
+          [b1, b2].map((disk, index) => (
             <div
               style={{
                 height: 30,
@@ -72,12 +69,13 @@ class ManageDisk extends React.Component {
                 color: '#888a8c',
                 alignItems: 'center'
               }}
-              key={disk.pos}
+              key={index.toString()}
             >
-              <div style={{ color: '#525a60' }}> { disk.pos } </div>
+              <div style={{ color: '#525a60' }}> { !index ? i18n.__('Disk 1') : i18n.__('Disk 2') } </div>
               <div style={{ flexGrow: 1 }} />
-              <div style={{ width: 100 }}> { disk.model } </div>
-              <div style={{ width: 84, textAlign: 'right' }}> { disk.size } </div>
+              { disk && <div style={{ width: 100 }}> { disk.model } </div> }
+              { disk && <div style={{ width: 84, textAlign: 'right' }}> { prettysize(disk.size * 512) } </div> }
+              { !disk && <div style={{ width: 184, textAlign: 'right' }}> { i18n.__('Disk Not Found') } </div> }
             </div>
           ))
         }
@@ -114,7 +112,7 @@ class ManageDisk extends React.Component {
         <div style={{ height: 30 }} />
         <div style={{ width: 240, height: 40, margin: '0 auto' }}>
           <RRButton
-            disabled={!this.state.mode}
+            disabled={!this.state.mode || !target.length}
             label={i18n.__('Format Disk in First Boot')}
             onClick={() => this.format(target)}
           />

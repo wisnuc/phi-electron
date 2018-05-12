@@ -10,6 +10,7 @@ import Dialog from '../common/PureDialog'
 import ConnectionHint from './ConnectionHint'
 import ConfirmBind from './ConfirmBind'
 import LANLogin from './LANLogin'
+import CloudLogin from './CloudLogin'
 
 class DeviceSelect extends React.Component {
   constructor (props) {
@@ -21,12 +22,22 @@ class DeviceSelect extends React.Component {
       confirm: false
     }
 
+    this.bindVolume = () => {
+      const storage = this.props.selectedDevice.boot.data.storage
+      this.setState({ confirm: false })
+      this.props.manageDisk(storage)
+    }
+
     this.getBindState = (deviceSN, token) => {
+      console.log('this.getBindState', deviceSN, token)
       this.props.selectedDevice.req('getBindState', { deviceSN, token }, (err, res) => {
         if (err) {
-          this.setState({ error: err })
+          this.setState({ error: err, confirm: false })
         } else {
           console.log('getBindState', res)
+          if (res && res.result && res.result.status === 'binded') this.bindVolume()
+          else if (res && res.result && res.result.status === 'error') this.setState({ error: 'bind error', confirm: false })
+          else setTimeout(() => this.getBindState(deviceSN, token), 1000)
         }
       })
     }
@@ -50,6 +61,27 @@ class DeviceSelect extends React.Component {
     }
 
     this.slDevice = (dev) => {
+      /*
+      this.setState({ LANLogin: dev })
+      return
+      */
+
+      console.log('this.slDevice', dev)
+      if (this.props.type === 'BOUND') {
+        this.setState({ cloudLogin: dev })
+      }
+
+      if (this.props.type === 'LANTOLOGIN') {
+        this.setState({ LANLogin: dev })
+      }
+
+      if (this.props.type === 'LANTOBIND') {
+        this.setState({ dev, confirm: true })
+        setTimeout(() => this.bindDevice(), 1000)
+      }
+      return
+
+
       /* bind volume */
       const storage = this.props.selectedDevice.boot.data.storage
       this.setState({ dev, confirm: true }) // First Boot, Bind Device and Formating Disk
@@ -60,11 +92,7 @@ class DeviceSelect extends React.Component {
 
       return
       /* bind device */
-      this.setState({ dev, confirm: true })
-      setTimeout(() => this.bindDevice(), 1000)
 
-      return
-      this.setState({ LANLogin: dev })
       if (dev.address === '10.10.9.153') { // LAN Login
         this.setState({ LANLogin: dev })
       } else if (dev.address === '10.10.9.251') { // User Maint
@@ -301,6 +329,18 @@ class DeviceSelect extends React.Component {
                 {...this.props}
                 dev={this.state.LANLogin}
                 onRequestClose={() => this.setState({ LANLogin: null })}
+              />
+          }
+        </Dialog>
+
+        {/* CloudLogin */}
+        <Dialog open={!!this.state.cloudLogin} onRequestClose={() => this.setState({ cloudLogin: null })} modal >
+          {
+            !!this.state.cloudLogin &&
+              <CloudLogin
+                {...this.props}
+                dev={this.state.cloudLogin}
+                onRequestClose={() => this.setState({ cloudLogin: null })}
               />
           }
         </Dialog>

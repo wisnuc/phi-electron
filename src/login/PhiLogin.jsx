@@ -14,7 +14,7 @@ class PhiLogin extends React.Component {
     super(props)
 
     this.state = {
-      pn: '13774305827',
+      pn: '18817301665',
       pnError: '',
       pwd: '123456',
       pwdError: '',
