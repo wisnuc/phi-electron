@@ -421,6 +421,7 @@ class Navigation extends React.Component {
     /* init apis */
     const token = props.selectedDevice.token
     if (!token.isFulfilled()) throw new Error('token not fulfilled')
+    console.log('Navigation', props.selectedDevice, token)
 
     const { address, isCloud } = props.selectedDevice.mdev
     const userUUID = token.ctx.uuid

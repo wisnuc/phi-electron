@@ -10,6 +10,12 @@ import { RSButton } from '../common/Buttons'
 const primaryColor = teal500
 const accentColor = pinkA200
 
+const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1dWlkIjoiODFlM2Q4M2ItNDVkNi00NjY0LTllODEtNzc1YzNjMmNmNzU4In0.lHw8ICp0niJU258e_wSHyKhdUzEQG4JVeBQVpv617f8'
+const user = {
+  uuid: '81e3d83b-45d6-4664-9e81-775c3c2cf758',
+  name: 'admin'
+}
+
 class ConfirmBind extends React.PureComponent {
   constructor (props) {
     super(props)
@@ -19,13 +25,39 @@ class ConfirmBind extends React.PureComponent {
     }
 
     this.getLANToken = () => {
+      const { dev, account } = this.props
       const args = {
-        token: this.props.account.token,
-        deviceSN: this.props.dev.deviceSN
+        token: account.token,
+        deviceSN: dev.deviceSN
       }
-      console.log('this.getLANToken', args)
+      console.log('this.getLANToken', args, dev, this.props.selectedDevice)
+
+      /* fake */
+      this.props.selectDevice({ address: dev.localIp, domain: 'local' })
+      setTimeout(() => {
+        Object.assign(this.props.selectedDevice, {
+          token: { isFulfilled: () => true, ctx: user, data: { token } },
+          mdev: { address: dev.localIp, domain: 'local', deviceSN: dev.deviceSN, stationName: dev.bindingName }
+        })
+        this.props.login()
+      }, 100)
+
+      return
+
       this.props.selectedDevice.req('getLANToken', args, (err, res) => {
         console.log('getLANToken', err, res)
+        if (err) {
+          this.setState({ status: 'error' })
+        } else {
+          // const token = res && res.data && res.data.token
+          // const user = res && res.data && res.data.user
+          this.props.selectDevice({ address: dev.localIp, domain: 'local' })
+          Object.assign(this.props.selectedDevice, {
+            token: { isFulfilled: () => true, ctx: user, data: token },
+            mdev: { address: dev.localIp, domain: 'local', deviceSN: dev.deviceSN, stationName: dev.bindingName }
+          })
+          this.props.login()
+        }
       })
     }
 
@@ -44,7 +76,7 @@ class ConfirmBind extends React.PureComponent {
     const { onRequestClose } = this.props
     const boxStyle = { display: 'flex', alignItems: 'center' }
     const text = {
-      busy: i18n.__('Cloud Logging Text'),
+      busy: i18n.__('Cloud Logging in...'),
       success: i18n.__('Cloud Logging Success text'),
       error: i18n.__('Cloud Logging Error Text')
     }

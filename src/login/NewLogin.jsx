@@ -78,7 +78,7 @@ class LoginApp extends React.Component {
     this.enterLANLogin = () => {
       this.props.refreshMdns()
       this.props.phiLogin({ lan: true })
-      this.setState({ list: [], loading: true, type: 'LANTOLOGIN' })
+      this.setState({ list: [], loading: true, type: 'LANTOLOGIN', status: 'deviceSelect' })
       this.timer = setTimeout(() => this.setState({ loading: false, list: this.props.mdns }), 500)
     }
   }
@@ -257,7 +257,7 @@ class LoginApp extends React.Component {
 
     switch (this.state.status) {
       case 'phiLogin':
-        view = <PhiLogin {...props} onSuccess={this.phiLoginSuccess} />
+        view = <PhiLogin {...props} onSuccess={this.phiLoginSuccess} enterLANLogin={this.enterLANLogin} />
         break
 
       case 'phiNoBound':

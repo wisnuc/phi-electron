@@ -189,6 +189,7 @@ class Fruitmix extends EventEmitter {
         break
 
       case 'drives':
+        console.log('drives', this.token)
         r = this.aget('drives')
         break
 
