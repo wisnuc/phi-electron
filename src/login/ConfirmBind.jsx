@@ -1,7 +1,7 @@
 import i18n from 'i18n'
 import React from 'react'
-import CloseIcon from 'material-ui/svg-icons/navigation/close'
-import { Divider, IconButton } from 'material-ui'
+import { Divider } from 'material-ui'
+import { RSButton } from '../common/Buttons'
 
 class ConfirmBind extends React.PureComponent {
   render () {
@@ -36,8 +36,10 @@ class ConfirmBind extends React.PureComponent {
             alt=""
           />
         </div>
-        <div style={{ color: 'var(--grey-text)', width: '100% - 40px', padding: '0 20px' }}>
-          { i18n.__('Confirm Device Text') }
+        <div style={{ color: 'var(--grey-text)', width: '100% - 40px', padding: '0 20px', display: 'flex', alignItems: 'center' }}>
+          { this.props.error ? i18n.__('Bind Device Error') : i18n.__('Confirm Device Text') }
+          <div style={{ width: 60 }} />
+          { this.props.error && <RSButton label={i18n.__('OK')} onClick={this.props.backToList} /> }
         </div>
       </div>
     )

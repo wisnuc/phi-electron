@@ -861,6 +861,7 @@
   "User Maint Title": "发现磁盘变化",
   "LAN Login": "离线登录",
   "Username Hint": "请输入用户名",
+  "Bind Device Error": "绑定失败",
 
   "==== login/CloudLogin.jsx ====": "",
   "Cloud Logging Error Text": "登录失败",

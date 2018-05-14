@@ -36,8 +36,9 @@ class DeviceSelect extends React.Component {
         } else {
           console.log('getBindState', res)
           if (res && res.result && res.result.status === 'binded') this.bindVolume()
-          else if (res && res.result && res.result.error !== 'error') this.setState({ error: 'bind error', confirm: false })
-          else setTimeout(() => this.getBindState(deviceSN, token), 1000)
+          else if (res && res.error && res.error !== '0') {
+            this.setState({ error: 'bind error' })
+          } else setTimeout(() => this.getBindState(deviceSN, token), 1000)
         }
       })
     }
@@ -107,7 +108,7 @@ class DeviceSelect extends React.Component {
     }
 
     this.backToList = () => {
-      this.setState({ dev: null, LANLogin: null })
+      this.setState({ dev: null, LANLogin: null, confirm: false, error: null })
     }
   }
 
@@ -310,6 +311,7 @@ class DeviceSelect extends React.Component {
           {
             !!this.state.confirm &&
             <ConfirmBind
+              error={this.state.error}
               backToList={this.backToList}
               onRequestClose={() => this.setState({ confirm: false })}
             />
