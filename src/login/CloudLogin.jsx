@@ -10,13 +10,7 @@ import { RSButton } from '../common/Buttons'
 const primaryColor = teal500
 const accentColor = pinkA200
 
-const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1dWlkIjoiODFlM2Q4M2ItNDVkNi00NjY0LTllODEtNzc1YzNjMmNmNzU4In0.lHw8ICp0niJU258e_wSHyKhdUzEQG4JVeBQVpv617f8'
-const user = {
-  uuid: '81e3d83b-45d6-4664-9e81-775c3c2cf758',
-  name: 'admin'
-}
-
-class ConfirmBind extends React.PureComponent {
+class CloudLogin extends React.PureComponent {
   constructor (props) {
     super(props)
 
@@ -24,41 +18,48 @@ class ConfirmBind extends React.PureComponent {
       status: 'busy'
     }
 
-    this.getLANToken = () => {
+    this.getLANTokenAsync = async () => {
       const { dev, account } = this.props
       const args = {
         token: account.token,
         deviceSN: dev.deviceSN
       }
-      console.log('this.getLANToken', args, dev, this.props.selectedDevice)
+      console.log('this.getLANToken1', args, dev, this.props.selectedDevice, this.props.account)
 
-      /* fake */
       this.props.selectDevice({ address: dev.localIp, domain: 'local' })
-      setTimeout(() => {
-        Object.assign(this.props.selectedDevice, {
-          token: { isFulfilled: () => true, ctx: user, data: { token } },
-          mdev: { address: dev.localIp, domain: 'local', deviceSN: dev.deviceSN, stationName: dev.bindingName }
-        })
-        this.props.login()
-      }, 100)
 
-      return
+      this.props.selectDevice({ address: dev.localIp, domain: 'local' })
+      /* fake */
+      /*
+      const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1dWlkIjoiODFlM2Q4M2ItNDVkNi00NjY0LTllODEtNzc1YzNjMmNmNzU4In0.lHw8ICp0niJU258e_wSHyKhdUzEQG4JVeBQVpv617f8'
+      const user = {
+        uuid: '81e3d83b-45d6-4664-9e81-775c3c2cf758',
+        name: 'admin'
+      }
+      */
 
-      this.props.selectedDevice.req('getLANToken', args, (err, res) => {
-        console.log('getLANToken', err, res)
-        if (err) {
-          this.setState({ status: 'error' })
-        } else {
-          // const token = res && res.data && res.data.token
-          // const user = res && res.data && res.data.user
-          this.props.selectDevice({ address: dev.localIp, domain: 'local' })
+      const token = (await this.props.selectedDevice.reqAsync('LANToken', args)).result.data.res.token
+      const users = (await this.props.selectedDevice.reqAsync('cloudUsers', args)).result.data.res
+      const user = Array.isArray(users) && users.find(u => u.phicommUserId === account.phicommUserId)
+      console.log('LANToken', token, user)
+      if (!token || !user) throw Error('get LANToken or user error')
+      return ({ dev, user, token })
+    }
+
+    this.getLANToken = () => {
+      this.getLANTokenAsync()
+        .then(({ dev, user, token }) => {
           Object.assign(this.props.selectedDevice, {
-            token: { isFulfilled: () => true, ctx: user, data: token },
+            token: { isFulfilled: () => true, ctx: user, data: { token } },
             mdev: { address: dev.localIp, domain: 'local', deviceSN: dev.deviceSN, stationName: dev.bindingName }
           })
+          this.props.ipcRenderer.send('LOGIN', this.props.selectedDevice, user)
           this.props.login()
-        }
-      })
+        })
+        .catch((error) => {
+          console.error('this.getLANToken', error)
+          this.setState({ status: 'error', error })
+        })
     }
 
     this.onSuccess = () => {
@@ -76,8 +77,8 @@ class ConfirmBind extends React.PureComponent {
     const { onRequestClose } = this.props
     const boxStyle = { display: 'flex', alignItems: 'center' }
     const text = {
-      busy: i18n.__('Cloud Logging in...'),
-      success: i18n.__('Cloud Logging Success text'),
+      busy: i18n.__('Cloud Logging Text'),
+      success: i18n.__('Cloud Logging Success Text'),
       error: i18n.__('Cloud Logging Error Text')
     }
 
@@ -106,4 +107,4 @@ class ConfirmBind extends React.PureComponent {
     )
   }
 }
-export default ConfirmBind
+export default CloudLogin

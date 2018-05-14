@@ -39,7 +39,7 @@ class LoginApp extends React.Component {
 
     this.enterSelectDevice = () => {
       console.log('mdns', this.props.mdns)
-      this.setState({ list: this.props.mdns, loading: true, type: 'LANTOBIND' })
+      this.setState({ list: this.props.mdns, loading: true, type: 'LANTOBIND', status: 'deviceSelect' })
       this.timer = setTimeout(() => this.setState({ loading: false }), 500)
     }
 
@@ -69,10 +69,10 @@ class LoginApp extends React.Component {
       this.setState({ LANPwd: false })
     }
 
-    this.phiLoginSuccess = ({ list, phonenumber, token }) => {
+    this.phiLoginSuccess = ({ list, phonenumber, token, phicommUserId }) => {
       const status = !list.length ? 'phiNoBound' : 'deviceSelect'
       this.setState({ list, loading: false, type: 'BOUND', status })
-      this.props.phiLogin({ phonenumber, token })
+      this.props.phiLogin({ phonenumber, token, phicommUserId })
     }
 
     this.enterLANLogin = () => {

@@ -378,7 +378,7 @@ class Device extends RequestManager {
           .send({ target: args.target, mode: args.mode })
         break
 
-      case 'getLANToken':
+      case 'LANToken':
         r = request
           .post(`http://${phiCloudAddress}/ResourceManager/app/pipe/command`)
           .set('Content-Type', 'application/json')
@@ -386,12 +386,30 @@ class Device extends RequestManager {
           .send({
             deviceSN: args.deviceSN,
             data: {
-              verb: 'get',
-              path: '/token',
-              qs: {},
+              verb: 'GET',
+              urlPath: '/token',
+              params: {},
               body: {}
             }
           })
+        cloud = true
+        break
+
+      case 'cloudUsers':
+        r = request
+          .post(`http://${phiCloudAddress}/ResourceManager/app/pipe/command`)
+          .set('Content-Type', 'application/json')
+          .set('Authorization', args.token)
+          .send({
+            deviceSN: args.deviceSN,
+            data: {
+              verb: 'GET',
+              urlPath: '/users',
+              params: {},
+              body: {}
+            }
+          })
+        cloud = true
         break
 
       case 'setLANPassword':
@@ -408,6 +426,7 @@ class Device extends RequestManager {
               body: { password: args.password }
             }
           })
+        cloud = true
         break
 
       default:

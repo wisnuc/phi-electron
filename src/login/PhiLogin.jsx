@@ -14,7 +14,7 @@ class PhiLogin extends React.Component {
     super(props)
 
     this.state = {
-      pn: '18817301665',
+      pn: '15888524760',
       pnError: '',
       pwd: '123456',
       pwdError: '',
@@ -60,7 +60,7 @@ class PhiLogin extends React.Component {
                 this.setState({ failed: true })
               } else {
                 console.log('get list success', r)
-                this.props.onSuccess({ list: r.result.list, phonenumber: this.state.pn, token: this.token })
+                this.props.onSuccess({ list: r.result.list, phonenumber: this.state.pn, token: this.token, phicommUserId: res.uid })
               }
             })
           }
@@ -176,9 +176,9 @@ class PhiLogin extends React.Component {
         <div style={{ height: 20 }} />
         <div style={{ width: 240, height: 40, margin: '0 auto' }}>
           <RRButton
-            label={i18n.__('Login')}
+            label={i18n.__('Login') + (this.state.loading ? '中...' : '')}
             onClick={this.login}
-            disabled={this.state.pnError || this.state.pwdError}
+            disabled={this.state.pnError || this.state.pwdError || this.state.loading}
           />
         </div>
 

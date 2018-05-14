@@ -10,6 +10,7 @@ class ConfirmBind extends React.PureComponent {
         <div style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 20 }} className="title">
           { i18n.__('Confirm Device to Bind') }
           <div style={{ flexGrow: 1 }} />
+          {/*
           <IconButton
             style={{
               display: 'flex',
@@ -25,6 +26,7 @@ class ConfirmBind extends React.PureComponent {
           >
             <CloseIcon />
           </IconButton>
+          */}
         </div>
         <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
         <div style={{ height: 176, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

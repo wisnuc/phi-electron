@@ -7,6 +7,7 @@ import FileMenu from './FileMenu'
 import TransMenu from './TransMenu'
 import TransCount from './TransCount'
 import SettingsMenu from './SettingMenu'
+import Policy from './Policy'
 
 import Home from '../view/Home'
 import Photo from '../view/Photo'
@@ -36,6 +37,7 @@ import ResetDevice from '../view/ResetDevice'
 import DeviceSelect from '../login/DeviceSelect'
 import Fruitmix from '../common/fruitmix'
 import WindowAction from '../common/WindowAction'
+import DialogOverlay from '../common/PureDialog'
 import { FileManage, TransIcon, DeviceChangeIcon, FuncIcon, BackIcon } from '../common/Svg'
 
 const HEADER_HEIGHT = 110
@@ -125,12 +127,40 @@ class NavViews extends React.Component {
     this.openSnackBar = (message) => {
       this.setState({ snackBar: message })
     }
+
+    this.handleTask = (uuid, response, conflicts) => {
+      console.log('this.handleTask', uuid, response, conflicts)
+      conflicts.forEach((c, index) => {
+        let policy
+        switch (response[index]) {
+          case 'rename':
+            policy = ['rename', 'rename']
+            break
+          case 'replace':
+            policy = ['replace', 'replace']
+            break
+          case 'skip':
+            policy = ['skip', 'skip']
+            break
+          case 'merge':
+            policy = ['keep', null]
+            break
+          case 'overwrite':
+            policy = ['keep', null]
+            break
+          default:
+            policy = [null, null]
+        }
+        this.props.apis.pureRequest('handleTask', { taskUUID: uuid, nodeUUID: c.nodeUUID, policy })
+      })
+    }
   }
 
   componentDidMount () {
     this.init()
     ipcRenderer.send('START_TRANSMISSION')
     ipcRenderer.on('snackbarMessage', (e, message) => this.openSnackBar(message.message))
+    ipcRenderer.on('conflicts', (e, args) => this.setState({ conflicts: args }))
   }
 
   componentDidUpdate () {
@@ -314,6 +344,20 @@ class NavViews extends React.Component {
 
         {/* drag item */}
         { this.views[this.state.nav].renderDragItems() }
+
+        {/* upload policy */}
+        <DialogOverlay open={!!this.state.conflicts} onRequestClose={() => this.setState({ conflicts: null })} modal >
+          {
+            this.state.conflicts &&
+              <Policy
+                primaryColor="#31a0f5"
+                data={this.state.conflicts}
+                ipcRenderer={ipcRenderer}
+                handleTask={this.handleTask}
+                onRequestClose={() => this.setState({ conflicts: null })}
+              />
+          }
+        </DialogOverlay>
       </div>
     )
   }
@@ -419,9 +463,9 @@ class Navigation extends React.Component {
     super(props)
 
     /* init apis */
+    console.log('Navigation', props.selectedDevice, props.selectedDevice.token)
     const token = props.selectedDevice.token
     if (!token.isFulfilled()) throw new Error('token not fulfilled')
-    console.log('Navigation', props.selectedDevice, token)
 
     const { address, isCloud } = props.selectedDevice.mdev
     const userUUID = token.ctx.uuid

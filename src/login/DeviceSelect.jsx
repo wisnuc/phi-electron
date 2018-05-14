@@ -36,7 +36,7 @@ class DeviceSelect extends React.Component {
         } else {
           console.log('getBindState', res)
           if (res && res.result && res.result.status === 'binded') this.bindVolume()
-          else if (res && res.result && res.result.status === 'error') this.setState({ error: 'bind error', confirm: false })
+          else if (res && res.result && res.result.error !== 'error') this.setState({ error: 'bind error', confirm: false })
           else setTimeout(() => this.getBindState(deviceSN, token), 1000)
         }
       })

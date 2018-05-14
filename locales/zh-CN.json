@@ -862,6 +862,11 @@
   "LAN Login": "离线登录",
   "Username Hint": "请输入用户名",
 
+  "==== login/CloudLogin.jsx ====": "",
+  "Cloud Logging Error Text": "登录失败",
+  "Cloud Logging Success Text": "登录成功",
+  "Cloud Logging Text": "登录中",
+
   "==== login/DiskFormating.jsx ====": "",
   "Disk Format Busy Text": "磁盘格式化进行中，请稍候...",
   "Disk Format Success text": "磁盘格式化成功",
