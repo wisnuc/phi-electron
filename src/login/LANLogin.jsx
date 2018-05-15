@@ -63,7 +63,7 @@ class LANLogin extends React.Component {
           })
           console.log('device', this.props.selectedDevice)
           this.props.ipcRenderer.send('LOGIN', this.props.selectedDevice, user)
-          this.props.login()
+          this.props.deviceLogin()
         }
       })
     }

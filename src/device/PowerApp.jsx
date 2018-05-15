@@ -75,9 +75,9 @@ class Power extends React.Component {
     this.scanMdns = () => {
       let hasBeenShutDown = false
       this.interval = setInterval(() => {
-        global.mdns.scan()
+        // global.mdns.scan()
         setTimeout(() => {
-          const store = [...global.mdns.store]
+          const store = [] // TODO
           switch (this.state.choice) {
             case 'POWEROFF':
               if (store.every(d => d.host !== this.host)) {

@@ -54,7 +54,7 @@ class CloudLogin extends React.PureComponent {
             mdev: { address: dev.localIp, domain: 'local', deviceSN: dev.deviceSN, stationName: dev.bindingName }
           })
           this.props.ipcRenderer.send('LOGIN', this.props.selectedDevice, user)
-          this.props.login()
+          this.props.deviceLogin()
         })
         .catch((error) => {
           console.error('this.getLANToken', error)

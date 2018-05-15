@@ -193,7 +193,7 @@ class NavViews extends React.Component {
   renderChangeDevice () {
     console.log('this.props renderChangeDevice', this.props)
     const refresh = () => {}
-    return <DeviceSelect {...this.props} list={this.props.mdns} refresh={refresh} />
+    return <DeviceSelect {...this.props} refresh={refresh} />
   }
 
   renderHeader () {

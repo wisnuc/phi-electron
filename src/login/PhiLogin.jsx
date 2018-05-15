@@ -8,16 +8,15 @@ import CloseIcon from 'material-ui/svg-icons/navigation/close'
 
 import Dialog from '../common/PureDialog'
 import { RRButton, FLButton, RSButton } from '../common/Buttons'
+import { isPhoneNumber } from '../common/validate'
 
 class PhiLogin extends React.Component {
   constructor (props) {
     super(props)
 
     this.state = {
-      // pn: '15888524760',
-      // pwd: '123456',
-      pn: '',
-      pwd: '',
+      pn: '18817301665',
+      pwd: '123456',
       pnError: '',
       pwdError: '',
       error: '',
@@ -25,9 +24,10 @@ class PhiLogin extends React.Component {
     }
 
     this.onPhoneNumber = (pn) => {
-      let pnError = ''
-      if (pn && !Number.isInteger(Number(pn))) pnError = i18n.__('Not Phone Number')
-      this.setState({ pn, pnError })
+      this.setState({
+        pn,
+        pnError: pn && !isPhoneNumber(pn) ? i18n.__('Not Phone Number') : ''
+      })
     }
 
     this.onPassword = (pwd) => {
@@ -41,28 +41,28 @@ class PhiLogin extends React.Component {
     }
 
     this.clearPn = () => this.setState({ pn: '', pnError: '' })
+
     this.togglePwd = () => this.setState({ showPwd: !this.state.showPwd })
 
     this.login = () => {
       console.log('this.login', this.props)
       this.setState({ loading: true })
-      this.props.selectedDevice.req(
-        'phiToken',
+      this.props.phi.req(
+        'token',
         { phonenumber: this.state.pn, password: md5(this.state.pwd).toUpperCase() },
         (err, res) => {
           if (err || (res && res.error !== '0')) {
             console.error('Phi login Error', err || res)
             this.setState({ failed: true })
           } else {
-            this.token = res.access_token
-            console.log('token', this.token, res)
-            this.props.selectedDevice.req('stationList', { token: this.token }, (e, r) => {
+            console.log('token res', res)
+            this.props.phi.req('stationList', null, (e, r) => {
               if (e || !r.result || !Array.isArray(r.result.list) || r.error !== '0') {
                 console.error('stationList', e, r)
                 this.setState({ failed: true })
               } else {
                 console.log('get list success', r)
-                this.props.onSuccess({ list: r.result.list, phonenumber: this.state.pn, token: this.token, phicommUserId: res.uid })
+                this.props.onSuccess({ list: r.result.list, phonenumber: this.state.pn, phicommUserId: res.uid })
               }
             })
           }

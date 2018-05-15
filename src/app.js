@@ -4,7 +4,6 @@ import { ipcRenderer, remote } from 'electron'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import i18n from 'i18n'
 
-import MDNS from './common/mdns'
 import Phi from './Phi'
 
 /* i18n config */
@@ -21,12 +20,10 @@ i18n.configure({
 injectTapEventPlugin()
 
 /* render method */
-const render = () => ReactDom.render(React.createElement(Phi), document.getElementById('app'))
-
-/* start mdns scan */
-global.mdnsStore = []
-global.mdns = MDNS(ipcRenderer, global.mdnsStore, render)
-global.mdns.scan()
+const render = () => {
+  console.log('app render')
+  ReactDom.render(React.createElement(Phi), document.getElementById('app'))
+}
 
 /* set useCapture true to prevent possible losting event */
 window.addEventListener('dragover', e => e.preventDefault(), true)

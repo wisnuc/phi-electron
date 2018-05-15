@@ -15,3 +15,5 @@ export const validatePassword = (value) => {
   if (value.search(firstword) > -1) return false
   return !value.replace(isPassword, '').length
 }
+
+export const isPhoneNumber = pn => pn && pn.length <= 11 && Number.isInteger(Number(pn))

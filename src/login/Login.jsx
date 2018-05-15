@@ -10,38 +10,41 @@ import DeviceSelect from './DeviceSelect'
 
 import { RRButton } from '../common/Buttons'
 import WindowAction from '../common/WindowAction'
+import reqMdns from '../common/mdns'
 
 const duration = 300
 
-class LoginApp extends React.Component {
+class Login extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      local: true,
       hello: true,
-      status: 'phiLogin',
-      loading: true, // searching device
-      format: '' // 'busy', 'success', 'error'
+      loading: true,
+      status: 'phiLogin'
     }
 
     this.refresh = () => {
-      this.setState({
-        storage: null,
-        // list: null,
-        confirm: false,
-        loading: true,
-        format: ''
-      })
-      this.props.refreshMdns()
-
-      clearTimeout(this.refreshHandle)
-      this.refreshHandle = setTimeout(() => this.enterSelectDevice(), 1500)
     }
 
-    this.enterSelectDevice = () => {
-      console.log('mdns', this.props.mdns)
-      this.setState({ list: this.props.mdns, loading: true, type: 'LANTOBIND', status: 'deviceSelect' })
-      this.timer = setTimeout(() => this.setState({ loading: false }), 500)
+    this.onMDNSError = (e) => {
+      console.error('reqMdns error', e)
+      this.setState({ loading: false, list: [] })
+      this.props.openSnackBar(i18n.__('MDNS Search Error'))
+    }
+
+    this.showDeviceToBind = () => {
+      this.setState({ list: [], loading: true, type: 'LANTOBIND', status: 'deviceSelect' })
+      reqMdns()
+        .then(mdns => this.setState({ loading: false, list: mdns }))
+        .catch(this.onMDNSError)
+    }
+
+    this.enterLANLogin = () => {
+      this.props.phiLogin({ lan: true })
+      this.setState({ list: [], loading: true, type: 'LANTOLOGIN', status: 'deviceSelect' })
+      reqMdns()
+        .then(mdns => this.setState({ loading: false, list: mdns }))
+        .catch(this.onMDNSError)
     }
 
     this.manageDisk = (storage) => {
@@ -52,17 +55,11 @@ class LoginApp extends React.Component {
       this.setState({ storage: null, LANLogin: null })
     }
 
-    this.format = () => {
-      this.setState({ format: 'busy' })
-      setTimeout(() => this.setState({ format: 'error' }), 2000)
-      setTimeout(() => this.setState({ format: 'success' }), 4000)
-    }
-
     this.onFormatSuccess = () => {
       this.setState({ storage: null, LANLogin: null })
       this.props.phiLogin(null)
+      // TODO
       // this.setState({ status: 'LANPwd' })
-
       // this.setState({ LANPwd: true, format: '' })
     }
 
@@ -75,19 +72,11 @@ class LoginApp extends React.Component {
       this.setState({ list, loading: false, type: 'BOUND', status })
       this.props.phiLogin({ phonenumber, token, phicommUserId })
     }
-
-    this.enterLANLogin = () => {
-      this.props.refreshMdns()
-      this.props.phiLogin({ lan: true })
-      this.setState({ list: [], loading: true, type: 'LANTOLOGIN', status: 'deviceSelect' })
-      this.timer = setTimeout(() => this.setState({ loading: false, list: this.props.mdns }), 500)
-    }
   }
 
   componentDidMount () {
     document.getElementById('start-bg').style.display = 'none'
     setTimeout(() => this.setState({ hello: false }), 300)
-    // this.enterSelectDevice()
   }
 
   componentWillReceiveProps (nextProps) {
@@ -244,7 +233,7 @@ class LoginApp extends React.Component {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <RRButton
             label={i18n.__('Add Device')}
-            onClick={this.enterSelectDevice}
+            onClick={this.showDeviceToBind}
           />
         </div>
       </div>
@@ -252,7 +241,7 @@ class LoginApp extends React.Component {
   }
 
   render () {
-    console.log('NewLogin', this.state, this.props)
+    console.log('Login', this.props, this.state)
     const props = this.props
     let view = null
 
@@ -391,4 +380,4 @@ class LoginApp extends React.Component {
   }
 }
 
-export default LoginApp
+export default Login

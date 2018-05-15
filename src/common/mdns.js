@@ -1,43 +1,54 @@
 import UUID from 'uuid'
-import EventEmitter from 'eventemitter3'
+import Promise from 'bluebird'
+import { ipcRenderer } from 'electron'
+
+const sort = (pre) => {
+  let mdns = pre
+  if (!global.config || !global.config.global.lastDevice) return mdns
+  const lastHost = global.config.global.lastDevice.host
+  const lastAddress = global.config.global.lastDevice.address
+  const lastLANIP = global.config.global.lastDevice.lanip
+  const index = mdns.findIndex(m => (m.host === lastHost || m.address === lastAddress || m.address === lastLANIP))
+  if (index > -1) {
+    mdns = [mdns[index], ...mdns.slice(0, index), ...mdns.slice(index + 1)]
+  }
+  return mdns
+}
 
 class MDNS {
-  constructor (ipc, store, callback) {
-    // console.log('constructing mdns', ipc, store)
-    this.ipc = ipc
-    this.store = store
+  constructor () {
+    this.store = []
     this.session = undefined
-    this.event = new EventEmitter()
-    this.event.on('updateMdns', callback)
 
     this.handleUpdate = (event, session, device) => {
       /* discard out-dated session data */
       if (this.session !== session) return
-      // console.log('MDNS_UPDATE', session, device)
+      console.log('MDNS_UPDATE', session, device, this.store.length)
 
       /* discard existing result */
       if (this.store.find(dev => dev.host === device.host)) return
       this.store.push(device)
-      this.event.emit('updateMdns')
     }
 
-    this.ipc.on('MDNS_UPDATE', this.handleUpdate)
+    ipcRenderer.on('MDNS_UPDATE', this.handleUpdate)
   }
 
   scan () {
     this.session = UUID.v4()
-    console.log('mdns store', this.store)
-    const manual = this.store.find(s => s && s.domain === 'manual')
     this.store.length = 0
-    if (manual && this.pre !== manual) {
-      this.store.push(manual)
-      this.pre = manual
-    } else {
-      this.pre = null
-    }
-    this.ipc.send('MDNS_SCAN', this.session)
-    // console.log('start new mdns scan session ', this.session)
+    ipcRenderer.send('MDNS_SCAN', this.session)
+  }
+
+  get () {
+    return sort(this.store)
   }
 }
 
-export default (ipc, store, callback) => new MDNS(ipc, store, callback)
+const reqMdns = async (delay) => {
+  const mdns = new MDNS()
+  mdns.scan()
+  await Promise.delay(delay || 500)
+  return mdns.get()
+}
+
+export default reqMdns

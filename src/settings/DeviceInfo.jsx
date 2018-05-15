@@ -110,7 +110,7 @@ class DeviceInfo extends React.PureComponent {
           { model }
         </div>
         <div style={{ fontSize: 16, color: '#85868c', marginTop: 10 }}>
-          { `${usage * 100}%` }
+          { `${(usage * 100).toFixed(1)}%` }
         </div>
         <div style={{ position: 'absolute', top: 30, right: 20, width: 80, height: 80 }}>
           { this.renderSector(color, usage) }
@@ -209,15 +209,16 @@ class DeviceInfo extends React.PureComponent {
     if (!device) return (<div />)
 
     const { cpus, deviceModel, hardwareVersion, memory, net, softwareVersion } = device
-    const memUsage = (memory && Math.round(100 - memory.free / memory.total * 100) / 100) || 0
+    const memUsage = (memory && (1 - memory.free / memory.total)) || 0
     const cpuUsage = (cpu) => {
+      if (!cpu || !cpu.times) return 0
       const { idle, irq, nice, sys, user } = cpu.times
-      return Math.round(100 - idle / (idle + irq + nice + sys + user) * 100) / 100
+      return (1 - idle / (idle + irq + nice + sys + user)) / 100
     }
 
     const graphData = [
-      { title: 'CPU1', model: cpus[0].model, usage: cpuUsage(cpus[0]), color: '#31a0f5' },
-      { title: 'CPU2', model: cpus[1].model, usage: cpuUsage(cpus[0]), color: '#5fc315' },
+      { title: 'CPU1', model: cpus[0] && cpus[0].model, usage: cpuUsage(cpus[0]), color: '#31a0f5' },
+      { title: 'CPU2', model: cpus[1] && cpus[1].model, usage: cpuUsage(cpus[1]), color: '#5fc315' },
       { title: i18n.__('Memory'), model: '1GB DDR3 16000MHz', usage: memUsage, color: '#ffb400' }
     ]
 
