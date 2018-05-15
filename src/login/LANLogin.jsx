@@ -73,10 +73,6 @@ class LANLogin extends React.Component {
     }
   }
 
-  componentDidMount () {
-    this.props.selectDevice(this.props.dev)
-  }
-
   render () {
     console.log('LANLogin', this.props, this.state)
     const iconStyle = { width: 30, height: 30, color: '#505259', iconHoverColor: '#31a0f5' }

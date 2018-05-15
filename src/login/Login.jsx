@@ -6,7 +6,7 @@ import VisibilityOff from 'material-ui/svg-icons/action/visibility-off'
 
 import PhiLogin from './PhiLogin'
 import ManageDisk from './ManageDisk'
-import DeviceSelect from './DeviceSelect'
+import SelectDevice from './SelectDevice'
 
 import { RRButton } from '../common/Buttons'
 import WindowAction from '../common/WindowAction'
@@ -95,7 +95,7 @@ class Login extends React.Component {
           overflow: 'hidden'
         }}
       >
-        <DeviceSelect {...props} {...this.state} refresh={this.refresh} manageDisk={this.manageDisk} />
+        <SelectDevice {...props} {...this.state} refresh={this.refresh} manageDisk={this.manageDisk} />
       </div>
     )
   }

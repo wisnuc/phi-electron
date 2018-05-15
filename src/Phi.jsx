@@ -46,7 +46,7 @@ class Fruitmix extends React.Component {
   }
 
   logout () {
-    this.setState({ account: null, view: 'login' })
+    this.setState({ account: null, view: 'login', phi: new PhiAPI() })
   }
 
   renderSnackBar () {

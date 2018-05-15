@@ -34,7 +34,7 @@ import Samba from '../view/Samba'
 import DLNA from '../view/DLNA'
 import ResetDevice from '../view/ResetDevice'
 
-import DeviceSelect from '../login/DeviceSelect'
+import SelectDevice from '../login/SelectDevice'
 import Fruitmix from '../common/fruitmix'
 import WindowAction from '../common/WindowAction'
 import DialogOverlay from '../common/PureDialog'
@@ -193,7 +193,7 @@ class NavViews extends React.Component {
   renderChangeDevice () {
     console.log('this.props renderChangeDevice', this.props)
     const refresh = () => {}
-    return <DeviceSelect {...this.props} refresh={refresh} />
+    return <SelectDevice {...this.props} refresh={refresh} />
   }
 
   renderHeader () {

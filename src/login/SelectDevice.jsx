@@ -1,17 +1,20 @@
-import React from 'react'
 import i18n from 'i18n'
+import React from 'react'
 import { Divider } from 'material-ui'
 import { AutoSizer } from 'react-virtualized'
+
+import Device from './Device'
+import LANLogin from './LANLogin'
+import CloudLogin from './CloudLogin'
+import ConfirmBind from './ConfirmBind'
+import ConnectionHint from './ConnectionHint'
+
+import Dialog from '../common/PureDialog'
 import ScrollBar from '../common/ScrollBar'
 import { RSButton } from '../common/Buttons'
 import { RefreshIcon, HelpIcon } from '../common/Svg'
-import { SIButton, LIButton } from '../common/IconButton'
-import Dialog from '../common/PureDialog'
-import ConnectionHint from './ConnectionHint'
-import ConfirmBind from './ConfirmBind'
-import LANLogin from './LANLogin'
-import CloudLogin from './CloudLogin'
 import CircularLoading from '../common/CircularLoading'
+import { SIButton, LIButton } from '../common/IconButton'
 
 class DeviceSelect extends React.Component {
   constructor (props) {
@@ -24,14 +27,14 @@ class DeviceSelect extends React.Component {
     }
 
     this.bindVolume = () => {
-      const storage = this.props.selectedDevice.boot.data.storage
+      const storage = this.state.dev.boot.data.storage
       this.setState({ confirm: false })
       this.props.manageDisk(storage)
     }
 
     this.getBindState = (deviceSN, token) => {
       console.log('this.getBindState', deviceSN, token)
-      this.props.selectedDevice.req('getBindState', { deviceSN, token }, (err, res) => {
+      this.state.dev.req('getBindState', { deviceSN, token }, (err, res) => {
         if (err) {
           this.setState({ error: err, confirm: false })
         } else {
@@ -46,12 +49,12 @@ class DeviceSelect extends React.Component {
 
     this.bindDevice = () => {
       console.log('this.bindDevice', this.state, this.props)
-      const deviceSN = this.props.selectedDevice.boot.data.device.deviceSN
+      const deviceSN = this.state.dev.boot.data.device.deviceSN
       const token = this.props.account.token
       console.log('deviceSN token', deviceSN, token)
       if (!deviceSN || !token) this.setState({ error: true })
       else {
-        this.props.selectedDevice.req('bindDevice', { deviceSN, token }, (err, res) => {
+        this.state.dev.req('bindDevice', { deviceSN, token }, (err, res) => {
           if (err) {
             console.error('bindDevice, error', err, res)
           } else {
@@ -63,50 +66,17 @@ class DeviceSelect extends React.Component {
     }
 
     this.slDevice = (dev) => {
-      /*
-      this.setState({ LANLogin: dev })
-      return
-      */
-
-      this.props.selectDevice(dev)
-
       console.log('this.slDevice', dev)
       if (this.props.type === 'BOUND') {
-        this.setState({ cloudLogin: dev })
+        this.setState({ dev, cloudLogin: dev })
       }
 
       if (this.props.type === 'LANTOLOGIN') {
-        this.setState({ LANLogin: dev })
+        this.setState({ dev, LANLogin: dev })
       }
 
       if (this.props.type === 'LANTOBIND') {
-        this.setState({ dev, confirm: true })
-        setTimeout(() => this.bindDevice(), 1000)
-      }
-      return
-
-
-      /* bind volume */
-      const storage = this.props.selectedDevice.boot.data.storage
-      this.setState({ dev, confirm: true }) // First Boot, Bind Device and Formating Disk
-      setTimeout(() => {
-        this.setState({ confirm: false })
-        this.props.manageDisk(storage)
-      }, 2000)
-
-      return
-      /* bind device */
-
-      if (dev.address === '10.10.9.153') { // LAN Login
-        this.setState({ LANLogin: dev })
-      } else if (dev.address === '10.10.9.251') { // User Maint
-        this.setState({ UserMaint: true })
-      } else {
-        this.setState({ dev, confirm: true }) // First Boot, Bind Device and Formating Disk
-        setTimeout(() => {
-          this.setState({ confirm: false })
-          this.props.manageDisk(dev)
-        }, 2000)
+        this.setState({ dev, confirm: true }, this.bindDevice)
       }
     }
 
@@ -116,50 +86,13 @@ class DeviceSelect extends React.Component {
   }
 
   renderDev (dev, index) {
-    const [stationName, storage, speed, location] = ['斐讯N2办公', '500GB/2TB', '30Mbps/3Mbps', '上海 电信']
-    const data = [
-      { des: i18n.__('Device Storage'), val: storage },
-      { des: i18n.__('Device Speed'), val: speed },
-      { des: i18n.__('Device Location'), val: location }
-    ]
     return (
-      <div
-        style={{
-          width: 210,
-          padding: '0 20px',
-          margin: '30px 7px 0 7px',
-          cursor: 'pointer'
-        }}
+      <Device
+        {...this.props}
+        slDevice={this.slDevice}
         key={index.toString()}
-        className="paper"
-        onClick={() => this.slDevice(dev)}
-      >
-        <div style={{ height: 56, fontSize: 16, color: '#525a60', display: 'flex', alignItems: 'center' }}>
-          { stationName }
-          { dev.address }
-        </div>
-        <div style={{ height: 224 }} className="flexCenter">
-          <img
-            style={{ width: 51, height: 104 }}
-            src="./assets/images/ic-n-2.png"
-            alt=""
-          />
-        </div>
-        {
-          data.map(({ des, val }) => (
-            <div style={{ height: 30, display: 'flex', alignItems: 'center' }} key={des}>
-              <div style={{ color: '#525a60' }}>
-                { des }
-              </div>
-              <div style={{ flexGrow: 1 }} />
-              <div style={{ color: '#888a8c' }}>
-                { val }
-              </div>
-            </div>
-          ))
-        }
-        <div style={{ height: 10 }} />
-      </div>
+        mdev={dev}
+      />
     )
   }
 
