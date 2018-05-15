@@ -1,6 +1,6 @@
 import React from 'react'
 import i18n from 'i18n'
-import { Divider, CircularProgress } from 'material-ui'
+import { Divider } from 'material-ui'
 import UpdateIcon from 'material-ui/svg-icons/action/system-update-alt'
 import NewReleases from 'material-ui/svg-icons/av/new-releases'
 import CheckIcon from 'material-ui/svg-icons/navigation/check'
@@ -9,6 +9,7 @@ import { green500, orange500, grey500 } from 'material-ui/styles/colors'
 import FlatButton from '../common/FlatButton'
 import DialogOverlay from '../common/DialogOverlay'
 import ErrorBox from '../common/ErrorBox'
+import CircularLoading from '../common/CircularLoading'
 
 const compareVerison = (a, b) => {
   const aArray = a.split('.')
@@ -193,7 +194,7 @@ class Firm extends React.PureComponent {
         <div style={{ flex: '0 0 24px' }} />
         <div style={{ flex: '0 0 56px', marginTop: 12 }} >
           {
-            checking ? <CircularProgress color={this.props.primaryColor} size={24} thickness={2} />
+            checking ? <CircularLoading />
               : show ? <NewReleases color={this.props.primaryColor} />
                 : checked ? <CheckIcon color={this.props.primaryColor} />
                   : <CloseIcon color={this.props.primaryColor} />
@@ -220,7 +221,7 @@ class Firm extends React.PureComponent {
                   <div style={{ display: 'flex', alignItems: 'center', height: 36, marginLeft: -8 }}>
                     {
                       action ? <FlatButton primary label={label} onClick={action} disabled={this.state.loading} />
-                        : <CircularProgress size={24} thickness={2} style={{ marginLeft: 8 }} />
+                        : <CircularLoading />
                     }
                   </div>
                   <div style={{ height: 16 }} />
@@ -266,7 +267,7 @@ class Firm extends React.PureComponent {
                   </div>
               }
               {
-                state === 'Starting' && <CircularProgress size={24} thickness={2} style={{ marginLeft: 8 }} />
+                state === 'Starting' && <CircularLoading />
               }
             </div>
             <div style={{ height: 8 }} />
@@ -315,7 +316,7 @@ class Firm extends React.PureComponent {
   renderLoading () {
     return (
       <div style={{ width: '100%', height: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
-        <CircularProgress size={32} thickness={3} />
+        <CircularLoading size={32} thickness={3} />
       </div>
     )
   }

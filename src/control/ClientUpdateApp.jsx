@@ -2,7 +2,7 @@ import React from 'react'
 import i18n from 'i18n'
 import Debug from 'debug'
 import { shell } from 'electron'
-import { CircularProgress, Divider } from 'material-ui'
+import { Divider } from 'material-ui'
 import { orange500 } from 'material-ui/styles/colors'
 import UpdateIcon from 'material-ui/svg-icons/action/update'
 import NewReleases from 'material-ui/svg-icons/av/new-releases'
@@ -11,6 +11,7 @@ import CloseIcon from 'material-ui/svg-icons/navigation/close'
 import InfoIcon from 'material-ui/svg-icons/action/info'
 import FlatButton from '../common/FlatButton'
 import ErrorBox from '../common/ErrorBox'
+import CircularLoading from '../common/CircularLoading'
 
 const debug = Debug('component:control:ClientUpdate:')
 
@@ -128,7 +129,7 @@ class Update extends React.Component {
         <div style={{ flex: '0 0 56px' }} >
           {
             unSupport ? <InfoIcon color={this.props.primaryColor} />
-              : this.state.status === 'checking' ? <CircularProgress color={this.props.primaryColor} size={24} thickness={2} />
+              : this.state.status === 'checking' ? <CircularLoading />
                 : this.state.status === 'needUpdate' ? <NewReleases color={this.props.primaryColor} />
                   : this.state.status === 'latest' ? <CheckIcon color={this.props.primaryColor} />
                     : <CloseIcon color={this.props.primaryColor} />

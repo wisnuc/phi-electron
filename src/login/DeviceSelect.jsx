@@ -1,6 +1,6 @@
 import React from 'react'
 import i18n from 'i18n'
-import { Divider, CircularProgress } from 'material-ui'
+import { Divider } from 'material-ui'
 import { AutoSizer } from 'react-virtualized'
 import ScrollBar from '../common/ScrollBar'
 import { RSButton } from '../common/Buttons'
@@ -11,6 +11,7 @@ import ConnectionHint from './ConnectionHint'
 import ConfirmBind from './ConfirmBind'
 import LANLogin from './LANLogin'
 import CloudLogin from './CloudLogin'
+import CircularLoading from '../common/CircularLoading'
 
 class DeviceSelect extends React.Component {
   constructor (props) {
@@ -268,7 +269,7 @@ class DeviceSelect extends React.Component {
   renderLoading () {
     return (
       <div style={{ width: '100%', height: '100%' }} className="flexCenter">
-        <CircularProgress size={64} thickness={3} />
+        <CircularLoading />
       </div>
     )
   }

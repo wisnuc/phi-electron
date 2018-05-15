@@ -1,7 +1,6 @@
 import React from 'react'
 import i18n from 'i18n'
 import { shell } from 'electron'
-import { CircularProgress } from 'material-ui'
 import { orange500 } from 'material-ui/styles/colors'
 import NewReleases from 'material-ui/svg-icons/av/new-releases'
 import CheckIcon from 'material-ui/svg-icons/navigation/check'
@@ -10,6 +9,7 @@ import InfoIcon from 'material-ui/svg-icons/action/info'
 import FlatButton from '../common/FlatButton'
 import ErrorBox from '../common/ErrorBox'
 import { RRButton } from '../common/Buttons'
+import CircularLoading from '../common/CircularLoading'
 
 const compareVerison = (a, b) => {
   const aArray = a.split('.')
@@ -119,7 +119,7 @@ class Update extends React.Component {
         <div style={{ flex: '0 0 56px' }} >
           {
             unSupport ? <InfoIcon color={this.props.primaryColor} />
-              : this.state.status === 'checking' ? <CircularProgress color={this.props.primaryColor} size={24} thickness={2} />
+              : this.state.status === 'checking' ? <CircularLoading />
                 : this.state.status === 'needUpdate' ? <NewReleases color={this.props.primaryColor} />
                   : this.state.status === 'latest' ? <CheckIcon color={this.props.primaryColor} />
                     : <CloseIcon color={this.props.primaryColor} />

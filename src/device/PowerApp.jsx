@@ -1,15 +1,13 @@
 import React from 'react'
 import i18n from 'i18n'
-import Debug from 'debug'
-import { CircularProgress, Divider } from 'material-ui'
+import { Divider } from 'material-ui'
 import { ipcRenderer } from 'electron'
 import PowerSetting from 'material-ui/svg-icons/action/power-settings-new'
 import Build from 'material-ui/svg-icons/action/build'
 import FlatButton from '../common/FlatButton'
 import Checkmark from '../common/Checkmark'
 import DialogOverlay from '../common/DialogOverlay'
-
-const debug = Debug('component:control:power:')
+import CircularLoading from '../common/CircularLoading'
 
 class Power extends React.Component {
   constructor (props) {
@@ -27,7 +25,6 @@ class Power extends React.Component {
     }
 
     this.boot = (op) => {
-      debug('this.boot', op)
       this.props.selectedDevice.request('power', op, (err) => {
         if (!err) {
           this.scanMdns()
@@ -81,7 +78,6 @@ class Power extends React.Component {
         global.mdns.scan()
         setTimeout(() => {
           const store = [...global.mdns.store]
-          debug('this.scanMdns', store)
           switch (this.state.choice) {
             case 'POWEROFF':
               if (store.every(d => d.host !== this.host)) {
@@ -95,7 +91,6 @@ class Power extends React.Component {
                 if (store.find(d => d.host === this.host) ||
                 store.find(d => d.address === this.address)) {
                   clearInterval(this.interval)
-                  debug('reboot success')
                   this.setState({ operation: 'done' })
                 }
               } else if (store.every(d => d.host !== this.host)) {
@@ -174,7 +169,7 @@ class Power extends React.Component {
       }
       return (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <CircularProgress style={{ marginTop: 48, marginLeft: 148 }} />
+          <CircularLoading style={{ marginTop: 48, marginLeft: 148 }} />
           <div style={{ textAlign: 'center', marginTop: 24 }}>{hintText} </div>
           <div style={{ textAlign: 'center', marginTop: 24 }}>
             <FlatButton label={i18n.__('Exit')} primary onClick={this.handleExit} />
@@ -185,7 +180,6 @@ class Power extends React.Component {
 
     /* done dialog */
     if (this.state.operation === 'done') {
-      debug('renderDiaContent this.state.operation === done')
       let hintText = ''
       let linkText = ''
       switch (this.state.choice) {
@@ -224,7 +218,6 @@ class Power extends React.Component {
   }
 
   render () {
-    // debug('power', this.props)
     return (
       <div style={{ paddingLeft: 24, paddingTop: 32 }}>
         {/* poweroff and reboot */}

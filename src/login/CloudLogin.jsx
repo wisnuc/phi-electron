@@ -1,11 +1,11 @@
 import i18n from 'i18n'
 import React from 'react'
 import CloseIcon from 'material-ui/svg-icons/navigation/close'
-import { CircularProgress } from 'material-ui'
 import { teal500, pinkA200 } from 'material-ui/styles/colors'
 import CheckIcon from 'material-ui/svg-icons/navigation/check'
 import ErrorBox from '../common/ErrorBox'
 import { RSButton } from '../common/Buttons'
+import CircularLoading from '../common/CircularLoading'
 
 const primaryColor = teal500
 const accentColor = pinkA200
@@ -85,7 +85,7 @@ class CloudLogin extends React.PureComponent {
     return (
       <div style={{ width: 320, height: 180 }}>
         <div style={{ width: '100%', height: 80 }} className="flexCenter">
-          { status === 'busy' && <CircularProgress size={32} thickness={2.5} /> }
+          { status === 'busy' && <CircularLoading /> }
           { status === 'success' && <CheckIcon color={primaryColor} style={{ width: 40, height: 40 }} /> }
           { status === 'error' && <CloseIcon color={accentColor} style={{ width: 40, height: 40 }} /> }
         </div>

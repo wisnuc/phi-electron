@@ -1,13 +1,13 @@
 import React from 'react'
 import i18n from 'i18n'
 import EventListener from 'react-event-listener'
-import { CircularProgress } from 'material-ui'
 import UploadIcon from 'material-ui/svg-icons/file/cloud-upload'
 import ErrorIcon from 'material-ui/svg-icons/alert/error'
 import ContainerOverlay from './ContainerOverlay'
 import SingleView from './SingleView'
 import RenderListByRow from './RenderListByRow'
 import GridView from './GridView'
+import CircularLoading from '../common/CircularLoading'
 
 /* Draw Select Box */
 const TOP = 230
@@ -348,7 +348,7 @@ class FileContent extends React.Component {
   renderLoading () {
     return (
       <div style={{ width: '100%', height: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
-        <CircularProgress size={32} thickness={3} />
+        <CircularLoading />
       </div>
     )
   }

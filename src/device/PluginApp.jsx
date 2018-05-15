@@ -1,7 +1,8 @@
 import React from 'react'
 import i18n from 'i18n'
-import { CircularProgress, Toggle, Avatar } from 'material-ui'
+import { CircularLoading, Toggle, Avatar } from 'material-ui'
 import { SambaIcon, MiniDLNAIcon, BTDownloadIcon } from '../common/Svg'
+import { CircularLoading } from '../common/CircularLoading'
 
 class PluginApp extends React.Component {
   constructor (props) {
@@ -63,7 +64,7 @@ class PluginApp extends React.Component {
             disabled={isWIP}
             onClick={(e) => { e.stopPropagation(); e.preventDefault() }}
           />
-          { isWIP && <CircularProgress size={16} thickness={2} /> }
+          { isWIP && <CircularLoading /> }
         </div>
       </div>
     )

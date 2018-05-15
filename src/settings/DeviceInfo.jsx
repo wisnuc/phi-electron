@@ -1,9 +1,10 @@
 import React from 'react'
 import i18n from 'i18n'
 // import prettysize from 'prettysize'
-import { TextField, Divider, IconButton, CircularProgress } from 'material-ui'
+import { TextField, Divider, IconButton } from 'material-ui'
 import DoneIcon from 'material-ui/svg-icons/action/done'
 import ModeEdit from 'material-ui/svg-icons/editor/mode-edit'
+import CircularLoading from '../common/CircularLoading'
 
 const parseData = value => parseInt(value, 10) * 1024
 
@@ -150,7 +151,7 @@ class DeviceInfo extends React.PureComponent {
                     this.state.progress
                       ? (
                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: 8 }}>
-                          <CircularProgress size={16} thickness={2} />
+                          <CircularLoading />
                         </div>
                       )
                       : (

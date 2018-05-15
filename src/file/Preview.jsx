@@ -1,7 +1,7 @@
 import React from 'react'
 import i18n from 'i18n'
 import UUID from 'uuid'
-import { CircularProgress, RaisedButton } from 'material-ui'
+import { RaisedButton } from 'material-ui'
 import OpenIcon from 'material-ui/svg-icons/action/open-with'
 import PDFView from './PDF'
 import DialogOverlay from '../common/DialogOverlay'
@@ -10,6 +10,7 @@ import PhotoDetail from '../photo/PhotoDetail'
 import { DownloadFileIcon, CloseIcon } from '../common/Svg'
 import { LIButton } from '../common/IconButton'
 import { OLButton } from '../common/Buttons'
+import CircularLoading from '../common/CircularLoading'
 
 class Preview extends React.Component {
   constructor (props) {
@@ -196,7 +197,7 @@ class Preview extends React.Component {
       this.state = Object.assign({}, this.state, { filePath: '', pages: null })
     }
 
-    return (<CircularProgress size={64} thickness={5} />)
+    return (<CircularLoading />)
   }
 
   renderVideo () {
@@ -228,7 +229,7 @@ class Preview extends React.Component {
       this.state = Object.assign({}, this.state, { filePath: '', pages: null })
     }
 
-    return (<CircularProgress size={64} thickness={5} />)
+    return (<CircularLoading />)
   }
 
   renderAudio () {
@@ -305,7 +306,7 @@ class Preview extends React.Component {
       this.state = Object.assign({}, this.state, { filePath: '', pages: null })
     }
     return (
-      <CircularProgress size={64} thickness={5} />
+      <CircularLoading />
     )
   }
 
