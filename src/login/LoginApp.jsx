@@ -19,6 +19,7 @@ class LoginApp extends React.Component {
     this.state = {
       local: true,
       hello: true,
+      status: 'phiLogin',
       loading: true, // searching device
       format: '' // 'busy', 'success', 'error'
     }

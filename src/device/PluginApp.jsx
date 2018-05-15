@@ -1,8 +1,8 @@
 import React from 'react'
 import i18n from 'i18n'
-import { CircularLoading, Toggle, Avatar } from 'material-ui'
+import { Toggle, Avatar } from 'material-ui'
 import { SambaIcon, MiniDLNAIcon, BTDownloadIcon } from '../common/Svg'
-import { CircularLoading } from '../common/CircularLoading'
+import CircularLoading from '../common/CircularLoading'
 
 class PluginApp extends React.Component {
   constructor (props) {
