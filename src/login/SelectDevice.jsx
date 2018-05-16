@@ -27,14 +27,13 @@ class DeviceSelect extends React.Component {
     }
 
     this.bindVolume = () => {
-      const storage = this.state.dev.boot.data.storage
       this.setState({ confirm: false })
-      this.props.manageDisk(storage)
+      this.props.manageDisk(this.state.dev)
     }
 
-    this.getBindState = (deviceSN, token) => {
-      console.log('this.getBindState', deviceSN, token)
-      this.state.dev.req('getBindState', { deviceSN, token }, (err, res) => {
+    this.getBindState = (deviceSN) => {
+      console.log('this.getBindState', deviceSN)
+      this.props.phi.req('getBindState', { deviceSN }, (err, res) => {
         if (err) {
           this.setState({ error: err, confirm: false })
         } else {
@@ -42,7 +41,7 @@ class DeviceSelect extends React.Component {
           if (res && res.result && res.result.status === 'binded') this.bindVolume()
           else if (res && res.error && res.error !== '0') {
             this.setState({ error: 'bind error' })
-          } else setTimeout(() => this.getBindState(deviceSN, token), 1000)
+          } else setTimeout(() => this.getBindState(deviceSN), 1000)
         }
       })
     }
@@ -50,16 +49,15 @@ class DeviceSelect extends React.Component {
     this.bindDevice = () => {
       console.log('this.bindDevice', this.state, this.props)
       const deviceSN = this.state.dev.boot.data.device.deviceSN
-      const token = this.props.account.token
-      console.log('deviceSN token', deviceSN, token)
-      if (!deviceSN || !token) this.setState({ error: true })
+      console.log('deviceSN token', deviceSN)
+      if (!deviceSN) this.setState({ error: true })
       else {
-        this.state.dev.req('bindDevice', { deviceSN, token }, (err, res) => {
+        this.props.phi.req('bindDevice', { deviceSN }, (err, res) => {
           if (err) {
             console.error('bindDevice, error', err, res)
           } else {
             console.log('bindDevice req success', res)
-            setTimeout(() => this.getBindState(deviceSN, token), 1000)
+            setTimeout(() => this.getBindState(deviceSN), 1000)
           }
         })
       }
@@ -91,7 +89,8 @@ class DeviceSelect extends React.Component {
         {...this.props}
         slDevice={this.slDevice}
         key={index.toString()}
-        mdev={dev}
+        mdev={this.props.type !== 'BOUND' ? dev : null}
+        cdev={this.props.type === 'BOUND' ? dev : null}
       />
     )
   }

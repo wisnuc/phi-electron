@@ -24,7 +24,7 @@ class ManageDisk extends React.Component {
       this.setState({ format: 'busy' })
       const args = { target, mode: this.state.mode }
       console.log('this.format args', args)
-      this.props.selectedDevice.req('boundVolume', args, (err, res) => {
+      this.props.selectedDevice.request('boundVolume', args, (err, res) => {
         console.log('boundVolume', err, res)
         if (err) this.setState({ format: 'error', error: err })
         else this.setState({ format: 'success' })
@@ -37,7 +37,7 @@ class ManageDisk extends React.Component {
   }
 
   renderInitFormat () {
-    const { storage } = this.props
+    const { storage } = this.props.selectedDevice.boot.data
     console.log('ManageDisk', storage)
     const iconStyle = { width: 20, height: 20, color: '#31a0f5' }
     const buttonStyle = { width: 22, height: 22, padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }
@@ -199,8 +199,8 @@ class ManageDisk extends React.Component {
   }
 
   render () {
-    const { storage, backToList, onFormatSuccess } = this.props
-    console.log('ManageDisk', storage)
+    const { backToList, onFormatSuccess } = this.props
+    console.log('ManageDisk', this.props)
     // const init = dev.address !== '10.10.9.157'
     const init = true
     const recover = !!this.state.recover

@@ -1,9 +1,6 @@
 import i18n from 'i18n'
 import React from 'react'
-import { Checkbox, Divider, IconButton, TextField } from 'material-ui'
-import VisibilityOff from 'material-ui/svg-icons/action/visibility-off'
-import Visibility from 'material-ui/svg-icons/action/visibility'
-import CloseIcon from 'material-ui/svg-icons/navigation/close'
+import { Divider, IconButton, TextField } from 'material-ui'
 import { BackIcon, EyeOpenIcon, DelPwdIcon } from '../common/Svg'
 
 import { RRButton } from '../common/Buttons'
@@ -13,18 +10,18 @@ class LANLogin extends React.Component {
     super(props)
 
     this.state = {
-      pn: '',
+      pn: 'admin',
       pnError: '',
-      pwd: '',
+      pwd: 'phicomm',
       pwdError: '',
       error: '',
       showPwd: false
     }
 
     this.onPhoneNumber = (pn) => {
-      let pnError = ''
+      // let pnError = ''
       // if (pn && !Number.isInteger(Number(pn))) pnError = i18n.__('Not Phone Number')
-      this.setState({ pn, pnError })
+      this.setState({ pn, pnError: '' })
     }
 
     this.onPassword = (pwd) => {
@@ -41,7 +38,7 @@ class LANLogin extends React.Component {
     this.togglePwd = () => this.setState({ showPwd: !this.state.showPwd })
 
     this.login = () => {
-      const users = this.props.selectedDevice.users && this.props.selectedDevice.users.data
+      const users = this.props.dev.users && this.props.dev.users.data
       const user = users && users.find(u => u.username === this.state.pn)
       if (!user) {
         this.setState({ pnError: '账户不存在' })
@@ -50,20 +47,14 @@ class LANLogin extends React.Component {
       const { uuid } = user
       const password = this.state.pwd
       console.log('uuid pwd', uuid, password)
-      this.props.selectedDevice.request('token', { uuid, password }, (err, data) => {
+      this.props.dev.request('token', { uuid, password }, (err, data) => {
         if (err) {
           console.error(`login err: ${err}`)
           const msg = (err && err.message === 'Unauthorized') ? i18n.__('Wrong Password') : (err && err.message)
           this.setState({ pwdError: msg })
         } else {
-          Object.assign(this.props.selectedDevice.mdev, {
-            autologin: this.state.autologin,
-            saveToken: this.state.saveToken ? data : null,
-            user
-          })
-          console.log('device', this.props.selectedDevice)
-          this.props.ipcRenderer.send('LOGIN', this.props.selectedDevice, user)
-          this.props.deviceLogin()
+          Object.assign(this.props.dev, { token: { isFulfilled: () => true, ctx: user, data } })
+          this.props.deviceLogin({ dev: this.props.dev, user })
         }
       })
     }

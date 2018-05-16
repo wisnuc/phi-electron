@@ -7,24 +7,27 @@ class Device extends React.Component {
     super(props)
 
     this.state = {
-      dev: null
+      dev: {}
     }
 
     this.select = () => {
-      if (this.systemStatus() !== 'systemError') {
-        this.props.slDevice(this.state.dev)
-      }
+      console.log('this.select', this.state.dev)
+      this.props.slDevice(this.state.dev)
     }
   }
 
   componentDidMount () {
     /* cloud dev or mdns dev */
-    if (this.props.mdev) {
-      this.device = new DeviceAPI(this.props.mdev)
+    const { mdev, cdev } = this.props
+    if (mdev) {
+      this.device = new DeviceAPI(mdev)
       this.device.on('updated', (prev, next) => this.setState({ dev: next }))
       this.device.start()
-    } else if (this.props.cdev) {
-      this.setState({ dev: this.props.cdev })
+    } else if (cdev) {
+      const dev = { address: cdev.localIp, domain: 'phiToLoacl', deviceSN: cdev.deviceSN, stationName: cdev.bindingName }
+      this.device = new DeviceAPI(dev)
+      this.device.on('updated', (prev, next) => this.setState({ dev: next }))
+      this.device.start()
     } else console.error('Device Error: No mdev or cdev')
   }
 
@@ -32,9 +35,38 @@ class Device extends React.Component {
     return (this.device && this.device.systemStatus()) || 'probing'
   }
 
+  isEnabled () {
+    const { type } = this.props
+    const status = this.systemStatus()
+    return (
+      (type === 'LANTOBIND' && status === 'noBoundUser') ||
+      (type === 'LANTOLOGIN' && status === 'ready') ||
+      (type === 'BOUND' && status === 'noBoundVolume') ||
+      (type === 'BOUND' && status === 'ready')
+    )
+  }
+
+  renderStatus (st) {
+    let text = st
+    switch (st) {
+      case 'noBoundUser':
+        text = i18n.__('Wait To Bind')
+        break
+
+      case 'systemError':
+        text = i18n.__('System Error')
+        break
+
+      default:
+        break
+    }
+    return text
+  }
+
   render () {
     console.log('Device render', this.props, this.state, this.device)
     const status = this.systemStatus()
+    const isEnabled = this.isEnabled()
     console.log('Device status', status)
 
     const [stationName, storage, speed, location] = ['斐讯N2办公', '500GB/2TB', '30Mbps/3Mbps', '上海 电信']
@@ -44,7 +76,7 @@ class Device extends React.Component {
       { des: i18n.__('Device Location'), val: location }
     ]
 
-    const { mdev } = this.props
+    const { dev } = this.state
 
     return (
       <div
@@ -52,18 +84,19 @@ class Device extends React.Component {
           width: 210,
           cursor: 'pointer',
           padding: '0 20px',
-          margin: '30px 7px 0 7px'
+          margin: '30px 7px 0 7px',
+          filter: isEnabled ? '' : 'grayscale(100%)'
         }}
         className="paper"
-        onClick={this.select}
+        onClick={() => isEnabled && this.select()}
       >
         <div style={{ height: 20, paddingTop: 20, fontSize: 16, color: '#525a60', display: 'flex', alignItems: 'center' }}>
           { stationName }
           <span style={{ width: 10 }} />
-          { mdev.address }
+          { dev.address }
         </div>
         <div style={{ height: 16, fontSize: 16, color: '#31a0f5', display: 'flex', alignItems: 'center' }}>
-          { status }
+          { this.renderStatus(status) }
         </div>
         <div style={{ height: 224 }} className="flexCenter">
           <img

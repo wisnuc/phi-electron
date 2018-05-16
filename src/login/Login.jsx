@@ -47,16 +47,16 @@ class Login extends React.Component {
         .catch(this.onMDNSError)
     }
 
-    this.manageDisk = (storage) => {
-      this.setState({ storage, status: 'diskManage' })
+    this.manageDisk = (dev) => {
+      this.setState({ selectedDevice: dev, status: 'diskManage' })
     }
 
     this.backToList = () => {
-      this.setState({ storage: null, LANLogin: null })
+      this.setState({ selectedDevice: null, LANLogin: null })
     }
 
     this.onFormatSuccess = () => {
-      this.setState({ storage: null, LANLogin: null })
+      this.setState({ selectedDevice: null, LANLogin: null })
       this.props.phiLogin(null)
       // TODO
       // this.setState({ status: 'LANPwd' })
@@ -100,11 +100,11 @@ class Login extends React.Component {
     )
   }
 
-  renderDiskManage (props) {
+  renderDiskManage () {
     return (
       <ManageDisk
         {...this.props}
-        storage={this.state.storage}
+        selectedDevice={this.state.selectedDevice}
         backToList={this.backToList}
         onFormatSuccess={this.onFormatSuccess}
       />
@@ -259,7 +259,7 @@ class Login extends React.Component {
         break
 
       case 'diskManage':
-        view = this.renderDiskManage(props)
+        view = this.renderDiskManage()
         break
 
       case 'LANPwd':
@@ -269,20 +269,6 @@ class Login extends React.Component {
       default:
         break
     }
-
-    /*
-    if (!this.props.account) {
-      view = <PhiLogin {...props} onSuccess={this.phiLoginSuccess} />
-    } else if (this.state.LANPwd) {
-      view = this.renderLANPwd()
-    } else if (this.state.storage) {
-      view = this.renderDiskManage(props)
-    } else if (!this.state.list || !this.state.list.length) {
-      view = this.renderNoBound()
-    } else {
-      view = this.renderDeviceSelect(props)
-    }
-    */
 
     return (
       <div

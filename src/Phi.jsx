@@ -41,8 +41,9 @@ class Fruitmix extends React.Component {
     this.setState({ account: user })
   }
 
-  deviceLogin () {
-    this.setState({ view: 'device' })
+  deviceLogin ({ dev, user, token }) {
+    ipcRenderer.send('LOGIN', dev, user)
+    this.setState({ view: 'device', selectedDevice: dev })
   }
 
   logout () {
@@ -75,7 +76,7 @@ class Fruitmix extends React.Component {
           {
             this.state.account &&
               <div style={{ position: 'fixed', top: 12, right: 147, height: 36, WebkitAppRegion: 'no-drag' }}>
-                <Account user={this.state.account} logout={this.logout} />
+                <Account user={this.state.account} logout={() => this.logout()} />
               </div>
           }
 
