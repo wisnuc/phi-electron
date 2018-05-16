@@ -26,9 +26,9 @@ class DeviceSelect extends React.Component {
       confirm: false
     }
 
-    this.bindVolume = () => {
-      this.setState({ confirm: false })
-      this.props.manageDisk(this.state.dev)
+    this.bindVolume = (dev) => {
+      this.setState({ confirm: false, dev })
+      this.props.manageDisk(dev)
     }
 
     this.getBindState = (deviceSN) => {
@@ -38,7 +38,7 @@ class DeviceSelect extends React.Component {
           this.setState({ error: err, confirm: false })
         } else {
           console.log('getBindState', res)
-          if (res && res.result && res.result.status === 'binded') this.bindVolume()
+          if (res && res.result && res.result.status === 'binded') this.bindVolume(this.state.dev)
           else if (res && res.error && res.error !== '0') {
             this.setState({ error: 'bind error' })
           } else setTimeout(() => this.getBindState(deviceSN), 1000)
@@ -65,15 +65,13 @@ class DeviceSelect extends React.Component {
 
     this.slDevice = (dev) => {
       console.log('this.slDevice', dev)
-      if (this.props.type === 'BOUND') {
+      if (this.props.type === 'BOUNDLIST' && dev.systemStatus() === 'ready') {
         this.setState({ dev, cloudLogin: dev })
-      }
-
-      if (this.props.type === 'LANTOLOGIN') {
+      } else if (this.props.type === 'BOUNDLIST' && dev.systemStatus() === 'noBoundVolume') {
+        this.bindVolume(dev)
+      } else if (this.props.type === 'LANTOLOGIN') {
         this.setState({ dev, LANLogin: dev })
-      }
-
-      if (this.props.type === 'LANTOBIND') {
+      } else if (this.props.type === 'LANTOBIND') {
         this.setState({ dev, confirm: true }, this.bindDevice)
       }
     }
@@ -89,8 +87,8 @@ class DeviceSelect extends React.Component {
         {...this.props}
         slDevice={this.slDevice}
         key={index.toString()}
-        mdev={this.props.type !== 'BOUND' ? dev : null}
-        cdev={this.props.type === 'BOUND' ? dev : null}
+        mdev={this.props.type !== 'BOUNDLIST' ? dev : null}
+        cdev={this.props.type === 'BOUNDLIST' ? dev : null}
       />
     )
   }

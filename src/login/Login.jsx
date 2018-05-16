@@ -7,6 +7,7 @@ import VisibilityOff from 'material-ui/svg-icons/action/visibility-off'
 import PhiLogin from './PhiLogin'
 import ManageDisk from './ManageDisk'
 import SelectDevice from './SelectDevice'
+import SetLANPwd from './SetLANPwd'
 
 import { RRButton } from '../common/Buttons'
 import WindowAction from '../common/WindowAction'
@@ -56,20 +57,16 @@ class Login extends React.Component {
     }
 
     this.onFormatSuccess = () => {
-      this.setState({ selectedDevice: null, LANLogin: null })
-      this.props.phiLogin(null)
-      // TODO
-      // this.setState({ status: 'LANPwd' })
-      // this.setState({ LANPwd: true, format: '' })
+      this.setState({ status: 'LANPwd' })
     }
 
-    this.saveLANPwd = () => {
-      this.setState({ LANPwd: false })
+    this.onSetLANPwdSuccess = () => {
+      console.log('this.onSetLANPwdSuccess')
     }
 
     this.phiLoginSuccess = ({ list, phonenumber, token, phicommUserId }) => {
       const status = !list.length ? 'phiNoBound' : 'deviceSelect'
-      this.setState({ list, loading: false, type: 'BOUND', status })
+      this.setState({ list, loading: false, type: 'BOUNDLIST', status })
       this.props.phiLogin({ phonenumber, token, phicommUserId })
     }
   }
@@ -112,53 +109,7 @@ class Login extends React.Component {
   }
 
   renderLANPwd () {
-    const iconStyle = { width: 18, height: 18, color: '#31a0f5', padding: 0 }
-    const buttonStyle = { width: 26, height: 26, padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }
-    return (
-      <div style={{ width: 320, zIndex: 200, position: 'relative' }} className="paper" >
-        <div
-          style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 19 }}
-          className="title"
-        >
-          { i18n.__('Set LAN Pwd') }
-        </div>
-        <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
-        <div style={{ height: 150, paddingBottom: 30 }} className="flexCenter">
-          <img
-            style={{ width: 280, height: 150 }}
-            src="./assets/images/pic-offlinepassword.png"
-            alt=""
-          />
-        </div>
-        <div style={{ width: 282, margin: '-20px auto 0px auto', position: 'relative' }}>
-          <TextField
-            fullWidth
-            style={{ marginTop: 12 }}
-            hintText={i18n.__('LAN Password Hint')}
-            errorStyle={{ position: 'absolute', right: 0, top: 0 }}
-            type={this.state.showPwd ? 'text' : 'password'}
-            errorText={this.state.pwdError}
-            value={this.state.pwd}
-            onChange={e => this.onPassword(e.target.value)}
-            onKeyDown={this.onKeyDown}
-          />
-          {/* clear password */}
-          <div style={{ position: 'absolute', right: 4, top: 26 }}>
-            <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.clearPn}>
-              { this.state.showPwd ? <VisibilityOff /> : <Visibility /> }
-            </IconButton>
-          </div>
-        </div>
-        <div style={{ height: 20 }} />
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <RRButton
-            label={i18n.__('Save')}
-            onClick={this.saveLANPwd}
-          />
-        </div>
-        <div style={{ height: 30 }} />
-      </div>
-    )
+    return (<SetLANPwd {...this.props} {...this.state} onSuccess={this.onSetLANPwdSuccess} dev={this.state.selectedDevice} />)
   }
 
   renderLANLogin () {

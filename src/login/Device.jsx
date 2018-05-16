@@ -41,8 +41,8 @@ class Device extends React.Component {
     return (
       (type === 'LANTOBIND' && status === 'noBoundUser') ||
       (type === 'LANTOLOGIN' && status === 'ready') ||
-      (type === 'BOUND' && status === 'noBoundVolume') ||
-      (type === 'BOUND' && status === 'ready')
+      (type === 'BOUNDLIST' && status === 'noBoundVolume') ||
+      (type === 'BOUNDLIST' && status === 'ready')
     )
   }
 
@@ -76,13 +76,13 @@ class Device extends React.Component {
       { des: i18n.__('Device Location'), val: location }
     ]
 
-    const { dev } = this.state
+    const address = this.state.dev && this.state.dev.mdev && this.state.dev.mdev.address
 
     return (
       <div
         style={{
           width: 210,
-          cursor: 'pointer',
+          cursor: isEnabled ? 'pointer' : 'not-allowed',
           padding: '0 20px',
           margin: '30px 7px 0 7px',
           filter: isEnabled ? '' : 'grayscale(100%)'
@@ -93,7 +93,7 @@ class Device extends React.Component {
         <div style={{ height: 20, paddingTop: 20, fontSize: 16, color: '#525a60', display: 'flex', alignItems: 'center' }}>
           { stationName }
           <span style={{ width: 10 }} />
-          { dev.address }
+          { address }
         </div>
         <div style={{ height: 16, fontSize: 16, color: '#31a0f5', display: 'flex', alignItems: 'center' }}>
           { this.renderStatus(status) }

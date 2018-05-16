@@ -28,6 +28,11 @@ class PhiAPI extends RequestManager {
         } else {
           body = res && res.body
         }
+        /* handle data from pipi command */
+        if (body && body.result && body.result.data) {
+          error = body.result.data.error
+          body = body.result.data.res
+        }
       }
 
       /* save phi token */
