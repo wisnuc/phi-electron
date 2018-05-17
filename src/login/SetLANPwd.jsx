@@ -13,7 +13,7 @@ class SetLANPwd extends React.Component {
       pwd: '123456',
       pwdError: '',
       error: '',
-      loading: true,
+      loading: false,
       showPwd: false
     }
 
@@ -42,11 +42,12 @@ class SetLANPwd extends React.Component {
       this.fireAsync()
         .then(({ dev, user, token }) => {
           Object.assign(dev, { token: { isFulfilled: () => true, ctx: user, data: { token } } })
+          this.setState({ loading: false })
           this.props.deviceLogin({ dev, user })
         })
         .catch((error) => {
           console.error('this.getLANToken', error)
-          this.setState({ status: 'error', error })
+          this.setState({ status: 'error', error, loading: false })
         })
     }
   }
@@ -94,7 +95,7 @@ class SetLANPwd extends React.Component {
           <RRButton
             label={i18n.__('Save') + (this.state.loading ? '中...' : '')}
             onClick={this.fire}
-            disabled={!this.state.pwd || !this.state.loading}
+            disabled={!this.state.pwd || this.state.loading}
           />
         </div>
         <div style={{ height: 30 }} />

@@ -1,6 +1,7 @@
 import md5 from 'md5'
 import React from 'react'
 import i18n from 'i18n'
+import { shell } from 'electron'
 import { Checkbox, Divider, IconButton, TextField } from 'material-ui'
 import VisibilityOff from 'material-ui/svg-icons/action/visibility-off'
 import Visibility from 'material-ui/svg-icons/action/visibility'
@@ -9,6 +10,8 @@ import CloseIcon from 'material-ui/svg-icons/navigation/close'
 import Dialog from '../common/PureDialog'
 import { RRButton, FLButton, RSButton } from '../common/Buttons'
 import { isPhoneNumber } from '../common/validate'
+
+const phicommURL = 'https://sohon2test.phicomm.com/v1'
 
 class PhiLogin extends React.Component {
   constructor (props) {
@@ -31,7 +34,7 @@ class PhiLogin extends React.Component {
     }
 
     this.onPassword = (pwd) => {
-      this.setState({ pwd })
+      this.setState({ pwd, pwdError: '' })
     }
 
     this.handleSaveToken = () => {
@@ -45,23 +48,20 @@ class PhiLogin extends React.Component {
     this.togglePwd = () => this.setState({ showPwd: !this.state.showPwd })
 
     this.login = () => {
-      console.log('this.login', this.props)
       this.setState({ loading: true })
       this.props.phi.req(
         'token',
         { phonenumber: this.state.pn, password: md5(this.state.pwd).toUpperCase() },
         (err, res) => {
           if (err || (res && res.error !== '0')) {
-            console.error('Phi login Error', err || res)
-            this.setState({ failed: true })
+            if (res && res.error === '7') this.setState({ pnError: i18n.__('User Not Exist'), loading: false })
+            else if (res && res.error === '8') this.setState({ pwdError: i18n.__('Wrong Password'), loading: false })
+            else this.setState({ failed: true, loading: false })
           } else {
-            console.log('token res', res)
             this.props.phi.req('stationList', null, (e, r) => {
               if (e || !r.result || !Array.isArray(r.result.list) || r.error !== '0') {
-                console.error('stationList', e, r)
-                this.setState({ failed: true })
+                this.setState({ failed: true, loading: false })
               } else {
-                console.log('get list success', r)
                 this.props.onSuccess({ list: r.result.list, phonenumber: this.state.pn, phicommUserId: res.uid })
               }
             })
@@ -71,7 +71,7 @@ class PhiLogin extends React.Component {
     }
 
     this.reset = () => {
-      this.setState({ failed: false, pn: '', pnError: '', pwd: '', pwdError: '' })
+      this.setState({ failed: false, pnError: '', pwdError: '' })
     }
   }
 
@@ -188,6 +188,7 @@ class PhiLogin extends React.Component {
           <div style={{ width: '50%', textAlign: 'right' }}>
             <FLButton
               label={i18n.__('Sign Up')}
+              onClick={() => shell.openExternal(phicommURL)}
             />
           </div>
           <div style={{ width: 1, height: 16, backgroundColor: 'rgba(0,0,0,.38)' }} />
@@ -195,6 +196,7 @@ class PhiLogin extends React.Component {
             <FLButton
               label={i18n.__('Forget Password')}
               style={{ marginLeft: 8 }}
+              onClick={() => shell.openExternal(phicommURL)}
             />
           </div>
         </div>

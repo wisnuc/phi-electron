@@ -3,7 +3,6 @@ import React from 'react'
 import CloseIcon from 'material-ui/svg-icons/navigation/close'
 import { teal500, pinkA200 } from 'material-ui/styles/colors'
 import CheckIcon from 'material-ui/svg-icons/navigation/check'
-import ErrorBox from '../common/ErrorBox'
 import { RSButton } from '../common/Buttons'
 import CircularLoading from '../common/CircularLoading'
 
@@ -71,7 +70,7 @@ class CloudLogin extends React.PureComponent {
           { status === 'error' && <CloseIcon color={accentColor} style={{ width: 40, height: 40 }} /> }
         </div>
         <div style={{ fontSize: 16, color: 'rgba(0,0,0,0.54)', height: 24 }} className="flexCenter">
-          { status === 'error' ? <ErrorBox style={boxStyle} text={text[status]} error={error} /> : text[status] }
+          { text[status] }
         </div>
         <div style={{ height: 18 }} />
         <div className="flexCenter">
