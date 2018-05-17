@@ -215,11 +215,11 @@ class ManageDisk extends React.Component {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              padding: 5,
-              height: 32,
-              width: 32
+              height: 50,
+              width: 50,
+              marginLeft: -15
             }}
-            iconStyle={{ width: 22, height: 22, fill: '#525a60' }}
+            iconStyle={{ width: 30, height: 30, color: '#525a60' }}
             onClick={backToList}
           >
             <BackIcon />

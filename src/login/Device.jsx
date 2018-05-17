@@ -35,6 +35,19 @@ class Device extends React.Component {
     return (this.device && this.device.systemStatus()) || 'probing'
   }
 
+  onlineStatus () {
+    if (!this.props.cdev) return null
+    if (this.props.cdev.onlineStatus !== 'online') return i18n.__('Offline Mode')
+    if (this.systemStatus === 'offline') return i18n.__('Remote Mode')
+    return i18n.__('Online')
+  }
+
+  renderIsOwner () {
+    if (!this.props.cdev) return null
+    if (this.props.cdev.type === 'owner') return i18n.__('Admin User')
+    return i18n.__('Normal User')
+  }
+
   isEnabled () {
     const { type } = this.props
     const status = this.systemStatus()
@@ -46,7 +59,8 @@ class Device extends React.Component {
     )
   }
 
-  renderStatus (st) {
+  renderStatus () {
+    const st = this.systemStatus()
     let text = st
     switch (st) {
       case 'noBoundUser':
@@ -55,6 +69,19 @@ class Device extends React.Component {
 
       case 'systemError':
         text = i18n.__('System Error')
+        break
+
+      case 'noBoundVolume':
+        text = i18n.__('Need Bind Volume')
+        break
+
+      case 'ready':
+        text = ''
+        break
+
+      case 'offline':
+        if (this.onlineStatus()) text = ''
+        else text = i18n.__('System Error')
         break
 
       default:
@@ -67,16 +94,17 @@ class Device extends React.Component {
     console.log('Device render', this.props, this.state, this.device)
     const status = this.systemStatus()
     const isEnabled = this.isEnabled()
-    console.log('Device status', status)
+    console.log('Device status', status, this.renderStatus())
 
-    const [stationName, storage, speed, location] = ['斐讯N2办公', '500GB/2TB', '30Mbps/3Mbps', '上海 电信']
+    const stationName = (this.state.dev && this.state.dev.mdev && this.state.dev.mdev.stationName) || 'PhiNAS2'
+    const address = (this.state.dev && this.state.dev.mdev && this.state.dev.mdev.address) || '--'
+
+    const storage = 'TODO'
+
     const data = [
       { des: i18n.__('Device Storage'), val: storage },
-      { des: i18n.__('Device Speed'), val: speed },
-      { des: i18n.__('Device Location'), val: location }
+      { des: i18n.__('IP Address'), val: address }
     ]
-
-    const address = this.state.dev && this.state.dev.mdev && this.state.dev.mdev.address
 
     return (
       <div
@@ -90,15 +118,49 @@ class Device extends React.Component {
         className="paper"
         onClick={() => isEnabled && this.select()}
       >
-        <div style={{ height: 20, paddingTop: 20, fontSize: 16, color: '#525a60', display: 'flex', alignItems: 'center' }}>
-          { stationName }
-          <span style={{ width: 10 }} />
-          { address }
+        <div style={{ height: 20, width: '100%', paddingTop: 20, display: 'flex', alignItems: 'center' }}>
+          <div
+            style={{ width: 170, fontSize: 16, color: '#525a60' }}
+            className="text"
+          >
+            { stationName }
+          </div>
+          {
+            !!this.onlineStatus() &&
+              <div
+                style={{
+                  width: 40,
+                  height: 20,
+                  fontSize: 12,
+                  color: '#FFF',
+                  borderRadius: 20,
+                  backgroundColor: this.onlineStatus === i18n.__('Offline Mode') ? '#666666' : '#31a0f5'
+                }}
+                className="flexCenter"
+              >
+                { this.onlineStatus() }
+              </div>
+          }
         </div>
-        <div style={{ height: 16, fontSize: 16, color: '#31a0f5', display: 'flex', alignItems: 'center' }}>
-          { this.renderStatus(status) }
+        <div style={{ height: 20, width: '100%', display: 'flex', alignItems: 'center' }}>
+          {
+            !!this.renderIsOwner() &&
+            <div style={{ fontSize: 14, color: '#31a0f5' }}>
+              { this.renderIsOwner() }
+            </div>
+          }
+          {
+            !!this.renderIsOwner() && !!this.renderStatus() &&
+              <div style={{ margin: 5, width: 1, backgroundColor: '#d3d3d3', height: 10 }} />
+          }
+          {
+            !!this.renderStatus() &&
+            <div style={{ fontSize: 14, color: '#fa5353' }}>
+              { this.renderStatus() }
+            </div>
+          }
         </div>
-        <div style={{ height: 224 }} className="flexCenter">
+        <div style={{ height: 230 }} className="flexCenter">
           <img
             style={{ width: 51, height: 104 }}
             src="./assets/images/ic-n-2.png"
@@ -107,7 +169,7 @@ class Device extends React.Component {
         </div>
         {
           data.map(({ des, val }) => (
-            <div style={{ height: 30, display: 'flex', alignItems: 'center' }} key={des}>
+            <div style={{ height: 40, display: 'flex', alignItems: 'center' }} key={des}>
               <div style={{ color: '#525a60' }}>
                 { des }
               </div>

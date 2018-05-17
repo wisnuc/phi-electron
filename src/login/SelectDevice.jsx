@@ -31,38 +31,6 @@ class DeviceSelect extends React.Component {
       this.props.manageDisk(dev)
     }
 
-    this.getBindState = (deviceSN) => {
-      console.log('this.getBindState', deviceSN)
-      this.props.phi.req('getBindState', { deviceSN }, (err, res) => {
-        if (err) {
-          this.setState({ error: err, confirm: false })
-        } else {
-          console.log('getBindState', res)
-          if (res && res.result && res.result.status === 'binded') this.bindVolume(this.state.dev)
-          else if (res && res.error && res.error !== '0') {
-            this.setState({ error: 'bind error' })
-          } else setTimeout(() => this.getBindState(deviceSN), 1000)
-        }
-      })
-    }
-
-    this.bindDevice = () => {
-      console.log('this.bindDevice', this.state, this.props)
-      const deviceSN = this.state.dev.boot.data.device.deviceSN
-      console.log('deviceSN token', deviceSN)
-      if (!deviceSN) this.setState({ error: true })
-      else {
-        this.props.phi.req('bindDevice', { deviceSN }, (err, res) => {
-          if (err) {
-            console.error('bindDevice, error', err, res)
-          } else {
-            console.log('bindDevice req success', res)
-            setTimeout(() => this.getBindState(deviceSN), 1000)
-          }
-        })
-      }
-    }
-
     this.slDevice = (dev) => {
       console.log('this.slDevice', dev)
       if (this.props.type === 'BOUNDLIST' && dev.systemStatus() === 'ready') {
@@ -72,12 +40,8 @@ class DeviceSelect extends React.Component {
       } else if (this.props.type === 'LANTOLOGIN') {
         this.setState({ dev, LANLogin: dev })
       } else if (this.props.type === 'LANTOBIND') {
-        this.setState({ dev, confirm: true }, this.bindDevice)
+        this.setState({ dev, confirm: true })
       }
-    }
-
-    this.backToList = () => {
-      this.setState({ dev: null, LANLogin: null, confirm: false, error: null })
     }
   }
 
@@ -244,9 +208,10 @@ class DeviceSelect extends React.Component {
           {
             !!this.state.confirm &&
             <ConfirmBind
-              error={this.state.error}
-              backToList={this.backToList}
-              onRequestClose={() => this.setState({ confirm: false })}
+              {...this.props}
+              dev={this.state.dev}
+              onSuccess={() => this.bindVolume(this.state.dev)}
+              onFailed={() => this.setState({ confirm: false })}
             />
           }
         </Dialog>

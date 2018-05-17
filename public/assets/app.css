@@ -143,8 +143,8 @@ img[src=""] {
 
 .text {
 	overflow: hidden;
-	textOverflow: ellipsis;
-	whiteSpace: nowrap;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .arrow_box {

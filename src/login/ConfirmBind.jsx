@@ -4,42 +4,105 @@ import { Divider } from 'material-ui'
 import { RSButton } from '../common/Buttons'
 
 class ConfirmBind extends React.PureComponent {
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      status: 'WIP'
+    }
+
+    this.getBindState = (deviceSN) => {
+      console.log('this.getBindState', deviceSN)
+      this.props.phi.req('getBindState', { deviceSN }, (err, res) => {
+        if (err) {
+          this.setState({ error: err, confirm: false })
+        } else {
+          console.log('getBindState', res)
+          /* res.result.status: 'binded', 'binding-*', 'error-*' */
+          if (res && res.result && res.result.status === 'binded') this.setState({ status: 'success' })
+          else if (res && (
+            (res.error && res.error !== '0') ||
+            ['error-timeout', 'error-station_offline', 'error-station_error'].includes(res.result && res.result.status)
+          )) {
+            this.setState({ error: 'bind error' })
+          } else setTimeout(() => this.getBindState(deviceSN), 1000)
+        }
+      })
+    }
+
+    this.bindDevice = () => {
+      console.log('this.bindDevice', this.state, this.props)
+      const deviceSN = this.props.dev.boot.data.device.deviceSN
+      console.log('deviceSN token', deviceSN)
+      if (!deviceSN) this.setState({ status: 'failed' })
+      else {
+        this.props.phi.req('bindDevice', { deviceSN }, (err, res) => {
+          if (err) {
+            console.error('bindDevice, error', err, res)
+          } else {
+            console.log('bindDevice req success', res)
+            setTimeout(() => this.getBindState(deviceSN), 1000)
+          }
+        })
+      }
+    }
+  }
+
+  componentDidMount () {
+    this.bindDevice()
+  }
+
   render () {
+    let [text, img, label, func] = ['', '', '', () => {}]
+    switch (this.state.status) {
+      case 'WIP':
+        img = 'pic-confirm.png'
+        text = i18n.__('Bind Device WIP Text')
+        label = i18n.__('Bind Device WIP Label')
+        func = () => {}
+        break
+      case 'success':
+        img = 'pic-confirm.png'
+        text = i18n.__('Bind Device Success Text')
+        label = i18n.__('Bind Device Success Label')
+        func = () => this.props.onSuccess()
+        break
+      case 'failed':
+        img = 'pic-confirm.png'
+        text = i18n.__('Bind Device Failed Text')
+        label = i18n.__('Bind Device Failed Label')
+        func = () => this.props.onFailed()
+        break
+      default:
+        break
+    }
     return (
-      <div className="paper" style={{ width: 300, height: 288, zIndex: 100 }} >
+      <div className="paper" style={{ width: 320, zIndex: 100 }} >
         <div style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 20 }} className="title">
-          { i18n.__('Confirm Device to Bind') }
-          <div style={{ flexGrow: 1 }} />
-          {/*
-          <IconButton
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: 29,
-              height: 29,
-              padding: 4,
-              marginRight: 24
-            }}
-            iconStyle={{ width: 21, height: 21, fill: '#525a60' }}
-            onClick={this.props.backToList}
-          >
-            <CloseIcon />
-          </IconButton>
-          */}
+          { i18n.__('Bind Device') }
         </div>
         <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
         <div style={{ height: 176, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <img
             style={{ width: 49, height: 100 }}
-            src="./assets/images/pic-confirm.png"
-            alt=""
+            src={`./assets/images/${img}`}
+            alt={img}
           />
         </div>
-        <div style={{ color: 'var(--grey-text)', width: '100% - 40px', padding: '0 20px', display: 'flex', alignItems: 'center' }}>
-          { this.props.error ? i18n.__('Bind Device Error') : i18n.__('Confirm Device Text') }
-          <div style={{ width: 60 }} />
-          { this.props.error && <RSButton label={i18n.__('OK')} onClick={this.props.backToList} /> }
+        <div
+          style={{
+            height: 40,
+            width: 280,
+            padding: '0 20px',
+            color: 'var(--grey-text)',
+            display: 'flex',
+            alignItems: 'center'
+          }}
+        >
+          { text }
+        </div>
+        <div style={{ height: 34, width: 280, padding: 20, alignItems: 'center', justifyContent: 'center' }}>
+          <RSButton label={label} onClick={func} disabled={this.state.status === 'WIP'} style={{ width: 232 }} />
         </div>
       </div>
     )

@@ -34,7 +34,8 @@ class Device extends RequestManager {
       requestAsync: this.requestAsync.bind(this),
       pureRequest: this.pureRequest.bind(this),
       pureRequestAsync: this.pureRequestAsync.bind(this),
-      systemStatus: this.systemStatus.bind(this)
+      systemStatus: this.systemStatus.bind(this),
+      refreshSystemState: this.refreshSystemState.bind(this)
     }
   }
 
@@ -42,6 +43,11 @@ class Device extends RequestManager {
     let r
 
     switch (name) {
+      case 'info':
+        r = request
+          .get(`http://${this.mdev.address}:3001/v1/info`)
+        break
+
       case 'boot':
         r = request
           .get(`http://${this.mdev.address}:3000/boot`)
@@ -132,8 +138,9 @@ class Device extends RequestManager {
   }
 
   refreshSystemState (next) {
-    let count = 2
+    let count = 3
     const done = next ? () => !(count -= 1) && next() : undefined
+    this.request('info', null, done)
     this.request('boot', null, done)
     this.request('users', null, done)
   }
@@ -144,6 +151,7 @@ class Device extends RequestManager {
 
   /**
    probing -> wait
+   offline -> not in LAN
    systemError -> error
    noBoundUser -> can bind user
    noBoundVolume -> can format disk and bind volume
@@ -152,7 +160,8 @@ class Device extends RequestManager {
   **/
 
   systemStatus () {
-    if (!this.boot || !this.users || this.boot.isPending() || this.users.isPending()) return 'probing'
+    if (['info', 'boot', 'users'].some(v => (!this[v] || this[v].isPending()))) return 'probing'
+    else if (this.info.isRejected()) return 'offline'
     else if (this.boot.isRejected()) return 'systemError'
 
     const boot = this.boot.value()
@@ -165,7 +174,7 @@ class Device extends RequestManager {
     if (!boot || !states.includes(boot.state)) return 'systemError'
 
     const { state, boundUser } = boot
-    if (state === 'PENDING' && boundUser === null) return 'noBoundUser'
+    if (state === 'PENDING' && !boundUser) return 'noBoundUser'
     else if (state === 'UNAVAILABLE' && boundUser) return 'noBoundVolume'
     else if (state === 'STARTED' && Array.isArray(users)) return 'ready'
     else if (['PENDING', 'UNAVAILABLE', 'STARTED'].includes(state)) return 'systemError'

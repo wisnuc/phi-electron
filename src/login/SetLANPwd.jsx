@@ -34,6 +34,7 @@ class SetLANPwd extends React.Component {
       const newUser = (await this.props.phi.reqAsync('setLANPassword', { deviceSN, password: this.state.pwd, userUUID }))
       const token = (await this.props.phi.reqAsync('LANToken', args)).token
       console.log('fireAsync newUser', newUser)
+      if (!newUser || !newUser.uuid || !token) throw Error('fireAsync Error')
       return ({ dev, user: newUser, token })
     }
 
@@ -47,7 +48,7 @@ class SetLANPwd extends React.Component {
         })
         .catch((error) => {
           console.error('this.getLANToken', error)
-          this.setState({ status: 'error', error, loading: false })
+          this.setState({ status: 'error', error, loading: false, pwdError: '设置失败' }) // TODO
         })
     }
   }
@@ -76,7 +77,7 @@ class SetLANPwd extends React.Component {
             fullWidth
             style={{ marginTop: 12 }}
             hintText={i18n.__('LAN Password Hint')}
-            errorStyle={{ position: 'absolute', right: 0, top: 0 }}
+            errorStyle={{ position: 'absolute', left: 0, top: -8, height: 18 }}
             type={this.state.showPwd ? 'text' : 'password'}
             errorText={this.state.pwdError}
             value={this.state.pwd}

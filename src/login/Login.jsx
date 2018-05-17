@@ -1,8 +1,6 @@
 import i18n from 'i18n'
 import React from 'react'
-import { Divider, IconButton, TextField } from 'material-ui'
-import Visibility from 'material-ui/svg-icons/action/visibility'
-import VisibilityOff from 'material-ui/svg-icons/action/visibility-off'
+import { Divider } from 'material-ui'
 
 import PhiLogin from './PhiLogin'
 import ManageDisk from './ManageDisk'
@@ -22,9 +20,6 @@ class Login extends React.Component {
       hello: true,
       loading: true,
       status: 'phiLogin'
-    }
-
-    this.refresh = () => {
     }
 
     this.onMDNSError = (e) => {
@@ -48,12 +43,49 @@ class Login extends React.Component {
         .catch(this.onMDNSError)
     }
 
+    this.refreshStationList = () => {
+      this.setState({ loading: true })
+      this.props.phi.req('stationList', null, (e, r) => {
+        if (e || !r.result || !Array.isArray(r.result.list) || r.error !== '0') {
+          this.setState({ loading: false, list: [], status: 'phiNoBound', error: true }) // TODO Error
+        } else {
+          const list = r.result.list
+          const status = !list.length ? 'phiNoBound' : 'deviceSelect'
+          this.setState({ list, loading: false, type: 'BOUNDLIST', status })
+        }
+      })
+    }
+
+    this.refresh = () => {
+      switch (this.state.type) {
+        case 'LANTOLOGIN':
+          this.enterLANLogin()
+          break
+
+        case 'LANTOBIND':
+          this.showDeviceToBind()
+          break
+
+        case 'BOUNDLIST':
+          this.refreshStationList()
+          break
+
+        default:
+          break
+      }
+    }
+
     this.manageDisk = (dev) => {
-      this.setState({ selectedDevice: dev, status: 'diskManage' })
+      console.log('this.manageDisk dev', dev, this.state)
+      this.setState({ loading: true })
+      dev.refreshSystemState(() => {
+        if (dev.systemStatus() === 'noBoundVolume') this.setState({ selectedDevice: dev, status: 'diskManage' })
+        else this.setState({ type: 'BOUNDLIST' }, () => this.refresh())
+      })
     }
 
     this.backToList = () => {
-      this.setState({ selectedDevice: null, LANLogin: null })
+      this.setState({ selectedDevice: null, status: 'deviceSelect', type: 'BOUNDLIST' }, () => this.refresh())
     }
 
     this.onFormatSuccess = () => {
@@ -110,56 +142,6 @@ class Login extends React.Component {
 
   renderLANPwd () {
     return (<SetLANPwd {...this.props} {...this.state} onSuccess={this.onSetLANPwdSuccess} dev={this.state.selectedDevice} />)
-  }
-
-  renderLANLogin () {
-    const iconStyle = { width: 18, height: 18, color: '#31a0f5', padding: 0 }
-    const buttonStyle = { width: 26, height: 26, padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }
-    return (
-      <div style={{ width: 320, zIndex: 200, position: 'relative' }} className="paper" >
-        <div
-          style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 19 }}
-          className="title"
-        >
-          { i18n.__('LAN Login') }
-        </div>
-        <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
-        <div style={{ height: 180, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <img
-            style={{ width: 218, height: 121 }}
-            src="./assets/images/pic-offlinepassword.png"
-            alt=""
-          />
-        </div>
-        <div style={{ width: 282, margin: '-20px auto 0px auto', position: 'relative' }}>
-          <TextField
-            fullWidth
-            style={{ marginTop: 12 }}
-            hintText={i18n.__('LAN Password Hint')}
-            errorStyle={{ position: 'absolute', right: 0, top: 0 }}
-            type={this.state.showPwd ? 'text' : 'password'}
-            errorText={this.state.pwdError}
-            value={this.state.pwd}
-            onChange={e => this.onPassword(e.target.value)}
-            onKeyDown={this.onKeyDown}
-          />
-          {/* clear password */}
-          <div style={{ position: 'absolute', right: 4, top: 26 }}>
-            <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.clearPn}>
-              { this.state.showPwd ? <VisibilityOff /> : <Visibility /> }
-            </IconButton>
-          </div>
-        </div>
-        <div style={{ height: 20 }} />
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <RRButton
-            label={i18n.__('Save')}
-            onClick={this.saveLANPwd}
-          />
-        </div>
-        <div style={{ height: 30 }} />
-      </div>
-    )
   }
 
   renderNoBound () {
