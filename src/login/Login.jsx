@@ -64,10 +64,10 @@ class Login extends React.Component {
       console.log('this.onSetLANPwdSuccess')
     }
 
-    this.phiLoginSuccess = ({ list, phonenumber, token, phicommUserId }) => {
+    this.phiLoginSuccess = ({ list, phonenumber, token, phicommUserId, phi }) => {
       const status = !list.length ? 'phiNoBound' : 'deviceSelect'
       this.setState({ list, loading: false, type: 'BOUNDLIST', status })
-      this.props.phiLogin({ phonenumber, token, phicommUserId })
+      this.props.phiLogin({ phonenumber, token, phicommUserId, phi })
     }
   }
 

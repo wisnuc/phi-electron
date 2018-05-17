@@ -39,6 +39,8 @@ class Fruitmix extends React.Component {
 
   phiLogin (user) {
     this.setState({ account: user })
+    /* save phi login data */
+    if (user && user.phi) ipcRenderer.send('SETCONFIG', { phi: user.phi })
   }
 
   deviceLogin ({ dev, user, token }) {

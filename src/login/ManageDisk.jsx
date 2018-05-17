@@ -99,14 +99,16 @@ class ManageDisk extends React.Component {
         <div style={{ height: 50, width: 'calc(100% - 40px)', marginLeft: 20, display: 'flex', alignItems: 'center' }} >
           <ModeSelect
             selected={this.state.mode === 'single'}
+            disabled={!target.length}
             label={i18n.__('Single Mode')}
-            onClick={() => this.setState({ mode: this.state.mode === 'single' ? '' : 'single' })}
+            onClick={() => target.length && this.setState({ mode: this.state.mode === 'single' ? '' : 'single' })}
           />
           <div style={{ width: 10 }} />
           <ModeSelect
             selected={this.state.mode === 'raid1'}
+            disabled={target.length !== 2}
             label={i18n.__('Raid1 Mode')}
-            onClick={() => this.setState({ mode: this.state.mode === 'raid1' ? '' : 'raid1' })}
+            onClick={() => target.length === 2 && this.setState({ mode: this.state.mode === 'raid1' ? '' : 'raid1' })}
           />
         </div>
         <div style={{ height: 30 }} />

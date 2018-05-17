@@ -12,23 +12,28 @@ import { RRButton, FLButton, RSButton } from '../common/Buttons'
 import { isPhoneNumber } from '../common/validate'
 
 const phicommURL = 'https://sohon2test.phicomm.com/v1'
+let firstLogin = true
 
 class PhiLogin extends React.Component {
   constructor (props) {
     super(props)
 
     this.state = {
-      pn: '18817301665',
-      pwd: '123456',
+      pn: '',
+      pwd: '',
       pnError: '',
       pwdError: '',
       error: '',
-      showPwd: false
+      showPwd: false,
+      saveToken: false,
+      autoLogin: false,
+      showFakePwd: false
     }
 
     this.onPhoneNumber = (pn) => {
       this.setState({
         pn,
+        showFakePwd: false,
         pnError: pn && !isPhoneNumber(pn) ? i18n.__('Not Phone Number') : ''
       })
     }
@@ -38,9 +43,12 @@ class PhiLogin extends React.Component {
     }
 
     this.handleSaveToken = () => {
+      this.setState({ saveToken: !this.state.saveToken, autoLogin: false, showFakePwd: false })
     }
 
     this.handleAutologin = () => {
+      this.setState({ autoLogin: !this.state.autoLogin })
+      if (!this.state.autoLogin) this.setState({ saveToken: true })
     }
 
     this.clearPn = () => this.setState({ pn: '', pnError: '' })
@@ -62,7 +70,13 @@ class PhiLogin extends React.Component {
               if (e || !r.result || !Array.isArray(r.result.list) || r.error !== '0') {
                 this.setState({ failed: true, loading: false })
               } else {
-                this.props.onSuccess({ list: r.result.list, phonenumber: this.state.pn, phicommUserId: res.uid })
+                const phi = {
+                  pn: this.state.pn,
+                  puid: res.uid,
+                  autoLogin: !!this.state.autoLogin,
+                  token: this.state.saveToken ? res.access_token : null
+                }
+                this.props.onSuccess({ list: r.result.list, phonenumber: this.state.pn, phicommUserId: res.uid, phi })
               }
             })
           }
@@ -70,15 +84,43 @@ class PhiLogin extends React.Component {
       )
     }
 
+    this.fakeLogin = () => {
+      this.setState({ loading: true })
+      console.log('phi', this.props.phi, this.phi)
+      /* assign token to PhiAPI */
+      Object.assign(this.props.phi, { token: this.phi.token })
+      this.props.phi.req('stationList', null, (e, r) => {
+        if (e || !r.result || !Array.isArray(r.result.list) || r.error !== '0') {
+          this.setState({ failed: true, loading: false })
+        } else {
+          const phi = {
+            pn: this.state.pn,
+            puid: this.phi.puid,
+            autoLogin: !!this.state.autoLogin,
+            token: this.state.saveToken ? this.phi.token : null
+          }
+          this.props.onSuccess({ list: r.result.list, phonenumber: this.state.pn, phicommUserId: this.phi.puid, phi })
+        }
+      })
+    }
+
     this.reset = () => {
       this.setState({ failed: false, pnError: '', pwdError: '' })
+    }
+
+    this.passwordMode = () => {
     }
   }
 
   componentDidMount () {
-  }
-
-  componentWillUnmount () {
+    this.phi = window.config && window.config.global && window.config.global.phi
+    if (this.phi) {
+      console.log('componentDidMount phi', this.phi, firstLogin)
+      const { autoLogin, pn, token } = this.phi
+      this.setState({ saveToken: !!token, autoLogin: !!autoLogin, pn: pn || '', showFakePwd: !!token })
+      if (firstLogin && token && !!autoLogin) this.fakeLogin()
+    }
+    firstLogin = false
   }
 
   renderFailed () {
@@ -129,17 +171,32 @@ class PhiLogin extends React.Component {
             value={this.state.pn}
             onChange={e => this.onPhoneNumber(e.target.value)}
           />
-          <TextField
-            fullWidth
-            style={{ marginTop: 12 }}
-            hintText={i18n.__('Password Hint')}
-            errorStyle={{ position: 'absolute', left: 0, top: -8, height: 18 }}
-            type={this.state.showPwd ? 'text' : 'password'}
-            errorText={this.state.pwdError}
-            value={this.state.pwd}
-            onChange={e => this.onPassword(e.target.value)}
-            onKeyDown={this.onKeyDown}
-          />
+          {
+            this.state.showFakePwd
+              ? (
+                <TextField
+                  value=""
+                  fullWidth
+                  hintText="*********"
+                  style={{ marginTop: 12 }}
+                  onTouchTap={() => this.setState({ showFakePwd: false })}
+                  errorText={this.state.pwdError}
+                  errorStyle={{ position: 'absolute', left: 0, top: -8, height: 18 }}
+                />
+              ) : (
+                <TextField
+                  fullWidth
+                  style={{ marginTop: 12 }}
+                  hintText={i18n.__('Password Hint')}
+                  errorStyle={{ position: 'absolute', left: 0, top: -8, height: 18 }}
+                  type={this.state.showPwd ? 'text' : 'password'}
+                  errorText={this.state.pwdError}
+                  value={this.state.pwd}
+                  onChange={e => this.onPassword(e.target.value)}
+                  onKeyDown={this.onKeyDown}
+                />
+              )
+          }
 
           {/* clear password */}
           <div style={{ position: 'absolute', right: 4, top: 26 }}>
@@ -160,18 +217,18 @@ class PhiLogin extends React.Component {
             label={i18n.__('Remember Password')}
             disableTouchRipple
             style={{ width: 140 }}
-            iconStyle={{ height: 18, width: 18, marginTop: 2 }}
+            iconStyle={{ height: 18, width: 18, marginTop: 2, fill: this.state.saveToken ? '#31a0f5' : 'rgba(0,0,0,.25)' }}
             labelStyle={{ fontSize: 14, color: '#85868c', marginLeft: -9 }}
-            checked
+            checked={this.state.saveToken}
             onCheck={() => this.handleSaveToken()}
           />
           <Checkbox
             label={i18n.__('Auto Login')}
             disableTouchRipple
             style={{ width: 140 }}
-            iconStyle={{ height: 18, width: 18, marginTop: 2, fill: 'rgba(0,0,0,.25)' }}
+            iconStyle={{ height: 18, width: 18, marginTop: 2, fill: this.state.autoLogin ? '#31a0f5' : 'rgba(0,0,0,.25)' }}
             labelStyle={{ fontSize: 14, color: '#85868c', marginLeft: -9 }}
-            checked={false}
+            checked={this.state.autoLogin}
             onCheck={() => this.handleAutologin()}
           />
         </div>
@@ -179,8 +236,8 @@ class PhiLogin extends React.Component {
         <div style={{ width: 240, height: 40, margin: '0 auto' }}>
           <RRButton
             label={i18n.__('Login') + (this.state.loading ? '中...' : '')}
-            onClick={this.login}
-            disabled={this.state.pnError || this.state.pwdError || this.state.loading}
+            onClick={() => (this.state.showFakePwd ? this.fakeLogin() : this.login())}
+            disabled={this.state.pnError || this.state.pwdError || this.state.loading || (!this.state.pwd && !this.state.showFakePwd)}
           />
         </div>
 
