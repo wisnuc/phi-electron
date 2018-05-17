@@ -94,10 +94,9 @@ class ConfirmBind extends React.PureComponent {
             height: 40,
             width: 280,
             padding: '0 20px',
-            color: 'var(--grey-text)',
-            display: 'flex',
-            alignItems: 'center'
+            color: 'var(--grey-text)'
           }}
+          className="flexCenter"
         >
           { text }
         </div>

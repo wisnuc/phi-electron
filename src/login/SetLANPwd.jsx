@@ -10,7 +10,7 @@ class SetLANPwd extends React.Component {
     super(props)
 
     this.state = {
-      pwd: '123456',
+      pwd: '',
       pwdError: '',
       error: '',
       loading: false,

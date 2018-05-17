@@ -39,7 +39,7 @@ class Device extends React.Component {
     if (!this.props.cdev) return null
     if (this.props.cdev.onlineStatus !== 'online') return i18n.__('Offline Mode')
     if (this.systemStatus === 'offline') return i18n.__('Remote Mode')
-    return i18n.__('Online')
+    return i18n.__('Online and LAN Mode')
   }
 
   renderIsOwner () {
@@ -84,6 +84,9 @@ class Device extends React.Component {
         else text = i18n.__('System Error')
         break
 
+      case 'probing':
+        text = i18n.__('Probing')
+        break
       default:
         break
     }
