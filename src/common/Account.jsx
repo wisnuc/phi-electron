@@ -1,8 +1,11 @@
 import i18n from 'i18n'
 import React from 'react'
+import { shell } from 'electron'
 import { Popover, MenuItem } from 'material-ui'
 import ADD from 'material-ui/svg-icons/navigation/arrow-drop-down'
 import { PersonIcon, UsersIcon, LogoutIcon } from '../common/Svg'
+
+const phicommUrl = 'https://sohon2test.phicomm.com/v1/ui/index'
 
 class Account extends React.Component {
   constructor (props) {
@@ -26,11 +29,30 @@ class Account extends React.Component {
     const color = 'rgba(255, 255, 255, 0.7)'
 
     const iconStyle = { marginLeft: 30, marginTop: 5, width: 30, height: 30, color: '#7d868f' }
-    const items = [
-      { primaryText: i18n.__('Account Settings'), leftIcon: <PersonIcon style={iconStyle} />, onClick: () => {} },
-      { primaryText: i18n.__('Users Management'), leftIcon: <UsersIcon style={iconStyle} />, onClick: () => {} },
-      { primaryText: i18n.__('Log Out'), leftIcon: <LogoutIcon style={iconStyle} />, onClick: this.props.logout }
-    ]
+    const items = []
+    /* phi account */
+    if (this.props.user.phicommUserId) {
+      items.push({
+        primaryText: i18n.__('Account Settings'),
+        leftIcon: <PersonIcon style={iconStyle} />,
+        onClick: () => { shell.openExternal(phicommUrl); this.setState({ open: false }) }
+      })
+    }
+    /* device logged */
+    if (this.props.user.phicommUserId && this.props.device) {
+      items.push({
+        primaryText: i18n.__('Users Management'),
+        leftIcon: <UsersIcon style={iconStyle} />,
+        onClick: () => {}
+      })
+    }
+    /* return phiLogin */
+    items.push({
+      primaryText: i18n.__('Log Out'),
+      leftIcon: <LogoutIcon style={iconStyle} />,
+      onClick: this.props.logout
+    })
+
     return (
       <div
         style={{
@@ -83,7 +105,7 @@ class Account extends React.Component {
           onRequestClose={() => this.setState({ open: false })}
           style={{ boxShadow: '0px 10px 20px 0 rgba(23, 99, 207, 0.1)', opacity: this.state.show ? 1 : 0 }}
         >
-          <div style={{ width: 125, maxWidth: 125, height: 130, overflow: 'hidden' }} >
+          <div style={{ width: 125, maxWidth: 125, height: items.length * 40 + 10, overflow: 'hidden' }} >
             {
               items.map((props, index) => (
                 <MenuItem

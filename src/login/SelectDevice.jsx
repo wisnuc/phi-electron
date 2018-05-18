@@ -51,8 +51,8 @@ class DeviceSelect extends React.Component {
         {...this.props}
         slDevice={this.slDevice}
         key={index.toString()}
-        mdev={this.props.type !== 'BOUNDLIST' ? dev : null}
-        cdev={this.props.type === 'BOUNDLIST' ? dev : null}
+        mdev={!['BOUNDLIST', 'CHANGEDEVICE'].includes(this.props.type) ? dev : null}
+        cdev={['BOUNDLIST', 'CHANGEDEVICE'].includes(this.props.type) ? dev : null}
       />
     )
   }
@@ -166,10 +166,6 @@ class DeviceSelect extends React.Component {
         <CircularLoading />
       </div>
     )
-  }
-
-  componentWillUnmount () {
-    clearInterval(this.timer)
   }
 
   render () {

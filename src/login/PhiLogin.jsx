@@ -11,7 +11,7 @@ import Dialog from '../common/PureDialog'
 import { RRButton, FLButton, RSButton } from '../common/Buttons'
 import { isPhoneNumber } from '../common/validate'
 
-const phicommURL = 'https://sohon2test.phicomm.com/v1'
+const phicommUrl = 'https://sohon2test.phicomm.com/v1'
 let firstLogin = true
 
 class PhiLogin extends React.Component {
@@ -245,7 +245,7 @@ class PhiLogin extends React.Component {
           <div style={{ width: '50%', textAlign: 'right' }}>
             <FLButton
               label={i18n.__('Sign Up')}
-              onClick={() => shell.openExternal(phicommURL)}
+              onClick={() => shell.openExternal(phicommUrl)}
             />
           </div>
           <div style={{ width: 1, height: 16, backgroundColor: 'rgba(0,0,0,.38)' }} />
@@ -253,7 +253,7 @@ class PhiLogin extends React.Component {
             <FLButton
               label={i18n.__('Forget Password')}
               style={{ marginLeft: 8 }}
-              onClick={() => shell.openExternal(phicommURL)}
+              onClick={() => shell.openExternal(phicommUrl)}
             />
           </div>
         </div>

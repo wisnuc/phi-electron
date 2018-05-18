@@ -19,13 +19,13 @@ class Device extends React.Component {
   componentDidMount () {
     /* cloud dev or mdns dev */
     const { mdev, cdev } = this.props
-    if (mdev) {
-      this.device = new DeviceAPI(mdev)
-      this.device.on('updated', (prev, next) => this.setState({ dev: next }))
-      this.device.start()
-    } else if (cdev) {
+    if (cdev) {
       const dev = { address: cdev.localIp, domain: 'phiToLoacl', deviceSN: cdev.deviceSN, stationName: cdev.bindingName }
       this.device = new DeviceAPI(dev)
+      this.device.on('updated', (prev, next) => this.setState({ dev: next }))
+      this.device.start()
+    } else if (mdev) {
+      this.device = new DeviceAPI(mdev)
       this.device.on('updated', (prev, next) => this.setState({ dev: next }))
       this.device.start()
     } else console.error('Device Error: No mdev or cdev')
@@ -102,7 +102,7 @@ class Device extends React.Component {
     const stationName = (this.state.dev && this.state.dev.mdev && this.state.dev.mdev.stationName) || 'PhiNAS2'
     const address = (this.state.dev && this.state.dev.mdev && this.state.dev.mdev.address) || '--'
 
-    const storage = 'TODO'
+    const storage = '233GB/1TB'
 
     const data = [
       { des: i18n.__('Device Storage'), val: storage },
@@ -158,14 +158,14 @@ class Device extends React.Component {
           }
           {
             !!this.renderStatus() &&
-            <div style={{ fontSize: 14, color: '#fa5353' }}>
+            <div style={{ fontSize: 14, color: status === 'noBoundUser' ? '#44c468' : '#fa5353' }}>
               { this.renderStatus() }
             </div>
           }
         </div>
         <div style={{ height: 230 }} className="flexCenter">
           <img
-            style={{ width: 51, height: 104 }}
+            style={{ width: 51, height: 104, filter: status === 'noBoundUser' ? 'hue-rotate(290deg)' : '' }}
             src="./assets/images/ic-n-2.png"
             alt=""
           />

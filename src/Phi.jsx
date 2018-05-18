@@ -78,7 +78,7 @@ class Fruitmix extends React.Component {
           {
             this.state.account &&
               <div style={{ position: 'fixed', top: 12, right: 147, height: 36, WebkitAppRegion: 'no-drag' }}>
-                <Account user={this.state.account} logout={() => this.logout()} />
+                <Account user={this.state.account} logout={() => this.logout()} device={this.state.selectedDevice} />
               </div>
           }
 

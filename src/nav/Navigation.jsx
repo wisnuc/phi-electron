@@ -48,7 +48,8 @@ class NavViews extends React.Component {
 
     this.state = {
       nav: null,
-      snackBar: ''
+      snackBar: '',
+      list: []
     }
 
     this.views = {}
@@ -153,6 +154,18 @@ class NavViews extends React.Component {
         this.props.apis.pureRequest('handleTask', { taskUUID: uuid, nodeUUID: c.nodeUUID, policy })
       })
     }
+
+    this.showBoundList = () => {
+      this.setState({ changeDevice: true, loading: true, list: [] })
+      this.props.phi.req('stationList', null, (e, r) => {
+        if (e || !r.result || !Array.isArray(r.result.list) || r.error !== '0') {
+          this.setState({ loading: false, list: [], error: true }) // TODO Error
+        } else {
+          const list = r.result.list
+          this.setState({ list, loading: false })
+        }
+      })
+    }
   }
 
   componentDidMount () {
@@ -191,8 +204,14 @@ class NavViews extends React.Component {
 
   renderChangeDevice () {
     console.log('this.props renderChangeDevice', this.props)
-    const refresh = () => {}
-    return <SelectDevice {...this.props} refresh={refresh} />
+    return (
+      <SelectDevice
+        {...this.props}
+        {...this.state}
+        refresh={this.showBoundList}
+        type="CHANGEDEVICE"
+      />
+    )
   }
 
   renderHeader () {
@@ -213,7 +232,7 @@ class NavViews extends React.Component {
         selected: !!this.state.changeDevice,
         Icon: DeviceChangeIcon,
         text: i18n.__('Change Device'),
-        fn: () => this.setState({ changeDevice: true })
+        fn: () => this.showBoundList()
       },
       {
         selected: !this.state.changeDevice && this.views[this.state.nav].navGroup() === 'settings',
