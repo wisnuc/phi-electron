@@ -174,15 +174,15 @@ export const WinFullIcon = f('icon_windows_full')
 
 export const WinMiniIcon = f('icon_windows_mini')
 
+export const RefreshIcon = f('icon_refresh1')
+
+export const AddDeviceIcon = f('icon_add')
+
+export const SmallHelpIcon = f('icon_help_list')
+
 export const CheckedIcon = props => (
   <SvgIcon viewBox="0 0 9.5 7.5" {...props}>
     <path fill="none" stroke="#FFF" d="M1.499 2.5l2.001 2 4-4" />
-  </SvgIcon>
-)
-
-export const RefreshIcon = props => (
-  <SvgIcon viewBox="0 0 20 20" {...props}>
-    <path fill="#7D868F" fillRule="evenodd" d="M10 0C4.477 0 0 4.477 0 10c0 5.522 4.477 10 10 10 5.522 0 10-4.478 10-10 0-5.523-4.478-10-10-10zm0 15c-2.757 0-5-2.243-5-5s2.243-5 5-5V3l4 3-4 3V7c-1.655 0-3 1.345-3 3 0 1.654 1.345 3 3 3a3.004 3.004 0 0 0 2.794-4.096l1.861-.731A5.006 5.006 0 0 1 10 15z" />
   </SvgIcon>
 )
 

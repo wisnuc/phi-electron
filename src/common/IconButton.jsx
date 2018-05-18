@@ -8,9 +8,9 @@ const styles = {
     height: 30
   },
   largeButton: {
-    width: 32,
-    height: 32,
-    padding: 1,
+    width: 50,
+    height: 50,
+    padding: 10,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'

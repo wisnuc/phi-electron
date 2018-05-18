@@ -11,10 +11,9 @@ import ConnectionHint from './ConnectionHint'
 
 import Dialog from '../common/PureDialog'
 import ScrollBar from '../common/ScrollBar'
-import { RSButton } from '../common/Buttons'
-import { RefreshIcon, HelpIcon } from '../common/Svg'
+import { RSButton, LIButton } from '../common/Buttons'
+import { RefreshIcon, HelpIcon, AddDeviceIcon } from '../common/Svg'
 import CircularLoading from '../common/CircularLoading'
-import { SIButton, LIButton } from '../common/IconButton'
 
 class DeviceSelect extends React.Component {
   constructor (props) {
@@ -183,8 +182,11 @@ class DeviceSelect extends React.Component {
             { title }
           </div>
           <div style={{ flexGrow: 1 }} />
-          <SIButton onClick={this.props.refresh} > <RefreshIcon /> </SIButton>
-          <div style={{ width: 10 }} />
+          <LIButton onClick={this.props.refresh} > <RefreshIcon /> </LIButton>
+          {
+            ['BOUNDLIST', 'CHANGEDEVICE'].includes(this.props.type) &&
+              <LIButton onClick={this.props.addBindDevice} > <AddDeviceIcon /> </LIButton>
+          }
           <LIButton onClick={() => this.setState({ showHelp: true })} > <HelpIcon /> </LIButton>
           <div style={{ width: 32 }} />
         </div>

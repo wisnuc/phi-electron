@@ -159,11 +159,10 @@ class PhiLogin extends React.Component {
             alt=""
           />
         </div>
-        <div style={{ height: 10 }} />
         <div style={{ width: 280, margin: '0 auto', position: 'relative' }}>
           <TextField
             fullWidth
-            style={{ marginTop: 12 }}
+            style={{ marginTop: 22, color: '#505259' }}
             hintText={i18n.__('Phone Number Hint')}
             errorStyle={{ position: 'absolute', left: 0, top: -8, height: 18 }}
             type="text"
@@ -178,7 +177,7 @@ class PhiLogin extends React.Component {
                   value=""
                   fullWidth
                   hintText="*********"
-                  style={{ marginTop: 12 }}
+                  style={{ marginTop: 22 }}
                   onTouchTap={() => this.setState({ showFakePwd: false })}
                   errorText={this.state.pwdError}
                   errorStyle={{ position: 'absolute', left: 0, top: -8, height: 18 }}
@@ -186,7 +185,7 @@ class PhiLogin extends React.Component {
               ) : (
                 <TextField
                   fullWidth
-                  style={{ marginTop: 12 }}
+                  style={{ marginTop: 22 }}
                   hintText={i18n.__('Password Hint')}
                   errorStyle={{ position: 'absolute', left: 0, top: -8, height: 18 }}
                   type={this.state.showPwd ? 'text' : 'password'}
@@ -199,20 +198,20 @@ class PhiLogin extends React.Component {
           }
 
           {/* clear password */}
-          <div style={{ position: 'absolute', right: 4, top: 26 }}>
+          <div style={{ position: 'absolute', right: 4, top: 32 }}>
             <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.clearPn}>
               <CloseIcon />
             </IconButton>
           </div>
 
           {/* password visibility */}
-          <div style={{ position: 'absolute', right: 4, top: 86 }}>
+          <div style={{ position: 'absolute', right: 4, top: 102 }}>
             <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.togglePwd}>
               { this.state.showPwd ? <VisibilityOff /> : <Visibility /> }
             </IconButton>
           </div>
         </div>
-        <div style={{ display: 'flex', width: 280, height: 30, alignItems: 'center', margin: '0 auto' }}>
+        <div style={{ display: 'flex', width: 280, height: 40, alignItems: 'center', margin: '0 auto' }}>
           <Checkbox
             label={i18n.__('Remember Password')}
             disableTouchRipple
@@ -232,7 +231,7 @@ class PhiLogin extends React.Component {
             onCheck={() => this.handleAutologin()}
           />
         </div>
-        <div style={{ height: 20 }} />
+        <div style={{ height: 30 }} />
         <div style={{ width: 240, height: 40, margin: '0 auto' }}>
           <RRButton
             label={i18n.__('Login') + (this.state.loading ? '中...' : '')}

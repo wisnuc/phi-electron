@@ -1,4 +1,5 @@
 import React from 'react'
+import { IconButton } from 'material-ui'
 import { CheckedIcon } from '../common/Svg'
 
 export class Button extends React.PureComponent {
@@ -259,59 +260,53 @@ export class MenuButton extends Button {
   }
 }
 
+const styles = {
+  largeIcon: {
+    width: 30,
+    height: 30
+  },
+  largeButton: {
+    width: 50,
+    height: 50,
+    padding: 10,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  smallIcon: {
+    width: 30,
+    height: 30
+  },
+  smallButton: {
+    width: 30,
+    height: 30,
+    padding: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
+}
+
 /* Larger Icon Button */
-export class LIButton extends Button {
+export class LIButton extends React.PureComponent {
   render () {
-    const { style, iconStyle, disabled, children } = this.props
-
-    const cursor = disabled ? 'default' : 'pointer'
-    const color = !disabled && (this.state.hover || this.state.pressed) ? 'var(--dodger-blue)' : ' var(--grey-text)'
-    const opacity = disabled ? 0.5 : 1
-    const buttonStyle = Object.assign({ width: 32, height: 32, padding: 4, cursor }, style)
-    const iStyle = Object.assign({ width: 24, height: 24, color, opacity }, iconStyle)
-
+    const { disabled } = this.props
+    const style = Object.assign({}, styles.largeButton, this.props.style)
+    const iconStyle = Object.assign({ color: '#7d868f', opacity: disabled ? 0.5 : 1 }, styles.largeIcon, this.props.iconStyle)
     return (
-      <div {...this.funcs} style={buttonStyle} className="flexCenter">
-        { React.cloneElement(children, { style: iStyle }) }
-      </div>
+      <IconButton style={style} iconStyle={iconStyle} {...this.props} />
     )
   }
 }
 
 /* Small Icon Button */
-export class SIButton extends Button {
+export class SIButton extends React.PureComponent {
   render () {
-    const { style, icon, iconStyle, disabled } = this.props
-
-    const cursor = disabled ? 'default' : 'pointer'
-    const color = !disabled && (this.state.hover || this.state.pressed) ? 'var(--dodger-blue)' : ' var(--grey-text)'
-    const buttonStyle = Object.assign({ width: 24, height: 24, padding: 2, cursor }, style)
-    const iStyle = Object.assign({ width: 20, height: 20, color }, iconStyle)
-
+    const { disabled } = this.props
+    const style = Object.assign({}, styles.smallButton, this.props.style)
+    const iconStyle = Object.assign({ color: '#7d868f', opacity: disabled ? 0.5 : 1 }, styles.smallIcon, this.props.iconStyle)
     return (
-      <div {...this.funcs} style={buttonStyle} className="flexCenter">
-        <icon style={iStyle} />
-      </div>
-    )
-  }
-}
-
-/* IconButton with label */
-export class ILButton extends Button {
-  render () {
-    const { style, icon, iconStyle, disabled } = this.props
-
-    const cursor = disabled ? 'default' : 'pointer'
-    const color  = this.state.hover || this.state.pressed ? 'var(--dodger-blue)' : ' var(--grey-text)'
-    const buttonStyle = Object.assign({ width: 32, height: 32, padding: 4, cursor, display: 'inline-block' }, style)
-    const iStyle = Object.assign({ width: 24, height: 24, color }, iconStyle)
-
-    return (
-      <div {...this.funcs} style={buttonStyle} >
-        <div className="flexCenter">
-          <icon style={iStyle} />
-        </div>
-      </div>
+      <IconButton style={style} iconStyle={iconStyle} {...this.props} />
     )
   }
 }

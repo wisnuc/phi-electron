@@ -1,13 +1,13 @@
 import i18n from 'i18n'
 import React from 'react'
-import { Divider, IconButton } from 'material-ui'
+import { Divider } from 'material-ui'
 import prettysize from 'prettysize'
 
 import DiskModeGuide from './DiskModeGuide'
 import DiskFormating from './DiskFormating'
 
-import { HelpIcon, BackIcon } from '../common/Svg'
-import { RRButton, ModeSelect } from '../common/Buttons'
+import { SmallHelpIcon, BackIcon } from '../common/Svg'
+import { RRButton, ModeSelect, LIButton, SIButton } from '../common/Buttons'
 import Dialog from '../common/PureDialog'
 
 class ManageDisk extends React.Component {
@@ -39,8 +39,6 @@ class ManageDisk extends React.Component {
   renderInitFormat () {
     const { storage } = this.props.selectedDevice.boot.data
     console.log('ManageDisk', storage)
-    const iconStyle = { width: 20, height: 20, color: '#31a0f5' }
-    const buttonStyle = { width: 22, height: 22, padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }
 
     /*
     const storages = [
@@ -91,9 +89,9 @@ class ManageDisk extends React.Component {
         >
           <div style={{ color: '#525a60' }}> { i18n.__('Select Disk Mode') } </div>
           <div style={{ flexGrow: 1 }} />
-          <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={() => this.setState({ showGuide: true })}>
-            <HelpIcon />
-          </IconButton>
+          <SIButton onClick={() => this.setState({ showGuide: true })} iconStyle={{ color: '#31a0f5' }}>
+            <SmallHelpIcon />
+          </SIButton>
         </div>
         <div style={{ height: 10 }} />
         <div style={{ height: 50, width: 'calc(100% - 40px)', marginLeft: 20, display: 'flex', alignItems: 'center' }} >
@@ -209,21 +207,10 @@ class ManageDisk extends React.Component {
     const imgSrc = init ? 'pic-finddisk.png' : 'pic-login.png'
     return (
       <div className="paper" style={{ width: 320, zIndex: 100 }} >
-        <div style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 20 }} className="title">
-          <IconButton
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: 50,
-              width: 50,
-              marginLeft: -15
-            }}
-            iconStyle={{ width: 30, height: 30, color: '#525a60' }}
-            onClick={backToList}
-          >
+        <div style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 5 }} className="title">
+          <LIButton onClick={backToList} >
             <BackIcon />
-          </IconButton>
+          </LIButton>
           { init ? i18n.__('Discover Disk') : recover ? i18n.__('Recover Volume') : i18n.__('Create or Import Disk') }
         </div>
         <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />

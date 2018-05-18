@@ -22,11 +22,11 @@ class Device extends Base {
 
   navEnter () {
     this.refresh()
-    this.timer = setInterval(this.refresh, 1000)
+    // this.timer = setInterval(this.refresh, 1000)
   }
 
   navLeave () {
-    clearInterval(this.timer)
+    // clearInterval(this.timer)
   }
 
   navGroup () {

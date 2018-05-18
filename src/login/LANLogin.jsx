@@ -3,16 +3,16 @@ import React from 'react'
 import { Divider, IconButton, TextField } from 'material-ui'
 import { BackIcon, EyeOpenIcon, DelPwdIcon } from '../common/Svg'
 
-import { RRButton } from '../common/Buttons'
+import { RRButton, LIButton } from '../common/Buttons'
 
 class LANLogin extends React.Component {
   constructor (props) {
     super(props)
 
     this.state = {
-      pn: 'admin',
+      pn: '',
       pnError: '',
-      pwd: 'phicomm',
+      pwd: '',
       pwdError: '',
       error: '',
       showPwd: false
@@ -70,21 +70,10 @@ class LANLogin extends React.Component {
     const buttonStyle = { width: 30, height: 30, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }
     return (
       <div style={{ width: 320, zIndex: 100 }} className="paper" >
-        <div style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 20 }} className="title">
-          <IconButton
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: 32,
-              width: 32,
-              padding: 0
-            }}
-            iconStyle={{ color: '#525a60' }}
-            onClick={this.props.onRequestClose}
-          >
+        <div style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 5 }} className="title">
+          <LIButton onClick={this.props.onRequestClose} >
             <BackIcon />
-          </IconButton>
+          </LIButton>
           { i18n.__('LAN Login') }
         </div>
         <Divider style={{ marginLeft: 20, width: 280 }} />
@@ -96,11 +85,10 @@ class LANLogin extends React.Component {
             alt=""
           />
         </div>
-        <div style={{ height: 10 }} />
         <div style={{ width: 280, margin: '0 auto', position: 'relative' }}>
           <TextField
             fullWidth
-            style={{ marginTop: 12 }}
+            style={{ marginTop: 22 }}
             hintText={i18n.__('Username Hint')}
             errorStyle={{ position: 'absolute', left: 0, top: -8, height: 18 }}
             type="text"
@@ -110,7 +98,7 @@ class LANLogin extends React.Component {
           />
           <TextField
             fullWidth
-            style={{ marginTop: 12 }}
+            style={{ marginTop: 22 }}
             hintText={i18n.__('Password Hint')}
             errorStyle={{ position: 'absolute', left: 0, top: -8, height: 18 }}
             type={this.state.showPwd ? 'text' : 'password'}
@@ -121,14 +109,14 @@ class LANLogin extends React.Component {
           />
 
           {/* clear password */}
-          <div style={{ position: 'absolute', right: 4, top: 20 }}>
+          <div style={{ position: 'absolute', right: 4, top: 30 }}>
             <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.clearPn}>
               <DelPwdIcon />
             </IconButton>
           </div>
 
           {/* password visibility */}
-          <div style={{ position: 'absolute', right: 4, top: 80 }}>
+          <div style={{ position: 'absolute', right: 4, top: 100 }}>
             <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.togglePwd}>
               { this.state.showPwd ? <EyeOpenIcon /> : <EyeOpenIcon /> }
             </IconButton>

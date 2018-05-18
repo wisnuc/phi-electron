@@ -722,15 +722,15 @@ class Home extends Base {
     const iconStyle = { color, width: 30, height: 30 }
     return (
       <div style={style}>
-        <div style={{ width: 24 }} />
+        <div style={{ width: 15 }} />
         <LIButton onClick={this.back} tooltip={noBack ? null : i18n.__('Backward')} disabled={noBack}>
           <BackwardIcon color={color} />
         </LIButton>
-        <div style={{ width: 24 }} />
+        <div style={{ width: 5 }} />
         <LIButton onClick={this.forward} tooltip={noForward ? null : i18n.__('Forward')} disabled={noForward}>
           <ForwardIcon color={color} />
         </LIButton>
-        <div style={{ width: 24 }} />
+        <div style={{ width: 5 }} />
         <LIButton onClick={() => this.refresh()} tooltip={i18n.__('Refresh')} >
           <RefreshAltIcon color={color} />
         </LIButton>
