@@ -109,7 +109,7 @@ class PhiAPI extends RequestManager {
 
       case 'setLANPassword':
         r = this.command(args.deviceSN, {
-          verb: 'PATCH', urlPath: `/users/${args.userUUID}`, params: {}, body: { password: args.password }
+          verb: 'PATCH', urlPath: `/users/${args.userUUID}`, params: {}, body: { password: args.password, encrypted: false }
         })
         break
 

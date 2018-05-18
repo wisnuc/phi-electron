@@ -72,11 +72,13 @@ class Device extends React.Component {
         break
 
       case 'noBoundVolume':
-        text = i18n.__('Need Bind Volume')
+        if (this.props.type === 'LANTOBIND') text = i18n.__('Already Bound')
+        else text = i18n.__('Need Bind Volume')
         break
 
       case 'ready':
-        text = ''
+        if (this.props.type === 'LANTOBIND') text = i18n.__('Already Bound')
+        else text = ''
         break
 
       case 'offline':

@@ -17,6 +17,7 @@ class Login extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      list: [],
       hello: true,
       loading: true,
       status: 'phiLogin'
@@ -44,7 +45,7 @@ class Login extends React.Component {
     }
 
     this.refreshStationList = () => {
-      this.setState({ loading: true })
+      this.setState({ loading: true, type: 'BOUNDLIST' })
       this.props.phi.req('stationList', null, (e, r) => {
         if (e || !r.result || !Array.isArray(r.result.list) || r.error !== '0') {
           this.setState({ loading: false, list: [], status: 'phiNoBound', error: true }) // TODO Error
@@ -54,6 +55,10 @@ class Login extends React.Component {
           this.setState({ list, loading: false, type: 'BOUNDLIST', status })
         }
       })
+    }
+
+    this.addBindDevice = () => {
+      this.showDeviceToBind()
     }
 
     this.refresh = () => {
@@ -106,6 +111,8 @@ class Login extends React.Component {
   componentDidMount () {
     document.getElementById('start-bg').style.display = 'none'
     setTimeout(() => this.setState({ hello: false }), 300)
+    /* jump to some status */
+    if (this.props.jump) this.setState(this.props.jump, () => this.refresh())
   }
 
   componentWillReceiveProps (nextProps) {
@@ -124,7 +131,14 @@ class Login extends React.Component {
           overflow: 'hidden'
         }}
       >
-        <SelectDevice {...props} {...this.state} refresh={this.refresh} manageDisk={this.manageDisk} />
+        <SelectDevice
+          {...props}
+          {...this.state}
+          refresh={this.refresh}
+          manageDisk={this.manageDisk}
+          addBindDevice={this.addBindDevice}
+          refreshStationList={this.refreshStationList}
+        />
       </div>
     )
   }

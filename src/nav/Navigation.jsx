@@ -3,11 +3,12 @@ import React from 'react'
 import { ipcRenderer } from 'electron'
 import { Snackbar, FlatButton } from 'material-ui'
 
+import Policy from './Policy'
 import FileMenu from './FileMenu'
 import TransMenu from './TransMenu'
 import TransCount from './TransCount'
 import SettingsMenu from './SettingMenu'
-import Policy from './Policy'
+import ChangeDevice from './ChangeDevice'
 
 import Home from '../view/Home'
 import Photo from '../view/Photo'
@@ -34,7 +35,6 @@ import Samba from '../view/Samba'
 import DLNA from '../view/DLNA'
 import ResetDevice from '../view/ResetDevice'
 
-import SelectDevice from '../login/SelectDevice'
 import Fruitmix from '../common/fruitmix'
 import WindowAction from '../common/WindowAction'
 import DialogOverlay from '../common/PureDialog'
@@ -48,8 +48,7 @@ class NavViews extends React.Component {
 
     this.state = {
       nav: null,
-      snackBar: '',
-      list: []
+      snackBar: ''
     }
 
     this.views = {}
@@ -156,15 +155,7 @@ class NavViews extends React.Component {
     }
 
     this.showBoundList = () => {
-      this.setState({ changeDevice: true, loading: true, list: [] })
-      this.props.phi.req('stationList', null, (e, r) => {
-        if (e || !r.result || !Array.isArray(r.result.list) || r.error !== '0') {
-          this.setState({ loading: false, list: [], error: true }) // TODO Error
-        } else {
-          const list = r.result.list
-          this.setState({ list, loading: false })
-        }
-      })
+      this.setState({ changeDevice: true })
     }
   }
 
@@ -203,14 +194,8 @@ class NavViews extends React.Component {
   }
 
   renderChangeDevice () {
-    console.log('this.props renderChangeDevice', this.props)
     return (
-      <SelectDevice
-        {...this.props}
-        {...this.state}
-        refresh={this.showBoundList}
-        type="CHANGEDEVICE"
-      />
+      <ChangeDevice {...this.props} />
     )
   }
 

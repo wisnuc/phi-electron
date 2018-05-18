@@ -25,11 +25,13 @@ class Fruitmix extends React.Component {
       ipcRenderer,
       snackBar: '',
       view: 'login',
+      jump: null,
       account: null,
       phi: new PhiAPI(),
       phiLogin: this.phiLogin.bind(this),
       deviceLogin: this.deviceLogin.bind(this),
-      openSnackBar: this.openSnackBar.bind(this)
+      openSnackBar: this.openSnackBar.bind(this),
+      jumpToBindDevice: this.jumpToBindDevice.bind(this)
     }
   }
 
@@ -45,11 +47,11 @@ class Fruitmix extends React.Component {
 
   deviceLogin ({ dev, user, token }) {
     ipcRenderer.send('LOGIN', dev, user)
-    this.setState({ view: 'device', selectedDevice: dev })
+    this.setState({ view: 'device', selectedDevice: dev, jump: null })
   }
 
   logout () {
-    this.setState({ account: null, view: 'login', phi: new PhiAPI() })
+    this.setState({ account: null, view: 'login', phi: new PhiAPI(), jump: null })
   }
 
   renderSnackBar () {
@@ -61,6 +63,10 @@ class Fruitmix extends React.Component {
         onRequestClose={() => this.setState({ snackBar: '' })}
       />
     )
+  }
+
+  jumpToBindDevice () {
+    this.setState({ view: 'login', selectedDevice: null, jump: { status: 'deviceSelect', type: 'LANTOBIND' } })
   }
 
   render () {

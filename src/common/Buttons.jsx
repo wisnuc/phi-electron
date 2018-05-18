@@ -122,7 +122,7 @@ export class FLButton extends Button {
     const cursor = disabled ? 'default' : 'pointer'
     const color = this.state.hover ? 'var(--dodger-blue)' : ' var(--grey-text)'
     const buttonStyle = Object.assign({ padding: '0 8px', cursor, display: 'inline-block' }, style)
-    const textStyle = Object.assign({ height: 36, color, fontSzie: 14 }, labelStyle)
+    const textStyle = Object.assign({ height: 34, color, fontSzie: 14 }, labelStyle)
 
     return (
       <div {...this.funcs} style={buttonStyle} >

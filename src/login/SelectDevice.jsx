@@ -12,7 +12,7 @@ import ConnectionHint from './ConnectionHint'
 import Dialog from '../common/PureDialog'
 import ScrollBar from '../common/ScrollBar'
 import { RSButton, LIButton } from '../common/Buttons'
-import { RefreshIcon, HelpIcon, AddDeviceIcon } from '../common/Svg'
+import { RefreshIcon, HelpIcon, AddDeviceIcon, BackIcon } from '../common/Svg'
 import CircularLoading from '../common/CircularLoading'
 
 class DeviceSelect extends React.Component {
@@ -178,7 +178,8 @@ class DeviceSelect extends React.Component {
     return (
       <div style={{ width: '100%', height: '100%', backgroundColor: '#f3f8ff' }}>
         <div style={{ height: 49, width: '100%', display: 'flex', alignItems: 'center' }}>
-          <div style={{ marginLeft: 30 }} className="title">
+          <div style={{ marginLeft: 30, display: 'flex', alignItems: 'center' }} className="title">
+            { this.props.type === 'LANTOBIND' && <LIButton onClick={this.props.refreshStationList} > <BackIcon /> </LIButton> }
             { title }
           </div>
           <div style={{ flexGrow: 1 }} />
