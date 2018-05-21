@@ -54,6 +54,7 @@ class Device extends React.Component {
     return (
       (type === 'LANTOBIND' && status === 'noBoundUser') ||
       (type === 'LANTOLOGIN' && status === 'ready') ||
+      (type === 'CHANGEDEVICE' && status === 'ready') ||
       (type === 'BOUNDLIST' && status === 'noBoundVolume') ||
       (type === 'BOUNDLIST' && status === 'ready')
     )
@@ -78,7 +79,12 @@ class Device extends React.Component {
 
       case 'ready':
         if (this.props.type === 'LANTOBIND') text = i18n.__('Already Bound')
-        else text = ''
+        else if (this.props.type === 'CHANGEDEVICE') {
+          const currentSN = this.props.selectedDevice && this.props.selectedDevice.mdev && this.props.selectedDevice.mdev.deviceSN
+          const newSN = this.state.dev && this.state.dev.mdev && this.state.dev.mdev.deviceSN
+          if (currentSN && (currentSN === newSN)) text = i18n.__('Current Logged Device')
+          else text = ''
+        } else text = ''
         break
 
       case 'offline':
@@ -160,7 +166,7 @@ class Device extends React.Component {
           }
           {
             !!this.renderStatus() &&
-            <div style={{ fontSize: 14, color: status === 'noBoundUser' ? '#44c468' : '#fa5353' }}>
+            <div style={{ fontSize: 14, color: ['noBoundUser', 'ready'].includes(status) ? '#44c468' : '#fa5353' }}>
               { this.renderStatus() }
             </div>
           }

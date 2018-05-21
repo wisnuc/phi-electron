@@ -46,8 +46,12 @@ class Fruitmix extends React.Component {
   }
 
   deviceLogin ({ dev, user, token }) {
-    ipcRenderer.send('LOGIN', dev, user)
-    this.setState({ view: 'device', selectedDevice: dev, jump: null })
+    if (this.state.selectedDevice) {
+      this.setState({ view: '', selectedDevice: null, jump: null }, () => this.deviceLogin({ dev, user, token }))
+    } else {
+      ipcRenderer.send('LOGIN', dev, user)
+      this.setState({ view: 'device', selectedDevice: dev, jump: null })
+    }
   }
 
   logout () {

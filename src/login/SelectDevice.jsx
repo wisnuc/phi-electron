@@ -40,6 +40,12 @@ class DeviceSelect extends React.Component {
         this.setState({ dev, LANLogin: dev })
       } else if (this.props.type === 'LANTOBIND') {
         this.setState({ dev, confirm: true })
+      } else if (this.props.type === 'CHANGEDEVICE') {
+        const currentSN = this.props.selectedDevice && this.props.selectedDevice.mdev && this.props.selectedDevice.mdev.deviceSN
+        const newSN = dev && dev.mdev && dev.mdev.deviceSN
+        if (currentSN && (currentSN === newSN)) return // the same device
+        this.setState({ dev, cloudLogin: dev })
+        console.log('CHANGEDEVICE', this.props, this.state, dev)
       }
     }
   }

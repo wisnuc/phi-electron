@@ -877,6 +877,7 @@
   "Online and LAN Mode": "本地",
   "Remote Mode": "远程",
   "System Error": "系统错误",
+  "Already Bound": "已绑定",
 
   "==== login/CloudLogin.jsx ====": "",
   "Cloud Logging Error Text": "登录失败",
@@ -903,6 +904,9 @@
   "Transmission Menu Name": "传输列表",
   "Settings Menu Name": "功能设置",
   "Select Device To Login": "选择要登录的设备",
+  "Confirm Logout To Bind Device Text": "需要先退出登录当前设备，才能绑定其它设备，确定继续吗？",
+  "Confirm Logout To Bind Device Title": "登出设备确认",
+  "Current Logged Device": "当前登录",
 
   "==== nav/FileMenu.jsx ====": "",
   "File Menu Title": "N2家庭"
