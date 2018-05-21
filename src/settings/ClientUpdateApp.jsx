@@ -190,7 +190,7 @@ class Update extends React.Component {
           </div>
 
           <div style={{ height: 1, width: 320, marginLeft: 160, marginTop: -1, backgroundColor: '#bfbfbf', opacity: 0.5 }} />
-          <div style={{ height: 20 }} />
+          <div style={{ height: 40 }} />
 
           <div style={{ width: 240, height: 40, margin: '0 auto', paddingLeft: 160 }}>
             <RRButton

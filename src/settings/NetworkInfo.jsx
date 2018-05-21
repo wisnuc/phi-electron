@@ -38,7 +38,7 @@ class NetworkInfo extends React.Component {
     return (
       <div style={{ width: '100%', height: '100%' }} className="flexCenter" >
         <div style={{ width: 480, paddingRight: 160, paddingBottom: 60 }}>
-          <div style={{ width: 300, marginLeft: 160, height: 100, padding: '40px 10px' }}>
+          <div style={{ width: 300, marginLeft: 160, height: 100, padding: '40px 10px', border: 'solid 1px #eaeaea' }}>
             <div style={{ height: 70, display: 'flex', alignItems: 'center' }}>
               <div style={{ width: 70 }} className="flexCenter">
                 <img

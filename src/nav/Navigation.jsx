@@ -399,16 +399,16 @@ class NavViews extends React.Component {
     return (
       <div style={{ height: '100%', width: '100%' }}>
         <div
-          style={{ height: 60, width: 210 }}
+          style={{ height: 60, minWidth: 210 }}
         >
           <FlatButton
             label={title}
-            labelStyle={{ height: 60, width: 210, lineHeight: '60px', fontSize: 22, color: '#525a60', marginLeft: 8 }}
+            labelStyle={{ height: 60, minWidth: 210, lineHeight: '60px', fontSize: 22, color: '#525a60', marginLeft: 8 }}
             hoverColor="rgba(0,0,0,.04)"
             rippleColor="rgba(0,0,0,.3)"
             icon={<BackIcon style={{ color: '#525a60' }} />}
             onClick={() => this.navTo('settings')}
-            style={{ height: 60, width: 210, borderRadius: '0 30px 30px 0' }}
+            style={{ height: 60, minWidth: 210, borderRadius: '0 30px 30px 0' }}
           />
         </div>
         <div style={{ height: 'calc(100% - 50px)', width: '100%' }}>

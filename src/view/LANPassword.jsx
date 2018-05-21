@@ -1,9 +1,9 @@
 import React from 'react'
 import i18n from 'i18n'
 import Base from './Base'
-import NetworkInfo from '../device/NetworkInfo'
+import LANPassword from '../settings/LANPassword'
 
-class Ethernet extends Base {
+class LAN extends Base {
   willReceiveProps (nextProps) {
     this.handleProps(nextProps.selectedDevice, ['net'])
   }
@@ -35,14 +35,12 @@ class Ethernet extends Base {
 
   renderContent ({ openSnackBar }) {
     return (
-      <NetworkInfo
-        net={this.state.net}
-        primaryColor={this.groupPrimaryColor()}
-        apis={this.ctx.props.apis}
+      <LANPassword
+        {...this.ctx.props}
         openSnackBar={openSnackBar}
       />
     )
   }
 }
 
-export default Ethernet
+export default LAN

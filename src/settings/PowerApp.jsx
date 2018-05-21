@@ -3,11 +3,14 @@ import React from 'react'
 import { RRButton } from '../common/Buttons'
 import ConfirmDialog from '../common/ConfirmDialog'
 
-class ResetDevice extends React.Component {
+class Power extends React.Component {
   constructor (props) {
     super(props)
 
     this.state = { confirm: false }
+
+    this.reboot = () => {
+    }
 
     this.reset = (check) => {
       console.log('this.reset', this.props, check)
@@ -30,17 +33,17 @@ class ResetDevice extends React.Component {
           <div style={{ height: 180, width: 280, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <img
               style={{ width: 280, height: 180 }}
-              src="./assets/images/pic_unbind.png"
+              src="./assets/images/pic_powermanage.png"
               alt=""
             />
           </div>
           <div style={{ height: 40 }} />
           <div style={{ color: '#888a8c', marginBottom: 40, height: 80, display: 'flex', alignItems: 'center' }}>
-            { i18n.__('ResetDevice Text')}
+            { i18n.__('Reboot Text')}
           </div>
           <div style={{ width: 240, height: 40, margin: '0 auto' }}>
             <RRButton
-              label={i18n.__('ResetDevice Menu Name')}
+              label={i18n.__('Reboot Menu Name')}
               onClick={this.showConfirm}
             />
           </div>
@@ -49,14 +52,13 @@ class ResetDevice extends React.Component {
         <ConfirmDialog
           open={this.state.confirm}
           onCancel={() => this.setState({ confirm: false })}
-          onConfirm={check => this.reset(check)}
-          title={i18n.__('Confirm Unbind Title')}
-          text={i18n.__('Confirm Unbind Text')}
-          checkText={i18n.__('Check Text of Unbind')}
+          onConfirm={() => this.reboot()}
+          title={i18n.__('Confirm Reboot Title')}
+          text={i18n.__('Confirm Reboot Text')}
         />
       </div>
     )
   }
 }
 
-export default ResetDevice
+export default Power

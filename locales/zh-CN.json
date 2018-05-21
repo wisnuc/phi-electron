@@ -624,18 +624,28 @@
   "==== view/LANPassword ====": "",
   "LANPassword Menu Name": "离线密码",
   "LANPassword Description": "离线密码设置",
+  "LAN Password Description": "请为NAS设备提供离线密码,以备离线时连接和管理NAS设备",
 
   "==== view/Power.jsx ====": "",
   "Power Menu Name": "设备重启",
   "Power Description": "重启NAS设备",
+  "Confirm Reboot Title": "重启设备",
+  "Reboot Menu Name": "重启设备",
+  "Reboot Text": "重启设备将会终止当前的数据传输，并退出当前登录的设备",
 
   "==== view/Samba.jsx ====": "",
   "Samba Menu Name": "SAMBA",
   "Samba Description": "SAMBA设置",
+  "Samba": "Samba",
+  "Samba Encrypt": "Samba加密",
+  "Samba Password Hint": "设置Samba密码",
+  "Sambe Description": "开启后支持Samba协议的设备可访问NAS当前用户的存储资源",
 
   "==== view/DLNA.jsx ====": "",
   "DLNA Menu Name": "DLNA",
   "DLNA Description": "DLNA设置",
+  "Dlna": "DLNA",
+  "Dlna Description": "开启后支持DLNA协议的设备可访问NAS所有用户存储的资源。",
 
   "==== view/ResetDevice.jsx ====": "",
   "ResetDevice Menu Name": "解绑及恢复出厂",

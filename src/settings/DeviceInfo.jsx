@@ -6,8 +6,6 @@ import DoneIcon from 'material-ui/svg-icons/action/done'
 import ModeEdit from 'material-ui/svg-icons/editor/mode-edit'
 import CircularLoading from '../common/CircularLoading'
 
-const parseData = value => parseInt(value, 10) * 1024
-
 class DeviceInfo extends React.PureComponent {
   constructor (props) {
     super(props)
@@ -102,6 +100,7 @@ class DeviceInfo extends React.PureComponent {
           border: 'solid 1px #eaeaea',
           padding: 20
         }}
+        key={index.toString()}
       >
         <div style={{ fontSize: 20, color: '#525a60' }}>
           { title }

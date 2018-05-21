@@ -1,9 +1,9 @@
 import React from 'react'
 import i18n from 'i18n'
 import Base from './Base'
-import PluginApp from '../device/PluginApp'
+import Samba from '../settings/Samba'
 
-class Plugin extends Base {
+class SambaApp extends Base {
   constructor (ctx) {
     super(ctx)
 
@@ -15,11 +15,11 @@ class Plugin extends Base {
   }
 
   willReceiveProps (nextProps) {
-    this.handleProps(nextProps.apis, ['samba', 'dlna', 'bt'])
+    // this.handleProps(nextProps.apis, ['samba', 'dlna', 'bt'])
   }
 
   navEnter () {
-    this.refresh()
+    // this.refresh()
   }
 
   navGroup () {
@@ -45,17 +45,12 @@ class Plugin extends Base {
 
   renderContent ({ openSnackBar }) {
     return (
-      <PluginApp
-        primaryColor={this.groupPrimaryColor()}
+      <Samba
+        {...this.ctx.props}
         openSnackBar={openSnackBar}
-        dlna={this.state.dlna}
-        samba={this.state.samba}
-        bt={this.state.bt}
-        apis={this.ctx.props.apis}
-        refresh={this.refresh}
       />
     )
   }
 }
 
-export default Plugin
+export default SambaApp

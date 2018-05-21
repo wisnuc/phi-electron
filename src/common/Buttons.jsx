@@ -1,5 +1,5 @@
 import React from 'react'
-import { IconButton } from 'material-ui'
+import { IconButton, Toggle as MToggle } from 'material-ui'
 import { CheckedIcon } from '../common/Svg'
 
 export class Button extends React.PureComponent {
@@ -307,6 +307,24 @@ export class SIButton extends React.PureComponent {
     const iconStyle = Object.assign({ color: '#7d868f', opacity: disabled ? 0.5 : 1 }, styles.smallIcon, this.props.iconStyle)
     return (
       <IconButton style={style} iconStyle={iconStyle} {...this.props} />
+    )
+  }
+}
+
+export class Toggle extends React.PureComponent {
+  render () {
+    const { toggled, onToggle, disabled } = this.props
+    return (
+      <MToggle
+        style={{ width: 48 }}
+        thumbStyle={{ width: 18, height: 18, marginTop: 3, backgroundColor: '#85868c', boxShadow: '0px 2px 6px 0 rgba(52,52,52,.24)' }}
+        thumbSwitchedStyle={{ width: 18, height: 18, marginTop: 3, backgroundColor: '#31a0f5', boxShadow: '0px 2px 6px 0 rgba(85,131,243,.3)' }}
+        trackStyle={{ height: 16, backgroundColor: '#FFF', border: '1px solid #e6e6e6' }}
+        trackSwitchedStyle={{ height: 16, backgroundColor: '#FFF', border: '1px solid #e6e6e6' }}
+        disabled={disabled}
+        toggled={toggled}
+        onToggle={onToggle}
+      />
     )
   }
 }

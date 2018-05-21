@@ -132,6 +132,7 @@ class Disk extends React.PureComponent {
                     display: 'flex',
                     alignItems: 'center'
                   }}
+                  key={index.toString()}
                 >
                   {
                     status === i18n.__('Disk Found')

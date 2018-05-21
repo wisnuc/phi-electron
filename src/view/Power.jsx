@@ -1,7 +1,7 @@
 import React from 'react'
 import i18n from 'i18n'
 import Base from './Base'
-import PowerApp from '../device/PowerApp'
+import PowerApp from '../settings/PowerApp'
 
 class Power extends Base {
   navGroup () {
@@ -28,11 +28,8 @@ class Power extends Base {
   renderContent ({ openSnackBar }) {
     return (
       <PowerApp
-        nav={this.ctx.props.nav}
-        apis={this.ctx.props.apis}
+        {...this.ctx.props}
         openSnackBar={openSnackBar}
-        primaryColor={this.groupPrimaryColor()}
-        selectedDevice={this.ctx.props.selectedDevice}
       />
     )
   }
