@@ -1,12 +1,18 @@
 import i18n from 'i18n'
 import React from 'react'
-import { Divider } from 'material-ui'
+import { Checkbox, Divider } from 'material-ui'
 import { RSButton } from '../common/Buttons'
 import Dialog from '../common/PureDialog'
 
 class ConfirmDialog extends React.PureComponent {
+  constructor (props) {
+    super(props)
+    this.state = { check: false }
+    this.handleCheck = () => this.setState({ check: !this.state.check })
+  }
+
   render () {
-    const { open, onCancel, onConfirm, title, text } = this.props
+    const { open, onCancel, onConfirm, title, text, checkText } = this.props
     return (
       <Dialog open={open} onRequestClose={onCancel} modal >
         {
@@ -29,12 +35,27 @@ class ConfirmDialog extends React.PureComponent {
               >
                 { text }
               </div>
+              {
+                !!checkText && (
+                  <div style={{ height: 40, width: 280, marginLeft: 20, display: 'flex', alignItems: 'center' }}>
+                    <Checkbox
+                      label={checkText}
+                      disableTouchRipple
+                      style={{ width: 280 }}
+                      iconStyle={{ height: 18, width: 18, marginTop: 2, fill: this.state.check ? '#31a0f5' : 'rgba(0,0,0,.25)' }}
+                      labelStyle={{ fontSize: 14, color: '#85868c', marginLeft: -9 }}
+                      checked={this.state.check}
+                      onCheck={() => this.handleCheck()}
+                    />
+                  </div>
+                )
+              }
               <div style={{ height: 20 }} />
               <div style={{ height: 34, width: 'calc(100% - 40px)', display: 'flex', alignItems: 'center', padding: 20 }}>
                 <div style={{ flexGrow: 1 }} />
                 <RSButton label={i18n.__('Cancel')} onClick={onCancel} alt />
                 <div style={{ width: 10 }} />
-                <RSButton label={i18n.__('Confirm')} onClick={onConfirm} />
+                <RSButton label={i18n.__('Confirm')} onClick={() => onConfirm(this.state.check)} />
               </div>
             </div>
           )

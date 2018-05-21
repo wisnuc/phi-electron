@@ -180,6 +180,12 @@ export const AddDeviceIcon = f('icon_add')
 
 export const SmallHelpIcon = f('icon_help_list')
 
+export const DiskIcon = f('icon_disk_normal')
+
+export const DiskAltIcon = f('icon_disk_disable')
+
+export const DropDownIcon = f('icon_arrow_list')
+
 export const CheckedIcon = props => (
   <SvgIcon viewBox="0 0 9.5 7.5" {...props}>
     <path fill="none" stroke="#FFF" d="M1.499 2.5l2.001 2 4-4" />

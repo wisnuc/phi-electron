@@ -59,6 +59,15 @@ class PhiAPI extends RequestManager {
     return typeof data === 'object' ? r.send(data) : r
   }
 
+  adel (ep, data) {
+    const r = request
+      .del(`http://${phiCloudAddress}/${ep}`)
+      .set('Content-Type', 'application/json')
+      .set('Authorization', this.token)
+
+    return typeof data === 'object' ? r.send(data) : r
+  }
+
   command (deviceSN, data) {
     return request
       .post(`http://${phiCloudAddress}/ResourceManager/app/pipe/command`)
@@ -92,6 +101,10 @@ class PhiAPI extends RequestManager {
 
       case 'bindDevice':
         r = this.apost('StationManager/relation/binding', { deviceSN: args.deviceSN })
+        break
+
+      case 'unbindStation':
+        r = this.adel('StationManager/relation/binding', { deviceSN: args.deviceSN })
         break
 
       case 'getBindState':

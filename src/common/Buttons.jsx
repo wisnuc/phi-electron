@@ -75,7 +75,7 @@ export class RSButton extends Button {
       },
       style
     )
-    const textStyle = Object.assign({ color, fontSize: 16, height: 31 }, labelStyle)
+    const textStyle = Object.assign({ color, fontSize: 16, height: 30 }, labelStyle)
 
     return (
       <div {...this.funcs} style={buttonStyle} >
@@ -104,7 +104,7 @@ export class RRButton extends Button {
         : `0px 5px 10px 0 ${alt ? 'rgba(47, 162, 79, 0.25)' : 'rgba(33, 110, 209, 0.25)'}`
 
     const buttonStyle = Object.assign({ width, height, cursor, borderRadius, backgroundColor, boxShadow }, style)
-    const textStyle = Object.assign({ color: '#FFF', fontSize: 16 }, labelStyle)
+    const textStyle = Object.assign({ color: '#FFF', fontSize: 14 }, labelStyle)
 
     return (
       <div {...this.funcs} style={buttonStyle} className="flexCenter" >

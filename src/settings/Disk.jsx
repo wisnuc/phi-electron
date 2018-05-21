@@ -4,7 +4,7 @@ import i18n from 'i18n'
 import { IconButton } from 'material-ui'
 import DiskModeGuide from '../login/DiskModeGuide'
 import Dialog from '../common/PureDialog'
-import { HelpIcon } from '../common/Svg'
+import { HelpIcon, DiskIcon, DiskAltIcon } from '../common/Svg'
 import { RSButton } from '../common/Buttons'
 
 class Disk extends React.PureComponent {
@@ -115,7 +115,7 @@ class Disk extends React.PureComponent {
               <div style={{ width: 150, height: 40 }}>
                 <RSButton
                   alt
-                  style={{ width: 100 }}
+                  style={{ width: 100, height: 30 }}
                   label={i18n.__('Format Disk')}
                   onClick={this.save}
                 />
@@ -133,7 +133,11 @@ class Disk extends React.PureComponent {
                     alignItems: 'center'
                   }}
                 >
-                  <div style={{ width: 30, height: 40, backgroundColor: 'grey', marginLeft: 30 }} />
+                  {
+                    status === i18n.__('Disk Found')
+                      ? <DiskIcon style={{ height: 54, width: 40, marginLeft: 15 }} />
+                      : <DiskAltIcon style={{ height: 54, width: 40, marginLeft: 15 }} />
+                  }
                   <div style={{ height: 40, marginLeft: 12 }} >
                     <div style={{ height: 20, display: 'flex', alignItems: 'center', color: '#505259' }} >
                       { pos }
@@ -166,7 +170,7 @@ class Disk extends React.PureComponent {
             <div style={{ width: 150, height: 40 }}>
               <RSButton
                 alt
-                style={{ width: 100 }}
+                style={{ width: 100, height: 30 }}
                 label={i18n.__('Eject USB')}
                 onClick={this.save}
               />

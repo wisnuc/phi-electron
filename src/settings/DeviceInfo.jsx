@@ -179,7 +179,7 @@ class DeviceInfo extends React.PureComponent {
           {
             <Divider
               color="rgba(0, 0, 0, 0.87)"
-              style={{ opacity: !this.state.modify && this.state.titleHover ? 1 : 0, width: 267 }}
+              style={{ opacity: !this.state.modify ? 1 : 0, width: 267 }}
             />
           }
         </div>

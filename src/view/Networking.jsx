@@ -1,15 +1,15 @@
 import React from 'react'
 import i18n from 'i18n'
 import Base from './Base'
-import NetworkInfo from '../device/NetworkInfo'
+import NetworkInfo from '../settings/NetworkInfo'
 
 class Ethernet extends Base {
   willReceiveProps (nextProps) {
-    this.handleProps(nextProps.selectedDevice, ['net'])
+    // this.handleProps(nextProps.selectedDevice, ['net'])
   }
 
   navEnter () {
-    this.ctx.props.selectedDevice.request('net')
+    // this.ctx.props.selectedDevice.request('net')
   }
 
   navGroup () {
@@ -36,9 +36,7 @@ class Ethernet extends Base {
   renderContent ({ openSnackBar }) {
     return (
       <NetworkInfo
-        net={this.state.net}
-        primaryColor={this.groupPrimaryColor()}
-        apis={this.ctx.props.apis}
+        {...this.ctx.props}
         openSnackBar={openSnackBar}
       />
     )

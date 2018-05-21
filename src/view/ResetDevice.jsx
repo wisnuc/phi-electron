@@ -28,7 +28,7 @@ class ResetDevice extends Base {
   renderContent ({ openSnackBar }) {
     return (
       <Reset
-        apis={this.ctx.props.apis}
+        {...this.ctx.props}
         openSnackBar={openSnackBar}
       />
     )
