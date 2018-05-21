@@ -1,6 +1,6 @@
 import React from 'react'
 import i18n from 'i18n'
-import { shell } from 'electron'
+import { shell, remote } from 'electron'
 import { orange500 } from 'material-ui/styles/colors'
 import NewReleases from 'material-ui/svg-icons/av/new-releases'
 import CheckIcon from 'material-ui/svg-icons/navigation/check'
@@ -8,7 +8,7 @@ import CloseIcon from 'material-ui/svg-icons/navigation/close'
 import InfoIcon from 'material-ui/svg-icons/action/info'
 import FlatButton from '../common/FlatButton'
 import ErrorBox from '../common/ErrorBox'
-import { RRButton } from '../common/Buttons'
+import { RRButton, RSButton } from '../common/Buttons'
 import CircularLoading from '../common/CircularLoading'
 
 const compareVerison = (a, b) => {
@@ -62,6 +62,13 @@ class Update extends React.Component {
 
     this.sendCheck = () => {
       this.setState({ status: 'checking' }, () => this.props.ipcRenderer.send('CHECK_UPDATE'))
+    }
+
+    this.onChoose = () => {
+      remote.dialog.showOpenDialog({ properties: ['openFile'], filters: [{ name: 'Roms', extensions: ['bin'] }] }, (filePaths) => {
+        if (!filePaths || !filePaths.length) return
+        this.setState({ path: filePaths[0] })
+      })
     }
   }
 
@@ -147,7 +154,7 @@ class Update extends React.Component {
   }
 
   render () {
-    const currentVersion = global.config.appVersion.toUpperCase()
+    const currentVersion = 'v1.0.0'.toUpperCase()
     const status = '版本检查中...'
     const ltsValue = '检测中...'
     return (
@@ -167,23 +174,23 @@ class Update extends React.Component {
           </div>
 
           <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center' }}>
-            <div style={{ width: 150, textAlign: 'right', color: '#525a60' }}>
+            <div style={{ width: 130, textAlign: 'right', color: '#525a60' }}>
               { i18n.__('Current Version') }
             </div>
-            <div style={{ width: 10 }} />
+            <div style={{ width: 30 }} />
             <div style={{ width: 150, color: '#888a8c', fontSize: 16 }}>
               { currentVersion }
             </div>
           </div>
 
           <div style={{ height: 1, width: 320, marginLeft: 160, marginTop: -1, backgroundColor: '#bfbfbf', opacity: 0.5 }} />
-          <div style={{ height: 40 }} />
+          <div style={{ height: 20 }} />
 
           <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center' }}>
-            <div style={{ width: 150, textAlign: 'right', color: '#525a60' }}>
+            <div style={{ width: 130, textAlign: 'right', color: '#525a60' }}>
               { i18n.__('Latest Version') }
             </div>
-            <div style={{ width: 10 }} />
+            <div style={{ width: 30 }} />
             <div style={{ width: 150, color: '#525a60', opacity: 0.5 }}>
               { ltsValue }
             </div>
@@ -192,9 +199,35 @@ class Update extends React.Component {
           <div style={{ height: 1, width: 320, marginLeft: 160, marginTop: -1, backgroundColor: '#bfbfbf', opacity: 0.5 }} />
           <div style={{ height: 20 }} />
 
-          <div style={{ width: 240, height: 40, margin: '0 auto', paddingLeft: 160 }}>
+          <div style={{ position: 'relative', height: 40, width: '100%', display: 'flex', alignItems: 'center' }}>
+            <div style={{ width: 130, textAlign: 'right', color: '#525a60' }}>
+              { i18n.__('Install Package') }
+            </div>
+            <div style={{ width: 30 }} />
+            <input
+              value={this.state.path || ''}
+              onChange={() => {}}
+              style={{ width: 220, color: '#888a8c', fontSize: 14 }}
+            />
+            <div style={{ position: 'absolute', right: 0 }}>
+              <RSButton label={i18n.__('Choose')} onClick={this.onChoose} alt />
+            </div>
+          </div>
+
+          <div style={{ height: 1, width: 320, marginLeft: 160, marginTop: -1, backgroundColor: '#bfbfbf', opacity: 0.5 }} />
+          <div style={{ height: 40 }} />
+
+          <div style={{ width: 320, height: 40, margin: '0 auto', paddingLeft: 160, display: 'flex', alignItems: 'center' }}>
             <RRButton
-              label={i18n.__('Checking...')}
+              alt
+              style={{ width: 131 }}
+              label={i18n.__('Open Web to Download Firmware')}
+              onClick={this.save}
+            />
+            <div style={{ width: 20 }} />
+            <RRButton
+              style={{ width: 131 }}
+              label={i18n.__('Update Immediately')}
               onClick={this.save}
             />
           </div>

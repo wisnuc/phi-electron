@@ -616,6 +616,10 @@
   "==== view/FirmwareUpdate.jsx ====": "",
   "FirmwareUpdate Menu Name": "固件升级",
   "FirmwareUpdate Description": "设备固件升级设置",
+  "Install Package": "安装包",
+  "Choose": "选择",
+  "Open Web to Download Firmware": "网页下载固件",
+  "Update Immediately": "立即升级",
 
   "==== view/LANPassword ====": "",
   "LANPassword Menu Name": "离线密码",

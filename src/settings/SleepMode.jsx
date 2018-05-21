@@ -22,6 +22,9 @@ class SleepMode extends React.Component {
         <div style={{ flexGrow: 1 }} />
         <Toggle
           style={{ width: 48 }}
+          thumbStyle={{ width: 18, height: 18, marginTop: 2 }}
+          trackStyle={{ height: 16, backgroundColor: '#FFF', border: '1px solid #e6e6e6' }}
+          trackSwitchedStyle={{ height: 16, backgroundColor: '#FFF', border: '1px solid #e6e6e6' }}
           toggled={enabled}
           onToggle={func}
         />
@@ -35,11 +38,11 @@ class SleepMode extends React.Component {
         <div style={{ width: 150, textAlign: 'right', color: '#525a60' }}>
           { i18n.__('Sleep Duration') }
         </div>
-        <div style={{ flexGrow: 1 }} />
+        <div style={{ width: 30 }} />
         <div style={{ width: 80, height: 30, backgroundColor: '#f5f7fa', color: '#525a60' }} className="flexCenter">
           { '00 : 30' }
         </div>
-        <div style={{ width: 20 }} />
+        <div style={{ flexGrow: 1 }} />
         <div style={{ width: 80, height: 30, backgroundColor: '#f5f7fa', color: '#525a60' }} className="flexCenter">
           { '07 : 30' }
         </div>
@@ -63,6 +66,14 @@ class SleepMode extends React.Component {
     return (
       <div style={{ width: '100%', height: '100%' }} className="flexCenter" >
         <div style={{ width: 480, paddingRight: 160, paddingBottom: 60 }}>
+          <div style={{ height: 180, width: 320, paddingLeft: 160 }} className="flexCenter">
+            <img
+              style={{ width: 280, height: 180 }}
+              src="./assets/images/pic_unbind.png"
+              alt=""
+            />
+          </div>
+
           { this.renderRow(settings[0]) }
 
           <div style={{ width: 320, color: '#888a8c', paddingLeft: 160 }}>

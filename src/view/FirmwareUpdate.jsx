@@ -1,7 +1,7 @@
 import i18n from 'i18n'
 import React from 'react'
 import Base from './Base'
-import FirmwareUpdateApp from '../device/FirmwareUpdateApp'
+import FirmwareUpdateApp from '../settings/FirmwareUpdateApp'
 
 class FirmwareUpdate extends Base {
   constructor (ctx) {
@@ -23,12 +23,14 @@ class FirmwareUpdate extends Base {
   }
 
   willReceiveProps (nextProps) {
-    this.handleProps(nextProps.selectedDevice, ['firm'])
+    // this.handleProps(nextProps.selectedDevice, ['firm'])
   }
 
   navEnter (t) {
+    /*
     this.ctx.props.selectedDevice.request('firm')
     if (!t || !t.noMoreCheck) this.ctx.props.selectedDevice.pureRequest('checkUpdates')
+    */
   }
 
   navGroup () {
