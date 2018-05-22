@@ -681,9 +681,10 @@ class Home extends Base {
     */
 
     return (
-      <div style={Object.assign({}, style, { marginLeft: 20, marginTop: -4 })}>
+      <div style={Object.assign({}, style, { marginLeft: 20 })}>
         {
           path.reduce((acc, node, index) => {
+            const last = index === path.length - 1
             const isDrop = () => this.state.select.isDrop()
             const dropable = () => this.state.select.isDrop() && this.dropHeader()
             const funcs = { node, isDrop, dropable, onHoverHeader: this.onHoverHeader, onClick: () => touchTap(node) }
@@ -699,8 +700,8 @@ class Home extends Base {
             if (index !== 0) acc.push(<BreadCrumbSeparator key={`Separator${node.uuid}`} />)
 
             /* the first one is always special */
-            if (index === 0) acc.push(<BreadCrumbItem text={this.title()} key="root" {...funcs} />)
-            else acc.push(<BreadCrumbItem text={node.name} key={`Item${node.uuid}`} {...funcs} />)
+            if (index === 0) acc.push(<BreadCrumbItem text={this.title()} key="root" {...funcs} last={last} />)
+            else acc.push(<BreadCrumbItem text={node.name} key={`Item${node.uuid}`} {...funcs} last={last} />)
 
             return acc
           }, [])

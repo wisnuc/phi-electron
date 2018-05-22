@@ -1,5 +1,4 @@
 import React from 'react'
-import RightIcon from 'material-ui/svg-icons/navigation/chevron-right'
 
 export class BreadCrumbItem extends React.PureComponent {
   constructor (props) {
@@ -19,39 +18,28 @@ export class BreadCrumbItem extends React.PureComponent {
     }
   }
   render () {
-    /* alt: small version and bgColor is white */
-    // const { alt, text } = this.props
-    const { text } = this.props
-    const alt = true
-
-    /* adjust the different lineHeight of Noto and Roboto */
-    const pureRoboto = !text.replace(/[a-zA-Z0-9`~!@#$%^&()-_=+{}[\];', ]/g, '').length
-
-    const bgColor = alt ? 'rgba(0,0,0,.09)' : 'rgba(255,255,255,0.28)'
+    const { text, onClick, last } = this.props
 
     return (
       <div
         style={{
           cursor: 'pointer',
           borderRadius: 2, // mimic a flat button
-          height: alt ? 24 : 32,
-          paddingLeft: (this.state.dropable) || alt ? 6 : 8,
-          paddingRight: (this.state.dropable || alt) ? 6 : 8,
-          fontSize: alt ? 12 : 20,
-          fontWeight: 500,
-          paddingTop: pureRoboto ? 4 : alt ? 2 : 0,
-          color: alt ? 'rgba(0,0,0,.54)' : '#FFF',
+          height: 24,
+          paddingLeft: 6,
+          paddingRight: 6,
+          fontSize: 12,
+          color: this.state.hover ? '#31a0f5' : last ? '#505259' : '#85868c',
           display: 'flex',
           alignItems: 'center',
-          border: this.state.dropable ? '2px #FAFAFA solid' : '',
-          backgroundColor: this.state.isDrop ? 'transparent' : this.state.hover ? bgColor : 'transparent'
+          backgroundColor: 'transparent'
         }}
-        onClick={this.props.onClick}
+        onClick={onClick}
         onMouseMove={this.onMouseMove}
         onMouseLeave={this.onMouseLeave}
       >
         <div style={{ maxWidth: 144, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }} >
-          { this.props.text }
+          { text }
         </div>
       </div>
     )
@@ -60,20 +48,18 @@ export class BreadCrumbItem extends React.PureComponent {
 
 export class BreadCrumbSeparator extends React.PureComponent {
   render () {
-    const alt = true
     return (
       <div
         style={{
-          height: alt ? 24 : 32,
-          width: alt ? 16 : 24,
+          height: 24,
+          width: 16,
           display: 'flex',
           alignItems: 'center',
-          marginTop: alt ? 2 : 4,
           justifyContent: 'center',
           color: 'rgba(0,0,0,.54)'
         }}
       >
-        { alt ? '>' : <RightIcon color="#FFFFFF" /> }
+        { '>' }
       </div>
     )
   }
