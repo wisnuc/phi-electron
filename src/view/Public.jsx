@@ -183,7 +183,6 @@ class Public extends Home {
               detailDrive={detailDrive}
               apis={this.ctx.props.apis}
               refreshDrives={this.refresh}
-              primaryColor={this.groupPrimaryColor()}
             />
             : this.state.entries.length
               ? <FileDetail
@@ -192,7 +191,6 @@ class Public extends Home {
                 entries={this.state.entries}
                 path={this.state.path}
                 ipcRenderer={ipcRenderer}
-                primaryColor={this.groupPrimaryColor()}
               />
               : <div style={{ height: 128, backgroundColor: this.groupPrimaryColor(), filter: 'brightness(0.9)' }} />
         }
@@ -202,6 +200,7 @@ class Public extends Home {
 
   renderContent ({ toggleDetail, openSnackBar, getDetailStatus }) {
     console.log('public', this.state)
+    const selected = this.state.select && this.state.select.selected
     return (
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
         {
@@ -214,7 +213,6 @@ class Public extends Home {
               setAnimation={this.setAnimation}
               ipcRenderer={ipcRenderer}
               download={this.download}
-              primaryColor={this.groupPrimaryColor()}
               changeSortType={this.changeSortType}
               openSnackBar={openSnackBar}
               toggleDialog={this.toggleDialog}
@@ -227,24 +225,27 @@ class Public extends Home {
               setScrollTop={this.setScrollTop}
               setGridData={this.setGridData}
               inPublicRoot={this.state.inRoot}
-              openNewDrive={() => this.setState({ newDrive: true })}
+              openNewDrive={() => this.setState({ newDrive: 'new' })}
             />
         }
 
-        { this.renderMenu(!!this.state.contextMenuOpen && !this.state.inRoot, toggleDetail, getDetailStatus) }
+        {
+          this.renderMenu(!!this.state.contextMenuOpen &&
+            (!this.state.inRoot || (this.state.inRoot && selected && selected.length === 1)))
+        }
 
         { this.renderDialogs(openSnackBar) }
 
         <DialogOverlay open={!!this.state.newDrive} onRequestClose={() => this.setState({ newDrive: false })}>
           {
             this.state.newDrive && <NewDriveDialog
-              primary
+              type={this.state.newDrive}
+              uuid={selected && this.state.entries[selected[0]] && this.state.entries[selected[0]].uuid}
               apis={this.ctx.props.apis}
               users={this.state.users}
               drives={this.state.drives}
               refreshDrives={this.refresh}
               openSnackBar={openSnackBar}
-              primaryColor={this.groupPrimaryColor()}
             />
           }
         </DialogOverlay>

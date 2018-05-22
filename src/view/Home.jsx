@@ -9,7 +9,6 @@ import Base from './Base'
 import FileDetail from '../file/FileDetail'
 import ListSelect from '../file/ListSelect'
 import FileContent from '../file/FileContent'
-import RenameDialog from '../file/RenameDialog'
 import NewFolderDialog from '../file/NewFolderDialog'
 import FileUploadButton from '../file/FileUploadButton'
 import ContextMenu from '../common/ContextMenu'
@@ -24,6 +23,7 @@ import { xcopyMsg } from '../common/msg'
 import Search from '../common/Search'
 import History from '../common/history'
 import { LIButton } from '../common/IconButton'
+import ConfirmDialog from '../common/ConfirmDialog'
 
 /* Drag Item's Coordinate */
 const DRAGLEFT = 180
@@ -182,6 +182,27 @@ class Home extends Base {
       }
     }
 
+    /* handle Public Drive */
+    this.modifyPublic = () => {
+      this.setState({ newDrive: 'edit' })
+    }
+
+    this.deletePublic = () => {
+      this.setState({ deleteDriveConfirm: true })
+    }
+
+    this.fireDeletePublic = () => {
+      if (!window.navigator.onLine) this.ctx.openSnackBar(i18n.__('Offline Text'))
+      else {
+        const { select, entries } = this.state
+        const uuid = select && entries && entries[select.selected[0]] && entries[select.selected[0]].uuid
+        this.ctx.props.apis.request('adminDeleteDrive', { uuid }, (err, res) => {
+          if (err) this.ctx.openSnackBar(i18n.__('Delete Drive Failed'))
+          else this.ctx.openSnackBar(i18n.__('Delete Drive Success'))
+        })
+      }
+    }
+
     this.history = new History()
 
     /* actions */
@@ -249,7 +270,7 @@ class Home extends Base {
       const maxTop = containerDom.offsetTop + containerDom.offsetHeight - adjust + 80
       const y = clientY > maxTop ? maxTop : clientY
       this.setState({
-        contextMenuOpen: !this.state.inRoot, // not show menu in Public root
+        contextMenuOpen: true,
         contextMenuX: x,
         contextMenuY: y
       })
@@ -825,7 +846,12 @@ class Home extends Base {
                 { this.state.deleteLoading && <CircularProgress size={16} thickness={2} style={{ marginLeft: 8 }} /> }
               </div>
               <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-                <FlatButton label={i18n.__('Cancel')} primary disabled={this.state.deleteLoading} onClick={() => this.toggleDialog('delete')} />
+                <FlatButton
+                  label={i18n.__('Cancel')}
+                  primary
+                  disabled={this.state.deleteLoading}
+                  onClick={() => this.toggleDialog('delete')}
+                />
                 <FlatButton
                   label={i18n.__('Confirm')}
                   disabled={this.state.deleteLoading}
@@ -866,6 +892,14 @@ class Home extends Base {
             />
           }
         </DialogOverlay>
+
+        <ConfirmDialog
+          open={this.state.deleteDriveConfirm}
+          onCancel={() => this.setState({ deleteDriveConfirm: false })}
+          onConfirm={() => this.fireDeletePublic()}
+          title={i18n.__('Confirm Delete Public Title')}
+          text={i18n.__('Confirm Delete Public Text')}
+        />
       </div>
     )
   }
@@ -881,9 +915,24 @@ class Home extends Base {
         onRequestClose={this.hideContextMenu}
       >
         {
-          !itemSelected
+          this.state.inRoot
             ? (
-              <div style={{ padding: '5px 0' }}>
+              <div>
+                <MenuItem
+                  primaryText={i18n.__('Modify')}
+                  onClick={this.modifyPublic}
+                />
+                <MenuItem
+                  primaryText={i18n.__('Delete')}
+                  onClick={this.deletePublic}
+                />
+                <MenuItem
+                  primaryText={i18n.__('Properties')}
+                  onClick={() => this.setState({ detail: true })}
+                />
+              </div>
+            ) : !itemSelected ? (
+              <div>
                 <MenuItem
                   primaryText={i18n.__('Upload File')}
                   onClick={() => this.upload('file')}
@@ -921,7 +970,7 @@ class Home extends Base {
                   }
                   menuItems={[
                     <MenuItem
-                      style={{ marginTop: -3 }}
+                      style={{ marginTop: -8 }}
                       primaryText={i18n.__('Name')}
                       onClick={() => this.changeSortType('nameUp')}
                     />,
@@ -930,22 +979,21 @@ class Home extends Base {
                       onClick={() => this.changeSortType('timeUp')}
                     />,
                     <MenuItem
-                      style={{ marginBottom: -3 }}
+                      style={{ marginBottom: -8 }}
                       primaryText={i18n.__('Size')}
                       onClick={() => this.changeSortType('sizeUp')}
                     />
                   ]}
                 />
               </div>
-            )
-            : (
-              <div style={{ padding: '5px 0' }}>
+            ) : (
+              <div>
                 {
                   !multiSelected &&
-                  <MenuItem
-                    primaryText={i18n.__('Open')}
-                    onClick={() => this.toggleDialog('move')}
-                  />
+                    <MenuItem
+                      primaryText={i18n.__('Open')}
+                      onClick={() => this.toggleDialog('move')}
+                    />
                 }
                 <MenuItem
                   primaryText={i18n.__('Download')}

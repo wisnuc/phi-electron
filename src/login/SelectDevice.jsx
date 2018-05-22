@@ -189,11 +189,11 @@ class DeviceSelect extends React.Component {
             { title }
           </div>
           <div style={{ flexGrow: 1 }} />
-          <LIButton onClick={this.props.refresh} > <RefreshIcon /> </LIButton>
           {
             ['BOUNDLIST', 'CHANGEDEVICE'].includes(this.props.type) &&
               <LIButton onClick={this.props.addBindDevice} > <AddDeviceIcon /> </LIButton>
           }
+          <LIButton onClick={this.props.refresh} > <RefreshIcon /> </LIButton>
           <LIButton onClick={() => this.setState({ showHelp: true })} > <HelpIcon /> </LIButton>
           <div style={{ width: 32 }} />
         </div>

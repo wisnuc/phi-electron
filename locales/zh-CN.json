@@ -306,7 +306,7 @@
   "Apply": "应用",
 
   "==== control/NewDriveDialog.jsx ====": "",
-  "Create New Public Drive": "创建新的指定共享盘",
+  "Create New Public Drive": "创建共享盘",
   "Create Drive Failed": "创建失败",
   "Create Drive Success": "创建成功",
 
@@ -527,6 +527,15 @@
   "Public Quick Name": "共享盘",
   "No Public Drive": "没有可用的共享盘",
   "Jump to Create": "去创建",
+  "Confirm Delete Public Text": "该磁盘下的所有数据都将被清除，确定继续吗？",
+  "Confirm Delete Public Title": "删除共享盘",
+  "Delete Drive Failed": "删除失败",
+  "Delete Drive Success": "删除成功",
+  "Modify": "修改",
+  "Modify Public Drive": "修改共享盘",
+  "Permissions": "分配权限",
+  "Public Drive Name": "共享盘名称",
+  "Public Drive Name Hint": "请输入新的共享盘名陈",
 
   "==== view/Photo.jsx ====": "",
   "Photo Menu Name": "我的图片",
@@ -840,7 +849,7 @@
   "==== login/PhiLogin ====": "",
   "Welcome Text": "欢迎使用斐讯NAS产品",
   "Phone Number: ": "服务热线",
-  "Log Out": "登出设备",
+  "Log Out": "退出登录",
   "Login or Sign Up": "登录注册",
   "Not Phone Number": "请输入正确的手机号",
   "Phone Number": "手机号",

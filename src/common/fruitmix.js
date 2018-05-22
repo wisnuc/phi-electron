@@ -237,7 +237,6 @@ class Fruitmix extends EventEmitter {
         break
 
       case 'adminCreateDrive':
-        console.log('adminCreateDrive', args)
         r = this.apost('drives', {
           label: args.label,
           writelist: args.writelist
@@ -249,6 +248,10 @@ class Fruitmix extends EventEmitter {
           label: args.label,
           writelist: args.writelist
         })
+        break
+
+      case 'adminDeleteDrive':
+        r = this.adel(`drives/${args.uuid}`)
         break
 
       /* File APIs */

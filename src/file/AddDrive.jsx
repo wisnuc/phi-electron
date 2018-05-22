@@ -16,6 +16,11 @@ class AddDrive extends Button {
     const { item } = this.props
     const { entry } = item
     console.log('AddDrive', this.props, this.state)
+
+    const backgroundColor = this.state.pressed ? '#f4fafe' : this.state.hover ? '#f9fcfe' : '#FFF'
+    const borderColor = this.state.pressed ? '#a3d3f8' : this.state.hover ? '#d1e9fb' : '#FFF'
+    const iconColor = this.state.pressed ? '#31a0f5' : 'rgba(125, 134, 143, 0.5)'
+    const textColor = this.state.pressed ? '#31a0f5' : '#505259'
     return (
       <div
         style={{
@@ -24,7 +29,9 @@ class AddDrive extends Button {
           height: 140,
           marginRight: 4,
           marginBottom: 10,
-          backgroundColor: this.state.hover ? '#f9fcfe' : '#FFF'
+          cursor: 'pointer',
+          backgroundColor,
+          border: `1px solid ${borderColor}`
         }}
         {...this.funcs}
       >
@@ -34,7 +41,7 @@ class AddDrive extends Button {
           className="flexCenter"
           style={{ height: 80, width: 108, margin: '16px auto 0 auto', overflow: 'hidden' }}
         >
-          <AddDriveIcon style={{ width: 30, height: 30, color: '#7d868f', opacity: 0.5 }} />
+          <AddDriveIcon style={{ width: 30, height: 30, color: iconColor }} />
         </div>
 
         {/* file name */}
@@ -46,6 +53,7 @@ class AddDrive extends Button {
               textOverflow: 'ellipsis',
               fontSize: 13,
               width: 130,
+              color: textColor,
               textAlign: 'center',
               fontWeight: 500
             }}

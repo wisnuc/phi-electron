@@ -1,5 +1,5 @@
 import React from 'react'
-import { IconButton, Toggle as MToggle } from 'material-ui'
+import { IconButton, Toggle as MToggle, Checkbox as MCheckbox } from 'material-ui'
 import { CheckedIcon } from '../common/Svg'
 
 export class Button extends React.PureComponent {
@@ -75,7 +75,7 @@ export class RSButton extends Button {
       },
       style
     )
-    const textStyle = Object.assign({ color, fontSize: 16, height: 30 }, labelStyle)
+    const textStyle = Object.assign({ color, fontSize: 14, height: 30 }, labelStyle)
 
     return (
       <div {...this.funcs} style={buttonStyle} >
@@ -324,6 +324,24 @@ export class Toggle extends React.PureComponent {
         disabled={disabled}
         toggled={toggled}
         onToggle={onToggle}
+      />
+    )
+  }
+}
+
+export class Checkbox extends React.PureComponent {
+  render () {
+    const { label, disabled, checked, onCheck, style, alt } = this.props
+    return (
+      <MCheckbox
+        label={label}
+        style={style}
+        checked={checked}
+        onCheck={onCheck}
+        disabled={disabled}
+        disableTouchRipple
+        iconStyle={{ height: 18, width: 18, marginTop: 2, fill: checked ? '#31a0f5' : 'rgba(0,0,0,.25)' }}
+        labelStyle={{ fontSize: 14, color: alt ? '#525a60' : '#85868c', marginLeft: -9 }}
       />
     )
   }

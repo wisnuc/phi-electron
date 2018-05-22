@@ -47,7 +47,7 @@ class FileUploadButton extends React.Component {
           onRequestClose={() => this.setState({ open: false })}
           style={{ boxShadow: '0px 10px 20px 0 rgba(23,99,207,.1)' }}
         >
-          <Menu style={{ width: 138, maxWidth: 138, height: 90, overflow: 'hidden' }} >
+          <Menu style={{ width: 138, maxWidth: 138, height: 80, overflow: 'hidden' }} >
             {
               items.map((props, index) => (
                 <MenuItem
@@ -55,7 +55,7 @@ class FileUploadButton extends React.Component {
                   key={index.toString()}
                   style={{
                     marginLeft: -24,
-                    marginTop: !index ? -3 : 0,
+                    marginTop: !index ? -8 : 0,
                     fontSize: 14,
                     color: '#292936',
                     height: 40,

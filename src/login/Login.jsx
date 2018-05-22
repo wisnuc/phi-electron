@@ -37,7 +37,7 @@ class Login extends React.Component {
     }
 
     this.enterLANLogin = () => {
-      this.props.phiLogin({ lan: true })
+      this.props.phiLogin({ lan: true, name: i18n.__('Offline') })
       this.setState({ list: [], loading: true, type: 'LANTOLOGIN', status: 'deviceSelect' })
       reqMdns()
         .then(mdns => this.setState({ loading: false, list: mdns }))
@@ -104,7 +104,7 @@ class Login extends React.Component {
     this.phiLoginSuccess = ({ list, phonenumber, token, phicommUserId, phi }) => {
       const status = !list.length ? 'phiNoBound' : 'deviceSelect'
       this.setState({ list, loading: false, type: 'BOUNDLIST', status })
-      this.props.phiLogin({ phonenumber, token, phicommUserId, phi })
+      this.props.phiLogin({ phonenumber, token, phicommUserId, phi, name: phonenumber })
     }
   }
 

@@ -26,12 +26,16 @@ class Account extends React.Component {
   }
 
   render () {
+    const { user, device, logout } = this.props
+    if (!user) return (<div />)
+    const { name, phicommUserId } = user
+
     const color = 'rgba(255, 255, 255, 0.7)'
 
     const iconStyle = { marginLeft: 30, marginTop: 5, width: 30, height: 30, color: '#7d868f' }
     const items = []
     /* phi account */
-    if (this.props.user.phicommUserId) {
+    if (phicommUserId) {
       items.push({
         primaryText: i18n.__('Account Settings'),
         leftIcon: <PersonIcon style={iconStyle} />,
@@ -39,7 +43,7 @@ class Account extends React.Component {
       })
     }
     /* device logged */
-    if (this.props.user.phicommUserId && this.props.device) {
+    if (phicommUserId && device) {
       items.push({
         primaryText: i18n.__('Users Management'),
         leftIcon: <UsersIcon style={iconStyle} />,
@@ -50,7 +54,7 @@ class Account extends React.Component {
     items.push({
       primaryText: i18n.__('Log Out'),
       leftIcon: <LogoutIcon style={iconStyle} />,
-      onClick: this.props.logout
+      onClick: logout
     })
 
     return (
@@ -68,7 +72,7 @@ class Account extends React.Component {
           <img src="./assets/images/avator-default.png" alt="" width={30} height={30} />
         </div>
         <div style={{ paddingLeft: 10, color }}>
-          { 'Brown' }
+          { name }
         </div>
 
         <div
@@ -105,7 +109,7 @@ class Account extends React.Component {
           onRequestClose={() => this.setState({ open: false })}
           style={{ boxShadow: '0px 10px 20px 0 rgba(23, 99, 207, 0.1)', opacity: this.state.show ? 1 : 0 }}
         >
-          <div style={{ width: 125, maxWidth: 125, height: items.length * 40 + 10, overflow: 'hidden' }} >
+          <div style={{ width: 125, maxWidth: 125, height: items.length * 40, overflow: 'hidden' }} >
             {
               items.map((props, index) => (
                 <MenuItem
@@ -113,7 +117,7 @@ class Account extends React.Component {
                   key={index.toString()}
                   style={{
                     marginLeft: -24,
-                    marginTop: !index ? 5 : 0,
+                    marginTop: 0,
                     fontSize: 14,
                     color: '#505259',
                     height: 40,

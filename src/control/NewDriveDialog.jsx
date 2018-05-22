@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react'
 import i18n from 'i18n'
-import { TextField, Checkbox, Divider } from 'material-ui'
+import { TextField, Divider } from 'material-ui'
 import sanitize from 'sanitize-filename'
-import FlatButton from '../common/FlatButton'
+import { Checkbox, RSButton } from '../common/Buttons'
 
 class NewDriveDialog extends PureComponent {
   constructor (props) {
@@ -16,7 +16,7 @@ class NewDriveDialog extends PureComponent {
       errorText: ''
     }
 
-    this.fire = () => {
+    this.newDrive = () => {
       this.setState({ loading: true })
       const apis = this.props.apis
       const args = {
@@ -35,9 +35,38 @@ class NewDriveDialog extends PureComponent {
         }
       })
     }
+
+    this.modifyDrive = () => {
+      console.log('this.modifyDrive', this.props)
+      this.setState({ loading: true })
+      const apis = this.props.apis
+      const args = {
+        uuid: this.props.uuid,
+        label: this.state.label,
+        writelist: this.state.writelist
+      }
+      apis.request('adminUpdateDrive', args, (err) => {
+        if (!err) {
+          this.props.refreshDrives()
+          this.props.onRequestClose()
+          this.props.openSnackBar(i18n.__('Modify Drive Success'))
+        } else {
+          this.setState({ loading: false })
+          console.log('adminUpdateDrive failed', err)
+          this.props.openSnackBar(i18n.__('Modify Drive Failed'))
+        }
+      })
+    }
+
+    this.fire = () => (this.props.type === 'new' ? this.newDrive() : this.modifyDrive())
   }
 
   updateLabel (value) {
+    console.log('updateLabel', value)
+    if (!value) {
+      this.setState({ label: value, errorText: '' })
+      return
+    }
     const drives = this.props.drives
     const newValue = sanitize(value)
     if (drives.findIndex(drive => drive.label === value) > -1) {
@@ -62,23 +91,28 @@ class NewDriveDialog extends PureComponent {
   }
 
   render () {
-    const users = this.props.users
+    const { type, users } = this.props
     return (
-      <div style={{ width: 336, padding: '24px 24px 0px 24px', zIndex: 2000 }}>
-
-        <div style={{ fontSize: 20, fontWeight: 500, color: 'rgba(0,0,0,0.87)' }}>{ i18n.__('Create New Public Drive') }</div>
+      <div style={{ width: 280, padding: '0 20px 20px 20px', zIndex: 2000 }}>
+        <div style={{ height: 59, display: 'flex', alignItems: 'center' }} className="title">
+          { type === 'new' ? i18n.__('Create New Public Drive') : i18n.__('Modify Public Drive') }
+        </div>
+        <Divider style={{ width: 280 }} className="divider" />
         <div style={{ height: 20 }} />
-        <div style={{ height: 32, fontSize: 14, fontWeight: 500, color: 'rgba(0,0,0,0.54)', display: 'flex', alignItems: 'center' }} >
-          { i18n.__('Name') }
+        <div style={{ height: 20, fontSize: 14, color: '#525a60', display: 'flex', alignItems: 'center' }} >
+          { i18n.__('Public Drive Name') }
         </div>
 
         <div style={{ height: 60 }}>
           <TextField
-            name="shareDiskName"
             fullWidth
-            onChange={e => this.updateLabel(e.target.value)}
+            name="shareDiskName"
             value={this.state.label}
+            onChange={e => this.updateLabel(e.target.value)}
+            style={{ marginTop: 22, color: '#505259' }}
+            hintText={i18n.__('Public Drive Name Hint')}
             errorText={this.state.errorText}
+            errorStyle={{ position: 'absolute', left: 0, top: -8, height: 18 }}
             ref={(input) => {
               if (input && this.state.focusOnce) {
                 input.focus()
@@ -90,15 +124,14 @@ class NewDriveDialog extends PureComponent {
 
         <div
           style={{
-            height: 32,
-            fontSize: 14,
-            fontWeight: 500,
-            color: 'rgba(0,0,0,0.54)',
+            height: 20,
+            marginTop: 10,
+            color: '#525a60',
             display: 'flex',
             alignItems: 'center'
           }}
         >
-          { i18n.__('People Shared') }
+          { i18n.__('Permissions') }
         </div>
 
         {/*
@@ -113,14 +146,13 @@ class NewDriveDialog extends PureComponent {
         </div>
         <Divider style={{ color: 'rgba(0, 0, 0, 0.54)' }} />
         */}
-        <div style={{ maxHeight: 40 * 8, overflow: 'auto' }}>
+        <div style={{ maxHeight: 40 * 5, overflow: 'auto' }}>
           {
             users.map(user => (
               <div style={{ width: '100%', height: 40, display: 'flex', alignItems: 'center' }} key={user.username} >
                 <Checkbox
+                  alt
                   label={user.username}
-                  iconStyle={{ fill: this.state.writelist === '*' || this.state.writelist.includes(user.uuid) ? this.props.primaryColor : 'rgba(0, 0, 0, 0.54)' }}
-                  labelStyle={{ fontSize: 14 }}
                   checked={this.state.writelist === '*' || this.state.writelist.includes(user.uuid)}
                   onCheck={() => this.handleCheck(user.uuid)}
                 />
@@ -132,15 +164,15 @@ class NewDriveDialog extends PureComponent {
 
         {/* button */}
         <div style={{ height: 16 }} />
-        <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-          <FlatButton
-            primary
+        <div style={{ height: 30, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+          <RSButton
+            alt
             label={i18n.__('Cancel')}
             onClick={this.props.onRequestClose}
           />
-          <FlatButton
-            primary
-            label={i18n.__('Create')}
+          <div style={{ width: 10 }} />
+          <RSButton
+            label={type === 'new' ? i18n.__('Create') : i18n.__('Modify')}
             disabled={this.state.label.length === 0 || !!this.state.errorText || this.state.loading || !this.state.writelist.length}
             onClick={this.fire}
           />
