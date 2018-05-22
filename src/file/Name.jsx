@@ -28,7 +28,8 @@ class Name extends React.PureComponent {
     }
 
     this.fire = () => {
-      if (this.fired) return
+      console.log('rename this.fire', this.shouldFire(), this.fired, this.state, this.props)
+      if (this.fired || !this.shouldFire()) return
       this.fired = true
       const { apis, path, entry } = this.props
       const curr = path[path.length - 1]
@@ -52,13 +53,14 @@ class Name extends React.PureComponent {
     }
 
     this.onBlur = () => {
+      if (this.fired) return
       console.log('this.onBlur', this.props, this.state)
-      if (this.state.value.length !== 0 && this.state.value !== this.value) this.fire()
-      this.props.refresh()
+      if (this.shouldFire()) this.fire()
+      else this.props.refresh()
     }
 
     this.onKeyDown = (e) => {
-      if (e.which === 13 && !this.state.errorText && this.state.value.length !== 0 && this.state.value !== this.value) this.fire()
+      if (e.which === 13 && this.shouldFire()) this.fire()
       else if (e.which === 13 && this.state.errorText) this.props.openSnackBar(i18n.__('Rename Failed'))
       else if (e.which === 13) this.props.refresh()
     }
@@ -68,6 +70,10 @@ class Name extends React.PureComponent {
       this.notFirst = false
       Object.assign(this.state, { value: this.props.entry && this.props.entry.name })
     }
+  }
+
+  shouldFire () {
+    return !this.state.errorText && this.state.value.length !== 0 && this.state.value !== this.value
   }
 
   render () {
@@ -87,22 +93,25 @@ class Name extends React.PureComponent {
     console.log('Name.jsx', this.props, this.state)
     return (
       <div
-        onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
+        onClick={(e) => { e.stopPropagation() }}
         onContextMenu={(e) => { e.preventDefault(); e.stopPropagation() }}
         onDoubleClick={(e) => { e.preventDefault(); e.stopPropagation() }}
-        onMouseDown={(e) => { e.preventDefault(); e.stopPropagation() }}
+        onMouseDown={(e) => { e.stopPropagation() }}
         style={{ height: '100%', width: '100%', position: 'relative', transform: 'none' }}
       >
         <div
-          style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%' }}
-          onMouseDown={() => this.fire()}
+          style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 10 }}
+          onMouseDown={() => (this.shouldFire() ? this.fire() : this.props.refresh())}
         />
         <input
+          onMouseDown={() => this.input && this.input.selectionEnd && this.input.setSelectionRange(0, 0)}
           name="rename"
           value={this.state.value}
           onChange={this.handleChange}
           onBlur={this.onBlur}
           style={{
+            position: 'relative',
+            zIndex: 11,
             height: 32,
             width: '100%',
             fontSize: 14,
@@ -112,6 +121,7 @@ class Name extends React.PureComponent {
           }}
           ref={(input) => { // forcus on TextField and autoselect file name without extension
             if (input && !this.notFirst) {
+              this.input = input
               console.log('input', input)
               input.focus()
               const end = input.value.lastIndexOf('.')
