@@ -1,13 +1,15 @@
-import React from 'react'
 import i18n from 'i18n'
+import React from 'react'
+import { ipcRenderer, remote } from 'electron'
 import { IconButton } from 'material-ui'
-import DownloadIcon from 'material-ui/svg-icons/file/file-download'
 import RenderToLayer from 'material-ui/internal/RenderToLayer'
 import keycode from 'keycode'
 import EventListener from 'react-event-listener'
 import { TweenMax } from 'gsap'
 import ReactTransitionGroup from 'react-transition-group/TransitionGroup'
 import Preview from './Preview'
+import { DownloadFileIcon, WinFullIcon, WinNormalIcon, CloseIcon } from '../common/Svg'
+import { SIButton } from '../common/Buttons'
 
 class ContainerOverlayInline extends React.Component {
   constructor (props) {
@@ -19,6 +21,8 @@ class ContainerOverlayInline extends React.Component {
       direction: null,
       detailInfo: false
     }
+
+    this.toggleMax = () => ipcRenderer.send('TOGGLE_MAX')
 
     this.toggleDialog = op => this.setState({ [op]: !this.state[op] })
 
@@ -169,8 +173,7 @@ class ContainerOverlayInline extends React.Component {
     const entry = this.props.items[this.currentIndex]
     this.firstFileIndex = this.props.items.findIndex(item => item.type === 'file')
 
-    const iconStyle = { width: 24, height: 24 }
-    const buttonStyle = { width: 30, height: 30, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }
+    const isMaximized = remote.getCurrentWindow().isMaximized()
     return (
       <div
         ref={ref => (this.refRoot = ref)}
@@ -182,7 +185,8 @@ class ContainerOverlayInline extends React.Component {
           left: 0,
           zIndex: 1500,
           display: 'flex',
-          alignItems: 'center'
+          alignItems: 'center',
+          WebkitAppRegion: 'no-drag'
         }}
       >
         {/* add EventListener to listen keyup */}
@@ -206,7 +210,7 @@ class ContainerOverlayInline extends React.Component {
           ref={ref => (this.refBackground = ref)}
           style={{
             position: 'relative',
-            width: this.state.detailInfo ? 'calc(100% - 360px)' : '100%',
+            width: '100%',
             height: '100%',
             display: 'flex',
             alignItems: 'center',
@@ -254,7 +258,7 @@ class ContainerOverlayInline extends React.Component {
                 zIndex: 100,
                 top: 0,
                 left: 0,
-                width: this.state.detailInfo ? 'calc(100% - 376px)' : 'calc(100% - 16px)',
+                width: '100%',
                 height: 80,
                 display: 'flex',
                 alignItems: 'center',
@@ -275,26 +279,27 @@ class ContainerOverlayInline extends React.Component {
                   marginRight: 20,
                   display: 'flex',
                   alignItems: 'center',
+                  color: '#FFFFFF',
                   backgroundColor: '#000000'
                 }}
               >
                 <div style={{ width: 10 }} />
-                <IconButton tooltip={i18n.__('Download')} onClick={this.props.download} style={buttonStyle} iconStyle={iconStyle}>
-                  <DownloadIcon color="#FFF" />
-                </IconButton>
-
+                <SIButton tooltip={i18n.__('Download')} onClick={this.props.download} iconStyle={{ color: '#FFF' }} >
+                  <DownloadFileIcon />
+                </SIButton>
                 <div style={{ width: 5 }} />
-                <IconButton tooltip={i18n.__('Download')} onClick={this.props.download} style={buttonStyle} iconStyle={iconStyle}>
-                  <DownloadIcon color="#FFF" />
-                </IconButton>
-
+                <SIButton
+                  onClick={this.toggleMax}
+                  iconStyle={{ color: '#FFF' }}
+                  tooltip={!isMaximized ? i18n.__('Full Winodw') : i18n.__('Normal Window')}
+                >
+                  { !isMaximized ? <WinFullIcon /> : <WinNormalIcon /> }
+                </SIButton>
                 <div style={{ width: 5 }} />
-                {/* return Button */}
-                <IconButton tooltip={i18n.__('Close')} onClick={this.close} style={buttonStyle} iconStyle={iconStyle}>
-                  <svg width={24} height={24} viewBox="0 0 24 24" fill="white">
-                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
-                  </svg>
-                </IconButton>
+                <SIButton tooltip={i18n.__('Close')} onClick={this.close} iconStyle={{ color: '#FFF' }} >
+                  <CloseIcon />
+                </SIButton>
+                <div style={{ width: 10 }} />
               </div>
             </div>
           }

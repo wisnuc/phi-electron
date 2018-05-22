@@ -211,6 +211,7 @@ class PhotoDetail extends React.Component {
             {
               this.state.thumbPath &&
                 <img
+                  style={{ opacity: this.state.detailPath ? 0 : 1, transition: 'opacity 1000ms' }}
                   height={this.photoHeight}
                   width={this.photoWidth}
                   alt="ThumbImage"
