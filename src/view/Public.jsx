@@ -3,7 +3,6 @@ import i18n from 'i18n'
 import { ipcRenderer } from 'electron'
 
 import Home from './Home'
-import FileDetail from '../file/FileDetail'
 import FileContent from '../file/FileContent'
 import DriversDetail from '../control/DriversDetail'
 import NewDriveDialog from '../control/NewDriveDialog'
@@ -156,44 +155,6 @@ class Public extends Home {
           { this.ctx.props.apis.account && this.ctx.props.apis.account.data && this.ctx.props.apis.account.data.isAdmin &&
             <div style={{ color: 'rgba(0,0,0,0.27)', height: 56 }}> { i18n.__('No Public Drive Text') } </div> }
         </div>
-      </div>
-    )
-  }
-
-  renderDetail ({ style, openSnackBar }) {
-    if (!this.state.entries) return (<div />)
-    const drives = this.state.drives && this.state.drives.filter(drive => drive.type === 'public' && drive.tag !== 'built-in')
-    /* pre selected drive */
-    const preDrive = drives && drives.find(d => d.uuid === this.state.scrollTo)
-    const account = this.ctx.props.apis.account
-    const isAdmin = account && account.data && account.data.isAdmin
-    const rightPos = this.state.entries.length && (this.state.path.length === 1)
-    const isSelected = this.select.state.selected.length || preDrive
-    const detailDrive = this.select.state.selected.length ? drives[this.select.state.selected[0]] : preDrive
-    return (
-      <div style={style}>
-        {
-          isAdmin && rightPos && isSelected
-            ? <DriversDetail
-              primary
-              openSnackBar={openSnackBar}
-              users={this.state.users}
-              drives={drives}
-              detailUsers={this.state.users}
-              detailDrive={detailDrive}
-              apis={this.ctx.props.apis}
-              refreshDrives={this.refresh}
-            />
-            : this.state.entries.length
-              ? <FileDetail
-                detailIndex={this.select.state.selected}
-                counter={this.state.counter}
-                entries={this.state.entries}
-                path={this.state.path}
-                ipcRenderer={ipcRenderer}
-              />
-              : <div style={{ height: 128, backgroundColor: this.groupPrimaryColor(), filter: 'brightness(0.9)' }} />
-        }
       </div>
     )
   }

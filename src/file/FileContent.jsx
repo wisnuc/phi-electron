@@ -283,6 +283,11 @@ class FileContent extends React.Component {
   componentWillReceiveProps (nextProps) {
     if (nextProps.loading) this.setState({ loading: true })
     if (nextProps.entries && this.props.entries !== nextProps.entries) this.setState({ loading: false })
+    if (nextProps.fakeOpen) {
+      const index = nextProps.fakeOpen.index
+      this.props.clearFakeOpen()
+      this.onRowDoubleClick(null, index)
+    }
   }
 
   componentWillUnmount () {

@@ -1,8 +1,8 @@
 import React from 'react'
 import i18n from 'i18n'
-import { TextField } from 'material-ui'
+import { TextField, Divider } from 'material-ui'
 import sanitize from 'sanitize-filename'
-import FlatButton from '../common/FlatButton'
+import { RSButton } from '../common/Buttons'
 
 class NewFolderDialog extends React.PureComponent {
   constructor (props) {
@@ -53,30 +53,37 @@ class NewFolderDialog extends React.PureComponent {
 
   render () {
     return (
-      <div style={{ width: 320, padding: '24px 24px 0px 24px' }}>
-        <div style={{ fontSize: 20, fontWeight: 500, color: 'rgba(0,0,0,0.87)' }}>
-          { this.props.title ? this.props.title : i18n.__('Create New Folder') }
+      <div style={{ width: 280, padding: '0 20px 20px 20px', zIndex: 2000 }}>
+        <div style={{ height: 59, display: 'flex', alignItems: 'center' }} className="title">
+          { i18n.__('Create New Folder') }
         </div>
-        <div style={{ height: 20 }} />
+        <Divider style={{ width: 280 }} className="divider" />
         <div style={{ height: 60 }}>
           <TextField
             fullWidth
-            hintText={this.props.hintText ? this.props.hintText : i18n.__('Mkdir Hint')}
-            errorText={this.state.errorText}
-            onChange={e => this.handleChange(e.target.value)}
             ref={input => input && input.focus()}
+            hintText={i18n.__('Mkdir Hint')}
+            style={{ marginTop: 22, color: '#505259' }}
+            errorText={this.state.errorText}
+            errorStyle={{ position: 'absolute', left: 0, top: -8, height: 18 }}
+            value={this.state.value}
             onKeyDown={this.onKeyDown}
+            onChange={e => this.handleChange(e.target.value)}
             disabled={this.state.loading}
           />
         </div>
-        <div style={{ height: 24 }} />
-        <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-          <FlatButton label={i18n.__('Cancel')} primary onClick={this.props.onRequestClose} />
-          <FlatButton
+        <div style={{ height: 40 }} />
+        <div style={{ height: 30, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+          <RSButton
+            alt
+            label={i18n.__('Cancel')}
+            onClick={this.props.onRequestClose}
+          />
+          <div style={{ width: 10 }} />
+          <RSButton
             label={i18n.__('Create')}
-            primary
-            onClick={this.fire}
             disabled={this.state.value.length === 0 || !!this.state.errorText || this.state.loading}
+            onClick={this.fire}
           />
         </div>
       </div>

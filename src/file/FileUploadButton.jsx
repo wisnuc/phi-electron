@@ -23,7 +23,7 @@ class FileUploadButton extends React.Component {
   render () {
     const color = '#7d868f'
 
-    const iconStyle = { color, width: 30, height: 30 }
+    const iconStyle = { color: this.props.disabled ? 'rgba(125,134,143,.5)' : color, width: 30, height: 30 }
 
     const iStyle = { marginLeft: 30, marginTop: 5, color, width: 30, height: 30 }
     const items = [
@@ -33,6 +33,7 @@ class FileUploadButton extends React.Component {
     return (
       <div>
         <FlatButton
+          disabled={this.props.disabled}
           onClick={this.openPop}
           label={i18n.__('Upload')}
           labelStyle={{ fontSize: 14, marginLeft: 4 }}

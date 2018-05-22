@@ -159,11 +159,10 @@ class NewDriveDialog extends PureComponent {
               </div>
             ))
           }
-          <div style={{ height: 8 }} />
         </div>
 
         {/* button */}
-        <div style={{ height: 16 }} />
+        <div style={{ height: 40 }} />
         <div style={{ height: 30, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
           <RSButton
             alt

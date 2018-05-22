@@ -2,7 +2,7 @@ import i18n from 'i18n'
 import React from 'react'
 import { TweenMax } from 'gsap'
 import { ipcRenderer } from 'electron'
-import { IconButton, Divider, CircularProgress, Avatar } from 'material-ui'
+import { IconButton, Divider, Avatar } from 'material-ui'
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu'
 
 import Base from './Base'
@@ -180,6 +180,16 @@ class Home extends Base {
           this.ctx.openSnackBar(i18n.__('Delete Failed'))
         })
       }
+    }
+
+    this.fakeOpen = () => {
+      const selected = this.state.select && this.state.select.selected
+      if (!selected || selected.length !== 1) return
+      this.setState({ fakeOpen: { index: selected[0] } })
+    }
+
+    this.clearFakeOpen = () => {
+      this.setState({ fakeOpen: null })
     }
 
     /* handle Public Drive */
@@ -562,22 +572,6 @@ class Home extends Base {
     return AllFileIcon
   }
 
-  appBarStyle () {
-    return 'colored'
-  }
-
-  prominent () {
-    return true
-  }
-
-  hasDetail () {
-    return true
-  }
-
-  detailEnabled () {
-    return true
-  }
-
   /* renderers */
   renderDragItems () {
     this.entry = (this.RDSI > -1 && this.state.entries[this.RDSI]) || {}
@@ -740,7 +734,8 @@ class Home extends Base {
     const { select } = this.state
     const itemSelected = select && select.selected && select.selected.length
     const color = '#7d868f'
-    const iconStyle = { color, width: 30, height: 30 }
+
+    const iconStyle = disabled => ({ color: disabled ? 'rgba(125, 134, 143, 0.5)' : color, width: 30, height: 30 })
     return (
       <div style={style}>
         <div style={{ width: 15 }} />
@@ -762,62 +757,46 @@ class Home extends Base {
           onClick={this.download}
           label={i18n.__('Download')}
           labelStyle={{ fontSize: 14, marginLeft: 4 }}
-          disabled={!itemSelected}
-          icon={<DownloadIcon style={Object.assign({}, iconStyle, { color: !itemSelected ? 'rgba(125, 134, 143, 0.5)' : color })} />}
+          disabled={!itemSelected || this.state.inRoot}
+          icon={<DownloadIcon style={iconStyle(!itemSelected || this.state.inRoot)} />}
         />
 
-        <FileUploadButton upload={this.upload} />
+        <FileUploadButton upload={this.upload} disabled={this.state.inRoot} />
 
         <FlatButton
           onClick={() => this.toggleDialog('delete')}
           label={i18n.__('Delete')}
           labelStyle={{ fontSize: 14, marginLeft: 4 }}
-          disabled={!itemSelected}
-          icon={<DeleteIcon style={Object.assign({}, iconStyle, { color: !itemSelected ? 'rgba(125, 134, 143, 0.5)' : color })} />}
+          disabled={!itemSelected || this.state.inRoot}
+          icon={<DeleteIcon style={iconStyle(!itemSelected || this.state.inRoot)} />}
         />
 
         <FlatButton
           label={i18n.__('Create New Folder')}
           labelStyle={{ fontSize: 14, marginLeft: 4 }}
           onClick={() => this.toggleDialog('createNewFolder')}
-          icon={<NewFolderIcon style={iconStyle} />}
+          disabled={this.state.inRoot}
+          icon={<NewFolderIcon style={iconStyle(this.state.inRoot)} />}
         />
 
         <FlatButton
           onClick={() => this.toggleDialog('gridView')}
           label={this.state.gridView ? i18n.__('List View') : i18n.__('Grid View')}
           labelStyle={{ fontSize: 14, marginLeft: 4 }}
-          icon={this.state.gridView ? <ListIcon style={iconStyle} /> : <GridIcon style={iconStyle} />}
+          disabled={this.state.inRoot}
+          icon={this.state.gridView
+            ? <ListIcon style={iconStyle(this.state.inRoot)} />
+            : <GridIcon style={iconStyle(this.state.inRoot)} />
+          }
         />
 
         <FlatButton
           label={i18n.__('Help')}
           labelStyle={{ fontSize: 14, marginLeft: 4 }}
           onClick={() => {}}
-          icon={<HelpIcon style={iconStyle} />}
+          icon={<HelpIcon style={iconStyle()} />}
         />
         <div style={{ width: 10 }} />
-      </div>
-    )
-  }
-
-  renderDetail ({ style }) {
-    if (!this.state.entries) return (<div />)
-    return (
-      <div style={style}>
-        {
-          this.state.entries.length
-            ? <FileDetail
-              key={this.state.path.slice(-1)[0].uuid}
-              detailIndex={this.select.state.selected}
-              counter={this.state.counter}
-              entries={this.state.entries}
-              path={this.state.path}
-              ipcRenderer={ipcRenderer}
-              primaryColor={this.groupPrimaryColor()}
-            />
-            : <div style={{ height: 128, backgroundColor: this.groupPrimaryColor(), filter: 'brightness(0.9)' }} />
-        }
       </div>
     )
   }
@@ -837,58 +816,23 @@ class Home extends Base {
             /> }
         </DialogOverlay>
 
-        <DialogOverlay open={!!this.state.delete} onRequestClose={() => this.toggleDialog('delete')}>
-          {
-            this.state.delete &&
-            <div style={{ width: 280, padding: '24px 24px 0px 24px' }}>
-              <div style={{ color: 'rgba(0,0,0,0.54)', height: 24, display: 'flex', alignItems: 'center', marginBottom: 24 }}>
-                { i18n.__('Confirm Delete Text') }
-                { this.state.deleteLoading && <CircularProgress size={16} thickness={2} style={{ marginLeft: 8 }} /> }
-              </div>
-              <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-                <FlatButton
-                  label={i18n.__('Cancel')}
-                  primary
-                  disabled={this.state.deleteLoading}
-                  onClick={() => this.toggleDialog('delete')}
-                />
-                <FlatButton
-                  label={i18n.__('Confirm')}
-                  disabled={this.state.deleteLoading}
-                  primary
-                  onClick={this.delete}
-                />
-              </div>
-            </div>
-          }
-        </DialogOverlay>
-
-        {/* used in Public drives */}
-        <DialogOverlay open={!!this.state.noAccess} onRequestClose={() => this.toggleDialog('noAccess')} >
-          {
-            this.state.noAccess &&
-            <div style={{ width: 280, padding: '24px 24px 0px 24px' }}>
-              <div style={{ color: 'rgba(0,0,0,0.54)' }}>{ i18n.__('No Access Text') }</div>
-              <div style={{ height: 24 }} />
-              <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-                <FlatButton label={i18n.__('OK')} primary onClick={() => this.toggleDialog('noAccess')} />
-              </div>
-            </div>
-          }
-        </DialogOverlay>
+        <ConfirmDialog
+          open={this.state.delete}
+          onCancel={() => this.setState({ delete: false })}
+          onConfirm={() => this.delete()}
+          title={i18n.__('Confirm Delete Items Title')}
+          text={i18n.__('Confirm Delete Items Text')}
+        />
 
         <DialogOverlay open={!!this.state.detail} onRequestClose={() => this.toggleDialog('detail')}>
           {
             this.state.detail &&
             <FileDetail
-              onRequestClose={() => this.toggleDialog('detail')}
-              key={this.state.path.slice(-1)[0].uuid}
-              detailIndex={this.select.state.selected}
-              counter={this.state.counter}
-              entries={this.state.entries}
+              {...this.ctx.props}
               path={this.state.path}
-              ipcRenderer={ipcRenderer}
-              primaryColor={this.groupPrimaryColor()}
+              entries={this.state.entries}
+              onRequestClose={() => this.toggleDialog('detail')}
+              selected={this.select.state && this.select.state.selected}
             />
           }
         </DialogOverlay>
@@ -992,7 +936,7 @@ class Home extends Base {
                   !multiSelected &&
                     <MenuItem
                       primaryText={i18n.__('Open')}
-                      onClick={() => this.toggleDialog('move')}
+                      onClick={() => this.fakeOpen()}
                     />
                 }
                 <MenuItem
@@ -1036,6 +980,7 @@ class Home extends Base {
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
         <FileContent
           {...this.state}
+          clearFakeOpen={this.clearFakeOpen}
           listNavBySelect={this.listNavBySelect}
           showContextMenu={this.showContextMenu}
           setAnimation={this.setAnimation}

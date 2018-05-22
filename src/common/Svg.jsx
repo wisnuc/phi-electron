@@ -186,6 +186,16 @@ export const DiskAltIcon = f('icon_disk_disable')
 
 export const DropDownIcon = f('icon_arrow_list')
 
+export const TypeSmallIcon = f('icon_intro_type')
+
+export const LocationSmallIcon = f('icon_intro_loca')
+
+export const SizeSmallIcon = f('icon_intro_size')
+
+export const ContentSmallIcon = f('icon_intro_content')
+
+export const MTimeSmallIcon = f('icon_intro_date')
+
 export const CheckedIcon = props => (
   <SvgIcon viewBox="0 0 9.5 7.5" {...props}>
     <path fill="none" stroke="#FFF" d="M1.499 2.5l2.001 2 4-4" />

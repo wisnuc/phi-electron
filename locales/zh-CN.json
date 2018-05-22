@@ -223,6 +223,7 @@
   "Avatar Edit Text": "请绑定微信，将会自动获取您的微信头像。",
   "Account Settings": "个人设置",
   "Users Management": "用户管理",
+  "Offline": "离线",
 
   "==== control/ResetPassword.jsx ====": "",
   "Authentication Success Text": "微信认证成功",
@@ -520,6 +521,8 @@
   "Open": "打开",
   "Cut": "剪切",
   "Properties": "属性",
+  "Confirm Delete Items Text": "确定删除选中的文件或文件夹吗？",
+  "Confirm Delete Items Title": "删除确认",
 
   "==== view/Public.jsx ====": "",
   "Public Drive": "共享盘",
@@ -714,6 +717,8 @@
   "File Count": "文件数量",
   "File Size": "文件总大小",
   "Media Count": "媒体文件数量",
+  "Fold Content": "内容",
+  "Multiple Items": "多个文件或文件夹",
 
   "==== file/FinishedTask.jsx ====": "",
   "And Other %s Items": " 等%s个项目",

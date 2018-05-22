@@ -1,10 +1,10 @@
 import i18n from 'i18n'
 import React from 'react'
 import prettysize from 'prettysize'
-import { Divider, IconButton } from 'material-ui'
-import FileFolder from 'material-ui/svg-icons/file/folder'
-import ContentCopy from 'material-ui/svg-icons/content/content-copy'
-import CloseIcon from 'material-ui/svg-icons/navigation/close'
+import { Divider } from 'material-ui'
+import { LIButton } from '../common/Buttons'
+import { TypeSmallIcon, LocationSmallIcon, SizeSmallIcon, ContentSmallIcon, MTimeSmallIcon, CloseIcon, AllFileIcon, PublicIcon } from '../common/Svg'
+import renderFileIcon from '../common/renderFileIcon'
 
 const phaseDate = (time) => {
   const a = new Date(time)
@@ -13,21 +13,16 @@ const phaseDate = (time) => {
   const date = a.getDate()
   const hour = a.getHours()
   const min = a.getMinutes()
+  if (!year) return ''
   return i18n.__('Parse Date Time %s %s %s %s %s', year, month, date, hour, min)
 }
 
-const phaseExifTime = (time) => {
-  const a = time.replace(/\s+/g, ':').split(':')
-  return i18n.__('Parse Date Time %s %s %s %s %s', a[0], a[1], a[2], a[3], a[4])
-}
-
-const getType = (type, name, metadata) => {
+const getType = (item) => {
+  const type = item && item.type
   if (type === 'public') return i18n.__('Public Drive')
   if (type === 'directory') return i18n.__('Directory')
-  if (metadata && metadata.format) return metadata.format
-  let extension = name.replace(/^.*\./, '')
-  if (!extension || extension === name) extension = i18n.__('Unknown File Type')
-  return extension.toUpperCase()
+  if (type === 'file') return i18n.__('File')
+  return i18n.__('Unknown File Type')
 }
 
 const getPath = (path) => {
@@ -43,40 +38,49 @@ const getPath = (path) => {
   return newPath.join('/')
 }
 
-const getResolution = (height, width) => {
-  let res = height * width
-  if (res > 100000000) {
-    res = Math.ceil(res / 100000000)
-    return i18n.__('Get 100 Million Resolution {{res}} {{alt}} {{height}} {{width}}', { res, alt: res * 100, height, width })
-  } else if (res > 10000) {
-    res = Math.ceil(res / 10000)
-    return i18n.__('Get 0.01 Million Resolution {{res}} {{alt}} {{height}} {{width}}', { res, alt: res / 100, height, width })
-  }
-  return i18n.__('Get Resolution {{res}} {{height}} {{width}}', { res, height, width })
-}
-
 class FileDetail extends React.PureComponent {
-  renderList (titles, values) {
+  constructor (props) {
+    super(props)
+    this.state = {
+      data: null,
+      loading: true
+    }
+
+    this.getData = () => {
+      const { selected, entries, path } = this.props
+      const entry = entries[selected[0]]
+      if (!entry) return
+      /* directory */
+      if (selected.length === 1 && entry.type === 'directory') {
+        this.props.apis.pureRequest('listNavDir', { driveUUID: path[0].uuid, dirUUID: entry.uuid }, (err, res) => {
+          console.log('this.getData', err, res)
+        })
+      }
+    }
+  }
+
+  componentDidMount () {
+    this.getData()
+  }
+
+  renderList (icons, titles, values) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', width: '100%' }}>
         {
-          titles.map((title, index) => {
-            if (!title) return <div key={`${title}+${index.toString()}`} />
+          values.map((value, index) => {
+            if (!value) return (<div key={index.toString()} />)
+            const Icon = icons[index]
+            const title = titles[index]
             return (
               <div
-                style={{
-                  height: 40,
-                  color: '#525a60',
-                  display: 'flex',
-                  alignItems: 'center',
-                  width: '100%'
-                }}
-                key={title}
+                key={index.toString()}
+                style={{ height: 40, color: '#525a60', display: 'flex', alignItems: 'center', width: '100%' }}
               >
-                <div style={{ flex: '0 0 112px', fontSize: 14 }} > { title } </div>
+                <div style={{ margin: '2px 2px 0px -5px' }}> <Icon style={{ color: '#85868c' }} /> </div>
+                <div style={{ width: 100 }}> { title } </div>
                 <input
                   onChange={() => {}}
-                  value={values[index]}
+                  value={value}
                   style={{
                     width: 200,
                     border: 0,
@@ -95,189 +99,85 @@ class FileDetail extends React.PureComponent {
     )
   }
 
-  renderMultiFiles (detailFile) {
-    let size = 0
-    const noSize = detailFile.findIndex(f => f.size === undefined) > -1
-    if (!noSize) detailFile.forEach(f => (size += f.size))
-    const Titles = [
-      i18n.__('Location'),
-      noSize ? '' : i18n.__('Total Size')
-    ]
-
-    const Values = [
-      getPath(this.props.path),
-      prettysize(size, false, true, 2)
-    ]
-
-    return (
-      <div style={{ height: '100%', overflowY: 'auto', overflowX: 'hidden' }}>
-        <div style={{ height: 128, backgroundColor: this.props.primaryColor, filter: 'brightness(0.9)' }}>
-          <div style={{ height: 64 }} />
-          {/* header */}
-          <div style={{ height: 64, marginLeft: 24 }} >
-            <div style={{ height: 16 }} />
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                height: 32,
-                fontSize: 20,
-                fontWeight: 500,
-                color: '#FFFFFF'
-              }}
-            >
-              <div style={{ flex: '0 0 24px', display: 'flex', alignItems: 'center' }}>
-                <ContentCopy style={{ color: '#FFFFFF' }} />
-              </div>
-              <div style={{ flex: '0 0 16px' }} />
-              <div style={{ flexGrow: 1 }}>
-                { i18n.__('Selected Item Text %s', detailFile.length) }
-              </div>
-              <div style={{ flex: '0 0 24px' }} />
-            </div>
-          </div>
-        </div>
-
-        {/* data */}
-        <div style={{ width: 312, padding: 24, display: 'flex', flexDirection: 'column' }}>
-          { this.renderList(Titles, Values) }
-        </div>
-      </div>
-    )
-  }
-
-  renderCounter () {
-    // console.log('renderCounter', this.props.counter)
-    const c = this.props.counter
-    const Titles = [
-      i18n.__('Dir Count'),
-      i18n.__('File Count'),
-      i18n.__('File Size'),
-      i18n.__('Media Count')
-    ]
-
-    const Values = [
-      c.dirCount,
-      c.fileCount,
-      prettysize(c.fileSize, false, true, 2),
-      c.mediaCount
-    ]
-
-    return (
-      <div style={{ height: '100%', overflowY: 'auto', overflowX: 'hidden' }}>
-        <div style={{ height: 128, backgroundColor: this.props.primaryColor, filter: 'brightness(0.9)' }}>
-          <div style={{ height: 64 }} />
-          {/* header */}
-          <div style={{ height: 64, marginLeft: 24 }} >
-            <div style={{ height: 16 }} />
-            <div style={{ display: 'flex', alignItems: 'center', height: 32 }} >
-              <div style={{ flex: '0 0 24px', display: 'flex', alignItems: 'center' }}>
-                <FileFolder style={{ color: '#FFFFFF' }} />
-              </div>
-              <div style={{ flex: '0 0 16px' }} />
-              <input
-                onChange={() => {}}
-                value={getPath(this.props.path).split('/').slice(-1)[0]}
-                style={{
-                  flexGrow: 1, border: 0, padding: 3, fontSize: 20, fontWeight: 500, backgroundColor: 'transparent', color: '#FFFFFF'
-                }}
-              />
-              <div style={{ flex: '0 0 24px' }} />
-            </div>
-          </div>
-        </div>
-
-        {/* data */}
-        <div style={{ width: 312, padding: 24, display: 'flex', flexDirection: 'column' }}>
-          { this.renderList(Titles, Values) }
-        </div>
-      </div>
-    )
-  }
-
   render () {
-    const { detailIndex, entries, path, primaryColor, counter } = this.props
-    if (!detailIndex || !entries || (path && path.length === 1 && path[0].type === 'publicRoot') || (!counter && !detailIndex.length)) {
-      return (<div style={{ height: 128, backgroundColor: primaryColor, filter: 'brightness(0.9)' }} />)
-    }
+    console.log('detail', this.props)
+    const { selected, entries, path } = this.props
+    const entry = entries[selected[0]]
+    if (!entry) return <div />
 
-    if (counter && !detailIndex.length) return this.renderCounter()
+    const isFile = selected.length === 1 && entry.type === 'file'
+    // const isFolder = selected.length === 1 && entry.type === 'directory'
+    const isMultiple = selected.length > 1
 
-    let detailFile // object or array of object
-    if (detailIndex.length === 1) {
-      detailFile = entries[detailIndex]
-    } else {
-      detailFile = detailIndex.map(i => entries[i])
-      return this.renderMultiFiles(detailFile)
-    }
-
-    const { metadata } = detailFile
-    let exifDateTime = ''
-    let exifModel = ''
-    let height = ''
-    let width = ''
-    if (metadata) {
-      exifDateTime = metadata.date || metadata.datetime
-      exifModel = metadata.model
-      height = metadata.h
-      width = metadata.w
-    }
+    const Icons = [
+      TypeSmallIcon,
+      LocationSmallIcon,
+      SizeSmallIcon,
+      ContentSmallIcon,
+      MTimeSmallIcon
+    ]
 
     const Titles = [
       i18n.__('Type'),
-      detailFile.type === 'file' ? i18n.__('Size') : '',
-      detailFile.type !== 'public' ? i18n.__('Location') : '',
-      (detailFile.type !== 'public' && detailFile.type !== 'unsupported') ? i18n.__('Date Modified') : '',
-      exifDateTime ? i18n.__('Date Taken') : '',
-      exifModel ? i18n.__('Camera Model') : '',
-      height && width ? i18n.__('Resolution') : ''
+      i18n.__('Location'),
+      i18n.__('Size'),
+      i18n.__('Fold Content'),
+      i18n.__('Date Modified')
     ]
 
     const Values = [
-      getType(detailFile.type, detailFile.name, metadata),
-      prettysize(detailFile.size, false, true, 2),
+      isMultiple ? i18n.__('Multiple Items') : getType(entry),
       getPath(path),
-      phaseDate(detailFile.mtime),
-      exifDateTime ? phaseExifTime(exifDateTime) : '',
-      exifModel,
-      getResolution(height, width)
+      isFile ? prettysize(entry.size, false, true, 2) : '',
+      !isFile ? 'TODO' : '',
+      !isMultiple ? phaseDate(entry.mtime) : ''
     ]
 
-    const { name } = detailFile
     return (
       <div style={{ width: 280, margin: '0 20px 20px 20px' }}>
         <div style={{ height: 59, display: 'flex', alignItems: 'center' }} className="title">
-          <div
-            key={name}
-            style={{ display: 'flex', alignItems: 'center', height: 59 }}
-          >
-            <input
-              value={name}
-              onChange={() => {}}
-              style={{ flexGrow: 1, border: 0, padding: 3, fontSize: 20, color: '#525a60' }}
-            />
+          <div style={{ display: 'flex', alignItems: 'center', height: 59 }} >
+            { i18n.__('Properties') }
           </div>
           <div style={{ flexGrow: 1 }} />
-          <IconButton
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: 29,
-              height: 29,
-              padding: 4
-            }}
-            iconStyle={{ width: 21, height: 21, color: '#525a60' }}
-            onClick={this.props.onRequestClose}
-          >
-            <CloseIcon />
-          </IconButton>
+          <div style={{ marginRight: -10 }}>
+            <LIButton onClick={this.props.onRequestClose} >
+              <CloseIcon />
+            </LIButton>
+          </div>
         </div>
         <Divider style={{ width: 280 }} className="divider" />
         <div style={{ height: 20 }} />
+
+        <div style={{ height: 60, display: 'flex', alignItems: 'center' }} >
+          <div style={{ marginRight: 10 }} className="flexCenter">
+            {
+              entry.type === 'public' ? <PublicIcon style={{ width: 60, height: 60, color: '#ffa93e' }} />
+                : entry.type === 'file' ? renderFileIcon(entry.name, entry.metadata, 60)
+                  : <AllFileIcon style={{ width: 60, height: 60, color: '#ffa93e' }} />
+            }
+          </div>
+          <div style={{ display: 'flex', flexGrow: 1, alignItems: 'center', color: '#525a60' }} >
+            <div
+              style={{
+                maxWidth: selected.length > 1 ? 120 : 200,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              { entry.name }
+            </div>
+            <div>
+              { selected.length > 1 && i18n.__('And Other %s Items', selected.length)}
+            </div>
+          </div>
+        </div>
+
+        <div style={{ height: 10 }} />
         {/* data */}
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          { this.renderList(Titles, Values) }
+          { this.renderList(Icons, Titles, Values) }
         </div>
       </div>
     )
