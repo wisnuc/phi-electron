@@ -2,7 +2,7 @@ import React from 'react'
 import i18n from 'i18n'
 import MultiSvg from 'material-ui/svg-icons/content/content-copy'
 import renderFileIcon from '../common/renderFileIcon'
-import { FolderIcon, OpenFolderIcon, TaskDeleteIcon } from '../common/Svg'
+import { FolderIcon, OpenFolderIcon, TaskDeleteIcon, ArrowIcon } from '../common/Svg'
 import { LIButton } from '../common/IconButton'
 
 const svgStyle = { color: '#000', opacity: 0.54 }
@@ -68,35 +68,38 @@ class FinishedTask extends React.Component {
         </div>
 
         {/* task item name */}
-        <div style={{ width: 'calc(100% - 588px)', padding: '20px 0 20px 12px', display: 'flex', alignItems: 'center', height: 60 }} >
+        <div style={{ width: 'calc(100% - 683px)', padding: '20px 0 20px 12px', display: 'flex', alignItems: 'center', height: 60 }} >
           <div style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', color: '#525a60', letterSpacing: 1.4 }}>
             { task.name }
           </div>
         </div>
 
-        {/* progress bar */}
-        <div style={{ width: 215, color: '#888a8c', fontSize: 12 }} >
+        <div style={{ width: 200, color: '#888a8c', fontSize: 12 }} >
           { this.formatSize(task.size) }
         </div>
 
-        {/* progress bar */}
-        <div style={{ width: 140, color: '#888a8c', fontSize: 12 }} >
+        <div style={{ width: 30 }} className="flexCenter">
+          <ArrowIcon
+            style={task.trsType === 'upload' ? { color: '#4dbc72', transform: 'rotate(180deg)' } : { color: '#8a69ed' }}
+          />
+        </div>
+
+        <div style={{ width: 220, color: '#888a8c', fontSize: 12 }} >
           { this.getFinishDate(task.finishDate) }
         </div>
 
-        {/* Pause, resume and delete task */}
         <div style={{ width: 170, display: 'flex', alignItems: 'center' }} >
-          <div style={{ width: 57 }} />
+          <div style={{ width: 40 }} />
           <LIButton onClick={() => this.openFileLocation(task)} tooltip={task.paused ? i18n.__('Resume') : i18n.__('Pause')} >
             <OpenFolderIcon />
           </LIButton>
-          <div style={{ width: 10 }} />
           <LIButton
             onClick={() => this.props.handleAll([task], 'DELETE')}
             tooltip={i18n.__('Delete')}
           >
             <TaskDeleteIcon />
           </LIButton>
+          <div style={{ width: 30 }} />
         </div>
       </div>
     )

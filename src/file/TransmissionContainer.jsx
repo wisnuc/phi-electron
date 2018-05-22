@@ -137,7 +137,7 @@ class TrsContainer extends React.Component {
           { allPaused ? '--' : speed }
         </div>
         <div style={{ flexGrow: 1 }} />
-        <div style={{ display: 'flex', alignItems: 'center', width: 114 }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           {
             allPaused
               ? (
@@ -159,7 +159,6 @@ class TrsContainer extends React.Component {
                 </LIButton>
               )
           }
-          <div style={{ width: 10 }} />
           <LIButton
             disabled={!userTasks.length}
             onClick={() => this.toggleDialog('clearRunningDialog')}
@@ -167,7 +166,7 @@ class TrsContainer extends React.Component {
           >
             <DeleteAllIcon />
           </LIButton>
-          <div style={{ width: 40 }} />
+          <div style={{ width: 30 }} />
         </div>
       </div>
     )
@@ -188,16 +187,31 @@ class TrsContainer extends React.Component {
           >
             <DeleteAllIcon />
           </LIButton>
-          <div style={{ width: 40 }} />
+          <div style={{ width: 30 }} />
         </div>
+      </div>
+    )
+  }
+
+  renderEmpty () {
+    const { type } = this.props
+    const imgName = this.props.type === 'u' ? 'uploadlistempty' : type === 'd' ? 'downloadlistempty' : 'donelistempty'
+    return (
+      <div style={{ width: '100%', height: '100%' }} className="flexCenter">
+        <img
+          width={320}
+          height={180}
+          src={`./assets/images/pic_${imgName}.png`}
+        />
       </div>
     )
   }
 
   render () {
     const { type } = this.props
-    const userTasks = this.state.userTasks
-    const finishTasks = this.state.finishTasks
+    const { userTasks, finishTasks } = this.state
+
+    if ((type === 'f' && !finishTasks.length) || (['u', 'd'].includes(type) && !userTasks.length)) return this.renderEmpty()
 
     /* show resumeAll button when allPaused = true */
     let allPaused = true

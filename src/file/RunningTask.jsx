@@ -142,7 +142,7 @@ class RunningTask extends React.Component {
 
         {/* Pause, resume and delete task */}
         <div style={{ width: 174, display: 'flex', alignItems: 'center' }} >
-          <div style={{ width: 60 }} />
+          <div style={{ width: 44 }} />
           {
             task.state === 'failed'
               ? (
@@ -156,7 +156,6 @@ class RunningTask extends React.Component {
                 </LIButton>
               )
           }
-          <div style={{ width: 10 }} />
           {
             task.paused &&
               <LIButton
@@ -166,6 +165,7 @@ class RunningTask extends React.Component {
                 <TaskDeleteIcon />
               </LIButton>
           }
+          <div style={{ width: 30 }} />
         </div>
       </div>
     )

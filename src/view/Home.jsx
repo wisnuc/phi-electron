@@ -209,6 +209,7 @@ class Home extends Base {
         this.ctx.props.apis.request('adminDeleteDrive', { uuid }, (err, res) => {
           if (err) this.ctx.openSnackBar(i18n.__('Delete Drive Failed'))
           else this.ctx.openSnackBar(i18n.__('Delete Drive Success'))
+          this.setState({ deleteDriveConfirm: false })
         })
       }
     }

@@ -1,7 +1,6 @@
 import React from 'react'
 import i18n from 'i18n'
 import EventListener from 'react-event-listener'
-import UploadIcon from 'material-ui/svg-icons/file/cloud-upload'
 import ErrorIcon from 'material-ui/svg-icons/alert/error'
 import ContainerOverlay from './ContainerOverlay'
 import SingleView from './SingleView'
@@ -303,27 +302,11 @@ class FileContent extends React.Component {
         onContextMenu={e => this.onRowContextMenu(e, -1)}
         onDrop={this.drop}
       >
-        {
-          this.props.fileSelect ? i18n.__('Empty Folder Text')
-            : (
-              <div
-                style={{
-                  width: 360,
-                  height: 360,
-                  borderRadius: '180px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexDirection: 'column',
-                  backgroundColor: '#FAFAFA'
-                }}
-              >
-                <UploadIcon style={{ height: 64, width: 64, color: 'rgba(0,0,0,0.27)' }} />
-                <div style={{ fontSize: 24, color: 'rgba(0,0,0,0.27)' }}> { i18n.__('No File Text 1') } </div>
-                <div style={{ color: 'rgba(0,0,0,0.27)' }}> { i18n.__('No File Text 2') } </div>
-              </div>
-            )
-        }
+        <img
+          width={320}
+          height={180}
+          src="./assets/images/pic_nofile.png"
+        />
       </div>
     )
   }
