@@ -210,6 +210,7 @@ class Home extends Base {
           if (err) this.ctx.openSnackBar(i18n.__('Delete Drive Failed'))
           else this.ctx.openSnackBar(i18n.__('Delete Drive Success'))
           this.setState({ deleteDriveConfirm: false })
+          this.refresh()
         })
       }
     }
@@ -871,6 +872,7 @@ class Home extends Base {
                 <MenuItem
                   primaryText={i18n.__('Delete')}
                   onClick={this.deletePublic}
+                  disabled={itemSelected && !multiSelected && this.state.select.selected[0] === 0}
                 />
                 <MenuItem
                   primaryText={i18n.__('Properties')}

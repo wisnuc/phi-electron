@@ -122,6 +122,7 @@ class NewDriveDialog extends PureComponent {
           />
         </div>
 
+        <div style={{ height: 20 }} />
         <div
           style={{
             height: 20,
