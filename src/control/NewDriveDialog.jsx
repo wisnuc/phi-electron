@@ -12,9 +12,11 @@ class NewDriveDialog extends PureComponent {
       loading: false,
       focusOnce: true,
       label: '',
-      writelist: '',
+      writelist: this.props.drive && this.props.drive.writelist,
       errorText: ''
     }
+
+    this.isBuiltIn = this.props.drive && this.props.drive.tag === 'built-in'
 
     this.newDrive = () => {
       this.setState({ loading: true })
@@ -41,9 +43,9 @@ class NewDriveDialog extends PureComponent {
       this.setState({ loading: true })
       const apis = this.props.apis
       const args = {
-        uuid: this.props.uuid,
+        uuid: this.props.drive.uuid,
         label: this.state.label,
-        writelist: this.state.writelist
+        writelist: this.isBuiltIn ? undefined : this.state.writelist
       }
       apis.request('adminUpdateDrive', args, (err) => {
         if (!err) {
@@ -91,6 +93,7 @@ class NewDriveDialog extends PureComponent {
   }
 
   render () {
+    console.log('NewDriveDialog.jsx', this.props)
     const { type, users } = this.props
     return (
       <div style={{ width: 280, padding: '0 20px 20px 20px', zIndex: 2000 }}>
@@ -156,6 +159,7 @@ class NewDriveDialog extends PureComponent {
                   label={user.username}
                   checked={this.state.writelist === '*' || this.state.writelist.includes(user.uuid)}
                   onCheck={() => this.handleCheck(user.uuid)}
+                  disabled={this.isBuiltIn}
                 />
               </div>
             ))

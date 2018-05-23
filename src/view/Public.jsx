@@ -201,7 +201,7 @@ class Public extends Home {
           {
             this.state.newDrive && <NewDriveDialog
               type={this.state.newDrive}
-              uuid={selected && this.state.entries[selected[0]] && this.state.entries[selected[0]].uuid}
+              drive={selected && this.state.entries[selected[0]]}
               apis={this.ctx.props.apis}
               users={this.state.users}
               drives={this.state.drives}
