@@ -22,6 +22,16 @@ class LANPassword extends React.Component {
     }
 
     this.save = () => {
+      this.setState({ loading: true })
+      const userUUID = this.props.apis.account && this.props.apis.account.data.uuid
+      const deviceSN = this.props.selectedDevice && this.props.selectedDevice.mdev.deviceSN
+      this.props.phi.req('setLANPassword', { userUUID, password: this.state.pwd, deviceSN }, (err, res) => {
+        if (err) {
+          console.error('Set LAN Password Error', err)
+          this.props.openSnackBar('Set LAN Password Error')
+        } else this.props.openSnackBar('Set LAN Password Success')
+        this.setState({ loading: false })
+      })
     }
 
     this.togglePwd = () => this.setState({ showPwd: !this.state.showPwd })
@@ -47,6 +57,7 @@ class LANPassword extends React.Component {
             value={this.state.pwd}
             onChange={e => this.onPassword(e.target.value)}
             onKeyDown={this.onKeyDown}
+            disabled={this.state.loading}
           />
           {/* show password */}
           <div style={{ position: 'absolute', right: -5, top: 15 }}>
@@ -60,6 +71,7 @@ class LANPassword extends React.Component {
   }
 
   render () {
+    console.log('LANPassword', this.props)
     return (
       <div style={{ width: '100%', height: '100%' }} className="flexCenter" >
         <div style={{ width: 480, paddingRight: 160, paddingBottom: 60 }}>
@@ -85,6 +97,7 @@ class LANPassword extends React.Component {
             <RRButton
               label={i18n.__('Save')}
               onClick={this.save}
+              disabled={this.state.loading}
             />
           </div>
         </div>

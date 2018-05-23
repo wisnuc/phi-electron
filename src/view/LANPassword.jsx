@@ -4,14 +4,6 @@ import Base from './Base'
 import LANPassword from '../settings/LANPassword'
 
 class LAN extends Base {
-  willReceiveProps (nextProps) {
-    this.handleProps(nextProps.selectedDevice, ['net'])
-  }
-
-  navEnter () {
-    this.ctx.props.selectedDevice.request('net')
-  }
-
   navGroup () {
     return 'settings'
   }
