@@ -95,7 +95,7 @@ class LANPassword extends React.Component {
 
           <div style={{ width: 240, height: 40, margin: '0 auto', paddingLeft: 160 }}>
             <RRButton
-              label={i18n.__('Save')}
+              label={i18n.__('Save') + (this.state.loading ? '中...' : '')}
               onClick={this.save}
               disabled={this.state.loading}
             />

@@ -1,16 +1,16 @@
-import React from 'react'
 import i18n from 'i18n'
 import UUID from 'uuid'
-import { RaisedButton } from 'material-ui'
-import OpenIcon from 'material-ui/svg-icons/action/open-with'
+import React from 'react'
+import { remote, ipcRenderer } from 'electron'
+import { Divider } from 'material-ui'
+
 import PDFView from './PDF'
-import DialogOverlay from '../common/DialogOverlay'
 import FlatButton from '../common/FlatButton'
 import PhotoDetail from '../photo/PhotoDetail'
-import { DownloadFileIcon, CloseIcon } from '../common/Svg'
-import { LIButton } from '../common/IconButton'
-import { OLButton } from '../common/Buttons'
+import DialogOverlay from '../common/DialogOverlay'
+import { OLButton, LIButton } from '../common/Buttons'
 import CircularLoading from '../common/CircularLoading'
+import { DownloadFileIcon, WinFullIcon, WinNormalIcon, CloseIcon } from '../common/Svg'
 
 class Preview extends React.Component {
   constructor (props) {
@@ -19,6 +19,12 @@ class Preview extends React.Component {
     this.state = {
       pages: null,
       alert: false
+    }
+
+    this.toggleMax = () => ipcRenderer.send('TOGGLE_MAX')
+
+    this.close = () => {
+      this.props.close()
     }
 
     this.toggleDialog = op => this.setState({ [op]: !this.state[op] })
@@ -161,20 +167,51 @@ class Preview extends React.Component {
     )
   }
 
-  renderText () {
+  renderDocHeader (entry) {
+    const isMaximized = remote.getCurrentWindow().isMaximized()
     return (
       <div
-        style={{ height: '80%', width: '80%', backgroundColor: '#FFFFFF' }}
+        style={{
+          width: '100%',
+          height: 59,
+          display: 'flex',
+          alignItems: 'center',
+          background: '#FFF'
+        }}
         onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
       >
-        <iframe
-          title="Text"
-          seamless
-          width="100%"
-          height="100%"
-          frameBorder={0}
-          src={this.state.filePath}
-        />
+        <div style={{ width: 600, fontSize: 20, color: '#525a60', marginLeft: 20 }} className="text">
+          { entry.name }
+        </div>
+        <div style={{ flexGrow: 1 }} />
+        <LIButton tooltip={i18n.__('Download')} onClick={this.props.download}>
+          <DownloadFileIcon />
+        </LIButton>
+        <LIButton
+          onClick={this.toggleMax}
+          tooltip={!isMaximized ? i18n.__('Full Winodw') : i18n.__('Normal Window')}
+        >
+          { !isMaximized ? <WinFullIcon /> : <WinNormalIcon /> }
+        </LIButton>
+        <LIButton tooltip={i18n.__('Close')} onClick={this.close}>
+          <CloseIcon />
+        </LIButton>
+        <div style={{ width: 10 }} />
+      </div>
+    )
+  }
+
+  renderDoc (type) {
+    return (
+      <div
+        style={{ height: '80%', width: '80%', backgroundColor: '#FFFFFF', overflowY: 'auto', position: 'relative' }}
+        onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
+      >
+        { this.renderDocHeader(this.props.item) }
+        <Divider style={{ marginLeft: 20, width: 'calc(100% - 40px)', marginBottom: 20 }} className="divider" />
+        <div style={{ height: 'calc(100% - 80px)', width: '100%' }}>
+          { type === 'pdf' ? this.renderPDF() : this.renderRawText() }
+        </div>
       </div>
     )
   }
@@ -183,10 +220,10 @@ class Preview extends React.Component {
     if (this.name === this.props.item.name && this.state.filePath) {
       return (
         <div
-          style={{ height: '80%', width: '80%', backgroundColor: '#FFFFFF', overflowY: 'auto' }}
+          style={{ height: '100%', width: '100%', backgroundColor: '#FFFFFF', overflowY: 'auto' }}
           onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
         >
-          <code><pre style={{ margin: 8 }}>{ this.state.data }</pre></code>
+          <code><pre style={{ margin: 8, whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>{ this.state.data }</pre></code>
         </div>
       )
     }
@@ -198,6 +235,19 @@ class Preview extends React.Component {
     }
 
     return (<CircularLoading />)
+  }
+
+  renderPDF () {
+    return (
+      <div
+        style={{ height: '100%', width: '100%', overflowY: 'auto', overflowX: 'hidden' }}
+        onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
+      >
+        <PDFView
+          filePath={this.state.filePath}
+        />
+      </div>
+    )
   }
 
   renderVideo () {
@@ -272,19 +322,6 @@ class Preview extends React.Component {
     )
   }
 
-  renderPDF () {
-    return (
-      <div
-        style={{ height: '80%', width: '80%', overflowY: 'auto', overflowX: 'hidden' }}
-        onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
-      >
-        <PDFView
-          filePath={this.state.filePath}
-        />
-      </div>
-    )
-  }
-
   renderPreview () {
     const extension = this.props.item.name.replace(/^.*\./, '').toUpperCase()
     const videoExtension = ['MP4', 'MOV', 'AVI', 'MKV']
@@ -296,7 +333,7 @@ class Preview extends React.Component {
     if ((!isVideo && !isAudio && !isPDF) || this.props.item.size > 1024 * 1024 * 50) return this.renderOtherFiles()
 
     if (this.name === this.props.item.name && this.state.filePath) {
-      return isVideo ? this.renderVideo() : isPDF ? this.renderPDF() : isAudio ? this.renderAudio() : <div />
+      return isVideo ? this.renderVideo() : isPDF ? this.renderDoc('pdf') : isAudio ? this.renderAudio() : <div />
     }
 
     // debug('before this.startDownload()', this.props.item.name, this.name, this.session)
@@ -333,13 +370,14 @@ class Preview extends React.Component {
           width: '100%',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          WebkitAppRegion: 'no-drag'
         }}
       >
         {
           isPhoto ? this.renderPhoto(hash, metadata)
             : isVideo ? this.renderKnownVideo()
-              : isText ? this.renderRawText()
+              : isText ? this.renderDoc('text')
                 : this.renderPreview()
         }
         {/* dialog */}
