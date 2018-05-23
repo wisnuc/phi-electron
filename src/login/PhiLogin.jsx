@@ -51,7 +51,7 @@ class PhiLogin extends React.Component {
       if (!this.state.autoLogin) this.setState({ saveToken: true })
     }
 
-    this.clearPn = () => this.setState({ pn: '', pnError: '' })
+    this.clearPn = () => this.setState({ pn: '', pnError: '', showFakePwd: false })
 
     this.togglePwd = () => this.setState({ showPwd: !this.state.showPwd })
 
@@ -121,6 +121,11 @@ class PhiLogin extends React.Component {
       if (firstLogin && token && !!autoLogin) this.fakeLogin()
     }
     firstLogin = false
+  }
+
+  shouldFire () {
+    return (!this.state.loading && !this.state.pnError && this.state.pn &&
+      !this.state.pwdError && (this.state.pwd || this.state.showFakePwd))
   }
 
   renderFailed () {
@@ -236,7 +241,7 @@ class PhiLogin extends React.Component {
           <RRButton
             label={i18n.__('Login') + (this.state.loading ? '中...' : '')}
             onClick={() => (this.state.showFakePwd ? this.fakeLogin() : this.login())}
-            disabled={this.state.pnError || this.state.pwdError || this.state.loading || (!this.state.pwd && !this.state.showFakePwd)}
+            disabled={!this.shouldFire()}
           />
         </div>
 
