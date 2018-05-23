@@ -157,7 +157,7 @@ class NewDriveDialog extends PureComponent {
                 <Checkbox
                   alt
                   label={user.username}
-                  checked={this.state.writelist === '*' || this.state.writelist.includes(user.uuid)}
+                  checked={this.state.writelist === '*' || (this.state.writelist && this.state.writelist.includes(user.uuid))}
                   onCheck={() => this.handleCheck(user.uuid)}
                   disabled={this.isBuiltIn}
                 />

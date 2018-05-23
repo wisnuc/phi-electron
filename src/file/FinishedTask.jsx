@@ -78,13 +78,13 @@ class FinishedTask extends React.Component {
           { this.formatSize(task.size) }
         </div>
 
-        <div style={{ width: 30 }} className="flexCenter">
+        <div style={{ width: 50 }} className="flexCenter">
           <ArrowIcon
-            style={task.trsType === 'upload' ? { color: '#4dbc72', transform: 'rotate(180deg)' } : { color: '#8a69ed' }}
+            style={task.trsType === 'upload' ? { color: '#8a69ed', transform: 'rotate(180deg)', width: 50, height: 50 } : { color: '#4dbc72', width: 50, height: 50 }}
           />
         </div>
 
-        <div style={{ width: 220, color: '#888a8c', fontSize: 12 }} >
+        <div style={{ width: 200, color: '#888a8c', fontSize: 12 }} >
           { this.getFinishDate(task.finishDate) }
         </div>
 

@@ -185,6 +185,7 @@ class NavViews extends React.Component {
   renderSnackBar () {
     return (
       <Snackbar
+        style={{ borderRadius: 4 }}
         open={!!this.state.snackBar}
         message={this.state.snackBar}
         autoHideDuration={4000}

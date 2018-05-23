@@ -46,7 +46,7 @@ class SleepMode extends React.Component {
     const iconStyle = { width: 30, height: 30, color: '#31a0f5', iconHoverColor: '#31a0f5' }
     const buttonStyle = { width: 30, height: 30, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }
     return (
-      <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center' }}>
+      <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center', filter: 'grayscale(10%)' }}>
         <div style={{ width: 150, textAlign: 'right', color: '#525a60' }}>
           { i18n.__('Password') }
         </div>

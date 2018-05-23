@@ -62,13 +62,13 @@ class ConfirmBind extends React.PureComponent {
         func = () => {}
         break
       case 'success':
-        img = 'pic-confirm.png'
+        img = 'pic-confirmed.png'
         text = i18n.__('Bind Device Success Text')
         label = i18n.__('Bind Device Success Label')
         func = () => this.props.onSuccess()
         break
       case 'failed':
-        img = 'pic-confirm.png'
+        img = 'pic-confirmfail.png'
         text = i18n.__('Bind Device Failed Text')
         label = i18n.__('Bind Device Failed Label')
         func = () => this.props.onFailed()
@@ -84,7 +84,7 @@ class ConfirmBind extends React.PureComponent {
         <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
         <div style={{ height: 176, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <img
-            style={{ width: 49, height: 100 }}
+            style={{ width: 59, height: 100 }}
             src={`./assets/images/${img}`}
             alt={img}
           />

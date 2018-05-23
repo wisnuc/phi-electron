@@ -43,7 +43,7 @@ class NetworkInfo extends React.Component {
               <div style={{ width: 70 }} className="flexCenter">
                 <img
                   style={{ height: 57 }}
-                  src="./assets/images/ic-n-2.png"
+                  src="./assets/images/pic_network_n2.png"
                   alt=""
                 />
               </div>
@@ -62,8 +62,8 @@ class NetworkInfo extends React.Component {
               </div>
               <div style={{ width: 70 }} className="flexCenter">
                 <img
-                  style={{ height: 57 }}
-                  src="./assets/images/ic-n-2.png"
+                  style={{ height: 48 }}
+                  src="./assets/images/pic_network_net.png"
                   alt=""
                 />
               </div>
