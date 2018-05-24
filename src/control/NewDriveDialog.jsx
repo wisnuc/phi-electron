@@ -93,7 +93,6 @@ class NewDriveDialog extends PureComponent {
   }
 
   render () {
-    console.log('NewDriveDialog.jsx', this.props)
     const { type, users } = this.props
     return (
       <div style={{ width: 280, padding: '0 20px 20px 20px', zIndex: 2000 }}>
@@ -102,20 +101,26 @@ class NewDriveDialog extends PureComponent {
         </div>
         <Divider style={{ width: 280 }} className="divider" />
         <div style={{ height: 20 }} />
-        <div style={{ height: 20, fontSize: 14, color: '#525a60', display: 'flex', alignItems: 'center' }} >
-          { i18n.__('Public Drive Name') }
+        <div
+          style={{
+            height: 20,
+            fontSize: 14,
+            color: this.state.errorText ? '#fa5353' : '#525a60',
+            display: 'flex',
+            alignItems: 'center'
+          }}
+        >
+          { this.state.errorText || i18n.__('Public Drive Name') }
         </div>
 
-        <div style={{ height: 60 }}>
+        <div style={{ height: 40 }}>
           <TextField
             fullWidth
             name="shareDiskName"
             value={this.state.label}
             onChange={e => this.updateLabel(e.target.value)}
-            style={{ marginTop: 22, color: '#505259' }}
+            style={{ color: '#525a60', fontSize: 14 }}
             hintText={i18n.__('Public Drive Name Hint')}
-            errorText={this.state.errorText}
-            errorStyle={{ position: 'absolute', left: 0, top: -8, height: 18 }}
             ref={(input) => {
               if (input && this.state.focusOnce) {
                 input.focus()
@@ -125,7 +130,6 @@ class NewDriveDialog extends PureComponent {
           />
         </div>
 
-        <div style={{ height: 20 }} />
         <div
           style={{
             height: 20,

@@ -1,5 +1,7 @@
 import React from 'react'
 import { IconButton, Toggle as MToggle, Checkbox as MCheckbox } from 'material-ui'
+
+import Tooltip from '../common/Tooltip'
 import { CheckedIcon } from '../common/Svg'
 
 class LoadingLabel extends React.PureComponent {
@@ -221,10 +223,10 @@ export class ModeSelect extends Button {
 /* open in local app Button */
 export class OLButton extends Button {
   render () {
-    const { label, onClick, disabled } = this.props
-    const color = disabled ? 'var(--light-grey-text)' : '#525a60'
-    const backgroundColor = disabled || (!this.state.hover) ? '#FFF' : '#f2f5fa'
-    const borderColor = disabled || (!this.state.hover) ? '#dae0e6' : 'var(--dodger-blue)'
+    const { label, onClick } = this.props
+    const Icon = this.props.icon
+    const color = '#FFF'
+    const backgroundColor = '#31a0f5'
 
     return (
       <div
@@ -236,13 +238,13 @@ export class OLButton extends Button {
           width: 280,
           color,
           backgroundColor,
-          position: 'relative',
-          boxSizing: 'border-box',
-          border: `solid 1px ${borderColor}`
+          cursor: 'pointer'
         }}
         className="flexCenter"
         {...this.funcs}
       >
+        <Icon />
+        <div style={{ width: 10 }} />
         { label }
       </div>
     )
@@ -355,8 +357,12 @@ export class LIButton extends React.PureComponent {
     const { disabled } = this.props
     const style = Object.assign({}, styles.largeButton, this.props.style)
     const iconStyle = Object.assign({ color: '#7d868f', opacity: disabled ? 0.5 : 1 }, styles.largeIcon, this.props.iconStyle)
+    const props = Object.assign({}, this.props)
+    delete props.tooltip
     return (
-      <IconButton style={style} iconStyle={iconStyle} {...this.props} />
+      <Tooltip tooltip={this.props.tooltip} disabled={disabled} >
+        <IconButton style={style} iconStyle={iconStyle} {...props} />
+      </Tooltip>
     )
   }
 }

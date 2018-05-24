@@ -147,6 +147,15 @@ img[src=""] {
 	white-space: nowrap;
 }
 
+.tooltip {
+	padding: 5px;
+	color: #292936;
+	font-size: 12px;
+	background-color: #FFFFFF;
+	margin-top: -10px;
+	box-shadow: 0 0 20px 0 rgba(23, 99, 207, 0.1);
+}
+
 .arrow_box {
 	position: relative;
 	display: flex;

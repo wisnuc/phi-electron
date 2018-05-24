@@ -40,6 +40,8 @@ export const MultiDownloadIcon = f('icon_downloadtask_th')
 
 export const MultiUploadIcon = f('icon_downloadtask_th')
 
+export const OpenViaLocalIcon = f('icon_downloadtask_th')
+
 /* Settings */
 export const SambaIcon = props => (
   <SvgIcon {...props} viewBox="0 0 24 24" style={{ fill: '#FFF' }}>

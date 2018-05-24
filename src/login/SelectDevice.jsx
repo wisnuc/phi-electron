@@ -185,16 +185,21 @@ class DeviceSelect extends React.Component {
       <div style={{ width: '100%', height: '100%', backgroundColor: '#f3f8ff' }}>
         <div style={{ height: 49, width: '100%', display: 'flex', alignItems: 'center' }}>
           <div style={{ marginLeft: 30, display: 'flex', alignItems: 'center' }} className="title">
-            { this.props.type === 'LANTOBIND' && <LIButton onClick={this.props.refreshStationList} > <BackIcon /> </LIButton> }
+            {
+              this.props.type === 'LANTOBIND' &&
+                <LIButton onClick={this.props.refreshStationList} tooltip={i18n.__('Return')}>
+                  <BackIcon />
+                </LIButton>
+            }
             { title }
           </div>
           <div style={{ flexGrow: 1 }} />
           {
             ['BOUNDLIST', 'CHANGEDEVICE'].includes(this.props.type) &&
-              <LIButton onClick={this.props.addBindDevice} > <AddDeviceIcon /> </LIButton>
+              <LIButton onClick={this.props.addBindDevice} tooltip={i18n.__('Add Device')}> <AddDeviceIcon /> </LIButton>
           }
-          <LIButton onClick={this.props.refresh} > <RefreshIcon /> </LIButton>
-          <LIButton onClick={() => this.setState({ showHelp: true })} > <HelpIcon /> </LIButton>
+          <LIButton onClick={this.props.refresh} tooltip={i18n.__('Refresh')}> <RefreshIcon /> </LIButton>
+          <LIButton onClick={() => this.setState({ showHelp: true })} tooltip={i18n.__('Help')}> <HelpIcon /> </LIButton>
           <div style={{ width: 32 }} />
         </div>
         <Divider style={{ marginLeft: 30, width: 'calc(100% - 60px)' }} />

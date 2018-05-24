@@ -2,8 +2,7 @@ import i18n from 'i18n'
 import React from 'react'
 import { TweenMax } from 'gsap'
 import { ipcRenderer } from 'electron'
-import { IconButton, Divider, Avatar } from 'material-ui'
-import NavigationMenu from 'material-ui/svg-icons/navigation/menu'
+import { Divider, Avatar } from 'material-ui'
 
 import Base from './Base'
 import FileDetail from '../file/FileDetail'
@@ -22,7 +21,7 @@ import renderFileIcon from '../common/renderFileIcon'
 import { xcopyMsg } from '../common/msg'
 import Search from '../common/Search'
 import History from '../common/history'
-import { LIButton } from '../common/IconButton'
+import { LIButton } from '../common/Buttons'
 import ConfirmDialog from '../common/ConfirmDialog'
 
 /* Drag Item's Coordinate */
@@ -650,17 +649,6 @@ class Home extends Base {
     )
   }
 
-  renderNavigationMenu ({ style, onClick }) {
-    const CustomStyle = Object.assign(style, { opacity: 1 })
-    return (
-      <div style={CustomStyle} ref={ref => (this.refNavigationMenu = ref)}>
-        <IconButton onClick={onClick}>
-          <NavigationMenu color="#FFFFFF" />
-        </IconButton>
-      </div>
-    )
-  }
-
   renderBreadCrumbItem ({ style }) {
     const path = this.state.path
 
@@ -742,11 +730,11 @@ class Home extends Base {
     return (
       <div style={style}>
         <div style={{ width: 15 }} />
-        <LIButton onClick={this.back} tooltip={noBack ? null : i18n.__('Backward')} disabled={noBack}>
+        <LIButton onClick={this.back} tooltip={i18n.__('Backward')} disabled={noBack}>
           <BackwardIcon color={color} />
         </LIButton>
         <div style={{ width: 5 }} />
-        <LIButton onClick={this.forward} tooltip={noForward ? null : i18n.__('Forward')} disabled={noForward}>
+        <LIButton onClick={this.forward} tooltip={i18n.__('Forward')} disabled={noForward}>
           <ForwardIcon color={color} />
         </LIButton>
         <div style={{ width: 5 }} />

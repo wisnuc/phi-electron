@@ -8,7 +8,7 @@ import FinishedTask from './FinishedTask'
 import ErrorDialogInTrans from './ErrorDialogInTrans'
 import { StartAllIcon, PauseAllIcon, DeleteAllIcon } from '../common/Svg'
 import ScrollBar from '../common/ScrollBar'
-import { LIButton } from '../common/IconButton'
+import { LIButton } from '../common/Buttons'
 import DialogOverlay from '../common/DialogOverlay'
 import PureDialog from '../common/PureDialog'
 import FlatButton from '../common/FlatButton'
@@ -179,16 +179,14 @@ class TrsContainer extends React.Component {
           { i18n.__('Finished Task Summary %s', finishTasks.length)}
         </div>
         <div style={{ flexGrow: 1 }} />
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <LIButton
-            disabled={!finishTasks.length}
-            onClick={() => this.toggleDialog('clearFinishedDialog')}
-            tooltip={i18n.__('Clear All Record')}
-          >
-            <DeleteAllIcon />
-          </LIButton>
-          <div style={{ width: 30 }} />
-        </div>
+        <LIButton
+          disabled={!finishTasks.length}
+          onClick={() => this.toggleDialog('clearFinishedDialog')}
+          tooltip={i18n.__('Clear All Record')}
+        >
+          <DeleteAllIcon />
+        </LIButton>
+        <div style={{ width: 30 }} />
       </div>
     )
   }

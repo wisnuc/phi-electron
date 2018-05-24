@@ -10,7 +10,7 @@ import PhotoDetail from '../photo/PhotoDetail'
 import DialogOverlay from '../common/DialogOverlay'
 import { OLButton, LIButton } from '../common/Buttons'
 import CircularLoading from '../common/CircularLoading'
-import { DownloadFileIcon, WinFullIcon, WinNormalIcon, CloseIcon } from '../common/Svg'
+import { DownloadFileIcon, WinFullIcon, WinNormalIcon, CloseIcon, OpenViaLocalIcon } from '../common/Svg'
 
 class Preview extends React.Component {
   constructor (props) {
@@ -307,7 +307,7 @@ class Preview extends React.Component {
     // debug('this.props renderOtherFiles', this.props)
     return (
       <div
-        style={{ height: 110, width: 280, padding: '0 20px 20px 20px', backgroundColor: '#FFF' }}
+        style={{ width: 290, padding: '0 10px 20px 20px', backgroundColor: '#FFF' }}
         onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
       >
         <div style={{ height: 60, display: 'flex', alignItems: 'center' }}>
@@ -322,9 +322,11 @@ class Preview extends React.Component {
             <CloseIcon />
           </LIButton>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Divider style={{ width: '100%' }} className="divider" />
+        <div style={{ display: 'flex', alignItems: 'center', marginTop: 20 }}>
           <OLButton
             label={i18n.__('Open via Local App')}
+            icon={OpenViaLocalIcon}
             onClick={this.openByLocal}
           />
         </div>

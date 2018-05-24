@@ -4,7 +4,7 @@ import InfoSvg from 'material-ui/svg-icons/action/info'
 import WarningIcon from 'material-ui/svg-icons/alert/warning'
 import renderFileIcon from '../common/renderFileIcon'
 import { FolderIcon, TaskStartIcon, TaskPauseIcon, TaskDeleteIcon, MultiDownloadIcon, MultiUploadIcon } from '../common/Svg'
-import { LIButton } from '../common/IconButton'
+import { LIButton } from '../common/Buttons'
 
 class RunningTask extends React.Component {
   constructor (props) {
