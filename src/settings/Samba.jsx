@@ -1,9 +1,9 @@
 import i18n from 'i18n'
 import React from 'react'
-import { Divider, IconButton, TextField } from 'material-ui'
+import { Divider, TextField } from 'material-ui'
 
 import { EyeOpenIcon } from '../common/Svg'
-import { RRButton, Toggle } from '../common/Buttons'
+import { RRButton, Toggle, TFButton } from '../common/Buttons'
 
 class SleepMode extends React.Component {
   constructor (props) {
@@ -43,8 +43,6 @@ class SleepMode extends React.Component {
   }
 
   renderPassword () {
-    const iconStyle = { width: 30, height: 30, color: '#31a0f5', iconHoverColor: '#31a0f5' }
-    const buttonStyle = { width: 30, height: 30, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }
     return (
       <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center', filter: 'grayscale(10%)' }}>
         <div style={{ width: 150, textAlign: 'right', color: '#525a60' }}>
@@ -65,9 +63,7 @@ class SleepMode extends React.Component {
           />
           {/* show password */}
           <div style={{ position: 'absolute', right: -5, top: 15 }}>
-            <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.togglePwd}>
-              { this.state.showPwd ? <EyeOpenIcon /> : <EyeOpenIcon /> }
-            </IconButton>
+            <TFButton icon={this.state.showPwd ? EyeOpenIcon : EyeOpenIcon} onClick={this.togglePwd} />
           </div>
         </div>
       </div>

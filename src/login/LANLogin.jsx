@@ -1,9 +1,9 @@
 import i18n from 'i18n'
 import React from 'react'
-import { Divider, IconButton, TextField } from 'material-ui'
+import { Divider, TextField } from 'material-ui'
 import { BackIcon, EyeOpenIcon, DelPwdIcon } from '../common/Svg'
 
-import { RRButton, LIButton } from '../common/Buttons'
+import { RRButton, LIButton, TFButton } from '../common/Buttons'
 
 class LANLogin extends React.Component {
   constructor (props) {
@@ -15,7 +15,8 @@ class LANLogin extends React.Component {
       pwd: '',
       pwdError: '',
       error: '',
-      showPwd: false
+      showPwd: false,
+      loading: false
     }
 
     this.onPhoneNumber = (pn) => {
@@ -44,6 +45,7 @@ class LANLogin extends React.Component {
         this.setState({ pnError: '账户不存在' })
         return
       }
+      this.setState({ loading: true })
       const { uuid } = user
       const password = this.state.pwd
       console.log('uuid pwd', uuid, password)
@@ -56,18 +58,13 @@ class LANLogin extends React.Component {
           Object.assign(this.props.dev, { token: { isFulfilled: () => true, ctx: user, data } })
           this.props.deviceLogin({ dev: this.props.dev, user })
         }
+        this.setState({ loading: false })
       })
-    }
-
-    this.reset = () => {
-      this.setState({ failed: false, pn: '', pnError: '', pwd: '', pwdError: '' })
     }
   }
 
   render () {
     console.log('LANLogin', this.props, this.state)
-    const iconStyle = { width: 30, height: 30, color: '#505259', iconHoverColor: '#31a0f5' }
-    const buttonStyle = { width: 30, height: 30, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }
     return (
       <div style={{ width: 320, zIndex: 100 }} className="paper" >
         <div style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 5 }} className="title">
@@ -110,46 +107,21 @@ class LANLogin extends React.Component {
 
           {/* clear password */}
           <div style={{ position: 'absolute', right: 4, top: 30 }}>
-            <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.clearPn}>
-              <DelPwdIcon />
-            </IconButton>
+            <TFButton icon={DelPwdIcon} onClick={this.clearPn} />
           </div>
 
           {/* password visibility */}
           <div style={{ position: 'absolute', right: 4, top: 100 }}>
-            <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.togglePwd}>
-              { this.state.showPwd ? <EyeOpenIcon /> : <EyeOpenIcon /> }
-            </IconButton>
+            <TFButton icon={this.state.showPwd ? EyeOpenIcon : EyeOpenIcon} onClick={this.togglePwd} />
           </div>
         </div>
-        {/*
-        <div style={{ display: 'flex', width: 280, height: 30, alignItems: 'center', margin: '0 auto' }}>
-          <Checkbox
-            label={i18n.__('Remember Password')}
-            disableTouchRipple
-            style={{ width: 140 }}
-            iconStyle={{ height: 18, width: 18, marginTop: 2 }}
-            labelStyle={{ fontSize: 14, color: '#85868c', marginLeft: -9 }}
-            checked
-            onCheck={() => this.handleSaveToken()}
-          />
-          <Checkbox
-            label={i18n.__('Auto Login')}
-            disableTouchRipple
-            style={{ width: 140 }}
-            iconStyle={{ height: 18, width: 18, marginTop: 2, fill: 'rgba(0,0,0,.25)' }}
-            labelStyle={{ fontSize: 14, color: '#85868c', marginLeft: -9 }}
-            checked={false}
-            onCheck={() => this.handleAutologin()}
-          />
-        </div>
-        */}
         <div style={{ height: 20 }} />
         <div style={{ width: 240, height: 40, margin: '0 auto' }}>
           <RRButton
-            label={i18n.__('Login')}
+            label={this.state.loading ? i18n.__('Logging') : i18n.__('Login')}
             onClick={this.login}
             disabled={this.state.pnError || this.state.pwdError || !this.state.pn || !this.state.pwd}
+            loading={this.state.loading}
           />
         </div>
         <div style={{ height: 30 }} />

@@ -12,7 +12,7 @@ class NewDriveDialog extends PureComponent {
       loading: false,
       focusOnce: true,
       label: '',
-      writelist: this.props.drive && this.props.drive.writelist,
+      writelist: (this.props.drive && this.props.drive.writelist) || [],
       errorText: ''
     }
 

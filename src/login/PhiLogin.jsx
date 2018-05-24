@@ -2,14 +2,11 @@ import md5 from 'md5'
 import React from 'react'
 import i18n from 'i18n'
 import { shell } from 'electron'
-import { Checkbox, Divider, IconButton, TextField } from 'material-ui'
-import VisibilityOff from 'material-ui/svg-icons/action/visibility-off'
-import Visibility from 'material-ui/svg-icons/action/visibility'
-import CloseIcon from 'material-ui/svg-icons/navigation/close'
-
+import { Checkbox, Divider, TextField } from 'material-ui'
 import Dialog from '../common/PureDialog'
-import { RRButton, FLButton, RSButton } from '../common/Buttons'
+import { RRButton, FLButton, RSButton, TFButton } from '../common/Buttons'
 import { isPhoneNumber } from '../common/validate'
+import { EyeOpenIcon, DelPwdIcon } from '../common/Svg'
 
 const phicommUrl = 'https://sohon2test.phicomm.com/v1'
 let firstLogin = true
@@ -149,8 +146,6 @@ class PhiLogin extends React.Component {
   }
 
   render () {
-    const iconStyle = { width: 18, height: 18, color: '#31a0f5', padding: 0 }
-    const buttonStyle = { width: 26, height: 26, padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }
     return (
       <div style={{ width: 320, zIndex: 100 }} className="paper" >
         <div style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 20 }} className="title">
@@ -204,16 +199,12 @@ class PhiLogin extends React.Component {
 
           {/* clear password */}
           <div style={{ position: 'absolute', right: 4, top: 32 }}>
-            <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.clearPn}>
-              <CloseIcon />
-            </IconButton>
+            <TFButton icon={DelPwdIcon} onClick={this.clearPn} />
           </div>
 
           {/* password visibility */}
           <div style={{ position: 'absolute', right: 4, top: 102 }}>
-            <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.togglePwd}>
-              { this.state.showPwd ? <VisibilityOff /> : <Visibility /> }
-            </IconButton>
+            <TFButton icon={this.state.showPwd ? EyeOpenIcon : EyeOpenIcon} onClick={this.togglePwd} />
           </div>
         </div>
         <div style={{ display: 'flex', width: 280, height: 40, alignItems: 'center', margin: '0 auto' }}>
@@ -239,9 +230,10 @@ class PhiLogin extends React.Component {
         <div style={{ height: 30 }} />
         <div style={{ width: 240, height: 40, margin: '0 auto' }}>
           <RRButton
-            label={i18n.__('Login') + (this.state.loading ? '中...' : '')}
+            label={this.state.loading ? i18n.__('Logging') : i18n.__('Login')}
             onClick={() => (this.state.showFakePwd ? this.fakeLogin() : this.login())}
             disabled={!this.shouldFire()}
+            loading={this.state.loading}
           />
         </div>
 

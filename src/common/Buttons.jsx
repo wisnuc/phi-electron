@@ -2,6 +2,35 @@ import React from 'react'
 import { IconButton, Toggle as MToggle, Checkbox as MCheckbox } from 'material-ui'
 import { CheckedIcon } from '../common/Svg'
 
+class LoadingLabel extends React.PureComponent {
+  constructor (props) {
+    super(props)
+    this.state = { count: 1 }
+
+    this.changeCount = () => {
+      this.setState({ count: (this.state.count + 1) % 4 })
+    }
+  }
+
+  componentDidMount () {
+    if (this.props.loading) this.timer = setInterval(this.changeCount, 1000)
+  }
+
+  componentWillUnmount () {
+    clearInterval(this.timer)
+  }
+
+  render () {
+    const { style, loading, label } = this.props
+    const dash = Array.from({ length: this.state.count }).fill('.').join('')
+    return (
+      <div style={style}>
+        { loading ? label + dash : label }
+      </div>
+    )
+  }
+}
+
 export class Button extends React.PureComponent {
   constructor (props) {
     super(props)
@@ -19,8 +48,8 @@ export class Button extends React.PureComponent {
     this.onMouseLeave = () => this.setState({ pressed: false, hover: false })
 
     this.onClick = (e) => {
-      const { disabled, onClick } = this.props
-      if (disabled || typeof onClick !== 'function') return
+      const { disabled, onClick, loading } = this.props
+      if (disabled || loading || typeof onClick !== 'function') return
       onClick(e)
     }
 
@@ -88,27 +117,33 @@ export class RSButton extends Button {
 /* Raised Button with BorderRadius */
 export class RRButton extends Button {
   render () {
-    const { label, style, labelStyle, disabled, alt } = this.props
+    const { label, style, labelStyle, disabled, alt, loading } = this.props
     const height = 40
     const width = 240
     const cursor = disabled ? 'default' : 'pointer'
     const borderRadius = height / 2
-    const backgroundColor = disabled ? 'var(--light-grey-text)'
-      : alt ? (this.state.pressed ? '#33b54e' : '#44c468')
-        : (this.state.pressed ? '#2588f2' : 'var(--dodger-blue)')
+    const backgroundColor = (disabled && !loading) ? '#c4c5cc' : alt ? '#44c468' : '#31a0f5'
 
-    const boxShadow = disabled
+    const boxShadow = (disabled && !loading)
       ? '0px 5px 10px 0 rgba(122, 125, 128, 0.25)'
       : this.state.hover
         ? `0px 10px 15px 0 ${alt ? 'rgba(47, 162, 79, 0.2)' : 'rgba(33, 110, 209, 0.2)'}`
         : `0px 5px 10px 0 ${alt ? 'rgba(47, 162, 79, 0.25)' : 'rgba(33, 110, 209, 0.25)'}`
 
-    const buttonStyle = Object.assign({ width, height, cursor, borderRadius, backgroundColor, boxShadow }, style)
+    const buttonStyle = Object.assign({ width, height, cursor, borderRadius, backgroundColor, boxShadow, position: 'relative' }, style)
     const textStyle = Object.assign({ color: '#FFF', fontSize: 14 }, labelStyle)
+
+    const overlayBgColor = loading ? 'rgba(0,0,0,.1)'
+      : disabled ? 'transparent'
+        : (this.state.pressed || this.state.hover) ? 'rgba(255,255,255,.1)'
+          : 'transparent'
+
+    const overlayStyle = { width, height, borderRadius, backgroundColor: overlayBgColor, position: 'absolute', top: 0, left: 0 }
 
     return (
       <div {...this.funcs} style={buttonStyle} className="flexCenter" >
-        <div style={textStyle}> { label } </div>
+        <LoadingLabel style={textStyle} loading={loading} label={label} />
+        <div style={overlayStyle} />
       </div>
     )
   }
@@ -255,6 +290,33 @@ export class MenuButton extends Button {
           <Icon style={{ margin: '0 30px', width: 30, height: 30, color: iconColor }} />
           <div style={{ color: textColor }}> { text } </div>
         </div>
+      </div>
+    )
+  }
+}
+
+/* Small Icon Button in TextFiled */
+export class TFButton extends Button {
+  render () {
+    const { disabled } = this.props
+    const Icon = this.props.icon
+    const iconColor = this.state.hover && !disabled ? '#31a0f5' : '#7d868f'
+    const opacity = disabled ? 0.5 : 1
+
+    return (
+      <div
+        style={{
+          width: 30,
+          height: 30,
+          position: 'relative',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: disabled ? 'not-allowed' : 'pointer'
+        }}
+        {...this.funcs}
+      >
+        <Icon style={{ width: 30, height: 30, color: iconColor, opacity }} />
       </div>
     )
   }

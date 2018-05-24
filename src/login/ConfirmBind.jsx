@@ -84,7 +84,7 @@ class ConfirmBind extends React.PureComponent {
         <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
         <div style={{ height: 176, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <img
-            style={{ width: 59, height: 100 }}
+            style={{ width: this.state.status === 'WIP' ? 49 : 59, height: 100 }}
             src={`./assets/images/${img}`}
             alt={img}
           />

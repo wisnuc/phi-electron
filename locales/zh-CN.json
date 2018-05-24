@@ -637,6 +637,8 @@
   "LANPassword Menu Name": "离线密码",
   "LANPassword Description": "离线密码设置",
   "LAN Password Description": "请为NAS设备提供离线密码,以备离线时连接和管理NAS设备",
+  "Set LAN Password Error": "设置成功",
+  "Set LAN Password Error": "设置失败",
 
   "==== view/Power.jsx ====": "",
   "Power Menu Name": "设备重启",
@@ -872,6 +874,8 @@
   "Network Connection Error Text": "网络连接失败，请连接网络",
   "Phi Login Failed Title": "登录失败",
   "Phi Login Failed Text": "云账户登录失败，请检查网络，或继续管理本地离线设备",
+  "Logging": "登录中",
+  "Saving": "保存中",
 
   "==== login/DeviceSelect.jsx====": "",
   "Add Device": "添加设备",

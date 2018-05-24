@@ -1,9 +1,9 @@
 import i18n from 'i18n'
 import React from 'react'
-import { IconButton, TextField } from 'material-ui'
+import { TextField } from 'material-ui'
 
 import { EyeOpenIcon } from '../common/Svg'
-import { RRButton } from '../common/Buttons'
+import { RRButton, TFButton } from '../common/Buttons'
 
 class LANPassword extends React.Component {
   constructor (props) {
@@ -28,8 +28,8 @@ class LANPassword extends React.Component {
       this.props.phi.req('setLANPassword', { userUUID, password: this.state.pwd, deviceSN }, (err, res) => {
         if (err) {
           console.error('Set LAN Password Error', err)
-          this.props.openSnackBar('Set LAN Password Error')
-        } else this.props.openSnackBar('Set LAN Password Success')
+          this.props.openSnackBar(i18n.__('Set LAN Password Error'))
+        } else this.props.openSnackBar(i18n.__('Set LAN Password Success'))
         this.setState({ loading: false })
       })
     }
@@ -38,8 +38,6 @@ class LANPassword extends React.Component {
   }
 
   renderPassword () {
-    const iconStyle = { width: 30, height: 30, color: '#31a0f5', iconHoverColor: '#31a0f5' }
-    const buttonStyle = { width: 30, height: 30, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }
     return (
       <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center' }}>
         <div style={{ width: 150, textAlign: 'right', color: '#525a60' }}>
@@ -61,9 +59,7 @@ class LANPassword extends React.Component {
           />
           {/* show password */}
           <div style={{ position: 'absolute', right: -5, top: 15 }}>
-            <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.togglePwd}>
-              { this.state.showPwd ? <EyeOpenIcon /> : <EyeOpenIcon /> }
-            </IconButton>
+            <TFButton icon={this.state.showPwd ? EyeOpenIcon : EyeOpenIcon} onClick={this.togglePwd} />
           </div>
         </div>
       </div>
@@ -95,9 +91,10 @@ class LANPassword extends React.Component {
 
           <div style={{ width: 240, height: 40, margin: '0 auto', paddingLeft: 160 }}>
             <RRButton
-              label={i18n.__('Save') + (this.state.loading ? '中...' : '')}
+              label={this.state.loading ? i18n.__('Saving') : i18n.__('Save')}
               onClick={this.save}
-              disabled={this.state.loading}
+              disabled={!this.state.pwd || this.state.pwdError || this.state.loading}
+              loading={this.state.loading}
             />
           </div>
         </div>
