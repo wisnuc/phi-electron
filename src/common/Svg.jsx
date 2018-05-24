@@ -34,6 +34,12 @@ export const AudioIcon = f('icon_music_thumb')
 
 export const VideoIcon = f('icon_mov_thumb')
 
+export const RARIcon = f('icon_package_thumb')
+
+export const MultiDownloadIcon = f('icon_downloadtask_th')
+
+export const MultiUploadIcon = f('icon_downloadtask_th')
+
 /* Settings */
 export const SambaIcon = props => (
   <SvgIcon {...props} viewBox="0 0 24 24" style={{ fill: '#FFF' }}>

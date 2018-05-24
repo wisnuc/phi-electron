@@ -204,7 +204,13 @@ class Preview extends React.Component {
   renderDoc (type) {
     return (
       <div
-        style={{ height: '80%', width: '80%', backgroundColor: '#FFFFFF', overflowY: 'auto', position: 'relative' }}
+        style={{
+          height: 'calc(100% - 160px)',
+          width: 'calc(100% - 200px)',
+          backgroundColor: '#FFFFFF',
+          overflowY: 'auto',
+          position: 'relative'
+        }}
         onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
       >
         { this.renderDocHeader(this.props.item) }
@@ -223,7 +229,11 @@ class Preview extends React.Component {
           style={{ height: '100%', width: '100%', backgroundColor: '#FFFFFF', overflowY: 'auto' }}
           onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
         >
-          <code><pre style={{ margin: 8, whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>{ this.state.data }</pre></code>
+          <code>
+            <pre style={{ margin: '0 20px', whiteSpace: 'pre-wrap', wordWrap: 'break-word', color: '#545558' }}>
+              { this.state.data }
+            </pre>
+          </code>
         </div>
       )
     }
@@ -253,7 +263,7 @@ class Preview extends React.Component {
   renderVideo () {
     return (
       <div
-        style={{ height: '80%', width: '80%', backgroundColor: 'rgba(0,0,0,0)' }}
+        style={{ height: 'calc(100% - 160px)', width: 'calc(100% - 200px)', backgroundColor: 'rgba(0,0,0,0)' }}
         onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
       >
         <video

@@ -262,6 +262,7 @@ class ContainerOverlayInline extends React.Component {
                 height: 80,
                 display: 'flex',
                 alignItems: 'center',
+                WebkitAppRegion: 'drag',
                 background: 'linear-gradient(0deg, rgba(0,0,0,0), rgba(0,0,0,0.54))'
               }}
               onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
@@ -280,7 +281,8 @@ class ContainerOverlayInline extends React.Component {
                   display: 'flex',
                   alignItems: 'center',
                   color: '#FFFFFF',
-                  backgroundColor: '#000000'
+                  backgroundColor: '#000000',
+                  WebkitAppRegion: 'no-drag'
                 }}
               >
                 <div style={{ width: 10 }} />

@@ -2,12 +2,10 @@ import i18n from 'i18n'
 import React from 'react'
 import InfoSvg from 'material-ui/svg-icons/action/info'
 import WarningIcon from 'material-ui/svg-icons/alert/warning'
-import MultiSvg from 'material-ui/svg-icons/content/content-copy'
 import renderFileIcon from '../common/renderFileIcon'
-import { FolderIcon, TaskStartIcon, TaskPauseIcon, TaskDeleteIcon } from '../common/Svg'
+import { FolderIcon, TaskStartIcon, TaskPauseIcon, TaskDeleteIcon, MultiDownloadIcon, MultiUploadIcon } from '../common/Svg'
 import { LIButton } from '../common/IconButton'
 
-const svgStyle = { color: '#000', opacity: 0.54 }
 class RunningTask extends React.Component {
   constructor (props) {
     super(props)
@@ -104,7 +102,7 @@ class RunningTask extends React.Component {
         {/* task item type */}
         <div style={{ width: 33, paddingLeft: 17, display: 'flex', alignItems: 'center' }}>
           {
-            task.entries.length > 1 ? <MultiSvg style={svgStyle} />
+            task.entries.length > 1 ? (this.props.trsType === 'download' ? <MultiDownloadIcon /> : <MultiUploadIcon />)
               : task.taskType === 'file' ? renderFileIcon(task.name, null, 30)
                 : <FolderIcon style={{ width: 30, height: 30 }} />
           }

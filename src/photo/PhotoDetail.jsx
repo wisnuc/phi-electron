@@ -68,8 +68,8 @@ class PhotoDetail extends React.Component {
 
     /* calculate size of image */
     this.calcSize = () => {
-      this.clientHeight = window.innerHeight
-      this.clientWidth = this.props.detailInfo ? window.innerWidth - 360 : window.innerWidth
+      this.clientHeight = window.innerHeight - 160
+      this.clientWidth = window.innerWidth - 200
 
       /* handle the exifOrientation */
       this.exifOrientation = this.photo.orient || 1
