@@ -54,7 +54,10 @@ class FinishedTask extends React.Component {
     const backgroundColor = this.state.isSelected ? '#f4f4f4' : index % 2 ? '#fafbfc' : '#FFF'
 
     return (
-      <div style={{ display: 'flex', alignItems: 'center', height: 60, backgroundColor }} >
+      <div
+        style={{ display: 'flex', alignItems: 'center', height: 60, backgroundColor }}
+        onDoubleClick={() => this.openFileLocation(task)}
+      >
         {/* task item type */}
         <div style={{ width: 33, paddingLeft: 17, display: 'flex', alignItems: 'center' }}>
           {
@@ -87,7 +90,7 @@ class FinishedTask extends React.Component {
 
         <div style={{ width: 170, display: 'flex', alignItems: 'center' }} >
           <div style={{ width: 40 }} />
-          <LIButton onClick={() => this.openFileLocation(task)} tooltip={task.paused ? i18n.__('Resume') : i18n.__('Pause')} >
+          <LIButton onClick={() => this.openFileLocation(task)} tooltip={i18n.__('Open In Folder')} >
             <OpenFolderIcon />
           </LIButton>
           <LIButton
