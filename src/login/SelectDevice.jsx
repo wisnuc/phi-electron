@@ -126,7 +126,7 @@ class DeviceSelect extends React.Component {
           <img
             width={280}
             height={150}
-            src="./assets/images/pic-nodevice.png"
+            src="./assets/images/pic_nodevice.png"
             alt=""
           />
           <div style={{ width: '100%', textAlign: 'center', color: '#31a0f5', marginTop: -10 }}>

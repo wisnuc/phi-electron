@@ -1,9 +1,9 @@
-import i18n from 'i18n'
 import React from 'react'
 import { AutoSizer } from 'react-virtualized'
 
-import AddDrive from './AddDrive'
+import Name from './Name'
 import Thumb from './Thumb'
+import AddDrive from './AddDrive'
 import ScrollBar from '../common/ScrollBar'
 import renderFileIcon from '../common/renderFileIcon'
 import { AllFileIcon, PublicIcon } from '../common/Svg'
@@ -27,10 +27,11 @@ class Row extends React.Component {
             list.entries.map((item) => {
               const { index, entry } = item
               const selected = select.selected.findIndex(s => s === index) > -1
+              const isOnModify = select.modify === index
               const hover = select.hover === index && !selected
               const focus = select.specified === index
               const backgroundColor = selected ? '#f4fafe' : hover ? '#f9fcfe' : '#FFF'
-              const borderColor = selected ? '#a3d3f8' : hover ? '#d1e9fb' : focus ? '#a3d3f8' : ''
+              const borderColor = selected ? '#a3d3f8' : hover ? '#d1e9fb' : focus ? '#a3d3f8' : 'transparent'
               // const onDropping = entry.type === 'directory' && select.rowDrop(index)
               if (entry.type === 'addDrive') {
                 return (
@@ -52,7 +53,7 @@ class Row extends React.Component {
                     marginBottom: 10,
                     backgroundColor,
                     boxSizing: 'border-box',
-                    border: borderColor ? `1px solid ${borderColor}` : ''
+                    border: `1px solid ${borderColor}`
                   }}
                   role="presentation"
                   onClick={e => this.props.onRowClick(e, index)}
@@ -89,20 +90,20 @@ class Row extends React.Component {
                   </div>
 
                   {/* file name */}
-                  <div style={{ height: 40, color: 'var(--dark-text)', paddingBottom: 4 }} className="flexCenter" >
-                    <div
-                      style={{
-                        overflow: 'hidden',
-                        whiteSpace: 'nowrap',
-                        textOverflow: 'ellipsis',
-                        fontSize: 13,
-                        width: 130,
-                        textAlign: 'center',
-                        fontWeight: 500
-                      }}
-                    >
-                      { entry.name || (entry.type === 'public' ? i18n.__('Public Drive') : '') }
-                    </div>
+                  <div
+                    className="flexCenter"
+                    style={{ height: 40, width: 130, color: 'var(--dark-text)', paddingBottom: 4, position: 'relative' }}
+                  >
+                    <Name
+                      center
+                      refresh={() => this.props.refresh({ noloading: true })}
+                      openSnackBar={this.props.openSnackBar}
+                      entry={entry}
+                      entries={this.props.entries}
+                      modify={isOnModify}
+                      apis={this.props.apis}
+                      path={this.props.path}
+                    />
                   </div>
                 </div>
               )

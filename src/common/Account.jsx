@@ -3,7 +3,7 @@ import React from 'react'
 import { shell } from 'electron'
 import { Popover, MenuItem } from 'material-ui'
 import ADD from 'material-ui/svg-icons/navigation/arrow-drop-down'
-import { PersonIcon, UsersIcon, LogoutIcon } from '../common/Svg'
+import { PersonIcon, UsersIcon, LogoutIcon, AvatarOnlineIcon, AvatarOfflineIcon } from '../common/Svg'
 
 const phicommUrl = 'https://sohon2test.phicomm.com/v1/ui/index'
 
@@ -68,9 +68,7 @@ class Account extends React.Component {
         }}
         onClick={this.openPop}
       >
-        <div>
-          <img src="./assets/images/avator-default.png" alt="" width={30} height={30} />
-        </div>
+        { phicommUserId ? <AvatarOnlineIcon style={{ color: '#FFF' }} /> : <AvatarOfflineIcon style={{ color: '#FFF' }} /> }
         <div style={{ paddingLeft: 10, color }}>
           { name }
         </div>

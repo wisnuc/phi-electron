@@ -1,7 +1,7 @@
 import i18n from 'i18n'
 import React from 'react'
 import { Divider, TextField } from 'material-ui'
-import { BackIcon, EyeOpenIcon, DelPwdIcon } from '../common/Svg'
+import { BackIcon, EyeOpenIcon, EyeOffIcon, DelPwdIcon } from '../common/Svg'
 
 import { RRButton, LIButton, TFButton } from '../common/Buttons'
 
@@ -112,7 +112,7 @@ class LANLogin extends React.Component {
 
           {/* password visibility */}
           <div style={{ position: 'absolute', right: 4, top: 100 }}>
-            <TFButton icon={this.state.showPwd ? EyeOpenIcon : EyeOpenIcon} onClick={this.togglePwd} />
+            <TFButton icon={this.state.showPwd ? EyeOffIcon : EyeOpenIcon} onClick={this.togglePwd} />
           </div>
         </div>
         <div style={{ height: 20 }} />

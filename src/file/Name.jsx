@@ -77,7 +77,7 @@ class Name extends React.PureComponent {
   }
 
   render () {
-    const { entry, modify, onMouseDown } = this.props
+    const { entry, modify, onMouseDown, center } = this.props
     const { name } = entry
     if (!modify) {
       this.reset()
@@ -98,6 +98,7 @@ class Name extends React.PureComponent {
         onDoubleClick={(e) => { e.preventDefault(); e.stopPropagation() }}
         onMouseDown={(e) => { e.stopPropagation() }}
         style={{ height: '100%', width: '100%', position: 'relative', transform: 'none' }}
+        className="flexCenter"
       >
         <div
           style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 10 }}
@@ -117,7 +118,8 @@ class Name extends React.PureComponent {
             fontSize: 14,
             color: '#525a60',
             letterSpacing: 1.4,
-            backgroundColor: '#FFF'
+            backgroundColor: '#FFF',
+            textAlign: center ? 'center' : undefined
           }}
           ref={(input) => { // forcus on TextField and autoselect file name without extension
             if (input && !this.notFirst) {

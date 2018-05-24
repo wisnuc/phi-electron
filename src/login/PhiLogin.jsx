@@ -6,7 +6,7 @@ import { Checkbox, Divider, TextField } from 'material-ui'
 import Dialog from '../common/PureDialog'
 import { RRButton, FLButton, RSButton, TFButton } from '../common/Buttons'
 import { isPhoneNumber } from '../common/validate'
-import { EyeOpenIcon, DelPwdIcon } from '../common/Svg'
+import { EyeOpenIcon, EyeOffIcon, DelPwdIcon } from '../common/Svg'
 
 const phicommUrl = 'https://sohon2test.phicomm.com/v1'
 let firstLogin = true
@@ -204,7 +204,7 @@ class PhiLogin extends React.Component {
 
           {/* password visibility */}
           <div style={{ position: 'absolute', right: 4, top: 102 }}>
-            <TFButton icon={this.state.showPwd ? EyeOpenIcon : EyeOpenIcon} onClick={this.togglePwd} />
+            <TFButton icon={this.state.showPwd ? EyeOffIcon : EyeOpenIcon} onClick={this.togglePwd} />
           </div>
         </div>
         <div style={{ display: 'flex', width: 280, height: 40, alignItems: 'center', margin: '0 auto' }}>

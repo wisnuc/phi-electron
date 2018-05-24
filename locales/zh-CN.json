@@ -223,7 +223,7 @@
   "Avatar Edit Text": "请绑定微信，将会自动获取您的微信头像。",
   "Account Settings": "个人设置",
   "Users Management": "用户管理",
-  "Offline": "离线",
+  "Account Offline": "离线模式",
 
   "==== control/ResetPassword.jsx ====": "",
   "Authentication Success Text": "微信认证成功",
@@ -637,7 +637,7 @@
   "LANPassword Menu Name": "离线密码",
   "LANPassword Description": "离线密码设置",
   "LAN Password Description": "请为NAS设备提供离线密码,以备离线时连接和管理NAS设备",
-  "Set LAN Password Error": "设置成功",
+  "Set LAN Password Success": "设置成功",
   "Set LAN Password Error": "设置失败",
 
   "==== view/Power.jsx ====": "",
@@ -750,6 +750,7 @@
   "File Oversize Text": "该文件大于50M，建议下载后再使用本地应用打开",
   "Full Winodw": "最大化",
   "Normal Window": "恢复",
+  "Open In Folder": "在文件夹中显示",
 
   "==== file/RenameDialog.jsx ====": "",
   "Rename Failed": "修改失败",

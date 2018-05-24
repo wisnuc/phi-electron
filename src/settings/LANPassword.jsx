@@ -2,7 +2,7 @@ import i18n from 'i18n'
 import React from 'react'
 import { TextField } from 'material-ui'
 
-import { EyeOpenIcon } from '../common/Svg'
+import { EyeOpenIcon, EyeOffIcon } from '../common/Svg'
 import { RRButton, TFButton } from '../common/Buttons'
 
 class LANPassword extends React.Component {
@@ -59,7 +59,7 @@ class LANPassword extends React.Component {
           />
           {/* show password */}
           <div style={{ position: 'absolute', right: -5, top: 15 }}>
-            <TFButton icon={this.state.showPwd ? EyeOpenIcon : EyeOpenIcon} onClick={this.togglePwd} />
+            <TFButton icon={this.state.showPwd ? EyeOffIcon : EyeOpenIcon} onClick={this.togglePwd} />
           </div>
         </div>
       </div>

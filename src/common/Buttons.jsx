@@ -237,13 +237,14 @@ export class OLButton extends Button {
           height: 50,
           width: 280,
           color,
+          borderRadius: 4,
           backgroundColor,
           cursor: 'pointer'
         }}
         className="flexCenter"
         {...this.funcs}
       >
-        <Icon />
+        <Icon style={{ color: '#FFF' }} />
         <div style={{ width: 10 }} />
         { label }
       </div>
@@ -373,8 +374,12 @@ export class SIButton extends React.PureComponent {
     const { disabled } = this.props
     const style = Object.assign({}, styles.smallButton, this.props.style)
     const iconStyle = Object.assign({ color: '#7d868f', opacity: disabled ? 0.5 : 1 }, styles.smallIcon, this.props.iconStyle)
+    const props = Object.assign({}, this.props)
+    delete props.tooltip
     return (
-      <IconButton style={style} iconStyle={iconStyle} {...this.props} />
+      <Tooltip tooltip={this.props.tooltip} disabled={disabled} >
+        <IconButton style={style} iconStyle={iconStyle} {...props} />
+      </Tooltip>
     )
   }
 }

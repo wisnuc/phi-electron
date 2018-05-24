@@ -315,10 +315,10 @@ class Preview extends React.Component {
             { this.props.item.name }
           </div>
 
-          <LIButton onClick={() => { this.props.download(); this.props.close() }}>
+          <LIButton onClick={() => { this.props.download(); this.props.close() }} tooltip={i18n.__('Download')}>
             <DownloadFileIcon />
           </LIButton>
-          <LIButton onClick={this.props.close}>
+          <LIButton onClick={this.props.close} tooltip={i18n.__('Close')}>
             <CloseIcon />
           </LIButton>
         </div>

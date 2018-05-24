@@ -1,9 +1,9 @@
 import i18n from 'i18n'
 import React from 'react'
-import { Divider, IconButton, TextField } from 'material-ui'
-import { EyeOpenIcon } from '../common/Svg'
+import { Divider, TextField } from 'material-ui'
+import { EyeOpenIcon, EyeOffIcon } from '../common/Svg'
 
-import { RRButton } from '../common/Buttons'
+import { RRButton, TFButton } from '../common/Buttons'
 
 class SetLANPwd extends React.Component {
   constructor (props) {
@@ -54,8 +54,6 @@ class SetLANPwd extends React.Component {
   }
 
   render () {
-    const iconStyle = { width: 30, height: 30, color: '#505259', iconHoverColor: '#31a0f5' }
-    const buttonStyle = { width: 30, height: 30, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }
     return (
       <div style={{ width: 320, zIndex: 200, position: 'relative' }} className="paper" >
         <div
@@ -86,9 +84,7 @@ class SetLANPwd extends React.Component {
           />
           {/* clear password */}
           <div style={{ position: 'absolute', right: 4, top: 20 }}>
-            <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={this.togglePwd}>
-              { this.state.showPwd ? <EyeOpenIcon /> : <EyeOpenIcon /> }
-            </IconButton>
+            <TFButton icon={this.state.showPwd ? EyeOffIcon : EyeOpenIcon} onClick={this.togglePwd} />
           </div>
         </div>
         <div style={{ height: 20 }} />

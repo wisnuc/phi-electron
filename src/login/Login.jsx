@@ -37,7 +37,7 @@ class Login extends React.Component {
     }
 
     this.enterLANLogin = () => {
-      this.props.phiLogin({ lan: true, name: i18n.__('Offline') })
+      this.props.phiLogin({ lan: true, name: i18n.__('Account Offline') })
       this.setState({ list: [], loading: true, type: 'LANTOLOGIN', status: 'deviceSelect' })
       reqMdns()
         .then(mdns => this.setState({ loading: false, list: mdns }))

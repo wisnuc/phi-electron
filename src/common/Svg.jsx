@@ -38,9 +38,9 @@ export const RARIcon = f('icon_package_thumb')
 
 export const MultiDownloadIcon = f('icon_downloadtask_th')
 
-export const MultiUploadIcon = f('icon_downloadtask_th')
+export const MultiUploadIcon = f('icon_uploadtask_thum')
 
-export const OpenViaLocalIcon = f('icon_downloadtask_th')
+export const OpenViaLocalIcon = f('icon_open_local')
 
 /* Settings */
 export const SambaIcon = props => (
@@ -176,6 +176,8 @@ export const DelPwdIcon = f('icon_del_password')
 
 export const EyeOpenIcon = f('icon_eye_list')
 
+export const EyeOffIcon = f('icon_password_invisi')
+
 export const WinNormalIcon = f('icon_windows_normal')
 
 export const WinFullIcon = f('icon_windows_full')
@@ -203,6 +205,12 @@ export const SizeSmallIcon = f('icon_intro_size')
 export const ContentSmallIcon = f('icon_intro_content')
 
 export const MTimeSmallIcon = f('icon_intro_date')
+
+export const AvatarOnlineIcon = f('icon_avatar_online')
+
+export const AvatarOfflineIcon = f('icon_avatar_offline')
+
+export const TransErrorIcon = f('icon_trans_error')
 
 export const CheckedIcon = props => (
   <SvgIcon viewBox="0 0 9.5 7.5" {...props}>
