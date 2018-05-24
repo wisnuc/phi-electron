@@ -746,6 +746,8 @@
   "Open via Local App": "使用本地应用打开",
   "Tips": "提示",
   "File Oversize Text": "该文件大于50M，建议下载后再使用本地应用打开",
+  "Full Winodw": "最大化",
+  "Normal Window": "恢复",
 
   "==== file/RenameDialog.jsx ====": "",
   "Rename Failed": "修改失败",
@@ -827,6 +829,9 @@
   "Do not Show again": "不再提醒",
   "Confirm Close Text": "确定退出并关闭应用吗？",
   "About": "关于",
+  "No Device": "暂无设备",
+  "No Storage Info": "暂无存储信息",
+  "No User Info": "暂无用户信息",
 
   "==== node/lib/transmissionUpdate.js ====": "",
   "Transmission Finished": "文件传输完成",

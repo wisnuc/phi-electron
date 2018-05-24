@@ -157,6 +157,11 @@ class NavViews extends React.Component {
     this.showBoundList = () => {
       this.setState({ changeDevice: true })
     }
+
+    this.jumpTo = (nav) => {
+      if (nav === 'changeDevice') this.showBoundList()
+      else if (nav === 'settings') this.navGroup('settings')
+    }
   }
 
   componentDidMount () {
@@ -164,6 +169,7 @@ class NavViews extends React.Component {
     ipcRenderer.send('START_TRANSMISSION')
     ipcRenderer.on('snackbarMessage', (e, message) => this.openSnackBar(message.message))
     ipcRenderer.on('conflicts', (e, args) => this.setState({ conflicts: args }))
+    ipcRenderer.on('JUMP_TO', (e, nav) => this.jumpTo(nav))
   }
 
   componentDidUpdate () {
@@ -173,6 +179,7 @@ class NavViews extends React.Component {
   componentWillUnmount () {
     ipcRenderer.removeAllListeners('snackbarMessage')
     ipcRenderer.removeAllListeners('conflicts')
+    ipcRenderer.removeAllListeners('JUMP_TO')
   }
 
   install (navs) {

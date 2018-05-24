@@ -48,6 +48,7 @@ class Fruitmix extends React.Component {
 
   deviceLogin ({ dev, user, token }) {
     if (this.state.selectedDevice) {
+      ipcRenderer.send('LOGOUT')
       this.setState({ view: '', selectedDevice: null, jump: null }, () => this.deviceLogin({ dev, user, token }))
     } else {
       ipcRenderer.send('LOGIN', dev, user)
@@ -56,10 +57,12 @@ class Fruitmix extends React.Component {
   }
 
   deviceLogout () {
+    ipcRenderer.send('LOGOUT')
     this.setState({ view: 'login', selectedDevice: null, jump: { status: 'deviceSelect', type: 'BOUNDLIST' } })
   }
 
   logout () {
+    ipcRenderer.send('LOGOUT')
     this.setState({ account: null, view: 'login', phi: new PhiAPI(), jump: null })
   }
 

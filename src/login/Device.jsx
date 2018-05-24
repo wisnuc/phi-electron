@@ -60,6 +60,15 @@ class Device extends React.Component {
     )
   }
 
+  getStationName () {
+    if (!this.state.dev) return 'N2'
+    const { boot, mdev } = this.state.dev
+    if (mdev && mdev.stationName) return mdev.stationName
+    const mac = boot && boot.data && boot.data.device && boot.data.device.net && boot.data.device.net.mac
+    if (mac) return `N2-${mac.slice(-2)}`
+    return 'N2'
+  }
+
   renderStatus () {
     const st = this.systemStatus()
     let text = st
@@ -107,7 +116,7 @@ class Device extends React.Component {
     const isEnabled = this.isEnabled()
     console.log('Device status', status, this.renderStatus())
 
-    const stationName = (this.state.dev && this.state.dev.mdev && this.state.dev.mdev.stationName) || 'PhiNAS2'
+    const stationName = this.getStationName()
     const address = (this.state.dev && this.state.dev.mdev && this.state.dev.mdev.address) || '--'
 
     const storage = '233GB/1TB'
