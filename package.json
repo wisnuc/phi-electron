@@ -9,7 +9,9 @@
   "scripts": {
     "i18n": "node test/checkI18n.js",
     "devel": "NODE_ENV=dev nodemon --exec electron .",
-    "dist": "./node_modules/.bin/build --config ./electron-builder.yml --win -p never",
+    "dist-x64": "./node_modules/.bin/build --config ./electron-builder.yml --win --x64 -p never",
+    "dist-ia32": "./node_modules/.bin/build --config ./electron-builder.yml --win --ia32 -p never",
+    "dist-mac": "./node_modules/.bin/build --config ./electron-builder.yml --mac -p never",
     "eslint": "eslint --fix lib/*.js src/*/*.jsx",
     "cloud": "NODE_ENV=cloud electron .",
     "doc": "nodemon --exec jsdoc -c jsdoc.conf.json -t node_modules/ink-docstrap/template",
