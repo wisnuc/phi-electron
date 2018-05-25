@@ -1,17 +1,18 @@
-import React from 'react'
 import i18n from 'i18n'
+import React from 'react'
 import { ipcRenderer } from 'electron'
 import { AutoSizer } from 'react-virtualized'
 
 import RunningTask from './RunningTask'
 import FinishedTask from './FinishedTask'
 import ErrorDialogInTrans from './ErrorDialogInTrans'
-import { StartAllIcon, PauseAllIcon, DeleteAllIcon } from '../common/Svg'
+
 import ScrollBar from '../common/ScrollBar'
 import { LIButton } from '../common/Buttons'
-import DialogOverlay from '../common/DialogOverlay'
 import PureDialog from '../common/PureDialog'
 import FlatButton from '../common/FlatButton'
+import DialogOverlay from '../common/DialogOverlay'
+import { StartAllIcon, PauseAllIcon, DeleteAllIcon } from '../common/Svg'
 
 class TrsContainer extends React.Component {
   constructor (props) {

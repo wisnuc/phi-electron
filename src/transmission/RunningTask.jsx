@@ -2,9 +2,10 @@ import i18n from 'i18n'
 import React from 'react'
 import InfoSvg from 'material-ui/svg-icons/action/info'
 import WarningIcon from 'material-ui/svg-icons/alert/warning'
+
+import { LIButton } from '../common/Buttons'
 import renderFileIcon from '../common/renderFileIcon'
 import { FolderIcon, TaskStartIcon, TaskPauseIcon, TaskDeleteIcon, MultiDownloadIcon, MultiUploadIcon } from '../common/Svg'
-import { LIButton } from '../common/Buttons'
 
 class RunningTask extends React.Component {
   constructor (props) {

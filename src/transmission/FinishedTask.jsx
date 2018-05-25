@@ -1,8 +1,8 @@
-import React from 'react'
 import i18n from 'i18n'
+import React from 'react'
+import { LIButton } from '../common/Buttons'
 import renderFileIcon from '../common/renderFileIcon'
 import { FolderIcon, OpenFolderIcon, TaskDeleteIcon, ArrowIcon, MultiDownloadIcon, MultiUploadIcon } from '../common/Svg'
-import { LIButton } from '../common/Buttons'
 
 class FinishedTask extends React.Component {
   constructor (props) {

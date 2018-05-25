@@ -4,7 +4,7 @@ import { ipcRenderer } from 'electron'
 
 import Base from './Base'
 import { UploadingIcon } from '../common/Svg'
-import TrsContainer from '../file/TransmissionContainer'
+import TrsContainer from '../transmission/TransmissionContainer'
 
 class Transmission extends Base {
   navEnter () {

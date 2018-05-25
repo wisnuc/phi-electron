@@ -1,9 +1,10 @@
-import React from 'react'
 import i18n from 'i18n'
+import React from 'react'
 import { ipcRenderer } from 'electron'
-import { FinishedIcon } from '../common/Svg'
-import TrsContainer from '../file/TransmissionContainer'
+
 import Base from './Base'
+import { FinishedIcon } from '../common/Svg'
+import TrsContainer from '../transmission/TransmissionContainer'
 
 class Transmission extends Base {
   navEnter () {

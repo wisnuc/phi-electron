@@ -4,7 +4,6 @@ import { ipcRenderer } from 'electron'
 
 import Home from './Home'
 import FileContent from '../file/FileContent'
-import DriversDetail from '../control/DriversDetail'
 import NewDriveDialog from '../control/NewDriveDialog'
 import sortByType from '../common/sort'
 import DialogOverlay from '../common/DialogOverlay'
