@@ -61,7 +61,7 @@ class FinishedTask extends React.Component {
         {/* task item type */}
         <div style={{ width: 33, paddingLeft: 17, display: 'flex', alignItems: 'center' }}>
           {
-            task.entries.length > 1 ? (this.props.trsType === 'download' ? <MultiDownloadIcon /> : <MultiUploadIcon />)
+            task.entries.length > 1 ? (task.trsType === 'download' ? <MultiDownloadIcon /> : <MultiUploadIcon />)
               : task.taskType === 'file' ? renderFileIcon(task.name, null, 30)
                 : <FolderIcon style={{ width: 30, height: 30 }} />
           }
@@ -69,8 +69,26 @@ class FinishedTask extends React.Component {
 
         {/* task item name */}
         <div style={{ width: 'calc(100% - 683px)', padding: '20px 0 20px 12px', display: 'flex', alignItems: 'center', height: 60 }} >
-          <div style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', color: '#525a60', letterSpacing: 1.4 }}>
-            { task.name }
+          <div
+            style={{
+              position: 'relative',
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              height: 20,
+              color: '#525a60',
+              letterSpacing: 1.4
+            }}
+          >
+            <div
+              style={{ maxWidth: task.entries.length > 1 ? 'calc(100% - 100px)' : '100%' }}
+              className="text"
+            >
+              { task.name }
+            </div>
+            <div>
+              { task.entries.length > 1 && i18n.__('And Other %s Items', task.entries.length)}
+            </div>
           </div>
         </div>
 

@@ -1,11 +1,10 @@
 import i18n from 'i18n'
 import React from 'react'
-import InfoSvg from 'material-ui/svg-icons/action/info'
-import WarningIcon from 'material-ui/svg-icons/alert/warning'
 
 import { LIButton } from '../common/Buttons'
 import renderFileIcon from '../common/renderFileIcon'
-import { FolderIcon, TaskStartIcon, TaskPauseIcon, TaskDeleteIcon, MultiDownloadIcon, MultiUploadIcon } from '../common/Svg'
+import { FolderIcon, TaskStartIcon, TaskPauseIcon, TaskDeleteIcon,
+  MultiDownloadIcon, MultiUploadIcon, TransErrorIcon } from '../common/Svg'
 
 class RunningTask extends React.Component {
   constructor (props) {
@@ -103,7 +102,7 @@ class RunningTask extends React.Component {
         {/* task item type */}
         <div style={{ width: 33, paddingLeft: 17, display: 'flex', alignItems: 'center' }}>
           {
-            task.entries.length > 1 ? (this.props.trsType === 'download' ? <MultiDownloadIcon /> : <MultiUploadIcon />)
+            task.entries.length > 1 ? (task.trsType === 'download' ? <MultiDownloadIcon /> : <MultiUploadIcon />)
               : task.taskType === 'file' ? renderFileIcon(task.name, null, 30)
                 : <FolderIcon style={{ width: 30, height: 30 }} />
           }
@@ -111,9 +110,15 @@ class RunningTask extends React.Component {
 
         {/* task item name */}
         <div style={{ width: 'calc(100% - 516px)', padding: '10px 0 10px 12px' }} >
-          <div style={{ display: 'flex', alignItems: 'center', height: 20, color: '#525a60' }} >
-            <div style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', color: '#525a60', letterSpacing: 1.4 }}>
+          <div style={{ display: 'flex', alignItems: 'center', height: 20, color: '#525a60', letterSpacing: 1.4 }} >
+            <div
+              style={{ maxWidth: task.entries.length > 1 ? 'calc(100% - 200px)' : '100%' }}
+              className="text"
+            >
               { task.name }
+            </div>
+            <div>
+              { task.entries.length > 1 && i18n.__('And Other %s Items', task.entries.length)}
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', height: 20, fontSize: 12, letterSpacing: 1.2, color: '#888a8c' }} >
@@ -146,7 +151,7 @@ class RunningTask extends React.Component {
             task.state === 'failed'
               ? (
                 <LIButton onClick={this.checkError} tooltip={i18n.__('Detail')} >
-                  { task.errors.length ? <InfoSvg color="#F44336" /> : <WarningIcon color="#FB8C00" /> }
+                  <TransErrorIcon />
                 </LIButton>
               )
               : (
