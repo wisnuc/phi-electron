@@ -117,6 +117,13 @@ class PhiAPI extends RequestManager {
           .query({ deviceSN: args.deviceSN })
         break
 
+      case 'registerPhiUser':
+        r = this.apost(
+          'StationManager/relation/invitation/pre',
+          { deviceSN: args.deviceSN, phoneNumber: args.phoneNumber, inviteeNickname: args.nickName }
+        )
+        break
+
       case 'localUsers':
         r = this.command(args.deviceSN, { verb: 'GET', urlPath: '/users', params: {}, body: {} })
         break

@@ -68,7 +68,7 @@ class AdminUsersApp extends React.Component {
     this.deleteUser = () => {
       this.deleteUserAsync().then(() => this.reqUsers()).catch((e) => {
         console.error('this.delete error', e)
-        this.props.openSnackBar('Invite User Error')
+        this.props.openSnackBar(i18n.__('Delete User Failed'))
       })
     }
 
@@ -79,7 +79,8 @@ class AdminUsersApp extends React.Component {
     this.inviteAsync = async () => {
       const { phi, device } = this.props
       const deviceSN = device.mdev.deviceSN
-      const phicommUserId = (await phi.reqAsync('registerPhiUser', { deviceSN, phoneNumber: this.state.pn })).result.uid
+      const args = { deviceSN, phoneNumber: this.state.pn, nickName: this.state.nickName }
+      const phicommUserId = (await phi.reqAsync('registerPhiUser', args)).result.uid
       console.log('this.inviteAsync phicommUserId', phicommUserId)
       const res = await phi.reqAsync('newUser', { deviceSN, username: this.state.pn, phicommUserId })
       console.log('this.inviteAsync res', res)
@@ -90,7 +91,8 @@ class AdminUsersApp extends React.Component {
       this.setState({ invited: true })
       this.inviteAsync().then(() => this.reqUsers()).catch((e) => {
         console.error('this.invite error', e)
-        this.props.openSnackBar('Invite User Error')
+        this.setState({ invited: false })
+        this.props.openSnackBar(i18n.__('Invite User Error'))
       })
     }
 
@@ -215,8 +217,24 @@ class AdminUsersApp extends React.Component {
 
   renderLoading () {
     return (
-      <div style={{ width: '100%', height: '100%' }} className="flexCenter">
-        <CircularLoading />
+      <div style={{ width: 320, padding: '0 30px' }} >
+        <div style={{ width: '100%', height: '100%' }} className="flexCenter">
+          <CircularLoading />
+        </div>
+        <div style={{ height: 20, color: '#31a0f5' }} className="flexCenter">
+          { i18n.__('Loading Users Text') }
+        </div>
+      </div>
+    )
+  }
+
+  renderNoUser () {
+    return (
+      <div style={{ width: 320, padding: '0 30px' }} >
+        <img src="./assets/images/pic_nouser.png" alt="nouser" width={320} height={180} />
+        <div style={{ height: 80, color: '#85868c', marginTop: 20, lineHeight: '26px' }} >
+          { i18n.__('No User Text') }
+        </div>
       </div>
     )
   }
@@ -257,7 +275,7 @@ class AdminUsersApp extends React.Component {
                 {
                   this.state.loading ? this.renderLoading()
                     : isAddUser ? this.renderAddUser()
-                      : this.state.users.lenght ? this.state.users.map(user => this.renderRow(user)) : 'No Normal User'
+                      : this.state.users.length ? this.state.users.map(user => this.renderRow(user)) : this.renderNoUser()
                 }
               </div>
               <div style={{ height: 20 }} />
@@ -267,6 +285,7 @@ class AdminUsersApp extends React.Component {
                   !isAddUser && (
                     <RSButton
                       alt
+                      disabled={!isModify && (!this.state.users || !this.state.users.length)}
                       label={isModify ? i18n.__('Cancel') : i18n.__('Modify Users')}
                       onClick={() => this.setState({ status: isModify ? 'view' : 'modify', checkList: [] })}
                     />

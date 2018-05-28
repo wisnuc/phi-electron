@@ -20,8 +20,6 @@ class LANLogin extends React.Component {
     }
 
     this.onPhoneNumber = (pn) => {
-      // let pnError = ''
-      // if (pn && !Number.isInteger(Number(pn))) pnError = i18n.__('Not Phone Number')
       this.setState({ pn, pnError: '' })
     }
 

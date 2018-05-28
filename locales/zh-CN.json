@@ -271,6 +271,7 @@
   "Send Invite": "发送邀请",
   "User": "用户",
   "User Management": "用户管理",
+  "No User Text": "绑定Nas设备成为该设备管理员，可邀请用户访问该设备，用户拥有自己的私有空间存储，管理员也可设置共享盘权限开放给用户。",
 
   "==== control/ChangeAccountDialog.jsx ====": "",
   "Previous Password Wrong": "原密码错误",

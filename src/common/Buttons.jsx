@@ -76,8 +76,8 @@ export class RSButton extends Button {
     const cursor = disabled ? 'default' : 'pointer'
     const borderRadius = 4
     const color = !alt ? '#FFF'
-      : alt && this.state.pressed ? 'var(--dodger-blue)'
-        : alt && disabled ? 'var(--light-grey-text)'
+      : alt && disabled ? 'var(--light-grey-text)'
+        : alt && this.state.pressed ? 'var(--dodger-blue)'
           : '#6d7073'
 
     const backgroundColor = alt ? '#FFF'
@@ -86,8 +86,8 @@ export class RSButton extends Button {
           : 'var(--dodger-blue)'
 
     const border = !alt ? undefined
-      : this.state.pressed ? 'solid 1px var(--dodger-blue)'
-        : disabled ? 'solid 1px var(--light-grey-text)'
+      : disabled ? 'solid 1px var(--light-grey-text)'
+        : this.state.pressed ? 'solid 1px var(--dodger-blue)'
           : 'solid 1px #dddddd'
 
     const boxShadow = this.state.hover && !disabled
@@ -106,7 +106,7 @@ export class RSButton extends Button {
       },
       style
     )
-    const textStyle = Object.assign({ color, fontSize: 14, height: 30 }, labelStyle)
+    const textStyle = Object.assign({ color, fontSize: 14, height: 34 }, labelStyle)
 
     return (
       <div {...this.funcs} style={buttonStyle} >
