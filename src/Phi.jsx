@@ -5,10 +5,10 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 import Login from './login/Login'
-import Navigation from './nav/Navigation'
-
+import Users from './control/Users'
 import PhiAPI from './common/PhiAPI'
 import Account from './common/Account'
+import Navigation from './nav/Navigation'
 
 const defaultTheme = getMuiTheme({
   fontFamily: 'Microsoft YaHei, PingFang SC, sans-serif',
@@ -27,6 +27,7 @@ class Fruitmix extends React.Component {
       view: 'login',
       jump: null,
       account: null,
+      showUsers: false,
       phi: new PhiAPI(),
       phiLogin: this.phiLogin.bind(this),
       deviceLogin: this.deviceLogin.bind(this),
@@ -34,10 +35,6 @@ class Fruitmix extends React.Component {
       openSnackBar: this.openSnackBar.bind(this),
       jumpToBindDevice: this.jumpToBindDevice.bind(this)
     }
-  }
-
-  openSnackBar (message) {
-    this.setState({ snackBar: message })
   }
 
   phiLogin (user) {
@@ -66,6 +63,14 @@ class Fruitmix extends React.Component {
     this.setState({ account: null, view: 'login', phi: new PhiAPI(), jump: null })
   }
 
+  jumpToBindDevice () {
+    this.setState({ view: 'login', selectedDevice: null, jump: { status: 'deviceSelect', type: 'LANTOBIND' } })
+  }
+
+  openSnackBar (message) {
+    this.setState({ snackBar: message })
+  }
+
   renderSnackBar () {
     return (
       <Snackbar
@@ -75,10 +80,6 @@ class Fruitmix extends React.Component {
         onRequestClose={() => this.setState({ snackBar: '' })}
       />
     )
-  }
-
-  jumpToBindDevice () {
-    this.setState({ view: 'login', selectedDevice: null, jump: { status: 'deviceSelect', type: 'LANTOBIND' } })
   }
 
   render () {
@@ -96,8 +97,23 @@ class Fruitmix extends React.Component {
           {
             this.state.account &&
               <div style={{ position: 'fixed', top: 12, right: 147, height: 36, WebkitAppRegion: 'no-drag' }}>
-                <Account user={this.state.account} logout={() => this.logout()} device={this.state.selectedDevice} />
+                <Account
+                  user={this.state.account}
+                  logout={() => this.logout()}
+                  device={this.state.selectedDevice}
+                  showUsers={() => this.setState({ showUsers: true })}
+                />
               </div>
+          }
+
+          {
+            <Users
+              phi={this.state.phi}
+              open={this.state.showUsers}
+              device={this.state.selectedDevice}
+              onCancel={() => this.setState({ showUsers: false })}
+              openSnackBar={msg => this.openSnackBar(msg)}
+            />
           }
 
           {/* snackBar */}

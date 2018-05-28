@@ -417,6 +417,10 @@ class Fruitmix extends EventEmitter {
         r = this.aget('media')
         break
 
+      case 'users':
+        r = this.aget('users')
+        break
+
       case 'blacklist':
         r = this.aget(`users/${this.userUUID}/media-blacklist`)
         break

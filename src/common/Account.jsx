@@ -3,6 +3,7 @@ import React from 'react'
 import { shell } from 'electron'
 import { Popover, MenuItem } from 'material-ui'
 import ADD from 'material-ui/svg-icons/navigation/arrow-drop-down'
+
 import { PersonIcon, UsersIcon, LogoutIcon, AvatarOnlineIcon, AvatarOfflineIcon } from '../common/Svg'
 
 const phicommUrl = 'https://sohon2test.phicomm.com/v1/ui/index'
@@ -10,7 +11,7 @@ const phicommUrl = 'https://sohon2test.phicomm.com/v1/ui/index'
 class Account extends React.Component {
   constructor (props) {
     super(props)
-    this.state = { open: false, show: false }
+    this.state = { open: false, show: false, users: false }
 
     this.openPop = (e) => {
       e.preventDefault()
@@ -18,6 +19,11 @@ class Account extends React.Component {
       this.setState({ open: true, show: false, anchorEl: e.currentTarget })
       /* hide the status of position move */
       this.timer = setTimeout(() => this.setState({ show: true }))
+    }
+
+    this.openUsers = () => {
+      this.setState({ open: false })
+      this.props.showUsers()
     }
   }
 
@@ -47,7 +53,7 @@ class Account extends React.Component {
       items.push({
         primaryText: i18n.__('Users Management'),
         leftIcon: <UsersIcon style={iconStyle} />,
-        onClick: () => {}
+        onClick: () => this.openUsers()
       })
     }
     /* return phiLogin */

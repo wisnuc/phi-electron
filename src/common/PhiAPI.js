@@ -112,12 +112,25 @@ class PhiAPI extends RequestManager {
           .query({ deviceSN: args.deviceSN })
         break
 
-      case 'LANToken':
-        r = this.command(args.deviceSN, { verb: 'GET', urlPath: '/token', params: {}, body: {} })
+      case 'cloudUsers':
+        r = this.aget('StationManager/station/users')
+          .query({ deviceSN: args.deviceSN })
         break
 
-      case 'cloudUsers':
+      case 'localUsers':
         r = this.command(args.deviceSN, { verb: 'GET', urlPath: '/users', params: {}, body: {} })
+        break
+
+      case 'drives':
+        r = this.command(args.deviceSN, { verb: 'GET', urlPath: '/drives', params: {}, body: {} })
+        break
+
+      case 'deleteUser':
+        r = this.command(args.deviceSN, { verb: 'DELETE', urlPath: `/users/${args.uuid}`, params: {}, body: {} })
+        break
+
+      case 'LANToken':
+        r = this.command(args.deviceSN, { verb: 'GET', urlPath: '/token', params: {}, body: {} })
         break
 
       case 'setLANPassword':

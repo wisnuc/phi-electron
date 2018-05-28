@@ -15,7 +15,7 @@ class CloudLogin extends React.PureComponent {
       const { dev, account } = this.props
       const args = { deviceSN: dev.mdev.deviceSN }
       const token = (await this.props.phi.reqAsync('LANToken', args)).token
-      const users = (await this.props.phi.reqAsync('cloudUsers', args))
+      const users = (await this.props.phi.reqAsync('localUsers', args))
       const user = Array.isArray(users) && users.find(u => u.phicommUserId === account.phicommUserId)
       console.log('LANToken', token, user)
       if (!token || !user) throw Error('get LANToken or user error')

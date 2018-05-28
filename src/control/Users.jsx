@@ -1,318 +1,288 @@
-import React from 'react'
 import i18n from 'i18n'
-import { clipboard } from 'electron'
-import { Avatar, Divider, FloatingActionButton, Toggle, Popover, Menu, MenuItem } from 'material-ui'
-import SocialPersonAdd from 'material-ui/svg-icons/social/person-add'
-import CheckIcon from 'material-ui/svg-icons/navigation/check'
-import DeltaIcon from 'material-ui/svg-icons/navigation/arrow-drop-down'
-import DialogOverlay from '../common/DialogOverlay'
-import ChangeAccountDialog from './ChangeAccountDialog'
-import FlatButton from '../common/FlatButton'
-import slice from '../common/slice'
+import React from 'react'
+import { Divider, TextField } from 'material-ui'
+import Dialog from '../common/PureDialog'
+import { CloseIcon, BackIcon } from '../common/Svg'
+import { RSButton, LIButton, Checkbox } from '../common/Buttons'
+import CircularLoading from '../common/CircularLoading'
+import { isPhoneNumber } from '../common/validate'
 
 class AdminUsersApp extends React.Component {
   constructor (props) {
     super(props)
+
     this.state = {
-      user: null,
-      password: '',
-      confirmPwd: '',
-      createNewUser: false,
-      resetPwd: false,
-      randomPwd: false,
-      disableUser: false,
-      changeAuth: false,
-      open: false // open menu
+      users: null,
+      checkList: [],
+      pn: '',
+      pnError: '',
+      nickName: '',
+      nickNameError: '',
+      status: 'view' // view, modify, add
     }
 
-    this.toggleDialog = (op, user) => {
-      this.setState({ [op]: !this.state[op], user, open: false, anchorEl: null })
+    this.reqUsersAsync = async () => {
+      const { phi, device } = this.props
+      const deviceSN = device.mdev.deviceSN
+      const cloudUsers = (await phi.reqAsync('cloudUsers', { deviceSN })).result.users
+      const localUsers = await phi.reqAsync('localUsers', { deviceSN })
+      const drives = await phi.reqAsync('drives', { deviceSN })
+
+      console.log('this.reqUsersAsync', cloudUsers, localUsers, drives)
+      /* public drives */
+      const builtIn = drives.find(d => d.tag === 'built-in')
+      const publicDrives = drives.filter(d => d.type === 'public' && d.tag !== 'built-in')
+
+      /* service users */
+      const users = cloudUsers.filter(u => u.type === 'service').map((u) => {
+        const localUser = localUsers.find(user => user.phicommUserId === u.uid)
+        if (!localUser) return null
+        const { uuid, username } = localUser
+        const driveList = []
+        driveList.push(builtIn.label || i18n.__('Public Drive'))
+        publicDrives.filter(p => p.writelist === '*' || p.writelist.includes(uuid)).forEach(d => driveList.push(d.label))
+        return Object.assign({ username, driveList, uuid }, u)
+      }).filter(u => !!u)
+
+      return users
     }
 
-    this.toggleMenu = (event, user) => {
-      if (!this.state.open && event && event.preventDefault) event.preventDefault()
-      this.setState({ open: !this.state.open, anchorEl: event.currentTarget, user })
-    }
-
-    this.toggleAuth = () => {
-      this.setState({ changeAuth: false }, () => this.updateAccount({ isAdmin: !this.state.user.isAdmin }))
-    }
-
-    this.disableUser = () => {
-      this.setState({ disableUser: false }, () => this.updateAccount({ disabled: !this.state.user.disabled }))
-    }
-
-    this.resetPwd = () => {
-      this.setState({ resetPwd: false, confirmPwd: 'resetPwd' })
-    }
-
-    this.copyText = () => {
-      clipboard.writeText('145343')
-      this.props.openSnackBar(i18n.__('Copy Text Success'))
-    }
-
-    this.updatePassword = (password) => {
-      this.setState({ password })
-    }
-
-    this.updateAccount = (op) => {
-      const args = Object.assign({ userUUID: this.state.user.uuid }, op)
-      this.props.apis.request('adminUpdateUsers', args, (err) => {
-        if (err) {
-          console.error('updateAccount error', err)
-          this.props.openSnackBar(i18n.__('Update Account Failed'))
-        } else {
-          this.props.refreshUsers()
-          this.setState({ confirmPwd: '' })
-          this.props.openSnackBar(i18n.__('Update Account Success'))
-        }
+    this.reqUsers = () => {
+      this.setState({ loading: true, users: null, status: 'view', invited: false })
+      this.reqUsersAsync().then(users => this.setState({ users, loading: false })).catch((e) => {
+        console.error('this.reqUsers error', e)
+        this.setState({ error: true, loading: false })
       })
+    }
+
+    this.deleteUserAsync = async () => {
+      console.log('this.deleteUser', this.state.checkList)
+      const { phi, device } = this.props
+      const deviceSN = device.mdev.deviceSN
+      for (let i = 0; i < this.state.checkList.length; i++) {
+        const uuid = this.state.checkList[i]
+        await phi.req('deleteUser', { deviceSN, uuid })
+      }
+    }
+
+    this.deleteUser = () => {
+      this.deleteUserAsync().then(() => this.reqUsers()).catch((e) => {
+        console.error('this.delete error', e)
+        this.props.openSnackBar('Invite User Error')
+      })
+    }
+
+    this.addUser = () => {
+      this.setState({ status: 'addUser' })
+    }
+
+    this.inviteAsync = async () => {
+      const { phi, device } = this.props
+      const deviceSN = device.mdev.deviceSN
+      const phicommUserId = (await phi.reqAsync('registerPhiUser', { deviceSN, phoneNumber: this.state.pn })).result.uid
+      console.log('this.inviteAsync phicommUserId', phicommUserId)
+      const res = await phi.reqAsync('newUser', { deviceSN, username: this.state.pn, phicommUserId })
+      console.log('this.inviteAsync res', res)
+    }
+
+    this.invite = () => {
+      if (!this.shouldAddUser()) return
+      this.setState({ invited: true })
+      this.inviteAsync().then(() => this.reqUsers()).catch((e) => {
+        console.error('this.invite error', e)
+        this.props.openSnackBar('Invite User Error')
+      })
+    }
+
+    this.onCheck = (uuid) => {
+      const checkList = [...this.state.checkList]
+      const index = checkList.findIndex(u => u === uuid)
+      if (index > -1) checkList.splice(index, 1)
+      else checkList.push(uuid)
+      this.setState({ checkList })
+    }
+
+    this.updateNickName = nickName => this.setState({ nickName, nickNameError: '' })
+
+    this.updatePn = (pn) => {
+      if (isPhoneNumber(pn)) this.setState({ pn, pnError: '' })
+      else this.setState({ pn, pnError: i18n.__('Invalid Phone Number') })
     }
   }
 
-  renderUserRow (user) {
-    let avatarUrl = null
-    let nickName = ''
-    const index = global.config.users.findIndex(uc => uc && uc.userUUID === user.uuid && uc.weChat)
-    if (index > -1) {
-      const weChatInfo = global.config.users[index].weChat
-      avatarUrl = weChatInfo.avatarUrl
-      nickName = weChatInfo.nickName
-    }
+  componentWillReceiveProps (nextProps) {
+    if (!this.props.open && nextProps.open) this.reqUsers()
+  }
 
-    const userLabel = user.isFirstUser ? i18n.__('Super Admin') : user.disabled ? i18n.__('Disabled')
-      : user.isAdmin ? i18n.__('Admin User') : i18n.__('Normal User')
+  shouldAddUser () {
+    return this.state.status === 'addUser' && this.state.nickName && !this.state.nickNameError &&
+      this.state.pn.length === 11 && !this.state.pnError && isPhoneNumber(this.state.pn) && !this.state.invited
+  }
 
+  renderUser (driveList) {
     return (
-      <div
-        style={{
-          height: 64,
-          display: 'flex',
-          alignItems: 'center',
-          fontSize: 14,
-          color: user.disabled ? 'rgba(0,0,0,0.54)' : 'rgba(0,0,0,0.87)'
-        }}
-        key={user.uuid}
-      >
-        <div style={{ flex: '0 0 32px' }} />
-        <div style={{ flex: '0 0 40px' }}>
-          {
-            avatarUrl
-              ? (
-                <div style={{ borderRadius: 20, width: 40, height: 40, overflow: 'hidden' }}>
-                  <img width={40} height={40} alt="" src={avatarUrl} />
-                </div>
-              )
-              : <Avatar>{ slice(user.username, 0, 2).toUpperCase() }</Avatar>
-          }
-        </div>
-        <div style={{ flex: '0 0 32px' }} />
-        <div style={{ flex: '0 0 320px' }}>{ user.username }</div>
+      <div style={{ height: 40, display: 'flex', alignItems: 'center' }}>
+        <div style={{ color: '#31a0f5' }}> { i18n.__('User') } </div>
+        <div style={{ backgroundColor: '#c4c5cc', height: 10, width: 1, margin: '0 8px' }} />
+        <div style={{ color: '#888a8c' }}> { driveList.join(', ') } </div>
+      </div>
+    )
+  }
 
-        <div style={{ flex: '0 0 140px', display: 'flex', alignItems: 'center ' }}>
-          <FlatButton
-            label={userLabel}
-            labelStyle={{ fontSize: 14, color: 'rgba(0,0,0,0.54)', textTransform: '' }}
-            labelPosition="before"
-            onClick={event => !user.disabled && this.toggleMenu(event, user)}
-            style={{ marginLeft: -4 }}
-            disabled={user.isFirstUser || user.disabled || (!this.props.apis.account.data.isFirstUser)}
-            icon={user.isFirstUser || user.disabled || (!this.props.apis.account.data.isFirstUser) ? <div /> : <DeltaIcon />}
-          />
-        </div>
-
-        <div style={{ flex: '0 0 160px' }}>{ user.global && user.global.wx ? i18n.__('Yes') : i18n.__('No') }</div>
-        <div style={{ flex: '0 0 256px' }}>{ nickName || '-' }</div>
-        <div style={{ flex: '0 0 56px' }} />
-        <div style={{ flex: '0 0 56px' }} />
-        {/*
-        <div style={{ flex: '0 0 116px', textAlign: 'left' }}>
-          {
-            user.isFirstUser
-            ? <div />
-            : <FlatButton
-              label=i18n.__('Reset Password')
-              onClick={() => this.toggleDialog('resetPwd', user)}
-              primary
-              disabled={user.nologin}
-            />
-          }
-        </div>
-        */}
-        <div style={{ flex: '0 0 50px' }}>
-          {
-            user.isFirstUser || !this.props.apis.account.data.isAdmin || (!this.props.apis.account.data.isFirstUser && user.isAdmin)
-              ? <div />
-              : <Toggle
-                toggled={!user.disabled}
-                onToggle={() => this.toggleDialog('disableUser', user)}
+  renderRow (user) {
+    const { driveList, inviteStatus, nickname, username, uuid } = user
+    return (
+      <div style={{ height: 60, display: 'flex' }}>
+        {
+          this.state.status === 'modify' &&
+          (
+            <div style={{ marginTop: -2 }}>
+              <Checkbox
+                onCheck={() => this.onCheck(uuid)}
+                checked={this.state.checkList.includes(uuid)}
               />
-          }
+            </div>
+          )
+        }
+
+        <div style={{ height: 60 }}>
+          <div style={{ height: 20, color: '#505259', display: 'flex', alignItems: 'center' }}>
+            { nickname || username }
+          </div>
+          <div style={{ height: 40, display: 'flex', alignItems: 'center' }}>
+            {
+              inviteStatus === 'accept' ? this.renderUser(driveList)
+                : (
+                  <div style={{ color: inviteStatus === 'reject' ? '#f53131' : '#31a0f5' }}>
+                    { inviteStatus === 'reject' ? i18n.__('Invite Rejected') : i18n.__('Invite Pending') }
+                  </div>
+                )
+            }
+          </div>
         </div>
       </div>
     )
   }
 
-  render () {
-    const { users, apis, refreshUsers, openSnackBar } = this.props
-    if (!users) return <div />
+  renderAddUser () {
     return (
-      <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-        <FloatingActionButton
-          style={{ position: 'absolute', top: -36, left: 24, zIndex: 200 }}
-          secondary
-          onClick={() => this.toggleDialog('createNewUser')}
+      <div style={{ width: 280 }}>
+        <div
+          style={{
+            height: 20,
+            fontSize: 14,
+            color: this.state.nickNameError ? '#fa5353' : '#525a60',
+            display: 'flex',
+            alignItems: 'center'
+          }}
         >
-          <SocialPersonAdd />
-        </FloatingActionButton>
-        <div style={{ overflow: 'auto', height: '100%' }}>
-          <div style={{ height: 48, display: 'flex', alignItems: 'center', fontSize: 14, fontWeight: 500, color: 'rgba(0,0,0,0.54)' }}>
-            <div style={{ flex: '0 0 104px' }} />
-            <div style={{ flex: '0 0 320px' }}>
-              { i18n.__('Username') }
-            </div>
-            <div style={{ flex: '0 0 140px' }}>
-              { i18n.__('User Type') }
-            </div>
-            <div style={{ flex: '0 0 160px' }}>
-              { i18n.__('WeChat Bind Status') }
-            </div>
-            <div style={{ flex: '0 0 256px' }}>
-              { i18n.__('WeChat Name') }
-            </div>
-          </div>
-          <div style={{ height: 8 }} />
-          <Divider style={{ marginLeft: 104, width: 1143 }} />
-          {
-            users.reduce((acc, user) => [...acc, this.renderUserRow(user),
-              <Divider style={{ marginLeft: 104, width: 1143 }} key={user.username} />], [])
-          }
+          { this.state.nickNameError || i18n.__('Nick Name') }
         </div>
-
-        {/* menu */}
-        <Popover
-          open={this.state.open}
-          anchorEl={this.state.anchorEl}
-          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-          targetOrigin={{ horizontal: 'right', vertical: 'top' }}
-          onRequestClose={event => this.toggleMenu(event)}
+        <div style={{ height: 40 }}>
+          <TextField
+            fullWidth
+            value={this.state.nickName}
+            onChange={e => this.updateNickName(e.target.value)}
+            style={{ color: '#525a60', fontSize: 14 }}
+            hintText={i18n.__('Add User Nick Name Hint')}
+          />
+        </div>
+        <div style={{ height: 10 }} />
+        <div
+          style={{
+            height: 20,
+            fontSize: 14,
+            color: this.state.pnError ? '#fa5353' : '#525a60',
+            display: 'flex',
+            alignItems: 'center'
+          }}
         >
-          { this.state.user &&
-          <Menu>
-            <MenuItem
-              style={{ fontSize: 13, marginLeft: -8 }}
-              leftIcon={this.state.user.isAdmin ? <CheckIcon /> : <div />}
-              primaryText={i18n.__('Admin User')}
-              onClick={() => !this.state.user.isAdmin && this.toggleDialog('changeAuth', this.state.user)}
-            />
-            <MenuItem
-              style={{ fontSize: 13, marginLeft: -8 }}
-              leftIcon={!this.state.user.isAdmin ? <CheckIcon /> : <div />}
-              primaryText={i18n.__('Normal User')}
-              onClick={() => this.state.user.isAdmin && this.toggleDialog('changeAuth', this.state.user)}
-            />
-          </Menu>
-          }
-        </Popover>
-
-        {/* createNewUser */}
-        <DialogOverlay open={!!this.state.createNewUser} onRequestClose={() => this.toggleDialog('createNewUser')}>
-          {
-            this.state.createNewUser &&
-            <ChangeAccountDialog
-              refreshUsers={refreshUsers}
-              apis={apis}
-              op="createUser"
-              openSnackBar={openSnackBar}
-            />
-          }
-        </DialogOverlay>
-
-        {/* reset password dialog */}
-        <DialogOverlay open={!!this.state.resetPwd || !!this.state.randomPwd || this.state.confirmPwd === 'resetPwd'}>
-          <div>
-            {
-              this.state.resetPwd &&
-                <div style={{ width: 320, padding: '24px 24px 0px 24px' }}>
-                  <div style={{ fontSize: 20, fontWeight: 500, color: 'rgba(0,0,0,0.87)' }}> { i18n.__('Reset Password')} </div>
-                  <div style={{ height: 20 }} />
-                  <div style={{ color: 'rgba(0,0,0,0.54)' }}> { i18n.__('Reset Password Text 1')} </div>
-                  <div style={{ color: 'rgba(0,0,0,0.54)' }}> { i18n.__('Reset Password Text 2')} </div>
-                  <div style={{ height: 24 }} />
-                  <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-                    <FlatButton label={i18n.__('Cancel')} primary onClick={() => this.toggleDialog('resetPwd')} />
-                    <FlatButton label={i18n.__('Confirm')} primary onClick={this.resetPwd} />
-                  </div>
-                </div>
-            }
-
-            {
-              this.state.randomPwd &&
-                <div style={{ width: 320, padding: '24px 24px 0px 24px' }}>
-                  <div style={{ fontSize: 20, fontWeight: 500, color: 'rgba(0,0,0,0.87)' }}> { i18n.__('Random Password') }</div>
-                  <div style={{ height: 20 }} />
-                  <div style={{ color: 'rgba(0,0,0,0.87)', fontSize: 34, fontWeight: '500', textAlign: 'center' }}>
-                    { '145343' }
-                  </div>
-                  <div style={{ height: 24 }} />
-                  <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-                    <FlatButton label={i18n.__('Copy to Clipboard')} primary onClick={this.copyText} />
-                    <div style={{ width: 158 }} />
-                    <FlatButton label={i18n.__('Confirm')} primary onClick={() => this.toggleDialog('randomPwd')} />
-                  </div>
-                </div>
-            }
-          </div>
-        </DialogOverlay>
-
-        {/* disable user dialog */}
-        <DialogOverlay open={!!this.state.disableUser || this.state.confirmPwd === 'disableUser'}>
-          <div>
-            {
-              this.state.disableUser &&
-                <div style={{ width: 320, padding: '24px 24px 0px 24px' }}>
-                  <div style={{ fontSize: 20, fontWeight: 500, color: 'rgba(0,0,0,0.87)' }}>
-                    { this.state.user.disabled ? i18n.__('Enable User') : i18n.__('Disable User') }
-                  </div>
-                  <div style={{ height: 20 }} />
-                  <div style={{ color: 'rgba(0,0,0,0.54)' }}>
-                    {
-                      this.state.user.disabled ? i18n.__('Enable User Text') : i18n.__('Disable User Text')
-                    }
-                  </div>
-                  <div style={{ height: 24 }} />
-                  <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-                    <FlatButton label={i18n.__('Cancel')} primary onClick={() => this.toggleDialog('disableUser')} />
-                    <FlatButton label={i18n.__('Confirm')} primary onClick={this.disableUser} />
-                  </div>
-                </div>
-            }
-          </div>
-        </DialogOverlay>
-
-        {/* change user auth dialog */}
-        <DialogOverlay open={!!this.state.changeAuth || this.state.confirmPwd === 'changeAuth'}>
-          <div>
-            {
-              this.state.changeAuth &&
-                <div style={{ width: 320, padding: '24px 24px 0px 24px' }}>
-                  <div style={{ fontSize: 20, fontWeight: 500, color: 'rgba(0,0,0,0.87)' }}>
-                    { i18n.__('Change User Type') }
-                  </div>
-                  <div style={{ height: 20 }} />
-                  <div style={{ color: 'rgba(0,0,0,0.54)' }}>
-                    { this.state.user.isAdmin ? i18n.__('Downgrade User Type Text') : i18n.__('Upgrade User Type Text') }
-                  </div>
-                  <div style={{ height: 24 }} />
-                  <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-                    <FlatButton label={i18n.__('Cancel')} primary onClick={() => this.toggleDialog('changeAuth')} />
-                    <FlatButton label={i18n.__('Confirm')} primary onClick={this.toggleAuth} />
-                  </div>
-                </div>
-            }
-          </div>
-        </DialogOverlay>
+          { this.state.pnError || i18n.__('Phone Number') }
+        </div>
+        <div style={{ height: 40 }}>
+          <TextField
+            fullWidth
+            value={this.state.pn}
+            maxLength={11}
+            onChange={e => this.updatePn(e.target.value)}
+            style={{ color: '#525a60', fontSize: 14 }}
+            hintText={i18n.__('Add User Phone Number Hint')}
+          />
+        </div>
       </div>
+    )
+  }
+
+  renderLoading () {
+    return (
+      <div style={{ width: '100%', height: '100%' }} className="flexCenter">
+        <CircularLoading />
+      </div>
+    )
+  }
+
+  render () {
+    const { open, onCancel } = this.props
+    const isModify = this.state.status === 'modify'
+    const isAddUser = this.state.status === 'addUser'
+    console.log('Users.jsx', this.state, this.props)
+
+    return (
+      <Dialog open={open} onRequestClose={onCancel} modal >
+        {
+          open && (
+            <div style={{ width: isAddUser ? 320 : 420, transition: 'all 175ms' }} >
+              <div
+                className="title"
+                style={{ height: 60, display: 'flex', alignItems: 'center', paddingLeft: isAddUser ? 0 : 20 }}
+              >
+                { isAddUser && <LIButton onClick={() => this.setState({ status: 'view' })}> <BackIcon /> </LIButton>}
+                { isAddUser ? i18n.__('Add User') : isModify ? i18n.__('Modify Users') : i18n.__('User Management') }
+                <div style={{ flexGrow: 1 }} />
+                { !isAddUser && <LIButton onClick={onCancel}> <CloseIcon /> </LIButton> }
+                <div style={{ width: 10 }} />
+              </div>
+              <Divider
+                style={{ marginLeft: 20, width: isAddUser ? 280 : 380, transition: 'all 175ms' }}
+                className="divider"
+              />
+              <div style={{ height: 30 }} />
+              <div
+                style={{
+                  width: 380,
+                  minHeight: 60,
+                  padding: '0 20px'
+                }}
+              >
+                {
+                  this.state.loading ? this.renderLoading()
+                    : isAddUser ? this.renderAddUser()
+                      : this.state.users.lenght ? this.state.users.map(user => this.renderRow(user)) : 'No Normal User'
+                }
+              </div>
+              <div style={{ height: 20 }} />
+              <div style={{ height: 34, width: 'calc(100% - 40px)', display: 'flex', alignItems: 'center', padding: 20 }}>
+                <div style={{ flexGrow: 1 }} />
+                {
+                  !isAddUser && (
+                    <RSButton
+                      alt
+                      label={isModify ? i18n.__('Cancel') : i18n.__('Modify Users')}
+                      onClick={() => this.setState({ status: isModify ? 'view' : 'modify', checkList: [] })}
+                    />
+                  )
+                }
+                <div style={{ width: 10 }} />
+                <RSButton
+                  label={isAddUser ? i18n.__('Send Invite') : isModify ? i18n.__('Delete') : i18n.__('Add User')}
+                  disabled={(isModify && !this.state.checkList.length) || (isAddUser && !this.shouldAddUser())}
+                  onClick={() => (isAddUser ? this.invite() : isModify ? this.deleteUser() : this.addUser())}
+                />
+              </div>
+            </div>
+          )
+        }
+      </Dialog>
     )
   }
 }

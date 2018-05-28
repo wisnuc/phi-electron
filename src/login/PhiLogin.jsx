@@ -31,7 +31,7 @@ class PhiLogin extends React.Component {
       this.setState({
         pn,
         showFakePwd: false,
-        pnError: pn && !isPhoneNumber(pn) ? i18n.__('Not Phone Number') : ''
+        pnError: pn && !isPhoneNumber(pn) ? i18n.__('Invalid Phone Number') : ''
       })
     }
 

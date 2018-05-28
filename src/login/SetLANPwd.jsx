@@ -27,7 +27,7 @@ class SetLANPwd extends React.Component {
       const { dev, account } = this.props
       const deviceSN = dev.boot.data.device.deviceSN
       const args = { deviceSN }
-      const users = (await this.props.phi.reqAsync('cloudUsers', args))
+      const users = (await this.props.phi.reqAsync('localUsers', args))
       const user = Array.isArray(users) && users.find(u => u.phicommUserId === account.phicommUserId)
       console.log('fireAsync users', users, user)
       const userUUID = user.uuid
