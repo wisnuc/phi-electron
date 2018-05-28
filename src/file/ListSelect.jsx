@@ -75,11 +75,18 @@ class ListSelect extends EventEmitter {
   }
 
   mouseEnter (index) {
-    if (index !== this.state.hover) { this.setState({ hover: index }) }
+    if (index !== this.state.hover) {
+      clearTimeout(this.hoverTimer)
+      this.setState({ hover: index, longHover: -1 })
+      this.hoverTimer = setTimeout(() => this.setState({ longHover: index }), 1000)
+    }
   }
 
   mouseLeave (index) {
-    if (index === this.state.hover) { this.setState({ hover: -1 }) }
+    if (index === this.state.hover) {
+      clearTimeout(this.hoverTimer)
+      this.setState({ hover: -1, longHover: -1 })
+    }
   }
 
   // select and specify one

@@ -1,12 +1,16 @@
+import i18n from 'i18n'
 import React from 'react'
+import prettysize from 'prettysize'
 import { AutoSizer } from 'react-virtualized'
 
 import Name from './Name'
 import Thumb from './Thumb'
 import AddDrive from './AddDrive'
+import HoverTip from './HoverTip'
 import ScrollBar from '../common/ScrollBar'
 import renderFileIcon from '../common/renderFileIcon'
 import { AllFileIcon, PublicIcon } from '../common/Svg'
+import { formatMtime } from '../common/datetime'
 
 class Row extends React.Component {
   shouldComponentUpdate (nextProps) {
@@ -144,6 +148,11 @@ class GridView extends React.Component {
       this.scrollTop = scrollTop
       this.props.onScroll(scrollTop)
     }
+
+    this.onMouseMove = (e) => {
+      this.mouseX = e.clientX
+      this.mouseY = e.clientY
+    }
   }
 
   componentDidMount () {
@@ -168,6 +177,48 @@ class GridView extends React.Component {
       }
     }
     this.calcGridData()
+  }
+
+  renderHoverTip () {
+    const longHover = this.props.select && this.props.select.longHover
+    const hover = this.props.select && this.props.select.hover
+    const entry = this.props.entries[longHover] || this.props.entries[hover] || {}
+    const top = Math.min(this.mouseY, window.innerHeight - 100)
+    const left = Math.min(this.mouseX, window.innerWidth - 400)
+    return (
+      <div
+        style={{
+          position: 'fixed',
+          top,
+          left,
+          maxWidth: 400,
+          boxSizing: 'bordr-box',
+          padding: 5,
+          color: '#292936',
+          fontSize: 12,
+          backgroundColor: '#FFF',
+          border: 'solid 1px #d9d9d9'
+        }}
+      >
+        <div>
+          { `${i18n.__('Name')}: ${entry.name}` }
+        </div>
+        {
+          entry.type === 'file' && (
+            <div>
+              { `${i18n.__('Size')}: ${prettysize(entry.size, false, true, 2).toUpperCase()}` }
+            </div>
+          )
+        }
+        {
+          entry.mtime && (
+            <div>
+              { `${i18n.__('Date Modified')}: ${formatMtime(entry.mtime)}` }
+            </div>
+          )
+        }
+      </div>
+    )
   }
 
   render () {
@@ -224,7 +275,7 @@ class GridView extends React.Component {
 
     if (!this.props.entries || this.props.entries.length === 0) return (<div />)
     return (
-      <div style={{ width: '100%', height: '100%' }} onDrop={this.props.drop}>
+      <div style={{ width: '100%', height: '100%' }} onDrop={this.props.drop} onMouseMove={this.onMouseMove}>
         <AutoSizer key={this.props.entries && this.props.entries[0] && this.props.entries[0].uuid}>
           {({ height, width }) => {
             const gridInfo = calcGridInfo(height, width, this.props.entries)
@@ -274,6 +325,15 @@ class GridView extends React.Component {
             )
           }}
         </AutoSizer>
+        <HoverTip
+          longHover={this.props.select && this.props.select.longHover}
+          hover={this.props.select && this.props.select.hover}
+          entries={this.props.entries}
+          mouseX={this.mouseX}
+          mouseY={this.mouseY}
+          onMouseEnter={this.props.onRowMouseEnter}
+          onMouseLeave={this.props.onRowMouseLeave}
+        />
       </div>
     )
   }

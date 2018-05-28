@@ -74,6 +74,19 @@ class Fruitmix extends React.Component {
   renderSnackBar () {
     return (
       <Snackbar
+        bodyStyle={{
+          borderRadius: 4,
+          marginBottom: 20,
+          height: 40,
+          minWidth: 0,
+          padding: '0 30px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: 'rgba(0,0,0,.8)',
+          boxShadow: '0px 4px 8px 0 rgba(23,99,207,.1)'
+        }}
+        contentStyle={{ fontSize: 12, letterSpacing: 1.2, color: '#FFF' }}
         open={!!this.state.snackBar}
         message={this.state.snackBar}
         autoHideDuration={4000}

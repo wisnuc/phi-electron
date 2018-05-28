@@ -123,10 +123,6 @@ class NavViews extends React.Component {
       this.navTo('home')
     }
 
-    this.openSnackBar = (message) => {
-      this.setState({ snackBar: message })
-    }
-
     this.handleTask = (uuid, response, conflicts) => {
       console.log('this.handleTask', uuid, response, conflicts)
       conflicts.forEach((c, index) => {
@@ -167,7 +163,7 @@ class NavViews extends React.Component {
   componentDidMount () {
     this.init()
     ipcRenderer.send('START_TRANSMISSION')
-    ipcRenderer.on('snackbarMessage', (e, message) => this.openSnackBar(message.message))
+    ipcRenderer.on('snackbarMessage', (e, message) => this.props.openSnackBar(message.message))
     ipcRenderer.on('conflicts', (e, args) => this.setState({ conflicts: args }))
     ipcRenderer.on('JUMP_TO', (e, nav) => this.jumpTo(nav))
   }
@@ -187,30 +183,6 @@ class NavViews extends React.Component {
       this.views[name] = new View(this)
       this.views[name].on('updated', next => this.setState({ [name]: next }))
     })
-  }
-
-  renderSnackBar () {
-    return (
-      <Snackbar
-        bodyStyle={{
-          borderRadius: 4,
-          marginBottom: 20,
-          height: 40,
-          minWidth: 0,
-          padding: '0 30px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: 'rgba(0,0,0,.8)',
-          boxShadow: '0px 4px 8px 0 rgba(23,99,207,.1)'
-        }}
-        contentStyle={{ fontSize: 12, letterSpacing: 1.2, color: '#FFF' }}
-        open={!!this.state.snackBar}
-        message={this.state.snackBar}
-        autoHideDuration={4000}
-        onRequestClose={() => this.setState({ snackBar: '' })}
-      />
-    )
   }
 
   renderChangeDevice () {
@@ -302,7 +274,7 @@ class NavViews extends React.Component {
     return this.views[this.state.nav].render({
       navTo: this.navTo,
       navToDrive: this.navToDrive,
-      openSnackBar: this.openSnackBar
+      openSnackBar: this.props.openSnackBar
     })
   }
 
@@ -464,10 +436,6 @@ class NavViews extends React.Component {
         <div style={{ height: 'calc(100% - 110px)', position: 'relative' }}>
           { view }
         </div>
-
-        {/* snackBar */}
-        { this.renderSnackBar() }
-
         <WindowAction />
       </div>
     )

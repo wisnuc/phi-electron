@@ -73,7 +73,11 @@ class AdminUsersApp extends React.Component {
     }
 
     this.addUser = () => {
-      this.setState({ status: 'addUser' })
+      this.setState({ status: 'addUser', loading: false, invited: false, pn: '', pnError: '', nickName: '', nickNameError: '' })
+    }
+
+    this.backToView = () => {
+      this.setState({ status: 'view', loading: false, invited: false, pn: '', pnError: '', nickName: '', nickNameError: '' })
     }
 
     this.inviteAsync = async () => {
@@ -254,7 +258,7 @@ class AdminUsersApp extends React.Component {
                 className="title"
                 style={{ height: 60, display: 'flex', alignItems: 'center', paddingLeft: isAddUser ? 0 : 20 }}
               >
-                { isAddUser && <LIButton onClick={() => this.setState({ status: 'view' })}> <BackIcon /> </LIButton>}
+                { isAddUser && <LIButton onClick={this.backToView}> <BackIcon /> </LIButton>}
                 { isAddUser ? i18n.__('Add User') : isModify ? i18n.__('Modify Users') : i18n.__('User Management') }
                 <div style={{ flexGrow: 1 }} />
                 { !isAddUser && <LIButton onClick={onCancel}> <CloseIcon /> </LIButton> }
