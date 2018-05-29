@@ -232,6 +232,20 @@
   "WeChat Authentication": "微信认证",
   "WeChat Reset Password Failed Text": "微信认证失败！",
 
+  "==== control/Users.jsx ====": "",
+	"Confirm Invitation Title": "邀请确认",
+  "%s Confirm Invitation Text": "“%s”设备的管理员邀请您成为该设备用户，请确认是否接受邀请。",
+  "Accept": "接受",
+  "Reject": "拒绝",
+  "Accept Invitation Failed": "操作失败",
+  "Accept Invitation Success": "已接受邀请",
+  "Reject Invitation Failed": "操作失败",
+  "Reject Invitation Success": "已拒绝邀请",
+  "Account Deleted": "访问权限已被删除",
+  "Rejected Invitaion": "邀请已拒绝",
+  "Inactive Invitaion": "邀请已失效",
+  "Rejected And Inactive Invitaion": "邀请已拒绝（已失效）",
+
   "==== control/AdminDriversApp.jsx ====": "",
   "Name": "名称",
   "Users": "用户",
@@ -602,6 +616,7 @@
   "==== view/Device.jsx ====": "",
   "Device Menu Name": "设备信息",
   "Device Description": "NAS设备信息详情",
+	"Need Check Invitation": "需要确认邀请",
 
   "==== view/DiskInfo.jsx ====": "",
   "Disk Menu Name": "磁盘信息",

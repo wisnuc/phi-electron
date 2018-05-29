@@ -8,6 +8,7 @@ import LANLogin from './LANLogin'
 import CloudLogin from './CloudLogin'
 import ConfirmBind from './ConfirmBind'
 import ConnectionHint from './ConnectionHint'
+import InvitationConfirm from './InvitationConfirm'
 
 import Dialog from '../common/PureDialog'
 import ScrollBar from '../common/ScrollBar'
@@ -22,7 +23,8 @@ class DeviceSelect extends React.Component {
     this.state = {
       dev: null,
       list: null,
-      confirm: false
+      confirm: false,
+      invitation: false
     }
 
     this.bindVolume = (dev) => {
@@ -33,7 +35,12 @@ class DeviceSelect extends React.Component {
     this.slDevice = (dev) => {
       console.log('this.slDevice', dev)
       if (this.props.type === 'BOUNDLIST' && dev.systemStatus() === 'ready') {
-        this.setState({ dev, cloudLogin: dev })
+        const { inviteStatus, accountStatus, type } = dev.mdev
+        if (type === 'owner' || (type === 'service' && inviteStatus === 'accept' && accountStatus === '1')) {
+          this.setState({ dev, cloudLogin: dev }) // cloud login
+        } else if (inviteStatus === 'pending' && accountStatus === '1') {
+          this.setState({ dev, invitation: dev }) // invitee confirm invitation
+        }
       } else if (this.props.type === 'BOUNDLIST' && dev.systemStatus() === 'noBoundVolume') {
         this.bindVolume(dev)
       } else if (this.props.type === 'LANTOLOGIN') {
@@ -254,6 +261,14 @@ class DeviceSelect extends React.Component {
               />
           }
         </Dialog>
+
+        {/* Invitaion */}
+        <InvitationConfirm
+          {...this.props}
+          dev={this.state.invitation}
+          open={!!this.state.invitation}
+          onClose={() => this.setState({ invitation: null })}
+        />
       </div>
     )
   }

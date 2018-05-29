@@ -153,7 +153,7 @@ class AdminUsersApp extends React.Component {
 
         <div style={{ height: 60 }}>
           <div style={{ height: 20, color: '#505259', display: 'flex', alignItems: 'center' }}>
-            { nickname || username }
+            { `${nickname} (${username})` }
           </div>
           <div style={{ height: 40, display: 'flex', alignItems: 'center' }}>
             {
@@ -247,7 +247,6 @@ class AdminUsersApp extends React.Component {
     const { open, onCancel } = this.props
     const isModify = this.state.status === 'modify'
     const isAddUser = this.state.status === 'addUser'
-    console.log('Users.jsx', this.state, this.props)
 
     return (
       <Dialog open={open} onRequestClose={onCancel} modal >

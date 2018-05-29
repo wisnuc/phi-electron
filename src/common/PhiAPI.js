@@ -59,6 +59,15 @@ class PhiAPI extends RequestManager {
     return typeof data === 'object' ? r.send(data) : r
   }
 
+  apatch (ep, data) {
+    const r = request
+      .patch(`http://${phiCloudAddress}/${ep}`)
+      .set('Content-Type', 'application/json')
+      .set('Authorization', this.token)
+
+    return typeof data === 'object' ? r.send(data) : r
+  }
+
   adel (ep, data) {
     const r = request
       .del(`http://${phiCloudAddress}/${ep}`)
@@ -122,6 +131,10 @@ class PhiAPI extends RequestManager {
           'StationManager/relation/invitation/pre',
           { deviceSN: args.deviceSN, phoneNumber: args.phoneNumber, inviteeNickname: args.nickName }
         )
+        break
+
+      case 'invitation':
+        r = this.apatch('StationManager/relation/invitation', { deviceSN: args.deviceSN, accept: args.accept })
         break
 
       case 'newUser':

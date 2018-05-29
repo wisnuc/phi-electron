@@ -23,7 +23,7 @@ class HoverTip extends React.Component {
           left,
           width: 'max-content',
           maxWidth: 400,
-          opacity: longHover > -1 ? 1 : 0,
+          opacity: top && left && longHover > -1 ? 1 : 0,
           pointerEvents: 'none', // ignore all mouse event, important
           boxSizing: 'bordr-box',
           padding: 5,

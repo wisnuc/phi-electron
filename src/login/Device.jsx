@@ -20,7 +20,10 @@ class Device extends React.Component {
     /* cloud dev or mdns dev */
     const { mdev, cdev } = this.props
     if (cdev) {
-      const dev = { address: cdev.localIp, domain: 'phiToLoacl', deviceSN: cdev.deviceSN, stationName: cdev.bindingName }
+      const dev = Object.assign(
+        { address: cdev.localIp, domain: 'phiToLoacl', deviceSN: cdev.deviceSN, stationName: cdev.bindingName },
+        cdev
+      )
       this.device = new DeviceAPI(dev)
       this.device.on('updated', (prev, next) => this.setState({ dev: next }))
       this.device.start()
@@ -44,19 +47,28 @@ class Device extends React.Component {
 
   renderIsOwner () {
     if (!this.props.cdev) return null
-    if (this.props.cdev.type === 'owner') return i18n.__('Admin User')
-    return i18n.__('Normal User')
+    const { inviteStatus, accountStatus, type } = this.props.cdev
+    if (type === 'owner') return i18n.__('Admin User')
+    if (inviteStatus === 'accept' && accountStatus === '1') return i18n.__('Normal User')
+    if (inviteStatus === 'accept' && accountStatus !== '1') return i18n.__('Account Deleted')
+    if (inviteStatus === 'pending' && accountStatus === '1') return i18n.__('Need Check Invitation')
+    if (inviteStatus === 'pending' && accountStatus !== '1') return i18n.__('Inactive Invitaion')
+    if (inviteStatus === 'reject' && accountStatus === '1') return i18n.__('Rejected Invitaion')
+    if (inviteStatus === 'reject' && accountStatus !== '1') return i18n.__('Rejected And Inactive Invitaion')
+    return null
   }
 
   isEnabled () {
-    const { type } = this.props
+    const { type, cdev } = this.props
     const status = this.systemStatus()
+    const isAdmin = cdev && cdev.type === 'owner'
+    const isUser = cdev && ['accept', 'pending'].includes(cdev.inviteStatus) && cdev.accountStatus === '1'
     return (
       (type === 'LANTOBIND' && status === 'noBoundUser') ||
       (type === 'LANTOLOGIN' && status === 'ready') ||
       (type === 'CHANGEDEVICE' && status === 'ready') ||
       (type === 'BOUNDLIST' && status === 'noBoundVolume') ||
-      (type === 'BOUNDLIST' && status === 'ready')
+      (type === 'BOUNDLIST' && status === 'ready' && (isAdmin || isUser))
     )
   }
 
@@ -111,10 +123,8 @@ class Device extends React.Component {
   }
 
   render () {
-    console.log('Device render', this.props, this.state, this.device)
     const status = this.systemStatus()
     const isEnabled = this.isEnabled()
-    console.log('Device status', status, this.renderStatus())
 
     const stationName = this.getStationName()
     const address = (this.state.dev && this.state.dev.mdev && this.state.dev.mdev.address) || '--'

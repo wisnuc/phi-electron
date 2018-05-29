@@ -198,9 +198,13 @@ class PhiLogin extends React.Component {
           }
 
           {/* clear password */}
-          <div style={{ position: 'absolute', right: 4, top: 32 }}>
-            <TFButton icon={DelPwdIcon} onClick={this.clearPn} />
-          </div>
+          {
+            !!this.state.pn && (
+              <div style={{ position: 'absolute', right: 4, top: 32 }}>
+                <TFButton icon={DelPwdIcon} onClick={this.clearPn} />
+              </div>
+            )
+          }
 
           {/* password visibility */}
           <div style={{ position: 'absolute', right: 4, top: 102 }}>

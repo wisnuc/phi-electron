@@ -60,7 +60,7 @@ class Fruitmix extends React.Component {
 
   logout () {
     ipcRenderer.send('LOGOUT')
-    this.setState({ account: null, view: 'login', phi: new PhiAPI(), jump: null })
+    this.setState({ account: null, view: 'login', phi: new PhiAPI(), jump: null, selectedDevice: null })
   }
 
   jumpToBindDevice () {

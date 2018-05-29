@@ -81,7 +81,9 @@ class Public extends Home {
       const path = [{ name: i18n.__('Public Drive'), uuid: null, type: 'publicRoot' }]
       const entries = this.state.drives.filter(drive => drive.type === 'public')
       entries.forEach(item => Object.assign(item, { name: item.label }))
-      if (entries.length < 3) entries.push({ name: i18n.__('Add Public Drive'), type: 'addDrive', uuid: 'addDrive' })
+      const isAdmin = nextProps.apis && nextProps.apis.account &&
+        nextProps.apis.account.data && nextProps.apis.account.data.isFirstUser
+      if (isAdmin && entries.length < 3) entries.push({ name: i18n.__('Add Public Drive'), type: 'addDrive', uuid: 'addDrive' })
       const select = this.select.reset(entries.length)
 
       this.force = false
@@ -159,7 +161,6 @@ class Public extends Home {
   }
 
   renderContent ({ toggleDetail, openSnackBar, getDetailStatus }) {
-    console.log('public', this.state)
     const selected = this.state.select && this.state.select.selected
     return (
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
