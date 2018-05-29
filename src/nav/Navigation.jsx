@@ -1,7 +1,7 @@
 import i18n from 'i18n'
 import React from 'react'
 import { ipcRenderer } from 'electron'
-import { Snackbar, FlatButton } from 'material-ui'
+import { FlatButton } from 'material-ui'
 
 import Policy from './Policy'
 import FileMenu from './FileMenu'
@@ -317,7 +317,7 @@ class NavViews extends React.Component {
           { this.views[this.state.nav].renderToolBar({ style: toolBarStyle }) }
 
           {/* Title and BreadCrumbItem */}
-          { ['home', 'public'].includes(this.state.nav) && this.views[this.state.nav].renderTitle({ style: titleStyle }) }
+          { this.views[this.state.nav].renderTitle({ style: titleStyle }) }
 
           {/* File Content */}
           <div style={{ height: 'calc(100% - 120px)', width: '100%' }} id="content-container">

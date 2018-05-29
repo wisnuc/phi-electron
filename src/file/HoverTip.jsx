@@ -33,7 +33,7 @@ class HoverTip extends React.Component {
           border: 'solid 1px #d9d9d9'
         }}
       >
-        <div>
+        <div style={{ wordBreak: 'break-all' }}>
           { `${i18n.__('Name')}: ${entry.name}` }
         </div>
         {
@@ -44,7 +44,7 @@ class HoverTip extends React.Component {
           )
         }
         {
-          entry.mtime && (
+          !!entry.mtime && (
             <div>
               { `${i18n.__('Date Modified')}: ${formatMtime(entry.mtime)}` }
             </div>

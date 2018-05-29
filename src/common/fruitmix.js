@@ -58,21 +58,6 @@ class Fruitmix extends EventEmitter {
       }
       return request.post(url).set('Authorization', this.token).send(Object.assign({ resource, method: type }, data))
     }
-
-    /* adapter of box api via cloud */
-    this.creq = (ep, method, boxUUID, stationId, data) => {
-      // console.log('this.creq', ep, method, stationId, data)
-      const url = boxUUID ? `${cloudAddress}/c/v1/boxes/${boxUUID}/stations/${stationId}/json`
-        : `${cloudAddress}/c/v1/stations/${stationId}/json`
-      if (stationId) {
-        const resource = Buffer.from(`/${ep}`).toString('base64')
-        if (method === 'GET') return request.get(url).set('Authorization', this.wxToken).query({ resource, method })
-        return request.post(url).set('Authorization', this.wxToken).send(Object.assign({ resource, method }, data))
-      }
-      return request
-        .get(`${cloudAddress}/c/v1/${ep}`)
-        .set('Authorization', this.wxToken)
-    }
   }
 
   setState (name, nextState) {
@@ -329,32 +314,24 @@ class Fruitmix extends EventEmitter {
         break
 
       /* Media API */
-      case 'media':
-        r = this.aget('media')
+      case 'photos':
+        r = this.aget('files')
+          .query({ metadata: true, magics: 'JPEG.PNG.JPG.GIF.BMP.RAW' })
         break
 
-      case 'blacklist':
-        r = this.aget(`users/${this.userUUID}/media-blacklist`)
+      case 'music':
+        r = this.aget('files')
+          .query({ metadata: true, magics: 'WAV.MP3.APE.WMA.FLAC' })
         break
 
-      case 'addBlacklist':
-        if (this.isCloud) r = this.apost(`users/${this.userUUID}/media-blacklist`, { blacklist: args })
-        else r = this.apost(`users/${this.userUUID}/media-blacklist`, args)
+      case 'docs':
+        r = this.aget('files')
+          .query({ metadata: true, magics: 'PDF.TXT.DOCX.MD.DOC.XLS.XLSX.PPT.PPTX' })
         break
 
-      case 'putBlacklist':
-        if (this.isCloud) r = this.aput(`users/${this.userUUID}/media-blacklist`, { blacklist: args })
-        else r = this.aput(`users/${this.userUUID}/media-blacklist`, args)
-        break
-
-      case 'subtractBlacklist':
-        if (this.isCloud) r = this.adel(`users/${this.userUUID}/media-blacklist`, { blacklist: args })
-        else r = this.adel(`users/${this.userUUID}/media-blacklist`, args)
-        break
-
-      /* Docker API */
-      case 'docker':
-        r = request.get('http://10.10.9.86:3000/server')
+      case 'videos':
+        r = this.aget('files')
+          .query({ metadata: true, magics: 'RM.RMVB.WMV.AVI.MP4.3GP.MKV.MOV.FLV' })
         break
 
       /* BT Download API */
@@ -413,16 +390,8 @@ class Fruitmix extends EventEmitter {
           .query({ counter: true })
         break
 
-      case 'media':
-        r = this.aget('media')
-        break
-
       case 'users':
         r = this.aget('users')
-        break
-
-      case 'blacklist':
-        r = this.aget(`users/${this.userUUID}/media-blacklist`)
         break
 
       case 'randomSrc':
@@ -488,69 +457,6 @@ class Fruitmix extends EventEmitter {
 
       case 'switchBT':
         r = this.apatch('download/switch', { op: args.op })
-        break
-
-      /* box API */
-      case 'createBox':
-        r = this.creq('boxes', 'POST', null, args.stationId, { name: args.name, users: args.users })
-        isCloud = true
-        break
-
-      case 'box':
-        r = this.creq(`boxes/${args.uuid}`, 'GET')
-        isCloud = true
-        break
-
-      case 'friends':
-        r = this.creq(`users/${args.userId}/interestingPerson`, 'GET')
-        isCloud = true
-        break
-
-      case 'boxes':
-        r = this.creq('boxes', 'GET')
-        isCloud = true
-        break
-
-      case 'delBox':
-        r = this.creq(`boxes/${args.boxUUID}`, 'DELETE', args.boxUUID, args.stationId)
-        isCloud = true
-        break
-
-      case 'tweets':
-        r = this.creq(`boxes/${args.boxUUID}/tweets`, 'GET', args.boxUUID, args.stationId)
-          .query({ first: args.first, last: args.last, count: args.count, metadata: true })
-        isCloud = true
-        break
-
-      case 'createTweet':
-        r = this.creq(`boxes/${args.boxUUID}/tweets`, 'POST', args.boxUUID, args.station, { comment: args.comment })
-        isCloud = true
-        break
-
-      case 'delTweet':
-        r = this.creq(`boxes/${args.boxUUID}/tweets`, 'DELETE', args.boxUUID, args.station, { indexArr: args.indexs })
-        isCloud = true
-        break
-
-      case 'nasTweets': {
-        const ep = `boxes/${args.boxUUID}/tweets`
-        const url = `${cloudAddress}/c/v1/boxes/${args.boxUUID}/stations/${args.stationId}/pipe`
-        const resource = Buffer.from(`/${ep}`).toString('base64')
-        r = request.post(url).set('Authorization', this.wxToken).field('manifest', JSON.stringify({
-          resource, method: 'POST', comment: args.comment, type: args.type, indrive: args.list
-        }))
-        isCloud = true
-        break
-      }
-
-      case 'handleBoxUser':
-        r = this.creq(`boxes/${args.boxUUID}`, 'PATCH', args.boxUUID, args.stationId, { users: { op: args.op, value: args.guids } })
-        isCloud = true
-        break
-
-      case 'boxName':
-        r = this.creq(`boxes/${args.boxUUID}`, 'PATCH', args.boxUUID, args.stationId, { name: args.name })
-        isCloud = true
         break
 
       default:

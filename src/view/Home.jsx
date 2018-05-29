@@ -24,6 +24,9 @@ import History from '../common/history'
 import { LIButton } from '../common/Buttons'
 import ConfirmDialog from '../common/ConfirmDialog'
 
+/* increase limit of listeners of EventEmitter */
+ipcRenderer.setMaxListeners(1000)
+
 /* Drag Item's Coordinate */
 const DRAGLEFT = 180
 const DRAGTOP = 344
