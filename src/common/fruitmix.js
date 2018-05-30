@@ -249,6 +249,15 @@ class Fruitmix extends EventEmitter {
           .query({ metadata: true })
         break
 
+      case 'phyDrives':
+        r = this.aget('phy-drives')
+        break
+
+      case 'listPhyDir':
+        r = this.aget(`phy-drives/${args.id}`)
+          .query({ path: args.path })
+        break
+
       case 'mkdir':
         if (this.isCloud) {
           r = this.apost(`drives/${args.driveUUID}/dirs/${args.dirUUID}/entries`, Object.assign({}, args, { op: 'mkdir' }))
@@ -477,6 +486,7 @@ class Fruitmix extends EventEmitter {
   start () {
     this.request('account')
     this.request('users')
+    this.request('phyDrives')
     this.requestAsync('drives').asCallback((err, drives) => {
       if (err || !drives) console.error('requestAsync drives error', err)
       else {

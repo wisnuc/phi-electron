@@ -655,15 +655,24 @@ class Home extends Base {
   renderBreadCrumbItem ({ style }) {
     const path = this.state.path
 
-    const touchTap = (node) => {
-      this.setState({ loading: true })
-      if (node.type === 'publicRoot') {
-        this.rootDrive = null
-        this.ctx.props.apis.request('drives')
+    const touchTap = (node, index) => {
+      if (index === path.length - 1) { // current dir
+        this.refresh()
       } else {
-        const pos = { driveUUID: path[0].uuid, dirUUID: node.uuid }
-        this.enter(pos, err => err && console.error('Jump via breadCrumb error', err))
-        this.history.add(pos)
+        this.setState({ loading: true })
+        if (node.type === 'publicRoot') { // public drives
+          this.rootDrive = null
+          this.ctx.props.apis.request('drives')
+        } else if (node.type === 'phy') { // phyDrives
+          const newPath = [...path.slice(0, index + 1).map(p => p.data).filter(p => !!p)].join('/')
+          const pos = { id: node.id, path: newPath }
+          this.enter(pos, err => err && console.error('listNavBySelect error', err))
+          this.history.add(pos)
+        } else { // home drives
+          const pos = { driveUUID: path[0].uuid, dirUUID: node.uuid }
+          this.enter(pos, err => err && console.error('Jump via breadCrumb error', err))
+          this.history.add(pos)
+        }
       }
     }
 
@@ -672,6 +681,7 @@ class Home extends Base {
       each one is assigned an action, except for the last one
     */
 
+    // console.log('renderBreadCrumbItem', path)
     return (
       <div style={Object.assign({}, style, { marginLeft: 20 })}>
         {
@@ -679,21 +689,21 @@ class Home extends Base {
             const last = index === path.length - 1
             const isDrop = () => this.state.select.isDrop()
             const dropable = () => this.state.select.isDrop() && this.dropHeader()
-            const funcs = { node, isDrop, dropable, onHoverHeader: this.onHoverHeader, onClick: () => touchTap(node) }
+            const funcs = { node, isDrop, dropable, onHoverHeader: this.onHoverHeader, onClick: () => touchTap(node, index) }
 
             if (path.length > 4 && index > 0 && index < path.length - 3) {
               if (index === path.length - 4) {
-                acc.push(<BreadCrumbSeparator key={`Separator${node.uuid}`} />)
+                acc.push(<BreadCrumbSeparator key={`Separator${index}`} />)
                 acc.push(<BreadCrumbItem key="..." text="..." {...funcs} />)
               }
               return acc
             }
 
-            if (index !== 0) acc.push(<BreadCrumbSeparator key={`Separator${node.uuid}`} />)
+            if (index !== 0) acc.push(<BreadCrumbSeparator key={`Separator${index}`} />)
 
             /* the first one is always special */
             if (index === 0) acc.push(<BreadCrumbItem text={this.title()} key="root" {...funcs} last={last} />)
-            else acc.push(<BreadCrumbItem text={node.name} key={`Item${node.uuid}`} {...funcs} last={last} />)
+            else acc.push(<BreadCrumbItem text={node.name} key={`Item${index}`} {...funcs} last={last} />)
 
             return acc
           }, [])
