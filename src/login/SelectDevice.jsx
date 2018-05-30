@@ -138,12 +138,12 @@ class DeviceSelect extends React.Component {
       <div style={{ height: '100%', width: '100%' }} className="flexCenter">
         <div>
           <img
-            width={280}
-            height={150}
+            width={320}
+            height={180}
             src="./assets/images/pic_nodevice.png"
             alt=""
           />
-          <div style={{ width: '100%', textAlign: 'center', color: '#31a0f5', marginTop: -10 }}>
+          <div style={{ width: '100%', textAlign: 'center', color: '#31a0f5', marginTop: 20 }}>
             { i18n.__('Not Found Any Device ?') }
           </div>
         </div>

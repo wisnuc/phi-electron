@@ -102,16 +102,16 @@ class NetworkInfo extends React.Component {
               anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
               targetOrigin={{ horizontal: 'right', vertical: 'top' }}
               onRequestClose={() => this.setState({ open: false })}
-              style={{ boxShadow: '0px 10px 20px 0 rgba(23, 99, 207, 0.1)', opacity: this.state.show ? 1 : 0 }}
+              style={{ boxShadow: '0 0 20px 0 rgba(23, 99, 207, 0.1)', opacity: this.state.show ? 1 : 0 }}
             >
-              <div style={{ width: 94, maxWidth: 94, height: items.length * 40 + 10, overflow: 'hidden' }} >
+              <div style={{ width: 94, maxWidth: 94, height: items.length * 40, overflow: 'hidden' }} >
                 {
                   items.map((props, index) => (
                     <MenuItem
                       {...props}
                       key={index.toString()}
                       style={{
-                        marginTop: !index ? 5 : 0,
+                        marginTop: 0,
                         fontSize: 14,
                         color: '#505259',
                         height: 40,

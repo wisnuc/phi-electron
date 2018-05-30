@@ -26,10 +26,10 @@ class ResetDevice extends React.Component {
   render () {
     return (
       <div style={{ width: '100%', height: '100%', boxSizing: 'border-box', paddingBottom: 60 }} className="flexCenter" >
-        <div style={{ width: 280 }}>
-          <div style={{ height: 180, width: 280, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ width: 320 }}>
+          <div style={{ height: 180, width: 320, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <img
-              style={{ width: 280, height: 180 }}
+              style={{ width: 320, height: 180 }}
               src="./assets/images/pic_unbind.png"
               alt=""
             />

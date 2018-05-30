@@ -208,7 +208,7 @@ class PhiLogin extends React.Component {
 
           {/* password visibility */}
           <div style={{ position: 'absolute', right: 4, top: 102 }}>
-            <TFButton icon={this.state.showPwd ? EyeOffIcon : EyeOpenIcon} onClick={this.togglePwd} />
+            <TFButton icon={this.state.showPwd ? EyeOpenIcon : EyeOffIcon} onClick={this.togglePwd} />
           </div>
         </div>
         <div style={{ display: 'flex', width: 280, height: 40, alignItems: 'center', margin: '0 auto' }}>
@@ -252,7 +252,6 @@ class PhiLogin extends React.Component {
           <div style={{ width: '50%', textAlign: 'left' }}>
             <FLButton
               label={i18n.__('Forget Password')}
-              style={{ marginLeft: 8 }}
               onClick={() => shell.openExternal(phicommUrl)}
             />
           </div>

@@ -74,7 +74,10 @@ class Account extends React.Component {
         }}
         onClick={this.openPop}
       >
-        { phicommUserId ? <AvatarOnlineIcon style={{ color: '#FFF' }} /> : <AvatarOfflineIcon style={{ color: '#FFF' }} /> }
+
+        <div style={{ width: 30, height: 30, borderRadius: 15, backgroundColor: 'rgba(255,255,255,.2)' }}>
+          { phicommUserId ? <AvatarOnlineIcon style={{ color: '#FFF' }} /> : <AvatarOfflineIcon style={{ color: '#FFF' }} /> }
+        </div>
         <div style={{ paddingLeft: 10, color }}>
           { name }
         </div>
@@ -111,7 +114,7 @@ class Account extends React.Component {
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           targetOrigin={{ horizontal: 'right', vertical: 'top' }}
           onRequestClose={() => this.setState({ open: false })}
-          style={{ boxShadow: '0px 10px 20px 0 rgba(23, 99, 207, 0.1)', opacity: this.state.show ? 1 : 0, marginLeft: -20 }}
+          style={{ boxShadow: '0 0 20px 0 rgba(23, 99, 207, 0.1)', opacity: this.state.show ? 1 : 0, marginLeft: -20 }}
         >
           <div style={{ width: 125, maxWidth: 125, height: items.length * 40, overflow: 'hidden' }} >
             {

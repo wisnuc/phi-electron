@@ -84,7 +84,7 @@ class SetLANPwd extends React.Component {
           />
           {/* clear password */}
           <div style={{ position: 'absolute', right: 4, top: 20 }}>
-            <TFButton icon={this.state.showPwd ? EyeOffIcon : EyeOpenIcon} onClick={this.togglePwd} />
+            <TFButton icon={this.state.showPwd ? EyeOpenIcon : EyeOffIcon} onClick={this.togglePwd} />
           </div>
         </div>
         <div style={{ height: 20 }} />

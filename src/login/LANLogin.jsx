@@ -110,7 +110,7 @@ class LANLogin extends React.Component {
 
           {/* password visibility */}
           <div style={{ position: 'absolute', right: 4, top: 100 }}>
-            <TFButton icon={this.state.showPwd ? EyeOffIcon : EyeOpenIcon} onClick={this.togglePwd} />
+            <TFButton icon={this.state.showPwd ? EyeOpenIcon : EyeOffIcon} onClick={this.togglePwd} />
           </div>
         </div>
         <div style={{ height: 20 }} />

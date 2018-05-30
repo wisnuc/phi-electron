@@ -59,7 +59,7 @@ class LANPassword extends React.Component {
           />
           {/* show password */}
           <div style={{ position: 'absolute', right: -5, top: 15 }}>
-            <TFButton icon={this.state.showPwd ? EyeOffIcon : EyeOpenIcon} onClick={this.togglePwd} />
+            <TFButton icon={this.state.showPwd ? EyeOpenIcon : EyeOffIcon} onClick={this.togglePwd} />
           </div>
         </div>
       </div>
@@ -73,7 +73,7 @@ class LANPassword extends React.Component {
         <div style={{ width: 480, paddingRight: 160, paddingBottom: 60 }}>
           <div style={{ height: 180, width: 320, paddingLeft: 160 }} className="flexCenter">
             <img
-              style={{ width: 280, height: 180 }}
+              style={{ width: 320, height: 180 }}
               src="./assets/images/pic_offlinepassword.png"
               alt=""
             />

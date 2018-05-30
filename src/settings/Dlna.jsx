@@ -42,7 +42,7 @@ class Dlna extends React.Component {
         <div style={{ width: 480, paddingRight: 160, paddingBottom: 60 }}>
           <div style={{ height: 180, width: 320, paddingLeft: 160 }} className="flexCenter">
             <img
-              style={{ width: 280, height: 180 }}
+              style={{ width: 320, height: 180 }}
               src="./assets/images/pic_dlna.png"
               alt=""
             />
