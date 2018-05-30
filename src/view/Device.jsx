@@ -54,9 +54,9 @@ class Device extends Base {
     return (
       <DeviceInfo
         {...this.state}
+        phi={this.ctx.props.phi}
         address={this.address}
         selectedDevice={this.ctx.props.selectedDevice}
-        primaryColor={this.groupPrimaryColor()}
         openSnackBar={openSnackBar}
       />
     )

@@ -121,6 +121,10 @@ class PhiAPI extends RequestManager {
           .query({ deviceSN: args.deviceSN })
         break
 
+      case 'renameStation':
+        r = this.apatch('StationManager/station/info', { deviceSN: args.deviceSN, deviceInfo: { bindingName: args.newName } })
+        break
+
       case 'cloudUsers':
         r = this.aget('StationManager/station/users')
           .query({ deviceSN: args.deviceSN })

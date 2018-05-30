@@ -178,7 +178,7 @@ class PhiLogin extends React.Component {
                   fullWidth
                   hintText="*********"
                   style={{ marginTop: 22 }}
-                  onTouchTap={() => this.setState({ showFakePwd: false })}
+                  onClick={() => this.setState({ showFakePwd: false })}
                   errorText={this.state.pwdError}
                   errorStyle={{ position: 'absolute', left: 0, top: -8, height: 18 }}
                 />

@@ -10,25 +10,26 @@ class DeviceInfo extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
-      titleHover: false
     }
 
     this.updateLabel = (value) => {
       this.setState({ label: value, errorText: '', changed: true })
     }
 
+    this.newName = ''
+
     this.changeDeviceName = () => {
+      const deviceSN = this.props.selectedDevice && this.props.selectedDevice.mdev.deviceSN
+      console.log('this.changeDeviceName args', this.state.label)
       this.setState({ progress: true }, () => {
-        this.props.selectedDevice.request('renameStation', { name: this.state.label }, (err) => {
+        this.props.phi.req('renameStation', { deviceSN, newName: this.state.label }, (err) => {
           if (err) {
             this.props.openSnackBar(i18n.__('Modify Device Name Failed'))
             this.setState({ modify: false, progress: false, label: '' })
           } else {
-            this.props.selectedDevice.request('info', null, (e) => {
-              if (e) this.props.openSnackBar(i18n.__('Modify Device Name Failed'))
-              else this.props.openSnackBar(i18n.__('Modify Device Name Success'))
-              this.setState({ modify: false, progress: false, label: '' })
-            })
+            this.newName = this.state.label
+            this.props.openSnackBar(i18n.__('Modify Device Name Success'))
+            this.setState({ modify: false, progress: false, label: '' })
           }
         })
       })
@@ -36,17 +37,6 @@ class DeviceInfo extends React.PureComponent {
 
     this.onKeyDown = (e) => {
       if (e.which === 13 && !this.state.errorText && this.state.label && this.state.label.length) this.changeDeviceName()
-    }
-  }
-
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.info && this.props.info && (nextProps.info.name !== this.props.info.name)) {
-      this.currentLabel = nextProps.info.name
-      this.setState({
-        label: nextProps.info.name,
-        modify: false,
-        changed: false
-      })
     }
   }
 
@@ -119,6 +109,9 @@ class DeviceInfo extends React.PureComponent {
   }
 
   renderDeviceName () {
+    const editable = this.props.selectedDevice.mdev && this.props.selectedDevice.mdev.bindingName
+    let name = 'N2'
+    if (editable) name = this.newName || this.props.selectedDevice.mdev.bindingName
     return (
       <div>
         <div style={{ height: 24, fontSize: 14, color: '#85868c', display: 'flex', alignItems: 'center', paddingLeft: 10 }}>
@@ -126,22 +119,19 @@ class DeviceInfo extends React.PureComponent {
         </div>
         <div
           style={{ height: 48, fontSize: 16, color: 'rgba(0, 0, 0, 0.87)', marginTop: -12 }}
-          onMouseMove={() => this.setState({ titleHover: true })}
-          onMouseLeave={() => this.setState({ titleHover: false })}
           onClick={e => e.stopPropagation()}
         >
           <div style={{ height: 16 }} />
           {
-            this.state.modify
+            this.state.modify && editable
               ? (
                 <div style={{ marginTop: -8, display: 'flex' }}>
-                  {/* FIXME */}
                   <TextField
                     name="deviceName"
                     inputStyle={{ marginLeft: 10, color: '#525a60' }}
                     onChange={e => this.updateLabel(e.target.value)}
                     maxLength={12}
-                    value={this.state.modify ? this.state.label : this.props.info.name}
+                    value={this.state.modify ? this.state.label : name}
                     errorText={this.state.errorText}
                     ref={(input) => { if (input && this.state.modify) { input.focus() } }}
                     onKeyDown={this.onKeyDown}
@@ -150,7 +140,7 @@ class DeviceInfo extends React.PureComponent {
                     this.state.progress
                       ? (
                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: 8 }}>
-                          <CircularLoading />
+                          <CircularLoading style={{ transform: 'scale(0.46)' }} />
                         </div>
                       )
                       : (
@@ -169,7 +159,7 @@ class DeviceInfo extends React.PureComponent {
                   style={{ display: 'flex', alignItems: 'center', height: 32, marginLeft: 10, color: '#525a60' }}
                   onClick={() => this.setState({ modify: true })}
                 >
-                  { this.state.label ? this.state.label : 'N2' }
+                  { this.state.label ? this.state.label : name }
                   <div style={{ flexGrow: 1 }} />
                   <ModeEdit color="#31a0f5" style={{ marginRight: 24 }} />
                 </div>
@@ -218,7 +208,7 @@ class DeviceInfo extends React.PureComponent {
     const graphData = [
       { title: 'CPU1', model: cpus[0] && cpus[0].model, usage: cpuUsage(cpus[0]), color: '#31a0f5' },
       { title: 'CPU2', model: cpus[1] && cpus[1].model, usage: cpuUsage(cpus[1]), color: '#5fc315' },
-      { title: i18n.__('Memory'), model: '1GB DDR3 16000MHz', usage: memUsage, color: '#ffb400' }
+      { title: i18n.__('Memory'), model: '1GB DDR3 1600MHz', usage: memUsage, color: '#ffb400' }
     ]
 
     const listData = [
@@ -232,7 +222,7 @@ class DeviceInfo extends React.PureComponent {
     return (
       <div
         style={{ position: 'relative', width: '100%', height: '100%' }}
-        onTouchTap={() => !this.state.progress && this.setState({ modify: false, label: '' })}
+        onClick={() => !this.state.progress && this.setState({ modify: false, label: '' })}
       >
         <div style={{ height: 20 }} />
         <div style={{ width: 1000, height: 140, margin: '20px auto', display: 'flex', alignItems: 'center' }}>
