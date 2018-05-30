@@ -281,6 +281,9 @@ class NavViews extends React.Component {
   renderFileGroup () {
     const toolBarStyle = { height: 50, width: '100%', display: 'flex', alignItems: 'center', backgroundColor: '#f8f8f8' }
     const titleStyle = { height: 70, width: '100%', display: 'flex', alignItems: 'center' }
+
+    const phyDrives = this.props.apis && this.props.apis.phyDrives
+    const hasUSB = phyDrives && phyDrives.data && Array.isArray(phyDrives.data) && phyDrives.data.length
     return (
       <div
         style={{
@@ -309,6 +312,7 @@ class NavViews extends React.Component {
             views={this.views}
             nav={this.state.nav}
             navTo={this.navTo}
+            hasUSB={!!hasUSB}
           />
         </div>
 

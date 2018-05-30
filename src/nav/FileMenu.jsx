@@ -18,10 +18,32 @@ class NavDrawer extends React.Component {
     if (this.state.nav !== this.props.nav) this.props.navTo(this.state.nav)
   }
 
+  renderUSB () {
+    const { views } = this.props
+    const { nav } = this.state
+    return (
+      <div>
+        <div style={{ height: 10 }} />
+        <Divider style={{ marginLeft: 15, width: 180 }} className="divider" />
+
+        {
+          ['usb'].map(v => (
+            <MenuButton
+              key={v}
+              icon={views[v].menuIcon()}
+              text={views[v].menuName()}
+              selected={nav === v}
+              onClick={() => this.navTo(v)}
+            />
+          ))
+        }
+      </div>
+    )
+  }
+
   render () {
     const { views } = this.props
     const { nav } = this.state
-    const primaryColor = views[nav].primaryColor()
 
     return (
       <div style={{ width: '100%', height: '100%' }} >
@@ -45,7 +67,6 @@ class NavDrawer extends React.Component {
               key={v}
               icon={views[v].menuIcon()}
               text={views[v].menuName()}
-              primaryColor={primaryColor}
               selected={nav === v}
               onClick={() => this.navTo(v)}
             />
@@ -61,28 +82,13 @@ class NavDrawer extends React.Component {
               key={v}
               icon={views[v].menuIcon()}
               text={views[v].menuName()}
-              primaryColor={primaryColor}
               selected={nav === v}
               onClick={() => this.navTo(v)}
             />
           ))
         }
 
-        <div style={{ height: 10 }} />
-        <Divider style={{ marginLeft: 15, width: 180 }} className="divider" />
-
-        {
-          ['usb'].map(v => (
-            <MenuButton
-              key={v}
-              icon={views[v].menuIcon()}
-              text={views[v].menuName()}
-              primaryColor={primaryColor}
-              selected={nav === v}
-              onClick={() => this.navTo(v)}
-            />
-          ))
-        }
+        { !!this.props.hasUSB && this.renderUSB() }
       </div>
     )
   }
