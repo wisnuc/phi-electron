@@ -10,8 +10,7 @@ import ErrorDialogInTrans from './ErrorDialogInTrans'
 import ScrollBar from '../common/ScrollBar'
 import { LIButton } from '../common/Buttons'
 import PureDialog from '../common/PureDialog'
-import FlatButton from '../common/FlatButton'
-import DialogOverlay from '../common/DialogOverlay'
+import ConfirmDialog from '../common/ConfirmDialog'
 import { StartAllIcon, PauseAllIcon, DeleteAllIcon } from '../common/Svg'
 
 class TrsContainer extends React.Component {
@@ -296,107 +295,41 @@ class TrsContainer extends React.Component {
           )}
         </AutoSizer>
 
-        {/* Delete Runing Tasks Dialog */}
-        <DialogOverlay open={!!this.state.deleteRunningDialog}>
-          <div>
-            {
-              this.state.deleteRunningDialog &&
-                <div style={{ width: 320, padding: '24px 24px 0px 24px' }}>
-                  <div style={{ fontSize: 20, fontWeight: 500, color: 'rgba(0,0,0,0.87)' }}>
-                    { i18n.__('Delete Running Task Dialog Text 1') }
-                  </div>
-                  <div style={{ height: 20 }} />
-                  <div style={{ color: 'rgba(0,0,0,0.54)' }}>
-                    { i18n.__('Delete Running Task Dialog Text 2') }
-                  </div>
-                  <div style={{ height: 24 }} />
-                  <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-                    <FlatButton
-                      primary
-                      label={i18n.__('Cancel')}
-                      onClick={() => this.toggleDialog('deleteRunningDialog')}
-                    />
-                    <FlatButton
-                      label={i18n.__('Confirm')}
-                      primary
-                      onClick={() => {
-                        this.toggleDialog('deleteRunningDialog')
-                        this.handleAll(this.state.tasks, 'DELETE')
-                      }}
-                    />
-                  </div>
-                </div>
-            }
-          </div>
-        </DialogOverlay>
+        {/* Delete Running Tasks Dialog */}
+        <ConfirmDialog
+          open={!!this.state.deleteRunningDialog}
+          onCancel={() => this.setState({ deleteRunningDialog: false })}
+          onConfirm={() => {
+            this.toggleDialog('deleteRunningDialog')
+            this.handleAll(this.state.tasks, 'DELETE')
+          }}
+          title={i18n.__('Delete Running Task Title')}
+          text={i18n.__('Delete Running Task Text')}
+        />
 
-        {/* clear Running Tasks dialog */}
-        <DialogOverlay open={!!this.state.clearRunningDialog}>
-          <div>
-            {
-              this.state.clearRunningDialog &&
-                <div style={{ width: 320, padding: '24px 24px 0px 24px' }}>
-                  <div style={{ fontSize: 20, fontWeight: 500, color: 'rgba(0,0,0,0.87)' }}>
-                    { i18n.__('Clear Running Task Dialog Text 1') }
-                  </div>
-                  <div style={{ height: 20 }} />
-                  <div style={{ color: 'rgba(0,0,0,0.54)' }}>
-                    { i18n.__('Clear Running Task Dialog Text 2') }
-                  </div>
-                  <div style={{ height: 24 }} />
-                  <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-                    <FlatButton
-                      primary
-                      label={i18n.__('Cancel')}
-                      onClick={() => this.toggleDialog('clearRunningDialog')}
-                    />
-                    <FlatButton
-                      label={i18n.__('Delete')}
-                      primary
-                      onClick={() => {
-                        this.toggleDialog('clearRunningDialog')
-                        this.handleAll(userTasks, 'DELETE')
-                      }}
-                    />
-                  </div>
-                </div>
-            }
-          </div>
-        </DialogOverlay>
+        {/* clear all Running Tasks dialog */}
+        <ConfirmDialog
+          open={!!this.state.clearRunningDialog}
+          onCancel={() => this.setState({ clearRunningDialog: false })}
+          onConfirm={() => {
+            this.toggleDialog('clearRunningDialog')
+            this.handleAll(userTasks, 'DELETE')
+          }}
+          title={i18n.__('Clear Running Task Title')}
+          text={i18n.__('Clear Running Task Text')}
+        />
 
-        {/* clear Finished Tasks dialog */}
-        <DialogOverlay open={!!this.state.clearFinishedDialog}>
-          <div>
-            {
-              this.state.clearFinishedDialog &&
-                <div style={{ width: 320, padding: '24px 24px 0px 24px' }}>
-                  <div style={{ fontSize: 20, fontWeight: 500, color: 'rgba(0,0,0,0.87)' }}>
-                    { i18n.__('Clear Finished Task Dialog Text 1') }
-                  </div>
-                  <div style={{ height: 20 }} />
-                  <div style={{ color: 'rgba(0,0,0,0.54)' }}>
-                    { i18n.__('Clear Finished Task Dialog Text 2') }
-                  </div>
-                  <div style={{ height: 24 }} />
-                  <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-                    <FlatButton
-                      label={i18n.__('Cancel')}
-                      primary
-                      onClick={() => this.toggleDialog('clearFinishedDialog')}
-                    />
-                    <FlatButton
-                      label={i18n.__('Clear')}
-                      primary
-                      onClick={() => {
-                        this.handleAll(this.state.finishTasks, 'DELETE')
-                        this.toggleDialog('clearFinishedDialog')
-                      }}
-                    />
-                  </div>
-                </div>
-            }
-          </div>
-        </DialogOverlay>
+        {/* clear all Finished Tasks dialog */}
+        <ConfirmDialog
+          open={!!this.state.clearFinishedDialog}
+          onCancel={() => this.setState({ clearFinishedDialog: false })}
+          onConfirm={() => {
+            this.toggleDialog('clearFinishedDialog')
+            this.handleAll(this.state.finishTasks, 'DELETE')
+          }}
+          title={i18n.__('Clear Finished Task Title')}
+          text={i18n.__('Clear Finished Task Text')}
+        />
 
         {/* error dialog */}
         <PureDialog open={!!this.state.errors} onRequestClose={() => this.setState({ errors: null })} >
