@@ -15,6 +15,8 @@ class Photo extends Home {
 
     this.title = () => i18n.__('Photo Menu Name')
 
+    this.isMedia = true // flag to disable toolbars or menuItems
+
     this.type = 'photos'
 
     this.refresh = (op) => {

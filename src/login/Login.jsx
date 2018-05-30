@@ -303,7 +303,7 @@ class Login extends React.Component {
             { i18n.__('Phone Number: ') }
           </div>
           <div style={{ fontSize: 18, marginRight: 20 }}>
-            { '4007 567 567' }
+            { '4007-567-567' }
           </div>
         </div>
         { view }

@@ -765,7 +765,7 @@ class Home extends Base {
           icon={<DownloadIcon style={iconStyle(!itemSelected || this.state.inRoot)} />}
         />
 
-        <FileUploadButton upload={this.upload} disabled={this.state.inRoot} />
+        <FileUploadButton upload={this.upload} disabled={this.state.inRoot || this.isMedia} />
 
         <FlatButton
           onClick={() => this.toggleDialog('delete')}
@@ -779,8 +779,8 @@ class Home extends Base {
           label={i18n.__('Create New Folder')}
           labelStyle={{ fontSize: 14, marginLeft: 4 }}
           onClick={() => this.toggleDialog('createNewFolder')}
-          disabled={this.state.inRoot}
-          icon={<NewFolderIcon style={iconStyle(this.state.inRoot)} />}
+          disabled={this.state.inRoot || this.isMedia}
+          icon={<NewFolderIcon style={iconStyle(this.state.inRoot || this.isMedia)} />}
         />
 
         <FlatButton

@@ -12,6 +12,7 @@ import InvitationConfirm from './InvitationConfirm'
 
 import Dialog from '../common/PureDialog'
 import ScrollBar from '../common/ScrollBar'
+import ConfirmDialog from '../common/ConfirmDialog'
 import { RSButton, LIButton } from '../common/Buttons'
 import { RefreshIcon, HelpIcon, AddDeviceIcon, BackIcon } from '../common/Svg'
 import CircularLoading from '../common/CircularLoading'
@@ -34,6 +35,7 @@ class DeviceSelect extends React.Component {
 
     this.slDevice = (dev) => {
       console.log('this.slDevice', dev)
+      clearTimeout(this.timer)
       if (this.props.type === 'BOUNDLIST' && dev.systemStatus() === 'ready') {
         const { inviteStatus, accountStatus, type } = dev.mdev
         if (type === 'owner' || (type === 'service' && inviteStatus === 'accept' && accountStatus === '1')) {
@@ -51,9 +53,14 @@ class DeviceSelect extends React.Component {
         const currentSN = this.props.selectedDevice && this.props.selectedDevice.mdev && this.props.selectedDevice.mdev.deviceSN
         const newSN = dev && dev.mdev && dev.mdev.deviceSN
         if (currentSN && (currentSN === newSN)) return // the same device
-        this.setState({ dev, cloudLogin: dev })
         console.log('CHANGEDEVICE', this.props, this.state, dev)
+        this.setState({ dev, changeDeviceConfirm: true })
       }
+    }
+
+    this.changeDevice = () => {
+      this.setState({ changeDeviceConfirm: false })
+      this.timer = setTimeout(() => this.setState({ cloudLogin: this.state.dev }), 200)
     }
   }
 
@@ -268,6 +275,15 @@ class DeviceSelect extends React.Component {
           dev={this.state.invitation}
           open={!!this.state.invitation}
           onClose={() => this.setState({ invitation: null })}
+        />
+
+        {/* confirm to change device */}
+        <ConfirmDialog
+          open={!!this.state.changeDeviceConfirm}
+          onCancel={() => this.setState({ dev: null, changeDeviceConfirm: false })}
+          onConfirm={this.changeDevice}
+          title={i18n.__('Confirm Change Device Title')}
+          text={i18n.__('Confirm Change Device Text')}
         />
       </div>
     )

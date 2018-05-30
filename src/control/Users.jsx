@@ -138,7 +138,7 @@ class AdminUsersApp extends React.Component {
   renderRow (user) {
     const { driveList, inviteStatus, nickname, username, uuid } = user
     return (
-      <div style={{ height: 60, display: 'flex' }}>
+      <div style={{ height: 60, display: 'flex' }} key={uuid}>
         {
           this.state.status === 'modify' &&
           (
