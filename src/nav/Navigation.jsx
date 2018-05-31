@@ -23,6 +23,7 @@ import Uploading from '../view/Uploading'
 import Finished from '../view/Finished'
 
 import Settings from '../view/Settings'
+import CacheClean from '../view/CacheClean'
 import Device from '../view/Device'
 import DiskInfo from '../view/DiskInfo'
 import Networking from '../view/Networking'
@@ -74,6 +75,7 @@ class NavViews extends React.Component {
       { name: 'clientUpdate', View: ClientUpdate },
       { name: 'firmwareUpdate', View: FirmwareUpdate },
       { name: 'lanPassword', View: LANPassword },
+      { name: 'cacheClean', View: CacheClean },
       { name: 'power', View: Power },
       { name: 'sambe', View: Samba },
       { name: 'dlna', View: DLNA },

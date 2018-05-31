@@ -86,8 +86,12 @@ class AdminUsersApp extends React.Component {
       const args = { deviceSN, phoneNumber: this.state.pn, nickName: this.state.nickName }
       const phicommUserId = (await phi.reqAsync('registerPhiUser', args)).result.uid
       console.log('this.inviteAsync phicommUserId', phicommUserId)
-      const res = await phi.reqAsync('newUser', { deviceSN, username: this.state.pn, phicommUserId })
-      console.log('this.inviteAsync res', res)
+      const user = await phi.reqAsync('newUser', { deviceSN, username: this.state.pn, phicommUserId })
+      console.log('this.inviteAsync res', user)
+      if (!user || user.phicommUserId !== phicommUserId) throw Error('add local user error')
+      const cloudUsers = (await phi.reqAsync('cloudUsers', { deviceSN })).result.users
+      console.log('this.inviteAsync cloudUsers', cloudUsers)
+      if (!cloudUsers.find(u => u.uid === phicommUserId)) throw Error('req cloud user error')
     }
 
     this.invite = () => {
@@ -191,6 +195,7 @@ class AdminUsersApp extends React.Component {
             onChange={e => this.updateNickName(e.target.value)}
             style={{ color: '#525a60', fontSize: 14 }}
             hintText={i18n.__('Add User Nick Name Hint')}
+            disabled={this.state.invited}
           />
         </div>
         <div style={{ height: 10 }} />
@@ -213,6 +218,7 @@ class AdminUsersApp extends React.Component {
             onChange={e => this.updatePn(e.target.value)}
             style={{ color: '#525a60', fontSize: 14 }}
             hintText={i18n.__('Add User Phone Number Hint')}
+            disabled={this.state.invited}
           />
         </div>
       </div>

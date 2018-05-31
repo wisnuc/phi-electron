@@ -71,68 +71,58 @@ class Home extends Base {
     }
 
     this.toggleDialog = (type) => {
-      if (!window.navigator.onLine) this.ctx.openSnackBar(i18n.__('Offline Text'))
-      else this.setState({ [type]: !this.state[type] })
+      this.setState({ [type]: !this.state[type] })
     }
 
     /* file or dir operations */
     this.upload = (type) => {
-      if (!window.navigator.onLine) this.ctx.openSnackBar(i18n.__('Offline Text'))
-      else {
-        const dirPath = this.state.path
-        const dirUUID = dirPath[dirPath.length - 1].uuid
-        const driveUUID = dirPath[0].uuid
-        ipcRenderer.send('UPLOAD', { dirUUID, driveUUID, type })
-      }
+      const dirPath = this.state.path
+      const dirUUID = dirPath[dirPath.length - 1].uuid
+      const driveUUID = dirPath[0].uuid
+      ipcRenderer.send('UPLOAD', { dirUUID, driveUUID, type })
     }
 
     this.download = () => {
-      if (!window.navigator.onLine) this.ctx.openSnackBar(i18n.__('Offline Text'))
-      else {
-        const selected = this.state.select.selected
-        const entries = selected.map(index => this.state.entries[index])
-        const path = this.state.path
-        ipcRenderer.send('DOWNLOAD', { entries, dirUUID: path[path.length - 1].uuid, driveUUID: path[0].uuid })
-      }
+      const selected = this.state.select.selected
+      const entries = selected.map(index => this.state.entries[index])
+      const path = this.state.path
+      ipcRenderer.send('DOWNLOAD', { entries, dirUUID: path[path.length - 1].uuid, driveUUID: path[0].uuid })
     }
 
     this.dupFile = () => {
-      if (!window.navigator.onLine) this.ctx.openSnackBar(i18n.__('Offline Text'))
-      else {
-        const entries = this.state.entries
-        const selected = this.state.select.selected
-        const path = this.state.path
-        const curr = path[path.length - 1]
-        const oldName = entries[selected[0]].name
-        const reg = /^.*\./
-        const extension = oldName.replace(reg, '')
-        const nameNoExt = oldName.match(reg) ? oldName.match(reg)[0] : oldName
-        let newName = oldName
-        const findSame = name => entries.findIndex(e => e.name === name) > -1
-        for (let i = 0; findSame(newName); i++) {
-          const addText = i ? ` - ${i18n.__('Copy(noun)')} (${i})` : ` - ${i18n.__('Copy(noun)')}`
-          if (!extension || extension === oldName || nameNoExt === '.') {
-            newName = `${oldName}${addText}`
-          } else {
-            const pureName = oldName.match(/^.*\./)[0]
-            newName = `${pureName.slice(0, pureName.length - 1)}${addText}.${extension}`
-          }
+      const entries = this.state.entries
+      const selected = this.state.select.selected
+      const path = this.state.path
+      const curr = path[path.length - 1]
+      const oldName = entries[selected[0]].name
+      const reg = /^.*\./
+      const extension = oldName.replace(reg, '')
+      const nameNoExt = oldName.match(reg) ? oldName.match(reg)[0] : oldName
+      let newName = oldName
+      const findSame = name => entries.findIndex(e => e.name === name) > -1
+      for (let i = 0; findSame(newName); i++) {
+        const addText = i ? ` - ${i18n.__('Copy(noun)')} (${i})` : ` - ${i18n.__('Copy(noun)')}`
+        if (!extension || extension === oldName || nameNoExt === '.') {
+          newName = `${oldName}${addText}`
+        } else {
+          const pureName = oldName.match(/^.*\./)[0]
+          newName = `${pureName.slice(0, pureName.length - 1)}${addText}.${extension}`
         }
-        const args = {
-          driveUUID: path[0].uuid,
-          dirUUID: curr.uuid,
-          entryUUID: entries[selected[0]].uuid,
-          newName,
-          oldName
-        }
-        this.ctx.props.apis.request('dupFile', args, (err, data) => {
-          if (err) this.ctx.openSnackBar(i18n.__('Dup File Failed'))
-          else {
-            this.refresh()
-            this.ctx.openSnackBar(i18n.__('Dup File Success'))
-          }
-        })
       }
+      const args = {
+        driveUUID: path[0].uuid,
+        dirUUID: curr.uuid,
+        entryUUID: entries[selected[0]].uuid,
+        newName,
+        oldName
+      }
+      this.ctx.props.apis.request('dupFile', args, (err, data) => {
+        if (err) this.ctx.props.openSnackBar(i18n.__('Dup File Failed'))
+        else {
+          this.refresh()
+          this.ctx.props.openSnackBar(i18n.__('Dup File Success'))
+        }
+      })
     }
 
     this.rename = () => {
@@ -170,18 +160,15 @@ class Home extends Base {
     }
 
     this.delete = () => {
-      if (!window.navigator.onLine) this.ctx.openSnackBar(i18n.__('Offline Text'))
-      else {
-        this.setState({ deleteLoading: true })
-        this.deleteAsync().then(() => {
-          this.setState({ deleteLoading: false, delete: false })
-          this.ctx.openSnackBar(i18n.__('Delete Success'))
-        }).catch((e) => {
-          this.setState({ deleteLoading: false, delete: false })
-          console.log('delete error', e)
-          this.ctx.openSnackBar(i18n.__('Delete Failed'))
-        })
-      }
+      this.setState({ deleteLoading: true })
+      this.deleteAsync().then(() => {
+        this.setState({ deleteLoading: false, delete: false })
+        this.ctx.props.openSnackBar(i18n.__('Delete Success'))
+      }).catch((e) => {
+        this.setState({ deleteLoading: false, delete: false })
+        console.log('delete error', e)
+        this.ctx.props.openSnackBar(i18n.__('Delete Failed'))
+      })
     }
 
     this.fakeOpen = () => {
@@ -204,17 +191,14 @@ class Home extends Base {
     }
 
     this.fireDeletePublic = () => {
-      if (!window.navigator.onLine) this.ctx.openSnackBar(i18n.__('Offline Text'))
-      else {
-        const { select, entries } = this.state
-        const uuid = select && entries && entries[select.selected[0]] && entries[select.selected[0]].uuid
-        this.ctx.props.apis.request('adminDeleteDrive', { uuid }, (err, res) => {
-          if (err) this.ctx.openSnackBar(i18n.__('Delete Drive Failed'))
-          else this.ctx.openSnackBar(i18n.__('Delete Drive Success'))
-          this.setState({ deleteDriveConfirm: false })
-          this.refresh()
-        })
-      }
+      const { select, entries } = this.state
+      const uuid = select && entries && entries[select.selected[0]] && entries[select.selected[0]].uuid
+      this.ctx.props.apis.request('adminDeleteDrive', { uuid }, (err, res) => {
+        if (err) this.ctx.props.openSnackBar(i18n.__('Delete Drive Failed'))
+        else this.ctx.props.openSnackBar(i18n.__('Delete Drive Success'))
+        this.setState({ deleteDriveConfirm: false })
+        this.refresh()
+      })
     }
 
     this.history = new History()
@@ -225,20 +209,17 @@ class Home extends Base {
     }
 
     this.listNavBySelect = () => {
-      if (!window.navigator.onLine) this.ctx.openSnackBar(i18n.__('Offline Text'))
-      else {
-        const selected = this.select.state.selected
-        if (selected.length !== 1) return
+      const selected = this.select.state.selected
+      if (selected.length !== 1) return
 
-        /* reset jump action of files or drives */
-        this.resetScrollTo()
+      /* reset jump action of files or drives */
+      this.resetScrollTo()
 
-        const entry = this.state.entries[selected[0]]
-        if (entry.type === 'directory') {
-          const pos = { driveUUID: this.state.path[0].uuid, dirUUID: entry.uuid }
-          this.enter(pos, err => err && console.error('listNavBySelect error', err))
-          this.history.add(pos)
-        }
+      const entry = this.state.entries[selected[0]]
+      if (entry.type === 'directory') {
+        const pos = { driveUUID: this.state.path[0].uuid, dirUUID: entry.uuid }
+        this.enter(pos, err => err && console.error('listNavBySelect error', err))
+        this.history.add(pos)
       }
     }
 
@@ -254,21 +235,18 @@ class Home extends Base {
 
     /* op: scrollTo file */
     this.refresh = (op) => {
-      if (!window.navigator.onLine) this.ctx.openSnackBar(i18n.__('Offline Text'))
-      else {
-        const rUUID = this.state.path[0] && this.state.path[0].uuid
-        const dUUID = this.state.path[0] && this.state.path[this.state.path.length - 1].uuid
-        if (!rUUID || !dUUID) {
-          this.setState({ loading: true })
-          this.ctx.props.apis.request('drives') // drive root
-        } else {
-          this.ctx.props.apis.request('listNavDir', { driveUUID: rUUID, dirUUID: dUUID })
-        }
-        this.resetScrollTo()
-
-        if (op) this.setState({ scrollTo: op.fileName || op.uuid, loading: !op.noloading }) // fileName for files, uuid for drives
-        else this.setState({ loading: true })
+      const rUUID = this.state.path[0] && this.state.path[0].uuid
+      const dUUID = this.state.path[0] && this.state.path[this.state.path.length - 1].uuid
+      if (!rUUID || !dUUID) {
+        this.setState({ loading: true })
+        this.ctx.props.apis.request('drives') // drive root
+      } else {
+        this.ctx.props.apis.request('listNavDir', { driveUUID: rUUID, dirUUID: dUUID })
       }
+      this.resetScrollTo()
+
+      if (op) this.setState({ scrollTo: op.fileName || op.uuid, loading: !op.noloading }) // fileName for files, uuid for drives
+      else this.setState({ loading: true })
     }
 
     this.resetScrollTo = () => Object.assign(this.state, { scrollTo: null })
@@ -326,17 +304,17 @@ class Home extends Base {
     /* finish post change dialog content to waiting/result */
     this.finish = (error, data) => {
       const type = i18n.__('Move')
-      if (error) this.ctx.openSnackBar(type.concat(i18n.__('+Failed')), { showTasks: true })
+      if (error) this.ctx.props.openSnackBar(type.concat(i18n.__('+Failed')), { showTasks: true })
       else {
         this.getTaskState(data.uuid).asCallback((err, res) => {
           if (err) {
-            this.ctx.openSnackBar(type.concat(i18n.__('+Failed')), { showTasks: true })
+            this.ctx.props.openSnackBar(type.concat(i18n.__('+Failed')), { showTasks: true })
           } else {
             let text = 'Working'
             if (res === 'Finished') text = xcopyMsg(this.xcopyData)
             if (res === 'Conflict') text = i18n.__('Task Conflict Text')
             this.refresh({ noloading: true })
-            this.ctx.openSnackBar(text, res !== 'Finished' ? { showTasks: true } : null)
+            this.ctx.props.openSnackBar(text, res !== 'Finished' ? { showTasks: true } : null)
           }
         })
       }
@@ -855,6 +833,9 @@ class Home extends Base {
   renderMenu (open) {
     const itemSelected = this.state.select && this.state.select.selected && this.state.select.selected.length
     const multiSelected = this.state.select && this.state.select.selected && (this.state.select.selected.length > 1)
+
+    const apis = this.ctx.props.apis
+    const isAdmin = apis && apis.account && apis.account.data && apis.account.data.isFirstUser
     return (
       <ContextMenu
         open={open}
@@ -869,11 +850,12 @@ class Home extends Base {
                 <MenuItem
                   primaryText={i18n.__('Modify')}
                   onClick={this.modifyPublic}
+                  disabled={!isAdmin}
                 />
                 <MenuItem
                   primaryText={i18n.__('Delete')}
                   onClick={this.deletePublic}
-                  disabled={itemSelected && !multiSelected && this.state.select.selected[0] === 0}
+                  disabled={(itemSelected && !multiSelected && this.state.select.selected[0] === 0) || !isAdmin}
                 />
                 <MenuItem
                   primaryText={i18n.__('Properties')}

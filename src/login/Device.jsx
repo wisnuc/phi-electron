@@ -116,6 +116,11 @@ class Device extends React.Component {
       case 'probing':
         text = i18n.__('Probing')
         break
+
+      case 'booting':
+        text = i18n.__('Booting')
+        break
+
       default:
         break
     }
@@ -142,8 +147,7 @@ class Device extends React.Component {
           width: 210,
           cursor: isEnabled ? 'pointer' : 'not-allowed',
           padding: '0 20px',
-          margin: '30px 7px 0 7px',
-          filter: isEnabled ? '' : 'grayscale(100%)'
+          margin: '30px 7px 0 7px'
         }}
         className="paper"
         onClick={() => isEnabled && this.select()}
@@ -192,7 +196,11 @@ class Device extends React.Component {
         </div>
         <div style={{ height: 230 }} className="flexCenter">
           <img
-            style={{ width: 51, height: 104, filter: status === 'noBoundUser' ? 'hue-rotate(290deg)' : '' }}
+            style={{
+              width: 51,
+              height: 104,
+              filter: !isEnabled ? 'grayscale(100%)' : status === 'noBoundUser' ? 'hue-rotate(290deg)' : ''
+            }}
             src="./assets/images/ic-n-2.png"
             alt=""
           />

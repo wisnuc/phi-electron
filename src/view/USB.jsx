@@ -18,39 +18,33 @@ class USB extends Home {
     }
 
     this.listNavBySelect = () => {
-      if (!window.navigator.onLine) this.ctx.openSnackBar(i18n.__('Offline Text'))
-      else {
-        const selected = this.select.state.selected
-        if (selected.length !== 1) return
+      const selected = this.select.state.selected
+      if (selected.length !== 1) return
 
-        /* reset jump action of files or drives */
-        this.resetScrollTo()
+      /* reset jump action of files or drives */
+      this.resetScrollTo()
 
-        const entry = this.state.entries[selected[0]]
+      const entry = this.state.entries[selected[0]]
 
-        if (entry.type === 'directory') {
-          const path = [...this.state.path.map(p => p.data).filter(p => !!p), entry.name].join('/')
-          const pos = { id: this.phyDrive.id, path }
-          this.enter(pos, err => err && console.error('listNavBySelect error', err))
-          this.history.add(pos)
-        }
+      if (entry.type === 'directory') {
+        const path = [...this.state.path.map(p => p.data).filter(p => !!p), entry.name].join('/')
+        const pos = { id: this.phyDrive.id, path }
+        this.enter(pos, err => err && console.error('listNavBySelect error', err))
+        this.history.add(pos)
       }
     }
 
     this.refresh = (op) => {
-      if (!window.navigator.onLine) this.ctx.openSnackBar(i18n.__('Offline Text'))
-      else {
-        if (this.phyDrive) {
-          this.setState({ loading: true })
-          const path = this.state.path.map(p => p.data).filter(p => !!p).join('/')
-          this.ctx.props.apis.request('listPhyDir', { id: this.phyDrive.id, path })
-        }
-
-        this.resetScrollTo()
-
-        if (op) this.setState({ scrollTo: op.fileName || op.uuid, loading: !op.noloading }) // fileName for files, uuid for drives
-        else this.setState({ loading: true })
+      if (this.phyDrive) {
+        this.setState({ loading: true })
+        const path = this.state.path.map(p => p.data).filter(p => !!p).join('/')
+        this.ctx.props.apis.request('listPhyDir', { id: this.phyDrive.id, path })
       }
+
+      this.resetScrollTo()
+
+      if (op) this.setState({ scrollTo: op.fileName || op.uuid, loading: !op.noloading }) // fileName for files, uuid for drives
+      else this.setState({ loading: true })
     }
   }
 

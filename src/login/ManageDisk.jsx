@@ -163,7 +163,7 @@ class ManageDisk extends React.Component {
   renderRecover () {
     const blks = this.props.selectedDevice.boot.data.storage.blocks
     const storage = this.availableVolumes().slice(0, 2).map((v, index) => ({
-      pos: !index ? i18n.__('First Volume') : i18n.__('SecondVolume'),
+      key: index.toString(),
       size: v.usage && prettysize(v.usage.overall.deviceSize),
       mode: v.usage && v.usage.data.mode === 'raid1' ? i18n.__('Raid1 Mode') : i18n.__('Single Mode'),
       fire: () => this.recover(v),
@@ -178,7 +178,7 @@ class ManageDisk extends React.Component {
       <div>
         {
           storage.map(disk => (
-            <div key={disk.pos} >
+            <div key={disk.key} >
               <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
               <div style={{ height: 10 }} />
               <div style={{ height: 30, margin: '0 auto', width: 280, display: 'flex', color: '#888a8c', alignItems: 'center' }} >

@@ -20,12 +20,9 @@ class Photo extends Home {
     this.type = 'photos'
 
     this.refresh = (op) => {
-      if (!window.navigator.onLine) this.ctx.openSnackBar(i18n.__('Offline Text'))
-      else {
-        this.ctx.props.apis.request(this.type)
-        if (op) this.setState({ scrollTo: op.fileName || op.uuid, loading: !op.noloading }) // fileName for files, uuid for drives
-        else this.setState({ loading: true })
-      }
+      this.ctx.props.apis.request(this.type)
+      if (op) this.setState({ scrollTo: op.fileName || op.uuid, loading: !op.noloading }) // fileName for files, uuid for drives
+      else this.setState({ loading: true })
     }
 
     this.handleMediaProps = (nextProps, type) => {

@@ -12,14 +12,14 @@ class HoverTip extends React.Component {
   render () {
     const { longHover, hover, entries, mouseY, mouseX } = this.props
     const entry = entries[longHover] || entries[hover] || {}
-    const top = Math.min(mouseY, window.innerHeight - 10 - (this.refBox ? this.refBox.offsetHeight : 0)) || 0
+    const top = Math.min(mouseY, window.innerHeight - 30 - (this.refBox ? this.refBox.offsetHeight : 0)) || 0
     const left = Math.min(mouseX, window.innerWidth - 10 - (this.refBox ? this.refBox.offsetWidth : 0)) || 0
     return (
       <div
         ref={ref => (this.refBox = ref)}
         style={{
           position: 'fixed',
-          top,
+          top: top + 20,
           left,
           width: 'max-content',
           maxWidth: 400,
