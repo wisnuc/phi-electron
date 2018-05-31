@@ -6,9 +6,10 @@ import prettysize from 'prettysize'
 import DiskModeGuide from './DiskModeGuide'
 import DiskFormating from './DiskFormating'
 
-import { SmallHelpIcon, BackIcon } from '../common/Svg'
-import { RRButton, ModeSelect, LIButton, SIButton } from '../common/Buttons'
 import Dialog from '../common/PureDialog'
+import { SmallHelpIcon, BackIcon } from '../common/Svg'
+import interpretModel from '../common/diskModel'
+import { RRButton, ModeSelect, LIButton, SIButton } from '../common/Buttons'
 
 class ManageDisk extends React.Component {
   constructor (props) {
@@ -72,8 +73,8 @@ class ManageDisk extends React.Component {
   renderInitFormat () {
     const { storage } = this.props.selectedDevice.boot.data
 
-    const b1 = storage.blocks.find(b => (b.isDisk && !b.unformattable && /ata1/.test(b.path)) || b.serial === 'VBf6bb5791-e1fa9c84')
-    const b2 = storage.blocks.find(b => (b.isDisk && !b.unformattable && /ata2/.test(b.path)) || b.serial === 'VB6167c3a6-cc8f4095')
+    const b1 = storage.blocks.find(b => (b.isDisk && !b.unformattable && b.slotNumber === 1))
+    const b2 = storage.blocks.find(b => (b.isDisk && !b.unformattable && b.slotNumber === 2))
 
     const target = []
     if (b1 && b1.name) target.push(b1.name)
@@ -96,9 +97,9 @@ class ManageDisk extends React.Component {
             >
               <div style={{ color: '#525a60' }}> { !index ? i18n.__('Disk 1') : i18n.__('Disk 2') } </div>
               <div style={{ flexGrow: 1 }} />
-              { disk && <div style={{ width: 100 }}> { disk.model } </div> }
-              { disk && <div style={{ width: 84, textAlign: 'right' }}> { prettysize(disk.size * 512) } </div> }
-              { !disk && <div style={{ width: 184, textAlign: 'right' }}> { i18n.__('Disk Not Found') } </div> }
+              { disk && <div style={{ marginRight: 10 }}> { interpretModel(disk.model) } </div> }
+              { disk && <div> { prettysize(disk.size * 512) } </div> }
+              { !disk && <div> { i18n.__('Disk Not Found') } </div> }
             </div>
           ))
         }
@@ -170,7 +171,7 @@ class ManageDisk extends React.Component {
       devices: v.devices.map((d) => {
         const blk = blks.find(b => b.name === d.name)
         const { model, size } = blk
-        return ({ model: model.slice(0, 10), size: prettysize(size * 512) })
+        return ({ model: interpretModel(model), size: prettysize(size * 512) })
       })
     }))
 
