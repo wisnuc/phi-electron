@@ -64,6 +64,12 @@ class Device extends RequestManager {
           .send({ target: args.target, mode: args.mode })
         break
 
+      case 'importVolume':
+        r = request
+          .put(`http://${this.mdev.address}:3000/boot/boundVolume`)
+          .send({ volumeUUID: args.volumeUUID })
+        break
+
       case 'token':
         r = request
           .get(`http://${this.mdev.address}:3000/token`)

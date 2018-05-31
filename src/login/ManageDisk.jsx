@@ -16,6 +16,7 @@ class ManageDisk extends React.Component {
 
     this.state = {
       mode: '',
+      status: this.volumeStatus() === 'init' ? 'init' : 'select', // init, select, recover, repair
       showGuide: false,
       format: '' // 'busy', 'success', 'error'
     }
@@ -31,21 +32,45 @@ class ManageDisk extends React.Component {
       })
     }
 
-    this.recover = () => {
-      this.setState({ recover: 'select' })
+    this.recover = (volume) => {
+      console.log('recover volume', volume)
+      this.setState({ format: 'busy' })
+      this.props.selectedDevice.request('importVolume', { volumeUUID: volume.uuid }, (err, res) => {
+        console.log('recover volume res', err, res)
+        if (err) this.setState({ format: 'error', error: err })
+        else this.setState({ format: 'success' })
+      })
     }
+
+    this.enterCreate = () => {
+      this.setState({ status: 'init' })
+    }
+
+    this.enterRecover = () => {
+      this.setState({ status: 'recover' })
+    }
+  }
+
+  availableVolumes () {
+    const { storage, boundUser } = this.props.selectedDevice.boot.data
+    return storage.volumes.filter(v => !v.isMissing && v.isMounted && Array.isArray(v.users) &&
+      v.users.find(u => u.isFirstUser && u.phicommUserId === boundUser.phicommUserId))
+  }
+
+  volumeStatus () {
+    const { storage, boundVolume, boundUser } = this.props.selectedDevice.boot.data
+    console.log('volumeStatus', storage, boundVolume, boundUser)
+    if (!storage || !Array.isArray(storage.volumes) || !boundUser) return 'init'
+
+    /* notMissing && isMounted && adminUser is boundUser => recover(import) */
+    if (this.availableVolumes().length) return 'recover'
+
+    /* TODO repair */
+    return 'init'
   }
 
   renderInitFormat () {
     const { storage } = this.props.selectedDevice.boot.data
-    console.log('ManageDisk', storage)
-
-    /*
-    const storages = [
-      { pos: '磁盘1', model: '希捷', size: '2.0T' },
-      { pos: '磁盘2', model: '希捷', size: '1.0T' }
-    ]
-    */
 
     const b1 = storage.blocks.find(b => (b.isDisk && !b.unformattable && /ata1/.test(b.path)) || b.serial === 'VBf6bb5791-e1fa9c84')
     const b2 = storage.blocks.find(b => (b.isDisk && !b.unformattable && /ata2/.test(b.path)) || b.serial === 'VB6167c3a6-cc8f4095')
@@ -136,10 +161,19 @@ class ManageDisk extends React.Component {
   }
 
   renderRecover () {
-    const storage = [
-      { pos: '磁盘1', posAlt: '磁盘2', model: '希捷', size: '2.0T', mode: 'Single 模式' },
-      { pos: '磁盘2', posAlt: '磁盘1', model: '希捷', size: '1.0T', mode: 'Raid 1 模式' }
-    ]
+    const blks = this.props.selectedDevice.boot.data.storage.blocks
+    const storage = this.availableVolumes().slice(0, 2).map((v, index) => ({
+      pos: !index ? i18n.__('First Volume') : i18n.__('SecondVolume'),
+      size: v.usage && prettysize(v.usage.overall.deviceSize),
+      mode: v.usage && v.usage.data.mode === 'raid1' ? i18n.__('Raid1 Mode') : i18n.__('Single Mode'),
+      fire: () => this.recover(v),
+      devices: v.devices.map((d) => {
+        const blk = blks.find(b => b.name === d.name)
+        const { model, size } = blk
+        return ({ model: model.slice(0, 10), size: prettysize(size * 512) })
+      })
+    }))
+
     return (
       <div>
         {
@@ -148,22 +182,38 @@ class ManageDisk extends React.Component {
               <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
               <div style={{ height: 10 }} />
               <div style={{ height: 30, margin: '0 auto', width: 280, display: 'flex', color: '#888a8c', alignItems: 'center' }} >
-                <div style={{ color: '#525a60' }}> { disk.pos } </div>
-                <div style={{ flexGrow: 1 }} />
-                <div style={{ width: 40 }}> { disk.model } </div>
-                <div style={{ width: 32 }}> { disk.size } </div>
-              </div>
-              <div style={{ height: 30, margin: '0 auto', width: 280, display: 'flex', color: '#888a8c', alignItems: 'center' }} >
                 <div style={{ color: '#525a60' }}> { i18n.__('Current Mode') } </div>
                 <div style={{ flexGrow: 1 }} />
                 <div> { disk.mode } </div>
               </div>
-              <div style={{ height: 10 }} />
-              { this.renderArrowTips(i18n.__('%s Fortmat Disk Text', disk.posAlt), true) }
+
+              <div style={{ height: 30, margin: '0 auto', width: 280, display: 'flex', color: '#888a8c', alignItems: 'center' }} >
+                <div style={{ color: '#525a60' }}> { i18n.__('Volume Size') } </div>
+                <div style={{ flexGrow: 1 }} />
+                <div> { disk.size } </div>
+              </div>
+
+              {
+                disk.devices.map((d, i) => (
+                  <div
+                    key={i.toString()}
+                    style={{ height: 30, margin: '0 auto', width: 280, display: 'flex', color: '#888a8c', alignItems: 'center' }}
+                  >
+                    <div style={{ color: '#525a60' }}> { !i ? i18n.__('Disk 1') : i18n.__('Disk 2') } </div>
+                    <div style={{ flexGrow: 1 }} />
+                    <div> { d.model } </div>
+                    <div style={{ width: 10 }} />
+                    <div> { d.size } </div>
+                  </div>
+                ))
+              }
+
+              <div style={{ height: 30 }} />
+              {/* this.renderArrowTips(i18n.__('%s Fortmat Disk Text', disk.posAlt), true) */}
               <div style={{ width: 240, height: 40, margin: '0 auto' }}>
                 <RRButton
                   label={i18n.__('Import')}
-                  onClick={this.format}
+                  onClick={disk.fire}
                 />
               </div>
               <div style={{ height: 30 }} />
@@ -181,7 +231,7 @@ class ManageDisk extends React.Component {
         <div style={{ width: 240, height: 40, margin: '0 auto' }}>
           <RRButton
             label={i18n.__('Create Volume')}
-            onClick={this.format}
+            onClick={this.enterCreate}
           />
         </div>
         <div style={{ height: 10 }} />
@@ -190,7 +240,7 @@ class ManageDisk extends React.Component {
           <RRButton
             alt
             label={i18n.__('Recover Volume')}
-            onClick={this.recover}
+            onClick={this.enterRecover}
           />
         </div>
         <div style={{ height: 30 }} />
@@ -200,22 +250,40 @@ class ManageDisk extends React.Component {
 
   render () {
     const { backToList, onFormatSuccess } = this.props
-    console.log('ManageDisk', this.props)
-    // const init = dev.address !== '10.10.9.157'
-    const init = true
-    const recover = !!this.state.recover
-    const imgSrc = init ? 'pic-finddisk.png' : 'pic-login.png'
+    console.log('ManageDisk props', this.props)
+    let [title, imgSrc, content] = ['', '', null]
+    switch (this.state.status) {
+      case 'init':
+        title = i18n.__('Discover Disk')
+        imgSrc = 'pic-finddisk.png'
+        content = this.renderInitFormat()
+        break
+
+      case 'select':
+        title = i18n.__('Create or Import Disk')
+        imgSrc = 'pic-login.png'
+        content = this.renderSelect()
+        break
+
+      case 'recover':
+        title = i18n.__('Recover Volume')
+        content = this.renderRecover()
+        break
+
+      default:
+        break
+    }
     return (
       <div className="paper" style={{ width: 320, zIndex: 100 }} >
         <div style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 5 }} className="title">
           <LIButton onClick={backToList} >
             <BackIcon />
           </LIButton>
-          { init ? i18n.__('Discover Disk') : recover ? i18n.__('Recover Volume') : i18n.__('Create or Import Disk') }
+          { title }
         </div>
         <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
         {
-          !recover &&
+          !!imgSrc &&
             <div style={{ height: 150, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 30 }}>
               <img
                 style={{ width: 280, height: 150 }}
@@ -225,7 +293,7 @@ class ManageDisk extends React.Component {
             </div>
         }
 
-        { init ? this.renderInitFormat() : recover ? this.renderRecover() : this.renderSelect() }
+        { content }
 
         <Dialog open={!!this.state.showGuide} onRequestClose={() => this.setState({ showGuide: false })}>
           {
@@ -237,10 +305,11 @@ class ManageDisk extends React.Component {
           }
         </Dialog>
 
-        <Dialog open={!!this.state.format} onRequestClose={() => this.setState({ format: '' })} modal >
+        <Dialog open={!!this.state.format} onRequestClose={() => this.setState({ format: '' })} modal transparent >
           {
             !!this.state.format &&
             <DiskFormating
+              type={this.state.status}
               error={this.state.error}
               status={this.state.format}
               onSuccess={onFormatSuccess}

@@ -946,7 +946,7 @@
   "Bind Device Success Text": "该设备绑定成功",
   "Bind Device WIP Label": "等待绑定",
   "Bind Device WIP Text": "当NAS设备电源灯闪烁，请短按电源键确认需要绑定的设备",
-  "Need Bind Volume": "待建立磁盘卷",
+  "Need Bind Volume": "无可用磁盘卷",
   "User Not Exist": "用户不存在",
   "Wait To Bind": "待绑定",
   "MDNS Search Error": "搜索设备失败",
