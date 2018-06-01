@@ -1,7 +1,7 @@
 import i18n from 'i18n'
 import React from 'react'
-import { TextField, Popover, MenuItem } from 'material-ui'
-import { RRButton } from '../common/Buttons'
+import { Popover, MenuItem } from 'material-ui'
+import { RRButton, TextField } from '../common/Buttons'
 import { ArrowIcon, DropDownIcon } from '../common/Svg'
 
 class NetworkInfo extends React.Component {
@@ -135,7 +135,6 @@ class NetworkInfo extends React.Component {
             <TextField
               style={{ width: 320 }}
               disabled={this.state.mode !== 'manu'}
-              underlineDisabledStyle={{ borderBottom: '1px solid #eaeaea' }}
               hintText={'0.0.0.0'}
             />
           </div>
@@ -149,7 +148,6 @@ class NetworkInfo extends React.Component {
             <TextField
               style={{ width: 320 }}
               disabled={this.state.mode !== 'manu'}
-              underlineDisabledStyle={{ borderBottom: '1px solid #eaeaea' }}
               hintText={'0.0.0.0'}
             />
           </div>

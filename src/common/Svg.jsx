@@ -174,6 +174,8 @@ export const SearchIcon = f('icon_search')
 
 export const DelPwdIcon = f('icon_del_password')
 
+export const SmallErrorIcon = f('icon_information')
+
 export const EyeOpenIcon = f('icon_eye_list')
 
 export const EyeOffIcon = f('icon_password_invisi')

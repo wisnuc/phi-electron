@@ -3,13 +3,15 @@ import React from 'react'
 import { Divider } from 'material-ui'
 
 import PhiLogin from './PhiLogin'
+import LANLogin from './LANLogin'
+import SetLANPwd from './SetLANPwd'
 import ManageDisk from './ManageDisk'
 import SelectDevice from './SelectDevice'
-import SetLANPwd from './SetLANPwd'
 
-import { RRButton } from '../common/Buttons'
-import WindowAction from '../common/WindowAction'
 import reqMdns from '../common/mdns'
+import { BackIcon } from '../common/Svg'
+import WindowAction from '../common/WindowAction'
+import { RRButton, LIButton } from '../common/Buttons'
 
 const duration = 300
 
@@ -36,12 +38,20 @@ class Login extends React.Component {
         .catch(this.onMDNSError)
     }
 
-    this.enterLANLogin = () => {
+    this.enterLANLoginList = () => {
       this.props.phiLogin({ lan: true, name: i18n.__('Account Offline') })
       this.setState({ list: [], loading: true, type: 'LANTOLOGIN', status: 'deviceSelect' })
       reqMdns()
         .then(mdns => this.setState({ loading: false, list: mdns }))
         .catch(this.onMDNSError)
+    }
+
+    this.openLANLogin = (dev) => {
+      this.setState({ selectedDevice: dev, status: 'LANLogin' })
+    }
+
+    this.backToLANList = () => {
+      this.setState({ selectedDevice: null, status: 'deviceSelect', type: 'LANTOLOGIN' }, () => this.refresh())
     }
 
     this.refreshStationList = () => {
@@ -64,7 +74,7 @@ class Login extends React.Component {
     this.refresh = () => {
       switch (this.state.type) {
         case 'LANTOLOGIN':
-          this.enterLANLogin()
+          this.enterLANLoginList()
           break
 
         case 'LANTOBIND':
@@ -83,8 +93,10 @@ class Login extends React.Component {
     this.manageDisk = (dev) => {
       console.log('this.manageDisk dev', dev, this.state)
       this.setState({ loading: true })
+      const isAdmin = dev.mdev && dev.mdev.type === 'owner'
       dev.refreshSystemState(() => {
-        if (dev.systemStatus() === 'noBoundVolume') this.setState({ selectedDevice: dev, status: 'diskManage' })
+        if (dev.systemStatus() === 'noBoundVolume' && isAdmin) this.setState({ selectedDevice: dev, status: 'diskManage' })
+        else if (dev.systemStatus() === 'noBoundVolume' && !isAdmin) this.setState({ status: 'diskError' })
         else this.setState({ type: 'BOUNDLIST' }, () => this.refresh())
       })
     }
@@ -138,6 +150,7 @@ class Login extends React.Component {
           manageDisk={this.manageDisk}
           addBindDevice={this.addBindDevice}
           refreshStationList={this.refreshStationList}
+          openLANLogin={this.openLANLogin}
         />
       </div>
     )
@@ -156,6 +169,16 @@ class Login extends React.Component {
 
   renderLANPwd () {
     return (<SetLANPwd {...this.props} {...this.state} onSuccess={this.onSetLANPwdSuccess} dev={this.state.selectedDevice} />)
+  }
+
+  renderLANLogin () {
+    return (
+      <LANLogin
+        {...this.props}
+        dev={this.state.selectedDevice}
+        onRequestClose={this.backToLANList}
+      />
+    )
   }
 
   renderNoBound () {
@@ -187,6 +210,33 @@ class Login extends React.Component {
     )
   }
 
+  renderDiskError () {
+    return (
+      <div
+        className="paper"
+        style={{ width: 320, overflow: 'hidden', zIndex: 200, position: 'relative' }}
+      >
+        <div style={{ height: 60, display: 'flex', alignItems: 'center', paddingLeft: 5 }} className="title">
+          <LIButton onClick={this.backToList} >
+            <BackIcon />
+          </LIButton>
+          { i18n.__('Disk Changed Title') }
+        </div>
+        <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
+        <div style={{ height: 150, width: 280, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <img
+            style={{ width: 280, height: 150 }}
+            src="./assets/images/pic-diskchange.png"
+            alt=""
+          />
+        </div>
+        <div style={{ color: '#fa5353', height: 40, margin: '20px 0 30px 0' }} className="flexCenter">
+          { i18n.__('Disk Error for Normal User') }
+        </div>
+      </div>
+    )
+  }
+
   render () {
     console.log('Login', this.props, this.state)
     const props = this.props
@@ -194,7 +244,7 @@ class Login extends React.Component {
 
     switch (this.state.status) {
       case 'phiLogin':
-        view = <PhiLogin {...props} onSuccess={this.phiLoginSuccess} enterLANLogin={this.enterLANLogin} />
+        view = (<PhiLogin {...props} onSuccess={this.phiLoginSuccess} enterLANLoginList={this.enterLANLoginList} />)
         break
 
       case 'phiNoBound':
@@ -211,6 +261,14 @@ class Login extends React.Component {
 
       case 'LANPwd':
         view = this.renderLANPwd()
+        break
+
+      case 'diskError':
+        view = this.renderDiskError()
+        break
+
+      case 'LANLogin':
+        view = this.renderLANLogin()
         break
 
       default:

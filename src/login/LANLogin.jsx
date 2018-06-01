@@ -1,9 +1,9 @@
 import i18n from 'i18n'
 import React from 'react'
-import { Divider, TextField } from 'material-ui'
+import { Divider } from 'material-ui'
 import { BackIcon, EyeOpenIcon, EyeOffIcon, DelPwdIcon } from '../common/Svg'
 
-import { RRButton, LIButton, TFButton } from '../common/Buttons'
+import { RRButton, LIButton, TFButton, TextField } from '../common/Buttons'
 
 class LANLogin extends React.Component {
   constructor (props) {
@@ -61,6 +61,15 @@ class LANLogin extends React.Component {
     }
   }
 
+  getStationName () {
+    if (!this.props.dev) return 'N2'
+    const { boot, mdev } = this.props.dev
+    if (mdev && mdev.stationName) return mdev.stationName
+    const mac = boot && boot.data && boot.data.device && boot.data.device.net && boot.data.device.net.mac
+    if (mac) return `N2-${mac.slice(-2)}`
+    return 'N2'
+  }
+
   render () {
     console.log('LANLogin', this.props, this.state)
     return (
@@ -69,33 +78,29 @@ class LANLogin extends React.Component {
           <LIButton onClick={this.props.onRequestClose} >
             <BackIcon />
           </LIButton>
-          { i18n.__('LAN Login') }
+          { this.getStationName() }
         </div>
-        <Divider style={{ marginLeft: 20, width: 280 }} />
-        <div style={{ height: 30 }} />
-        <div style={{ height: 120, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
+        <div style={{ height: 150, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <img
-            style={{ width: 220, height: 116 }}
-            src="./assets/images/pic-login.png"
+            style={{ width: 280, height: 150 }}
+            src="./assets/images/pic-login-offline.png"
             alt=""
           />
         </div>
-        <div style={{ width: 280, margin: '0 auto', position: 'relative' }}>
+        <div style={{ height: 20, marginTop: 10, fontSize: 12, color: '#85868c' }} className="flexCenter">
+          { i18n.__('LAN Login Text') }
+        </div>
+        <div style={{ width: 280, margin: '-10px auto 0px auto', position: 'relative' }}>
           <TextField
-            fullWidth
-            style={{ marginTop: 22 }}
             hintText={i18n.__('Username Hint')}
-            errorStyle={{ position: 'absolute', left: 0, top: -8, height: 18 }}
             type="text"
             errorText={this.state.pnError}
             value={this.state.pn}
             onChange={e => this.onPhoneNumber(e.target.value)}
           />
           <TextField
-            fullWidth
-            style={{ marginTop: 22 }}
             hintText={i18n.__('Password Hint')}
-            errorStyle={{ position: 'absolute', left: 0, top: -8, height: 18 }}
             type={this.state.showPwd ? 'text' : 'password'}
             errorText={this.state.pwdError}
             value={this.state.pwd}
@@ -104,16 +109,19 @@ class LANLogin extends React.Component {
           />
 
           {/* clear password */}
-          <div style={{ position: 'absolute', right: 4, top: 30 }}>
-            <TFButton icon={DelPwdIcon} onClick={this.clearPn} />
-          </div>
+          {
+            !!this.state.pn &&
+              <div style={{ position: 'absolute', right: 0, top: 35 }}>
+                <TFButton icon={DelPwdIcon} onClick={this.clearPn} />
+              </div>
+          }
 
           {/* password visibility */}
-          <div style={{ position: 'absolute', right: 4, top: 100 }}>
+          <div style={{ position: 'absolute', right: 0, top: 105 }}>
             <TFButton icon={this.state.showPwd ? EyeOpenIcon : EyeOffIcon} onClick={this.togglePwd} />
           </div>
         </div>
-        <div style={{ height: 20 }} />
+        <div style={{ height: 30 }} />
         <div style={{ width: 240, height: 40, margin: '0 auto' }}>
           <RRButton
             label={this.state.loading ? i18n.__('Logging') : i18n.__('Login')}

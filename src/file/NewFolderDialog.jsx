@@ -1,8 +1,8 @@
 import React from 'react'
 import i18n from 'i18n'
-import { TextField, Divider } from 'material-ui'
+import { Divider } from 'material-ui'
 import sanitize from 'sanitize-filename'
-import { RSButton } from '../common/Buttons'
+import { RSButton, TextField } from '../common/Buttons'
 
 class NewFolderDialog extends React.PureComponent {
   constructor (props) {
@@ -60,12 +60,9 @@ class NewFolderDialog extends React.PureComponent {
         <Divider style={{ width: 280 }} className="divider" />
         <div style={{ height: 60 }}>
           <TextField
-            fullWidth
-            ref={input => input && input.focus()}
+            autoFoucus
             hintText={i18n.__('Mkdir Hint')}
-            style={{ marginTop: 22, color: '#505259' }}
             errorText={this.state.errorText}
-            errorStyle={{ position: 'absolute', left: 0, top: -8, height: 18 }}
             value={this.state.value}
             onKeyDown={this.onKeyDown}
             onChange={e => this.handleChange(e.target.value)}

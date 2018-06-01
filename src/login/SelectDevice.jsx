@@ -4,7 +4,6 @@ import { Divider } from 'material-ui'
 import { AutoSizer } from 'react-virtualized'
 
 import Device from './Device'
-import LANLogin from './LANLogin'
 import CloudLogin from './CloudLogin'
 import ConfirmBind from './ConfirmBind'
 import ConnectionHint from './ConnectionHint'
@@ -46,7 +45,7 @@ class DeviceSelect extends React.Component {
       } else if (this.props.type === 'BOUNDLIST' && dev.systemStatus() === 'noBoundVolume') {
         this.bindVolume(dev)
       } else if (this.props.type === 'LANTOLOGIN') {
-        this.setState({ dev, LANLogin: dev })
+        this.props.openLANLogin(dev)
       } else if (this.props.type === 'LANTOBIND') {
         this.setState({ dev, confirm: true })
       } else if (this.props.type === 'CHANGEDEVICE') {
@@ -243,18 +242,6 @@ class DeviceSelect extends React.Component {
         {/* Device boot failed, due to disk changed */}
         <Dialog open={!!this.state.UserMaint} onRequestClose={() => this.setState({ UserMaint: null })} modal >
           { !!this.state.UserMaint && this.renderUserMaint() }
-        </Dialog>
-
-        {/* LANLogin */}
-        <Dialog open={!!this.state.LANLogin} onRequestClose={() => this.setState({ LANLogin: null })} modal >
-          {
-            !!this.state.LANLogin &&
-              <LANLogin
-                {...this.props}
-                dev={this.state.LANLogin}
-                onRequestClose={() => this.setState({ LANLogin: null })}
-              />
-          }
         </Dialog>
 
         {/* CloudLogin */}

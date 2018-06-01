@@ -34,6 +34,7 @@ class AddDrive extends Button {
           border: `1px solid ${borderColor}`
         }}
         {...this.funcs}
+        onContextMenu={(e) => { e.preventDefault(); e.stopPropagation() }}
       >
         {/* preview or icon */}
         <div

@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react'
 import i18n from 'i18n'
-import { TextField, Divider } from 'material-ui'
+import { Divider } from 'material-ui'
 import sanitize from 'sanitize-filename'
-import { Checkbox, RSButton } from '../common/Buttons'
+import { Checkbox, RSButton, TextField } from '../common/Buttons'
 
 class NewDriveDialog extends PureComponent {
   constructor (props) {
@@ -10,7 +10,6 @@ class NewDriveDialog extends PureComponent {
 
     this.state = {
       loading: false,
-      focusOnce: true,
       label: '',
       writelist: (this.props.drive && this.props.drive.writelist) || [],
       errorText: ''
@@ -113,20 +112,12 @@ class NewDriveDialog extends PureComponent {
           { this.state.errorText || i18n.__('Public Drive Name') }
         </div>
 
-        <div style={{ height: 40 }}>
+        <div style={{ marginTop: -30 }}>
           <TextField
-            fullWidth
-            name="shareDiskName"
+            autoFocus
             value={this.state.label}
             onChange={e => this.updateLabel(e.target.value)}
-            style={{ color: '#525a60', fontSize: 14 }}
             hintText={i18n.__('Public Drive Name Hint')}
-            ref={(input) => {
-              if (input && this.state.focusOnce) {
-                input.focus()
-                this.setState({ focusOnce: false })
-              }
-            }}
           />
         </div>
 

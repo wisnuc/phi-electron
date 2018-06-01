@@ -24,7 +24,7 @@ class ConfirmBind extends React.PureComponent {
             (res.error && res.error !== '0') ||
             ['error-timeout', 'error-station_offline', 'error-station_error'].includes(res.result && res.result.status)
           )) {
-            this.setState({ error: 'bind error' })
+            this.setState({ error: 'bind error', status: 'failed' })
           } else setTimeout(() => this.getBindState(deviceSN), 1000)
         }
       })
@@ -68,7 +68,7 @@ class ConfirmBind extends React.PureComponent {
         func = () => this.props.onSuccess()
         break
       case 'failed':
-        img = 'pic-confirmfail.png'
+        img = 'pic-confirmfailed.png'
         text = i18n.__('Bind Device Failed Text')
         label = i18n.__('Bind Device Failed Label')
         func = () => this.props.onFailed()

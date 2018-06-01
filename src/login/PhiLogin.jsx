@@ -2,11 +2,11 @@ import md5 from 'md5'
 import React from 'react'
 import i18n from 'i18n'
 import { shell } from 'electron'
-import { Checkbox, Divider, TextField } from 'material-ui'
+import { Divider } from 'material-ui'
 import Dialog from '../common/PureDialog'
-import { RRButton, FLButton, RSButton, TFButton } from '../common/Buttons'
 import { isPhoneNumber } from '../common/validate'
 import { EyeOpenIcon, EyeOffIcon, DelPwdIcon } from '../common/Svg'
+import { RRButton, FLButton, RSButton, TFButton, Checkbox, TextField } from '../common/Buttons'
 
 const phicommUrl = 'https://sohon2test.phicomm.com/v1'
 let firstLogin = true
@@ -140,7 +140,7 @@ class PhiLogin extends React.Component {
           <div style={{ flexGrow: 1 }} />
           <RSButton label={i18n.__('Cancel')} onClick={this.reset} alt />
           <div style={{ width: 10 }} />
-          <RSButton label={i18n.__('OK')} onClick={this.props.enterLANLogin} />
+          <RSButton label={i18n.__('OK')} onClick={this.props.enterLANLoginList} />
         </div>
       </div>
     )
@@ -152,7 +152,7 @@ class PhiLogin extends React.Component {
         <div style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 20 }} className="title">
           { i18n.__('Login') }
         </div>
-        <Divider style={{ marginLeft: 20, width: 280 }} />
+        <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
         <div style={{ height: 150, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <img
             style={{ width: 280, height: 150 }}
@@ -162,13 +162,11 @@ class PhiLogin extends React.Component {
         </div>
         <div style={{ width: 280, margin: '0 auto', position: 'relative' }}>
           <TextField
-            fullWidth
-            style={{ marginTop: 22, color: '#505259' }}
             hintText={i18n.__('Phone Number Hint')}
-            errorStyle={{ position: 'absolute', left: 0, top: -8, height: 18 }}
             type="text"
             errorText={this.state.pnError}
             value={this.state.pn}
+            maxLength={11}
             onChange={e => this.onPhoneNumber(e.target.value)}
           />
           {
@@ -176,19 +174,13 @@ class PhiLogin extends React.Component {
               ? (
                 <TextField
                   value=""
-                  fullWidth
                   hintText="*********"
-                  style={{ marginTop: 22 }}
                   onClick={() => this.setState({ showFakePwd: false })}
                   errorText={this.state.pwdError}
-                  errorStyle={{ position: 'absolute', left: 0, top: -8, height: 18 }}
                 />
               ) : (
                 <TextField
-                  fullWidth
-                  style={{ marginTop: 22 }}
                   hintText={i18n.__('Password Hint')}
-                  errorStyle={{ position: 'absolute', left: 0, top: -8, height: 18 }}
                   type={this.state.showPwd ? 'text' : 'password'}
                   errorText={this.state.pwdError}
                   value={this.state.pwd}
@@ -201,14 +193,14 @@ class PhiLogin extends React.Component {
           {/* clear password */}
           {
             !!this.state.pn && (
-              <div style={{ position: 'absolute', right: 4, top: 32 }}>
+              <div style={{ position: 'absolute', right: 0, top: 35 }}>
                 <TFButton icon={DelPwdIcon} onClick={this.clearPn} />
               </div>
             )
           }
 
           {/* password visibility */}
-          <div style={{ position: 'absolute', right: 4, top: 102 }}>
+          <div style={{ position: 'absolute', right: 0, top: 105 }}>
             <TFButton icon={this.state.showPwd ? EyeOpenIcon : EyeOffIcon} onClick={this.togglePwd} />
           </div>
         </div>

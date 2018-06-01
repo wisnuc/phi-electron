@@ -1,9 +1,9 @@
 import i18n from 'i18n'
 import React from 'react'
-import { Divider, TextField } from 'material-ui'
+import { Divider } from 'material-ui'
 
-import { EyeOpenIcon } from '../common/Svg'
-import { RRButton, Toggle, TFButton } from '../common/Buttons'
+import { EyeOpenIcon, EyeOffIcon } from '../common/Svg'
+import { RRButton, Toggle, TFButton, TextField } from '../common/Buttons'
 
 class SleepMode extends React.Component {
   constructor (props) {
@@ -45,16 +45,13 @@ class SleepMode extends React.Component {
   renderPassword () {
     return (
       <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center', filter: 'grayscale(10%)' }}>
-        <div style={{ width: 150, textAlign: 'right', color: '#525a60' }}>
+        <div style={{ width: 130, textAlign: 'right', color: '#525a60' }}>
           { i18n.__('Password') }
         </div>
         <div style={{ width: 30 }} />
-        <div style={{ width: 320, position: 'relative' }}>
+        <div style={{ width: 320, marginTop: -30, position: 'relative' }}>
           <TextField
-            fullWidth
-            style={{ marginTop: 5 }}
             hintText={i18n.__('Samba Password Hint')}
-            errorStyle={{ position: 'absolute', left: 0, top: -8, height: 18 }}
             type={this.state.showPwd ? 'text' : 'password'}
             errorText={this.state.pwdError}
             value={this.state.pwd}
@@ -62,8 +59,8 @@ class SleepMode extends React.Component {
             onKeyDown={this.onKeyDown}
           />
           {/* show password */}
-          <div style={{ position: 'absolute', right: -5, top: 15 }}>
-            <TFButton icon={this.state.showPwd ? EyeOpenIcon : EyeOpenIcon} onClick={this.togglePwd} />
+          <div style={{ position: 'absolute', right: 0, top: 35 }}>
+            <TFButton icon={this.state.showPwd ? EyeOpenIcon : EyeOffIcon} onClick={this.togglePwd} />
           </div>
         </div>
       </div>

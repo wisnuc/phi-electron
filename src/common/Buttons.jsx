@@ -1,8 +1,8 @@
 import React from 'react'
-import { IconButton, Toggle as MToggle, Checkbox as MCheckbox } from 'material-ui'
+import { IconButton, Toggle as MToggle, Checkbox as MCheckbox, TextField as MTF } from 'material-ui'
 
 import Tooltip from '../common/Tooltip'
-import { CheckedIcon } from '../common/Svg'
+import { CheckedIcon, SmallErrorIcon } from '../common/Svg'
 
 class LoadingLabel extends React.PureComponent {
   constructor (props) {
@@ -415,6 +415,35 @@ export class Checkbox extends React.PureComponent {
         disableTouchRipple
         iconStyle={{ height: 18, width: 18, marginTop: 2, fill: checked ? '#31a0f5' : 'rgba(0,0,0,.25)' }}
         labelStyle={{ fontSize: 14, color: alt ? '#525a60' : '#85868c', marginLeft: -9 }}
+      />
+    )
+  }
+}
+
+export class TextField extends React.PureComponent {
+  render () {
+    const props = Object.assign({}, this.props)
+    if (this.props.errorText) {
+      props.errorText = (
+        <div style={{ display: 'flex', alignItems: 'center' }} >
+          <SmallErrorIcon style={{ color: '#fa5353' }} />
+          <div style={{ marginTop: -2, marginLeft: -2 }}> { this.props.errorText } </div>
+        </div>
+      )
+    }
+
+    delete props.autoFoucus
+    return (
+      <MTF
+        fullWidth
+        ref={input => input && this.props.autoFoucus && input.focus()}
+        style={{ marginTop: 32, marginBottom: -10 }}
+        hintStyle={{ color: '#c4c5cc', fontSize: 14, marginBottom: 5 }}
+        inputStyle={{ color: '#505259', fontSize: 14, marginTop: -5 }}
+        errorStyle={{ position: 'absolute', left: -9, bottom: 45 }}
+        underlineStyle={{ backgroundColor: '#eaeaea' }}
+        underlineDisabledStyle={{ borderBottom: '1px solid #eaeaea' }}
+        {...props}
       />
     )
   }

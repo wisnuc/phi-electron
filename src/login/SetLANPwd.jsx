@@ -1,9 +1,9 @@
 import i18n from 'i18n'
 import React from 'react'
-import { Divider, TextField } from 'material-ui'
+import { Divider } from 'material-ui'
 import { EyeOpenIcon, EyeOffIcon } from '../common/Svg'
 
-import { RRButton, TFButton } from '../common/Buttons'
+import { RRButton, TFButton, TextField } from '../common/Buttons'
 
 class SetLANPwd extends React.Component {
   constructor (props) {
@@ -70,12 +70,9 @@ class SetLANPwd extends React.Component {
             alt=""
           />
         </div>
-        <div style={{ width: 282, margin: '-20px auto 0px auto', position: 'relative' }}>
+        <div style={{ width: 280, margin: '-10px auto 0px auto', position: 'relative' }}>
           <TextField
-            fullWidth
-            style={{ marginTop: 12 }}
             hintText={i18n.__('LAN Password Hint')}
-            errorStyle={{ position: 'absolute', left: 0, top: -8, height: 18 }}
             type={this.state.showPwd ? 'text' : 'password'}
             errorText={this.state.pwdError}
             value={this.state.pwd}
@@ -83,7 +80,7 @@ class SetLANPwd extends React.Component {
             onKeyDown={this.onKeyDown}
           />
           {/* clear password */}
-          <div style={{ position: 'absolute', right: 4, top: 20 }}>
+          <div style={{ position: 'absolute', right: 0, top: 35 }}>
             <TFButton icon={this.state.showPwd ? EyeOpenIcon : EyeOffIcon} onClick={this.togglePwd} />
           </div>
         </div>

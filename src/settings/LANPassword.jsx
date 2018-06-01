@@ -1,9 +1,8 @@
 import i18n from 'i18n'
 import React from 'react'
-import { TextField } from 'material-ui'
 
 import { EyeOpenIcon, EyeOffIcon } from '../common/Svg'
-import { RRButton, TFButton } from '../common/Buttons'
+import { RRButton, TFButton, TextField } from '../common/Buttons'
 
 class LANPassword extends React.Component {
   constructor (props) {
@@ -40,16 +39,13 @@ class LANPassword extends React.Component {
   renderPassword () {
     return (
       <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center' }}>
-        <div style={{ width: 150, textAlign: 'right', color: '#525a60' }}>
+        <div style={{ width: 130, textAlign: 'right', color: '#525a60' }}>
           { i18n.__('Password') }
         </div>
         <div style={{ width: 30 }} />
-        <div style={{ width: 320, position: 'relative' }}>
+        <div style={{ width: 320, marginTop: -30, position: 'relative' }}>
           <TextField
-            fullWidth
-            style={{ marginTop: 5 }}
             hintText={i18n.__('LAN Password Hint')}
-            errorStyle={{ position: 'absolute', left: 0, top: -8, height: 18 }}
             type={this.state.showPwd ? 'text' : 'password'}
             errorText={this.state.pwdError}
             value={this.state.pwd}
@@ -58,7 +54,7 @@ class LANPassword extends React.Component {
             disabled={this.state.loading}
           />
           {/* show password */}
-          <div style={{ position: 'absolute', right: -5, top: 15 }}>
+          <div style={{ position: 'absolute', right: 0, top: 35 }}>
             <TFButton icon={this.state.showPwd ? EyeOpenIcon : EyeOffIcon} onClick={this.togglePwd} />
           </div>
         </div>

@@ -1,9 +1,9 @@
 import i18n from 'i18n'
 import React from 'react'
-import { Divider, TextField } from 'material-ui'
+import { Divider } from 'material-ui'
 import Dialog from '../common/PureDialog'
 import { CloseIcon, BackIcon } from '../common/Svg'
-import { RSButton, LIButton, Checkbox } from '../common/Buttons'
+import { RSButton, LIButton, Checkbox, TextField } from '../common/Buttons'
 import CircularLoading from '../common/CircularLoading'
 import { isPhoneNumber } from '../common/validate'
 
@@ -188,12 +188,11 @@ class AdminUsersApp extends React.Component {
         >
           { this.state.nickNameError || i18n.__('Nick Name') }
         </div>
-        <div style={{ height: 40 }}>
+        <div style={{ marginTop: -30 }}>
           <TextField
-            fullWidth
             value={this.state.nickName}
+            maxLength={20}
             onChange={e => this.updateNickName(e.target.value)}
-            style={{ color: '#525a60', fontSize: 14 }}
             hintText={i18n.__('Add User Nick Name Hint')}
             disabled={this.state.invited}
           />
@@ -210,13 +209,11 @@ class AdminUsersApp extends React.Component {
         >
           { this.state.pnError || i18n.__('Phone Number') }
         </div>
-        <div style={{ height: 40 }}>
+        <div style={{ marginTop: -30 }}>
           <TextField
-            fullWidth
             value={this.state.pn}
             maxLength={11}
             onChange={e => this.updatePn(e.target.value)}
-            style={{ color: '#525a60', fontSize: 14 }}
             hintText={i18n.__('Add User Phone Number Hint')}
             disabled={this.state.invited}
           />
