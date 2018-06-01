@@ -15,7 +15,6 @@ class AddDrive extends Button {
   render () {
     const { item } = this.props
     const { entry } = item
-    console.log('AddDrive', this.props, this.state)
 
     const backgroundColor = this.state.pressed ? '#f4fafe' : this.state.hover ? '#f9fcfe' : '#FFF'
     const borderColor = this.state.pressed ? '#a3d3f8' : this.state.hover ? '#d1e9fb' : '#FFF'

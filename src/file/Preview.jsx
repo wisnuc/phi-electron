@@ -209,7 +209,7 @@ class Preview extends React.Component {
       >
         { this.renderDocHeader(this.props.item) }
         <Divider style={{ marginLeft: 20, width: 'calc(100% - 40px)', marginBottom: 20 }} className="divider" />
-        <div style={{ height: 'calc(100% - 80px)', width: '100%' }}>
+        <div style={{ height: 'calc(100% - 80px)', width: '100%' }} className="flexCenter">
           { type === 'pdf' ? this.renderPDF() : this.renderRawText() }
         </div>
       </div>
@@ -244,8 +244,9 @@ class Preview extends React.Component {
   renderPDF () {
     return (
       <div
-        style={{ height: '100%', width: '100%', overflowY: 'auto', overflowX: 'hidden' }}
+        className="flexCenter"
         onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
+        style={{ height: '100%', width: '100%', overflowY: 'auto', overflowX: 'hidden' }}
       >
         <PDFView
           filePath={this.state.filePath}
