@@ -89,7 +89,8 @@ class PhiLogin extends React.Component {
       Object.assign(this.props.phi, { token: this.phi.token })
       this.props.phi.req('stationList', null, (e, r) => {
         if (e || !r.result || !Array.isArray(r.result.list) || r.error !== '0') {
-          this.setState({ failed: true, loading: false })
+          if (r && r.error === '5') this.setState({ showFakePwd: false, pwdError: i18n.__('Token Expired'), loading: false })
+          else this.setState({ failed: true, loading: false })
         } else {
           const phi = {
             pn: this.state.pn,
@@ -173,15 +174,15 @@ class PhiLogin extends React.Component {
             this.state.showFakePwd
               ? (
                 <TextField
-                  value=""
-                  hintText="*********"
+                  type="password"
+                  value="**********"
                   onClick={() => this.setState({ showFakePwd: false })}
                   errorText={this.state.pwdError}
                 />
               ) : (
                 <TextField
-                  hintText={i18n.__('Password Hint')}
                   type={this.state.showPwd ? 'text' : 'password'}
+                  hintText={i18n.__('Password Hint')}
                   errorText={this.state.pwdError}
                   value={this.state.pwd}
                   onChange={e => this.onPassword(e.target.value)}
@@ -200,9 +201,13 @@ class PhiLogin extends React.Component {
           }
 
           {/* password visibility */}
-          <div style={{ position: 'absolute', right: 0, top: 105 }}>
-            <TFButton icon={this.state.showPwd ? EyeOpenIcon : EyeOffIcon} onClick={this.togglePwd} />
-          </div>
+          {
+            !this.state.showFakePwd && (
+              <div style={{ position: 'absolute', right: 0, top: 105 }}>
+                <TFButton icon={this.state.showPwd ? EyeOpenIcon : EyeOffIcon} onClick={this.togglePwd} />
+              </div>
+            )
+          }
         </div>
         <div style={{ display: 'flex', width: 280, height: 40, alignItems: 'center', margin: '0 auto' }}>
           <Checkbox

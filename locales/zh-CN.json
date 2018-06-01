@@ -70,7 +70,7 @@
   "Initialize": "初始化",
   "Error: No User": "系统错误：未发现用户",
   "Probing": "通讯中...",
-	"Booting": "设备启动中...",
+  "Booting": "设备启动中...",
   "Error: System Error": "系统错误：无法与该设备通讯",
   "Error: Fruitmix Error": "应用错误：无法启动WISNUC应用",
   "User Maintenance Text": "用户指定进入维护模式",
@@ -234,7 +234,7 @@
   "WeChat Reset Password Failed Text": "微信认证失败！",
 
   "==== control/Users.jsx ====": "",
-	"Confirm Invitation Title": "邀请确认",
+  "Confirm Invitation Title": "邀请确认",
   "%s Confirm Invitation Text": "“%s”设备的管理员邀请您成为该设备用户，请确认是否接受邀请。",
   "Accept": "接受",
   "Reject": "拒绝",
@@ -617,7 +617,7 @@
   "==== view/Device.jsx ====": "",
   "Device Menu Name": "设备信息",
   "Device Description": "NAS设备信息详情",
-	"Need Check Invitation": "需要确认邀请",
+  "Need Check Invitation": "需要确认邀请",
 
   "==== view/DiskInfo.jsx ====": "",
   "Disk Menu Name": "磁盘信息",
@@ -701,12 +701,12 @@
   "Confirm Unbind Title": "解绑及恢复",
 
   "==== view/CacheClean.jsx ====": "",
-	"CacheClean Description": "清理客户端缓存",
-	"CacheClean Menu Name": "缓存清理",
-	"Clean Cache Menu Name": "清理",
-	"Clean Cache Text %s": "当前有%s缓存文件，清除缓存，提高设备性能，优化空间",
-	"Confirm Clean Cache Text": "所有缓存的照片原图、缩略图、下载文件都将被删除。",
-	"Confirm Clean Cache Title": "缓存清理",
+  "CacheClean Description": "清理客户端缓存",
+  "CacheClean Menu Name": "缓存清理",
+  "Clean Cache Menu Name": "清理",
+  "Clean Cache Text %s": "当前有%s缓存文件，清除缓存，提高设备性能，优化空间",
+  "Confirm Clean Cache Text": "所有缓存的照片原图、缩略图、下载文件都将被删除。",
+  "Confirm Clean Cache Title": "缓存清理",
 
   "==== file/ErrorDialogInTrans.jsx ====": "",
   "EEXIST": "文件命名冲突",
@@ -904,6 +904,7 @@
   "Log Out": "退出登录",
   "Login or Sign Up": "登录注册",
   "Invalid Phone Number": "请输入正确的手机号",
+  "Token Expired": "登录已过期",
   "Phone Number": "手机号",
   "Quit": "退出",
   "Sign Up": "注册帐号",
@@ -964,6 +965,7 @@
   "Remote Mode": "远程",
   "System Error": "系统错误",
   "Already Bound": "已绑定",
+  "LAN Login Text": "当前设备连接斐讯云失败，登录可本地管理",
 
   "==== login/CloudLogin.jsx ====": "",
   "Cloud Logging Error Text": "登录失败",
@@ -988,7 +990,9 @@
   "Import": "导入",
   "Recover Volume": "导入磁盘",
   "Recover Volume Text": "导入磁盘，保留数据",
-	"Volume Size": "磁盘卷总大小",
+  "Volume Size": "磁盘卷总大小",
+  "Disk Changed Title": "发现磁盘变化",
+  "Disk Error for Normal User": "请联系管理员检查磁盘",
 
   "==== nav/Navigation.jsx ====": "",
   "Detail": "详情",
@@ -1000,8 +1004,8 @@
   "Confirm Logout To Bind Device Text": "需要先退出登录当前设备，才能绑定其它设备，确定继续吗？",
   "Confirm Logout To Bind Device Title": "登出设备确认",
   "Current Logged Device": "当前登录",
-	"Confirm Change Device Text": "切换设备会停止当前设备正在传输的任务，确定继续吗？",
-	"Confirm Change Device Title": "切换设备",
+  "Confirm Change Device Text": "切换设备会停止当前设备正在传输的任务，确定继续吗？",
+  "Confirm Change Device Title": "切换设备",
 
   "==== nav/FileMenu.jsx ====": "",
   "File Menu Title": "N2家庭"
