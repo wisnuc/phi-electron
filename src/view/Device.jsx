@@ -13,11 +13,16 @@ class Device extends Base {
       boot: null
     }
 
-    this.refresh = () => this.ctx.props.selectedDevice.request('boot')
+    this.refresh = () => {
+      this.ctx.props.selectedDevice.request('device')
+      this.ctx.props.selectedDevice.request('memory')
+      this.ctx.props.selectedDevice.request('cpus')
+      this.ctx.props.selectedDevice.request('network')
+    }
   }
 
   willReceiveProps (nextProps) {
-    this.handleProps(nextProps.selectedDevice, ['boot'])
+    this.handleProps(nextProps.selectedDevice, ['network', 'device', 'memory', 'cpus'])
   }
 
   navEnter () {

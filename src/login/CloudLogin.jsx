@@ -28,7 +28,7 @@ class CloudLogin extends React.PureComponent {
           /* onSuccess: auto login */
           Object.assign(dev, { token: { isFulfilled: () => true, ctx: user, data: { token } } })
           this.props.onRequestClose()
-          this.props.deviceLogin({ dev, user })
+          this.props.deviceLogin({ dev, user, selectedDevice: this.props.selectedDevice })
         })
         .catch((error) => {
           console.error('this.getLANToken', error)

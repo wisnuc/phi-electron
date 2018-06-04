@@ -43,18 +43,25 @@ class Fruitmix extends React.Component {
     if (user && user.phi) ipcRenderer.send('SETCONFIG', { phi: user.phi })
   }
 
-  deviceLogin ({ dev, user, token }) {
+  deviceLogin ({ dev, user, token, selectedDevice }) {
     if (this.state.selectedDevice) {
       ipcRenderer.send('LOGOUT')
       this.setState({ view: '', selectedDevice: null, jump: null }, () => this.deviceLogin({ dev, user, token }))
     } else {
       ipcRenderer.send('LOGIN', dev, user)
+      this.selectedDevice = selectedDevice
+      console.log('this.selectedDevice', this.selectedDevice)
+      this.selectedDevice.on('updated', (prev, next) => this.setState({ selectedDevice: next }))
       this.setState({ view: 'device', selectedDevice: dev, jump: null })
     }
   }
 
   deviceLogout () {
     ipcRenderer.send('LOGOUT')
+    if (this.selectedDevice) {
+      this.selectedDevice.removeAllListeners('updated')
+      this.selectedDevice = null
+    }
     this.setState({ view: 'login', selectedDevice: null, jump: { status: 'deviceSelect', type: 'BOUNDLIST' } })
   }
 

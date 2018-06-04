@@ -24,7 +24,8 @@ class DeviceSelect extends React.Component {
       dev: null,
       list: null,
       confirm: false,
-      invitation: false
+      invitation: false,
+      selectedDevice: null
     }
 
     this.bindVolume = (dev) => {
@@ -32,20 +33,20 @@ class DeviceSelect extends React.Component {
       this.props.manageDisk(dev)
     }
 
-    this.slDevice = (dev) => {
+    this.slDevice = (dev, selectedDevice) => {
       console.log('this.slDevice', dev)
       clearTimeout(this.timer)
       if (this.props.type === 'BOUNDLIST' && dev.systemStatus() === 'ready') {
         const { inviteStatus, accountStatus, type } = dev.mdev
         if (type === 'owner' || (type === 'service' && inviteStatus === 'accept' && accountStatus === '1')) {
-          this.setState({ dev, cloudLogin: dev }) // cloud login
+          this.setState({ dev, cloudLogin: dev, selectedDevice }) // cloud login
         } else if (inviteStatus === 'pending' && accountStatus === '1') {
           this.setState({ dev, invitation: dev }) // invitee confirm invitation
         }
       } else if (this.props.type === 'BOUNDLIST' && dev.systemStatus() === 'noBoundVolume') {
         this.bindVolume(dev)
       } else if (this.props.type === 'LANTOLOGIN') {
-        this.props.openLANLogin(dev)
+        this.props.openLANLogin(dev, selectedDevice)
       } else if (this.props.type === 'LANTOBIND') {
         this.setState({ dev, confirm: true })
       } else if (this.props.type === 'CHANGEDEVICE') {
@@ -250,6 +251,7 @@ class DeviceSelect extends React.Component {
             !!this.state.cloudLogin &&
               <CloudLogin
                 {...this.props}
+                selectedDevice={this.state.selectedDevice}
                 dev={this.state.cloudLogin}
                 onRequestClose={() => this.setState({ cloudLogin: null })}
               />

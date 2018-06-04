@@ -12,7 +12,11 @@ class Device extends React.Component {
 
     this.select = () => {
       console.log('this.select', this.state.dev)
-      this.props.slDevice(this.state.dev)
+      this.props.slDevice(this.state.dev, this.device)
+    }
+
+    this.onUpdate = (prev, next) => {
+      this.setState({ dev: next })
     }
   }
 
@@ -25,13 +29,17 @@ class Device extends React.Component {
         cdev
       )
       this.device = new DeviceAPI(dev)
-      this.device.on('updated', (prev, next) => this.setState({ dev: next }))
+      this.device.on('updated', this.onUpdate)
       this.device.start()
     } else if (mdev) {
       this.device = new DeviceAPI(mdev)
-      this.device.on('updated', (prev, next) => this.setState({ dev: next }))
+      this.device.on('updated', this.onUpdate)
       this.device.start()
     } else console.error('Device Error: No mdev or cdev')
+  }
+
+  componentWillUnmount () {
+    if (this.device) this.device.removeListener('updated', this.onUpdate)
   }
 
   systemStatus () {

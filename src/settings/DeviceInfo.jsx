@@ -1,10 +1,18 @@
 import React from 'react'
 import i18n from 'i18n'
-// import prettysize from 'prettysize'
+import prettysize from 'prettysize'
 import { TextField, Divider, IconButton } from 'material-ui'
 import DoneIcon from 'material-ui/svg-icons/action/done'
 import ModeEdit from 'material-ui/svg-icons/editor/mode-edit'
 import CircularLoading from '../common/CircularLoading'
+
+const cpuUsage = (cpu) => {
+  if (!cpu || !cpu.times) return 0
+  const { idle, irq, nice, sys, user } = cpu.times
+  return (1 - (idle / (idle + irq + nice + sys + user)))
+}
+
+const parseData = value => prettysize(parseInt(value, 10) * 1024)
 
 class DeviceInfo extends React.PureComponent {
   constructor (props) {
@@ -193,30 +201,29 @@ class DeviceInfo extends React.PureComponent {
 
   render () {
     console.log('device this.props', this.props)
-    if (!this.props.boot) return (<div />)
-    const { device } = this.props.boot
+    const { device, network, cpus, memory, address } = this.props
+
     if (!device) return (<div />)
 
-    const { cpus, deviceModel, hardwareVersion, memory, net, softwareVersion } = device
-    const memUsage = (memory && (1 - memory.free / memory.total)) || 0
-    const cpuUsage = (cpu) => {
-      if (!cpu || !cpu.times) return 0
-      const { idle, irq, nice, sys, user } = cpu.times
-      return (1 - idle / (idle + irq + nice + sys + user)) / 100
-    }
+    const { mode, swVersion, hwVersion } = device
+
+    const memUsage = (memory && (1 - parseInt(memory.memAvailable, 10) / parseInt(memory.memTotal, 10))) || 0
+
+    const NIC = network.find(card => card && card.ipAddresses && card.ipAddresses.length > 0) || {}
+    const mac = NIC.address
 
     const graphData = [
       { title: 'CPU1', model: cpus[0] && cpus[0].model, usage: cpuUsage(cpus[0]), color: '#31a0f5' },
       { title: 'CPU2', model: cpus[1] && cpus[1].model, usage: cpuUsage(cpus[1]), color: '#5fc315' },
-      { title: i18n.__('Memory'), model: '1GB DDR3 1600MHz', usage: memUsage, color: '#ffb400' }
+      { title: i18n.__('Memory'), model: parseData(memory && memory.memTotal), usage: memUsage, color: '#ffb400' }
     ]
 
     const listData = [
-      { title: i18n.__('Device Model'), value: deviceModel },
-      { title: i18n.__('Current IP'), value: net.address },
-      { title: i18n.__('Mac Address'), value: net.mac },
-      { title: i18n.__('Hardware Version'), value: hardwareVersion },
-      { title: i18n.__('Firmware Version'), value: softwareVersion }
+      { title: i18n.__('Device Model'), value: mode },
+      { title: i18n.__('Current IP'), value: address },
+      { title: i18n.__('Mac Address'), value: mac },
+      { title: i18n.__('Hardware Version'), value: hwVersion },
+      { title: i18n.__('Firmware Version'), value: swVersion }
     ]
 
     return (

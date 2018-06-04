@@ -57,6 +57,26 @@ class Device extends RequestManager {
           .get(`http://${this.mdev.address}:3000/boot`)
         break
 
+      case 'device':
+        r = request
+          .get(`http://${this.mdev.address}:3000/device`)
+        break
+
+      case 'cpus':
+        r = request
+          .get(`http://${this.mdev.address}:3000/device/cpuInfo`)
+        break
+
+      case 'network':
+        r = request
+          .get(`http://${this.mdev.address}:3000/device/net`)
+        break
+
+      case 'memory':
+        r = request
+          .get(`http://${this.mdev.address}:3000/device/memInfo`)
+        break
+
       case 'users':
         r = request
           .get(`http://${this.mdev.address}:3000/users`)
