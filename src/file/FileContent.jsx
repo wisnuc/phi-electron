@@ -50,7 +50,7 @@ class FileContent extends React.Component {
       e.preventDefault() // important, to prevent other event
       e.stopPropagation()
 
-      console.log('this.onRowClick', this.selectBox, index, this.props.select)
+      // console.log('this.onRowClick', this.selectBox, index, this.props.select)
       /* disabled in select box mode */
       if (this.selectBox) return
 
@@ -66,7 +66,7 @@ class FileContent extends React.Component {
       e.preventDefault() // important, to prevent other event
       e.stopPropagation()
 
-      console.log('this.onRowContextMenu', e, e.type, e.nativeEvent.button, this.selectBox)
+      // console.log('this.onRowContextMenu', e, e.type, e.nativeEvent.button, this.selectBox)
       this.props.select.touchTap(2, index)
       this.props.resetScrollTo()
 
@@ -119,7 +119,7 @@ class FileContent extends React.Component {
     this.selectBox = null
 
     this.selectStart = (event, scrollTop) => {
-      console.log('this.selectStart', event, scrollTop)
+      // console.log('this.selectStart', event, scrollTop)
       /* disabled in public root */
       if (this.props.inPublicRoot) return
 
@@ -144,7 +144,7 @@ class FileContent extends React.Component {
     }
 
     this.selectEnd = (event) => {
-      console.log('this.selectEnd', this.selectBox)
+      // console.log('this.selectEnd', this.selectBox)
       document.removeEventListener('mousemove', this.exSelect)
       document.removeEventListener('mouseup', this.selectEnd, true)
 

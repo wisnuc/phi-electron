@@ -529,7 +529,9 @@ class Home extends Base {
 
   navLeave () {
     this.isNavEnter = false
+    const select = this.select.reset(this.state.entries.length)
     this.setState({
+      select,
       contextMenuOpen: false,
       contextMenuY: -1,
       contextMenuX: -1,

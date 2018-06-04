@@ -127,8 +127,14 @@ class Login extends React.Component {
     if (this.props.jump) this.setState(this.props.jump, () => this.refresh())
   }
 
+  /* make sure log out phi account success */
   componentWillReceiveProps (nextProps) {
     if (!nextProps.account && this.state.status !== 'phiLogin') this.setState({ status: 'phiLogin' })
+  }
+
+  /* make sure log out phi account success */
+  componentDidUpdate () {
+    if (!this.props.account && this.state.status !== 'phiLogin') this.setState({ status: 'phiLogin' })
   }
 
   renderDeviceSelect (props) {

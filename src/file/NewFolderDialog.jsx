@@ -1,5 +1,5 @@
-import React from 'react'
 import i18n from 'i18n'
+import React from 'react'
 import { Divider } from 'material-ui'
 import sanitize from 'sanitize-filename'
 import { RSButton, TextField } from '../common/Buttons'
@@ -25,8 +25,7 @@ class NewFolderDialog extends React.PureComponent {
       }
     }
 
-    this.fire = () => {
-      this.setState({ loading: true })
+    this.mkdir = () => {
       const { apis, path } = this.props
       const curr = path[path.length - 1]
       const args = {
@@ -36,7 +35,7 @@ class NewFolderDialog extends React.PureComponent {
       }
       apis.request('mkdir', args, (err) => {
         if (err) {
-          console.log('mkdir error', err.code)
+          console.log('mkdir error', err, err.code)
           this.setState({ errorText: i18n.__('Mkdir Failed'), loading: false })
         } else {
           this.props.onRequestClose(true)
@@ -44,6 +43,32 @@ class NewFolderDialog extends React.PureComponent {
           this.props.refresh({ fileName: this.state.value })
         }
       })
+    }
+
+    this.mkPhyDir = () => {
+      const { apis, path } = this.props
+
+      const args = {
+        id: path[0].id,
+        path: path.map(p => p.data).filter(p => !!p).join('/'),
+        dirname: this.state.value
+      }
+      apis.request('mkPhyDir', args, (err) => {
+        if (err) {
+          console.log('mkdir error', err, err.code)
+          this.setState({ errorText: i18n.__('Mkdir Failed'), loading: false })
+        } else {
+          this.props.onRequestClose(true)
+          this.props.openSnackBar(i18n.__('Mkdir Success'))
+          this.props.refresh({ fileName: this.state.value })
+        }
+      })
+    }
+
+    this.fire = () => {
+      this.setState({ loading: true })
+      if (this.props.path[0].uuid) this.mkdir()
+      else this.mkPhyDir()
     }
 
     this.onKeyDown = (e) => {

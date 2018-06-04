@@ -1,5 +1,6 @@
 import i18n from 'i18n'
 import React from 'react'
+import { ipcRenderer } from 'electron'
 
 import Home from './Home'
 import sortByType from '../common/sort'
@@ -45,6 +46,24 @@ class USB extends Home {
 
       if (op) this.setState({ scrollTo: op.fileName || op.uuid, loading: !op.noloading }) // fileName for files, uuid for drives
       else this.setState({ loading: true })
+    }
+
+    /* file or dir operations */
+    this.upload = (type) => {
+      const dirPath = this.state.path
+      const dirUUID = dirPath[dirPath.length - 1].uuid
+      const driveUUID = dirPath[0].uuid
+      ipcRenderer.send('UPLOAD', { dirUUID, driveUUID, type })
+    }
+
+    this.download = () => {
+      let path = this.state.path.map(p => p.data).filter(p => !!p).join('/')
+      if (path) path = `${path}/`
+      const id = this.phyDrive.id
+      const selected = this.state.select.selected
+      const entries = selected.map(index => this.state.entries[index])
+      console.log('this.download', id, path, entries)
+      ipcRenderer.send('DOWNLOAD', { entries, dirUUID: path, driveUUID: id })
     }
   }
 

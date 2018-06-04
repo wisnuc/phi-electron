@@ -1,5 +1,6 @@
 import request from 'superagent'
 import EventEmitter from 'eventemitter3'
+import querystring from 'querystring'
 
 import Request from './Request'
 
@@ -265,6 +266,11 @@ class Fruitmix extends EventEmitter {
           r = this.apost(`drives/${args.driveUUID}/dirs/${args.dirUUID}/entries`)
             .field(args.dirname, JSON.stringify({ op: 'mkdir' }))
         }
+        break
+
+      case 'mkPhyDir':
+        r = this.apost(`phy-drives/${args.id}?${querystring.stringify({ path: args.path })}`)
+          .field('directory', args.dirname)
         break
 
       case 'renameDirOrFile':
