@@ -43,16 +43,15 @@ class Fruitmix extends React.Component {
     if (user && user.phi) ipcRenderer.send('SETCONFIG', { phi: user.phi })
   }
 
-  deviceLogin ({ dev, user, token, selectedDevice }) {
+  deviceLogin ({ dev, user, selectedDevice, isCloud }) {
     if (this.state.selectedDevice) {
       ipcRenderer.send('LOGOUT')
-      this.setState({ view: '', selectedDevice: null, jump: null }, () => this.deviceLogin({ dev, user, token }))
+      this.setState({ view: '', selectedDevice: null, jump: null }, () => this.deviceLogin({ dev, user, selectedDevice, isCloud }))
     } else {
-      ipcRenderer.send('LOGIN', dev, user)
+      ipcRenderer.send('LOGIN', { device: dev, user, isCloud })
       this.selectedDevice = selectedDevice
-      console.log('this.selectedDevice', this.selectedDevice)
       this.selectedDevice.on('updated', (prev, next) => this.setState({ selectedDevice: next }))
-      this.setState({ view: 'device', selectedDevice: dev, jump: null })
+      this.setState({ view: 'device', selectedDevice: dev, jump: null, isCloud })
     }
   }
 

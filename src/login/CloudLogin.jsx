@@ -14,7 +14,8 @@ class CloudLogin extends React.PureComponent {
     this.getLANTokenAsync = async () => {
       const { dev, account } = this.props
       const args = { deviceSN: dev.mdev.deviceSN }
-      const token = (await this.props.phi.reqAsync('LANToken', args)).token
+      // const token = (await this.props.phi.reqAsync('LANToken', args)).token
+      const token = this.props.phi.token
       const users = (await this.props.phi.reqAsync('localUsers', args))
       const user = Array.isArray(users) && users.find(u => u.phicommUserId === account.phicommUserId)
       console.log('LANToken', token, user)
@@ -28,7 +29,8 @@ class CloudLogin extends React.PureComponent {
           /* onSuccess: auto login */
           Object.assign(dev, { token: { isFulfilled: () => true, ctx: user, data: { token } } })
           this.props.onRequestClose()
-          this.props.deviceLogin({ dev, user, selectedDevice: this.props.selectedDevice })
+          const { selectedDevice, isCloud } = this.props
+          this.props.deviceLogin({ dev, user, selectedDevice, isCloud })
         })
         .catch((error) => {
           console.error('this.getLANToken', error)

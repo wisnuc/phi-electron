@@ -460,13 +460,14 @@ class Navigation extends React.Component {
     super(props)
 
     /* init apis */
-    console.log('Navigation', props.selectedDevice, props.selectedDevice.token)
-    const token = props.selectedDevice.token
+    console.log('Navigation', props)
+    const { isCloud, selectedDevice } = props
+    const { mdev, token } = selectedDevice
     if (!token.isFulfilled()) throw new Error('token not fulfilled')
 
-    const { address, isCloud } = props.selectedDevice.mdev
     const userUUID = token.ctx.uuid
-    this.fruitmix = new Fruitmix(address, userUUID, token.data.token, isCloud, token.data.stationID)
+    const { address, deviceSN } = mdev
+    this.fruitmix = new Fruitmix(address, userUUID, token.data.token, isCloud, deviceSN)
     this.fruitmix.on('updated', (prev, next) => this.setState({ apis: next }))
 
     this.state = { apis: null }

@@ -251,6 +251,7 @@ class DeviceSelect extends React.Component {
             !!this.state.cloudLogin &&
               <CloudLogin
                 {...this.props}
+                isCloud
                 selectedDevice={this.state.selectedDevice}
                 dev={this.state.cloudLogin}
                 onRequestClose={() => this.setState({ cloudLogin: null })}

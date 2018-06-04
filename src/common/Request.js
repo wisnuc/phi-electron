@@ -1,4 +1,5 @@
 const EventEmitter = require('eventemitter3')
+const parseRes = require('./parseRes')
 
 class ReqState {
   constructor (ctx) { this.ctx = ctx }
@@ -32,7 +33,11 @@ class ReqPending extends ReqState {
 
     this.handle = this.ctx.func((err, res) => {
       if (this.aborted) return
-      if (err) { this.setState(ReqRejected, err) } else { this.setState(ReqFulfilled, res.body) }
+
+      const { error, body } = parseRes(err, res)
+
+      if (error) this.setState(ReqRejected, error)
+      else this.setState(ReqFulfilled, body)
     })
   }
 
@@ -47,7 +52,7 @@ class ReqFulfilled extends ReqState {
 }
 
 class ReqRejected extends ReqState {
-  constructor (ctx, err) { super(ctx); this.err = Object.assign(err, { response: err && err.response && err.response.body }) }
+  constructor (ctx, err) { super(ctx); this.err = err }
   isRejected () { return true }
   reason () { return this.err }
 }
@@ -76,4 +81,4 @@ class Request extends EventEmitter {
   isFinished () { return this.state.isFinished() }
 }
 
-export default Request
+module.exports = Request

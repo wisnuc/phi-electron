@@ -1,4 +1,6 @@
 import request from 'superagent'
+
+import parseRes from './parseRes'
 import RequestManager from './reqman'
 
 const phiCloudAddress = 'sohon2test.phicomm.com'
@@ -12,34 +14,13 @@ class PhiAPI extends RequestManager {
     }
 
     this.setRequest = (name, err, res, next) => {
-      console.log('req raw', err, res)
-      let error = err
-      let body
-      if (!error) {
-        body = res && res.body
-
-        /* handle response in res.text */
-        if (!Object.keys(body).length) {
-          try {
-            body = JSON.parse(res.text)
-          } catch (e) {
-            error = new Error('JSON parse error')
-          }
-        } else {
-          body = res && res.body
-        }
-        /* handle data from pipi command */
-        if (body && body.result && body.result.data) {
-          error = body.result.data.error
-          body = body.result.data.res
-        }
-      }
+      const { error, body } = parseRes(err, res)
 
       /* save phi token */
-      if (name === 'token' && !err && body && body.access_token) this.token = body.access_token
+      if (name === 'token' && !error && body) this.token = body.access_token
 
       /* callback next */
-      if (typeof next === 'function') next(err, body)
+      if (typeof next === 'function') next(error, body)
     }
   }
 
