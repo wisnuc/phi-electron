@@ -1,5 +1,8 @@
 import i18n from 'i18n'
 import React from 'react'
+
+import Rebooting from './Rebooting'
+import Dialog from '../common/PureDialog'
 import { RRButton } from '../common/Buttons'
 import ConfirmDialog from '../common/ConfirmDialog'
 
@@ -7,20 +10,31 @@ class Power extends React.Component {
   constructor (props) {
     super(props)
 
-    this.state = { confirm: false }
-
-    this.reboot = () => {
+    this.state = {
+      confirm: false,
+      type: 'reboot',
+      status: '' // busy, success, error
     }
 
-    this.reset = (check) => {
-      console.log('this.reset', this.props, check)
-      /* check clean data TODO */
-      const { phi, selectedDevice } = this.props
-      const deviceSN = selectedDevice.mdev.deviceSN
-      phi.req('unbindStation', { deviceSN }, (err, res) => {
-        console.log('this.reset err res', err, res)
-        this.props.deviceLogout()
+    this.reboot = () => {
+      this.setState({ confirm: false })
+      setTimeout(() => this.setState({ status: 'busy' }), 500)
+      setTimeout(() => this.setState({ status: 'error' }), 2000)
+      this.props.apis.request('reboot', (err, res) => {
+        if (err) {
+          this.setState({ status: 'error' })
+        } else {
+          this.setState({ status: 'success' })
+        }
       })
+    }
+
+    this.onSuccess = () => {
+      this.props.deviceLogout()
+    }
+
+    this.onFailed = () => {
+      this.props.deviceLogout()
     }
 
     this.showConfirm = () => this.setState({ confirm: true })
@@ -56,6 +70,20 @@ class Power extends React.Component {
           title={i18n.__('Confirm Reboot Title')}
           text={i18n.__('Confirm Reboot Text')}
         />
+
+        <Dialog open={!!this.state.status} onRequestClose={() => this.setState({ status: false })} modal transparent >
+          {
+            !!this.state.status &&
+            <Rebooting
+              type={this.state.type}
+              error={this.state.error}
+              status={this.state.status}
+              onSuccess={this.onSuccess}
+              onFailed={this.onFailed}
+              onRequestClose={() => this.setState({ status: false })}
+            />
+          }
+        </Dialog>
       </div>
     )
   }
