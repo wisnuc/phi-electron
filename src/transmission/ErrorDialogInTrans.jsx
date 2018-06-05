@@ -40,6 +40,8 @@ const convert = (code) => {
       return i18n.__('ETYPE')
     case 'EIGNORE':
       return i18n.__('EIGNORE')
+    case 'EMKDIR':
+      return i18n.__('EMKDIR')
     default:
       return code || i18n.__('Unknown Error')
   }

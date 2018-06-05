@@ -246,12 +246,8 @@ class Fruitmix extends EventEmitter {
         break
 
       case 'mkdir':
-        if (this.isCloud) {
-          r = this.apost(`drives/${args.driveUUID}/dirs/${args.dirUUID}/entries`, Object.assign({}, args, { op: 'mkdir' }))
-        } else {
-          r = this.apost(`drives/${args.driveUUID}/dirs/${args.dirUUID}/entries`, null, true)
-            .field(args.dirname, JSON.stringify({ op: 'mkdir' }))
-        }
+        r = this.apost(`drives/${args.driveUUID}/dirs/${args.dirUUID}/entries`, null, true)
+          .field(args.dirname, JSON.stringify({ op: 'mkdir' }))
         break
 
       case 'mkPhyDir':
@@ -260,32 +256,20 @@ class Fruitmix extends EventEmitter {
         break
 
       case 'renameDirOrFile':
-        if (this.isCloud) {
-          r = this.apost(`drives/${args.driveUUID}/dirs/${args.dirUUID}/entries`, Object.assign({}, args, { op: 'rename' }))
-        } else {
-          r = this.apost(`drives/${args.driveUUID}/dirs/${args.dirUUID}/entries`)
-            .field(`${args.oldName}|${args.newName}`, JSON.stringify({ op: 'rename' }))
-        }
+        r = this.apost(`drives/${args.driveUUID}/dirs/${args.dirUUID}/entries`, null, true)
+          .field(`${args.oldName}|${args.newName}`, JSON.stringify({ op: 'rename' }))
         break
 
       case 'deleteDirOrFile':
-        if (this.isCloud) {
-          r = this.apost(`drives/${args.driveUUID}/dirs/${args.dirUUID}/entries`, Object.assign({}, args, { op: 'remove' }))
-        } else {
-          r = this.apost(`drives/${args[0].driveUUID}/dirs/${args[0].dirUUID}/entries`)
-          for (let i = 0; i < args.length; i++) {
-            r.field(args[i].entryName, JSON.stringify({ op: 'remove', uuid: args[i].entryUUID }))
-          }
+        r = this.apost(`drives/${args[0].driveUUID}/dirs/${args[0].dirUUID}/entries`, null, true)
+        for (let i = 0; i < args.length; i++) {
+          r.field(args[i].entryName, JSON.stringify({ op: 'remove', uuid: args[i].entryUUID }))
         }
         break
 
       case 'dupFile':
-        if (this.isCloud) {
-          r = this.apost(`drives/${args.driveUUID}/dirs/${args.dirUUID}/entries`, Object.assign({}, args, { op: 'dup' }))
-        } else {
-          r = this.apost(`drives/${args.driveUUID}/dirs/${args.dirUUID}/entries`)
-            .field(`${args.oldName}|${args.newName}`, JSON.stringify({ op: 'dup' }))
-        }
+        r = this.apost(`drives/${args.driveUUID}/dirs/${args.dirUUID}/entries`, null, true)
+          .field(`${args.oldName}|${args.newName}`, JSON.stringify({ op: 'dup' }))
         break
 
       case 'copy':

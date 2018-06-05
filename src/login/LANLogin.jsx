@@ -54,7 +54,8 @@ class LANLogin extends React.Component {
           this.setState({ pwdError: msg })
         } else {
           Object.assign(this.props.dev, { token: { isFulfilled: () => true, ctx: user, data } })
-          this.props.deviceLogin({ dev: this.props.dev, user })
+          const { selectedDevice } = this.props
+          this.props.deviceLogin({ dev: this.props.dev, user, selectedDevice })
         }
         this.setState({ loading: false })
       })
