@@ -322,6 +322,10 @@ class Fruitmix extends EventEmitter {
         r = this.apatch('boot', { state: 'reboot' })
         break
 
+      case 'speed':
+        r = this.aget('device/speed')
+        break
+
       /* Plugin API */
       case 'samba':
         r = this.aget('features/samba/status')

@@ -4,12 +4,29 @@ import Base from './Base'
 import NetworkInfo from '../settings/NetworkInfo'
 
 class Ethernet extends Base {
+  constructor (ctx) {
+    super(ctx)
+
+    this.state = {
+    }
+
+    this.refresh = () => {
+      this.ctx.props.apis.request('network')
+      this.ctx.props.apis.request('speed')
+    }
+  }
+
   willReceiveProps (nextProps) {
-    // this.handleProps(nextProps.selectedDevice, ['net'])
+    this.handleProps(nextProps.apis, ['network', 'speed'])
   }
 
   navEnter () {
-    // this.ctx.props.selectedDevice.request('net')
+    this.refresh()
+    // this.timer = setInterval(this.refresh, 1000)
+  }
+
+  navLeave () {
+    // clearInterval(this.timer)
   }
 
   navGroup () {
@@ -37,6 +54,7 @@ class Ethernet extends Base {
     return (
       <NetworkInfo
         {...this.ctx.props}
+        {...this.state}
         openSnackBar={openSnackBar}
       />
     )

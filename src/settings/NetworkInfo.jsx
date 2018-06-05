@@ -1,16 +1,30 @@
 import i18n from 'i18n'
 import React from 'react'
+import prettysize from 'prettysize'
 import { Popover, MenuItem } from 'material-ui'
 import { RRButton, TextField } from '../common/Buttons'
 import { ArrowIcon, DropDownIcon } from '../common/Svg'
+
+const tStyle = { height: 18, color: '#525a60', fontSize: 12, opacity: 0.7, marginLeft: 27, display: 'flex', alignItems: 'center' }
 
 class NetworkInfo extends React.Component {
   constructor (props) {
     super(props)
 
-    this.state = {}
+    this.state = {
+      ip: '',
+      dns: '0.0.0.0'
+    }
 
     this.save = () => {
+    }
+
+    this.onDNS = (dns) => {
+      this.setState({ dns })
+    }
+
+    this.onIP = (ip) => {
+      this.setState({ ip })
     }
 
     this.openPop = (e) => {
@@ -22,8 +36,24 @@ class NetworkInfo extends React.Component {
     }
   }
 
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.network && (!this.state.dns || !this.state.ip)) {
+      const NIC = nextProps.network.find(card => card && card.ipAddresses && card.ipAddresses.length > 0) || {}
+      const ip = NIC.ipAddresses.find(addr => (addr.family === 'IPv4')).address
+      this.setState({ ip })
+    }
+  }
+
   render () {
-    const tStyle = { height: 18, color: '#525a60', fontSize: 12, opacity: 0.7, marginLeft: 27, display: 'flex', alignItems: 'center' }
+    console.log('network render', this.props)
+
+    const { network, speed } = this.props
+    if (!network || !Array.isArray(speed)) return (<div />)
+
+    const first = speed[0]
+    const last = speed[speed.length - 1]
+    const receiveSpeed = (first.receive.bytes - last.receive.bytes) / speed.length
+    const transmitSpeed = (first.transmit.bytes - last.transmit.bytes) / speed.length
 
     const items = [
       {
@@ -35,6 +65,7 @@ class NetworkInfo extends React.Component {
         onClick: () => this.setState({ mode: 'manu', open: false, show: false })
       }
     ]
+
     return (
       <div style={{ width: '100%', height: '100%' }} className="flexCenter" >
         <div style={{ width: 480, paddingRight: 160, paddingBottom: 60 }}>
@@ -51,13 +82,13 @@ class NetworkInfo extends React.Component {
                 <div style={{ height: 16 }} />
                 <div style={tStyle}>
                   <ArrowIcon style={{ color: '#4dbc72', transform: 'rotate(180deg)' }} />
-                  <div style={{ marginLeft: -5 }}> 566 K/s </div>
+                  <div style={{ marginLeft: -5 }}> { `${prettysize(transmitSpeed)}/s` } </div>
                 </div>
                 <div style={{ height: 1, width: 140, backgroundColor: '#31a0f5' }} />
                 <div style={{ height: 2 }} />
                 <div style={tStyle}>
                   <ArrowIcon style={{ color: '#8a69ed' }} />
-                  <div style={{ marginLeft: -5 }}> 15.5 M/s </div>
+                  <div style={{ marginLeft: -5 }}> { `${prettysize(receiveSpeed)}/s` } </div>
                 </div>
               </div>
               <div style={{ width: 70 }} className="flexCenter">
@@ -88,7 +119,16 @@ class NetworkInfo extends React.Component {
             </div>
             <div style={{ width: 30 }} />
             <div
-              style={{ width: 320, borderBottom: '1px solid #31a0f5', color: '#505259', paddingBottom: 2, cursor: 'pointer' }}
+              style={{
+                width: 320,
+                height: 30,
+                borderBottom: '1px solid #31a0f5',
+                color: '#505259',
+                paddingBottom: 2,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center'
+              }}
               onClick={this.openPop}
             >
               { this.state.mode === 'auto' ? i18n.__('Automatic Mode') : i18n.__('Manual Mode') }
@@ -132,11 +172,16 @@ class NetworkInfo extends React.Component {
               { i18n.__('IP Address') }
             </div>
             <div style={{ width: 30 }} />
-            <TextField
-              style={{ width: 320 }}
-              disabled={this.state.mode !== 'manu'}
-              hintText={'0.0.0.0'}
-            />
+            <div style={{ width: 320, marginTop: 10, position: 'relative' }}>
+              <TextField
+                name="ip"
+                style={{ width: 320 }}
+                disabled={this.state.mode !== 'manu'}
+                onChange={e => this.onIP(e.target.value)}
+                value={this.state.mode !== 'manu' ? '' : this.state.ip}
+                hintText={this.state.ip}
+              />
+            </div>
           </div>
 
           <div style={{ height: 30 }} />
@@ -145,11 +190,16 @@ class NetworkInfo extends React.Component {
               { i18n.__('DNS Address') }
             </div>
             <div style={{ width: 30 }} />
-            <TextField
-              style={{ width: 320 }}
-              disabled={this.state.mode !== 'manu'}
-              hintText={'0.0.0.0'}
-            />
+            <div style={{ width: 320, marginTop: 10, position: 'relative' }}>
+              <TextField
+                name="dns"
+                style={{ width: 320 }}
+                disabled={this.state.mode !== 'manu'}
+                onChange={e => this.onDNS(e.target.value)}
+                value={this.state.mode !== 'manu' ? '' : this.state.dns}
+                hintText={this.state.dns}
+              />
+            </div>
           </div>
 
           <div style={{ height: 40 }} />
