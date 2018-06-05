@@ -1,5 +1,5 @@
-import React from 'react'
 import i18n from 'i18n'
+import React from 'react'
 import Base from './Base'
 import DeviceInfo from '../settings/DeviceInfo'
 
@@ -10,19 +10,18 @@ class Device extends Base {
     this.address = ctx.props.selectedDevice.mdev.address // TODO
 
     this.state = {
-      boot: null
     }
 
     this.refresh = () => {
-      this.ctx.props.selectedDevice.request('device')
-      this.ctx.props.selectedDevice.request('memory')
-      this.ctx.props.selectedDevice.request('cpus')
-      this.ctx.props.selectedDevice.request('network')
+      this.ctx.props.apis.request('device')
+      this.ctx.props.apis.request('memory')
+      this.ctx.props.apis.request('cpus')
+      this.ctx.props.apis.request('network')
     }
   }
 
   willReceiveProps (nextProps) {
-    this.handleProps(nextProps.selectedDevice, ['network', 'device', 'memory', 'cpus'])
+    this.handleProps(nextProps.apis, ['network', 'device', 'memory', 'cpus'])
   }
 
   navEnter () {

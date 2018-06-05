@@ -625,7 +625,7 @@
   "Format Disk": "格式化磁盘",
   "Eject USB": "安全弹出",
   "Storage Space": "磁盘存储空间",
-  "Storage Usage %s %s": "已使用%s/共%s",
+  "Storage Usage %s %s": "%s / %s",
   "USB Storage Title": "USB存储空间",
   "Current Mode %s": "当前组盘模式：%s 模式",
   "Disk Not Found": "未发现",

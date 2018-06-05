@@ -50,11 +50,7 @@ class Fruitmix extends EventEmitter {
         params: type === 'GET' ? qsOrData : {},
         body: type === 'GET' ? {} : (qsOrData || {})
       }
-      if (!isFormdata) return request.post(url).set('Authorization', this.token).send({ deviceSN, data })
-
-      const qs = querystring.stringify({ deviceSN, data: JSON.stringify(data) })
-      console.log('this.reqCloud', url, qs)
-      return request.post(`${url}?${qs}`).set('Authorization', this.token)
+      return request.post(url).set('Authorization', this.token).send({ deviceSN, data })
     }
   }
 
@@ -250,8 +246,12 @@ class Fruitmix extends EventEmitter {
         break
 
       case 'mkdir':
-        r = this.apost(`drives/${args.driveUUID}/dirs/${args.dirUUID}/entries`, null, true)
-          .field(args.dirname, JSON.stringify({ op: 'mkdir' }))
+        if (this.isCloud) {
+          r = this.apost(`drives/${args.driveUUID}/dirs/${args.dirUUID}/entries`, Object.assign({}, args, { op: 'mkdir' }))
+        } else {
+          r = this.apost(`drives/${args.driveUUID}/dirs/${args.dirUUID}/entries`, null, true)
+            .field(args.dirname, JSON.stringify({ op: 'mkdir' }))
+        }
         break
 
       case 'mkPhyDir':
@@ -296,24 +296,6 @@ class Fruitmix extends EventEmitter {
         r = this.aget(`tasks/${args.taskUUID}`)
         break
 
-      /* Ext APIs */
-      case 'extDrives':
-        r = this.aget('files/external/fs')
-        break
-
-      case 'extListDir':
-        r = this.aget(`files/external/fs/${args.path}`)
-        break
-
-      case 'extMkdir':
-        break
-
-      case 'extRenameDirOrFile':
-        break
-
-      case 'extDeleteDirOrFile':
-        break
-
       /* Media API */
       case 'photos':
         r = this.aget('files', { metadata: true, magics: 'JPEG.PNG.JPG.GIF.BMP.RAW' })
@@ -331,6 +313,23 @@ class Fruitmix extends EventEmitter {
         r = this.aget('files', { metadata: true, magics: 'RM.RMVB.WMV.AVI.MP4.3GP.MKV.MOV.FLV' })
         break
 
+      /* device api */
+      case 'device':
+        r = this.aget('device')
+        break
+
+      case 'cpus':
+        r = this.aget('device/cpuInfo')
+        break
+
+      case 'network':
+        r = this.aget('device/net')
+        break
+
+      case 'memory':
+        r = this.aget('device/memInfo')
+        break
+
       /* Plugin API */
       case 'samba':
         r = this.aget('features/samba/status')
@@ -338,10 +337,6 @@ class Fruitmix extends EventEmitter {
 
       case 'dlna':
         r = this.aget('features/dlna/status')
-        break
-
-      case 'bt':
-        r = this.aget('download/switch')
         break
 
       default:

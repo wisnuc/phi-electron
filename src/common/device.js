@@ -55,6 +55,10 @@ class Device extends RequestManager {
       case 'boot':
         r = request
           .get(`http://${this.mdev.address}:3000/boot`)
+          .timeout({
+            response: 5000, // Wait 5 seconds for the server to start sending,
+            deadline: 60000 // but allow 1 minute for the file to finish loading.
+          })
         break
 
       case 'device':
@@ -80,6 +84,10 @@ class Device extends RequestManager {
       case 'users':
         r = request
           .get(`http://${this.mdev.address}:3000/users`)
+          .timeout({
+            response: 5000, // Wait 5 seconds for the server to start sending,
+            deadline: 60000 // but allow 1 minute for the file to finish loading.
+          })
         break
 
       case 'boundVolume':

@@ -1,5 +1,6 @@
 import i18n from 'i18n'
 import React from 'react'
+import prettysize from 'prettysize'
 import DeviceAPI from '../common/device'
 
 class Device extends React.Component {
@@ -11,7 +12,7 @@ class Device extends React.Component {
     }
 
     this.select = () => {
-      console.log('this.select', this.state.dev)
+      console.log('this.select', this.state.dev, this.device)
       this.props.slDevice(this.state.dev, this.device)
     }
 
@@ -24,6 +25,7 @@ class Device extends React.Component {
     /* cloud dev or mdns dev */
     const { mdev, cdev } = this.props
     if (cdev) {
+      if (cdev.onlineStatus !== 'online') return
       const dev = Object.assign(
         { address: cdev.localIp, domain: 'phiToLoacl', deviceSN: cdev.deviceSN, stationName: cdev.bindingName },
         cdev
@@ -49,7 +51,8 @@ class Device extends React.Component {
   onlineStatus () {
     if (!this.props.cdev) return null
     if (this.props.cdev.onlineStatus !== 'online') return i18n.__('Offline Mode')
-    if (this.systemStatus === 'offline') return i18n.__('Remote Mode')
+    if (this.systemStatus() === 'offline') return i18n.__('Remote Mode')
+    if (this.systemStatus() === 'probing') return null
     return i18n.__('Online and LAN Mode')
   }
 
@@ -76,7 +79,8 @@ class Device extends React.Component {
       (type === 'LANTOLOGIN' && status === 'ready') ||
       (type === 'CHANGEDEVICE' && status === 'ready') ||
       (type === 'BOUNDLIST' && status === 'noBoundVolume') ||
-      (type === 'BOUNDLIST' && status === 'ready' && (isAdmin || isUser))
+      (type === 'BOUNDLIST' && status === 'ready' && (isAdmin || isUser)) ||
+      (type === 'BOUNDLIST' && status === 'offline')
     )
   }
 
@@ -123,6 +127,7 @@ class Device extends React.Component {
 
       case 'probing':
         text = i18n.__('Probing')
+        if (this.props.cdev && this.props.cdev.onlineStatus === 'offline') text = ''
         break
 
       case 'booting':
@@ -142,10 +147,20 @@ class Device extends React.Component {
     const stationName = this.getStationName()
     const address = (this.state.dev && this.state.dev.mdev && this.state.dev.mdev.address) || '--'
 
-    const storage = '233GB/1TB'
+    let devStorage = '--'
+
+    try {
+      const { boundVolume, storage } = this.state.dev.boot.data
+      const usage = storage.volumes.find(v => v.uuid === boundVolume.uuid).usage
+      const { deviceSize, free } = usage.overall
+      devStorage = i18n.__('Storage Usage %s %s', prettysize(free), prettysize(deviceSize))
+    } catch (e) {
+      // console.log('get devStorage err', e)
+      devStorage = '--'
+    }
 
     const data = [
-      { des: i18n.__('Device Storage'), val: storage },
+      { des: i18n.__('Device Storage'), val: devStorage },
       { des: i18n.__('IP Address'), val: address }
     ]
 
@@ -176,7 +191,7 @@ class Device extends React.Component {
                   fontSize: 12,
                   color: '#FFF',
                   borderRadius: 20,
-                  backgroundColor: this.onlineStatus === i18n.__('Offline Mode') ? '#666666' : '#31a0f5'
+                  backgroundColor: this.onlineStatus() === i18n.__('Offline Mode') ? '#666666' : '#31a0f5'
                 }}
                 className="flexCenter"
               >

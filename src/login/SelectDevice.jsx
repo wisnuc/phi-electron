@@ -28,27 +28,28 @@ class DeviceSelect extends React.Component {
       selectedDevice: null
     }
 
-    this.bindVolume = (dev) => {
+    this.bindVolume = (dev, selectedDevice) => { // dev === selectedDevice.state
+      console.log('this.bindVolume', dev, selectedDevice)
       this.setState({ confirm: false, dev })
-      this.props.manageDisk(dev)
+      this.props.manageDisk(selectedDevice)
     }
 
     this.slDevice = (dev, selectedDevice) => {
-      console.log('this.slDevice', dev)
+      console.log('this.slDevice', dev, selectedDevice)
       clearTimeout(this.timer)
-      if (this.props.type === 'BOUNDLIST' && dev.systemStatus() === 'ready') {
+      if (this.props.type === 'BOUNDLIST' && ['ready', 'offline'].includes(dev.systemStatus())) {
         const { inviteStatus, accountStatus, type } = dev.mdev
         if (type === 'owner' || (type === 'service' && inviteStatus === 'accept' && accountStatus === '1')) {
-          this.setState({ dev, cloudLogin: dev, selectedDevice }) // cloud login
+          this.setState({ dev, cloudLogin: dev, selectedDevice }) // cloud login: remote or LAN
         } else if (inviteStatus === 'pending' && accountStatus === '1') {
           this.setState({ dev, invitation: dev }) // invitee confirm invitation
         }
       } else if (this.props.type === 'BOUNDLIST' && dev.systemStatus() === 'noBoundVolume') {
-        this.bindVolume(dev)
+        this.bindVolume(dev, selectedDevice)
       } else if (this.props.type === 'LANTOLOGIN') {
-        this.props.openLANLogin(dev, selectedDevice)
+        this.props.openLANLogin(selectedDevice)
       } else if (this.props.type === 'LANTOBIND') {
-        this.setState({ dev, confirm: true })
+        this.setState({ dev, confirm: true, selectedDevice })
       } else if (this.props.type === 'CHANGEDEVICE') {
         const currentSN = this.props.selectedDevice && this.props.selectedDevice.mdev && this.props.selectedDevice.mdev.deviceSN
         const newSN = dev && dev.mdev && dev.mdev.deviceSN
@@ -234,7 +235,7 @@ class DeviceSelect extends React.Component {
             <ConfirmBind
               {...this.props}
               dev={this.state.dev}
-              onSuccess={() => this.bindVolume(this.state.dev)}
+              onSuccess={() => this.bindVolume(this.state.dev, this.state.selectedDevice)}
               onFailed={() => this.setState({ confirm: false })}
             />
           }
@@ -251,9 +252,8 @@ class DeviceSelect extends React.Component {
             !!this.state.cloudLogin &&
               <CloudLogin
                 {...this.props}
-                isCloud
-                selectedDevice={this.state.selectedDevice}
                 dev={this.state.cloudLogin}
+                selectedDevice={this.state.selectedDevice}
                 onRequestClose={() => this.setState({ cloudLogin: null })}
               />
           }

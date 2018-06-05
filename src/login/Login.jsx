@@ -93,7 +93,7 @@ class Login extends React.Component {
     this.manageDisk = (dev) => {
       console.log('this.manageDisk dev', dev, this.state)
       this.setState({ loading: true })
-      const isAdmin = dev.mdev && dev.mdev.type === 'owner'
+      const isAdmin = dev.state && dev.state.mdev && dev.state.mdev.type === 'owner'
       dev.refreshSystemState(() => {
         if (dev.systemStatus() === 'noBoundVolume' && isAdmin) this.setState({ selectedDevice: dev, status: 'diskManage' })
         else if (dev.systemStatus() === 'noBoundVolume' && !isAdmin) this.setState({ status: 'diskError' })
@@ -167,7 +167,7 @@ class Login extends React.Component {
     return (
       <ManageDisk
         {...this.props}
-        selectedDevice={this.state.selectedDevice}
+        selectedDevice={this.state.selectedDevice.state}
         backToList={this.backToList}
         onFormatSuccess={this.onFormatSuccess}
       />
@@ -175,14 +175,23 @@ class Login extends React.Component {
   }
 
   renderLANPwd () {
-    return (<SetLANPwd {...this.props} {...this.state} onSuccess={this.onSetLANPwdSuccess} dev={this.state.selectedDevice} />)
+    return (
+      <SetLANPwd
+        {...this.props}
+        {...this.state}
+        onSuccess={this.onSetLANPwdSuccess}
+        dev={this.state.selectedDevice.state}
+        selectedDevice={this.state.selectedDevice}
+      />
+    )
   }
 
   renderLANLogin () {
     return (
       <LANLogin
         {...this.props}
-        dev={this.state.selectedDevice}
+        dev={this.state.selectedDevice.state}
+        selectedDevice={this.state.selectedDevice}
         onRequestClose={this.backToLANList}
       />
     )

@@ -14,8 +14,7 @@ class CloudLogin extends React.PureComponent {
     this.getLANTokenAsync = async () => {
       const { dev, account } = this.props
       const args = { deviceSN: dev.mdev.deviceSN }
-      // const token = (await this.props.phi.reqAsync('LANToken', args)).token
-      const token = this.props.phi.token
+      const token = (await this.props.phi.reqAsync('LANToken', args)).token
       const users = (await this.props.phi.reqAsync('localUsers', args))
       const user = Array.isArray(users) && users.find(u => u.phicommUserId === account.phicommUserId)
       console.log('LANToken', token, user)
@@ -29,8 +28,43 @@ class CloudLogin extends React.PureComponent {
           /* onSuccess: auto login */
           Object.assign(dev, { token: { isFulfilled: () => true, ctx: user, data: { token } } })
           this.props.onRequestClose()
-          const { selectedDevice, isCloud } = this.props
-          this.props.deviceLogin({ dev, user, selectedDevice, isCloud })
+          const { selectedDevice } = this.props
+          this.props.deviceLogin({ dev, user, selectedDevice, isCloud: false })
+        })
+        .catch((error) => {
+          console.error('this.getLANToken', error)
+          this.setState({ status: 'error', error })
+        })
+    }
+
+    this.remoteLoginAsync = async () => {
+      const { dev, account } = this.props
+      const args = { deviceSN: dev.mdev.deviceSN }
+      const token = this.props.phi.token
+      const boot = (await this.props.phi.reqAsync('boot', args))
+      const users = (await this.props.phi.reqAsync('localUsers', args))
+      const user = Array.isArray(users) && users.find(u => u.phicommUserId === account.phicommUserId)
+      console.log('remoteLoginAsync', token, user, boot)
+      if (!token || !user || !boot) throw Error('get LANToken or user error')
+      if (boot.state !== 'STARTED') throw Error('station not started')
+      return ({ dev, user, token, boot })
+    }
+
+    this.remoteLogin = () => {
+      this.remoteLoginAsync()
+        .then(({ dev, user, token, boot }) => {
+          /* onSuccess: auto login */
+          Object.assign(dev, {
+            token: {
+              isFulfilled: () => true, ctx: user, data: { token }
+            },
+            boot: {
+              isFulfilled: () => true, ctx: user, data: boot
+            }
+          })
+          this.props.onRequestClose()
+          const { selectedDevice } = this.props
+          this.props.deviceLogin({ dev, user, selectedDevice, isCloud: true })
         })
         .catch((error) => {
           console.error('this.getLANToken', error)
@@ -40,7 +74,8 @@ class CloudLogin extends React.PureComponent {
   }
 
   componentDidMount () {
-    this.getLANToken()
+    if (this.props.selectedDevice.systemStatus() === 'ready') this.getLANToken()
+    else this.remoteLogin()
   }
 
   render () {
