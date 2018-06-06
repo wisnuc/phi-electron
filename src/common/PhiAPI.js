@@ -3,7 +3,7 @@ import request from 'superagent'
 import parseRes from './parseRes'
 import RequestManager from './reqman'
 
-const phiCloudAddress = 'sohon2test.phicomm.com'
+const phiCloudAddress = 'sohon2dev.phicomm.com'
 
 class PhiAPI extends RequestManager {
   constructor () {
