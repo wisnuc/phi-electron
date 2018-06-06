@@ -44,13 +44,18 @@ class Fruitmix extends EventEmitter {
     /* adapter of cloud apis */
     this.reqCloud = (ep, qsOrData, type, isFormdata) => {
       const url = `${cloudAddress}/ResourceManager/app/pipe/command`
+      const url2 = `${cloudAddress}/ResourceManager/app/pipe/resource`
       const data = {
         verb: type,
         urlPath: `/${ep}`,
-        params: type === 'GET' ? qsOrData : {},
+        params: type === 'GET' ? (qsOrData || {}) : {},
         body: type === 'GET' ? {} : (qsOrData || {})
       }
-      return request.post(url).set('Authorization', this.token).send({ deviceSN, data })
+      if (!isFormdata) return request.post(url).set('Authorization', this.token).send({ deviceSN, data })
+
+      /* mkdir, delete file */
+      const qs = querystring.stringify({ deviceSN, data: JSON.stringify(data) })
+      return request.post(`${url2}?${qs}`).set('Authorization', token)
     }
   }
 
@@ -163,7 +168,6 @@ class Fruitmix extends EventEmitter {
         break
 
       case 'drives':
-        console.log('drives', this.token)
         r = this.aget('drives')
         break
 
@@ -234,7 +238,7 @@ class Fruitmix extends EventEmitter {
         break
 
       case 'listNavDir':
-        r = this.aget(`drives/${args.driveUUID}/dirs/${args.dirUUID}`, { metadata: true })
+        r = this.aget(`drives/${args.driveUUID}/dirs/${args.dirUUID}`, { metadata: 'true' })
         break
 
       case 'phyDrives':
@@ -267,6 +271,10 @@ class Fruitmix extends EventEmitter {
         }
         break
 
+      case 'deletePhyDirOrFile':
+        r = this.adel(`phy-drives/${args.id}?${querystring.stringify(args.qs)}`)
+        break
+
       case 'dupFile':
         r = this.apost(`drives/${args.driveUUID}/dirs/${args.dirUUID}/entries`, null, true)
           .field(`${args.oldName}|${args.newName}`, JSON.stringify({ op: 'dup' }))
@@ -282,19 +290,19 @@ class Fruitmix extends EventEmitter {
 
       /* Media API */
       case 'photos':
-        r = this.aget('files', { metadata: true, magics: 'JPEG.PNG.JPG.GIF.BMP.RAW' })
+        r = this.aget('files', { metadata: 'true', magics: 'JPEG.PNG.JPG.GIF.BMP.RAW' })
         break
 
       case 'music':
-        r = this.aget('files', { metadata: true, magics: 'WAV.MP3.APE.WMA.FLAC' })
+        r = this.aget('files', { metadata: 'true', magics: 'WAV.MP3.APE.WMA.FLAC' })
         break
 
       case 'docs':
-        r = this.aget('files', { metadata: true, magics: 'PDF.TXT.DOCX.MD.DOC.XLS.XLSX.PPT.PPTX' })
+        r = this.aget('files', { metadata: 'true', magics: 'PDF.TXT.DOCX.MD.DOC.XLS.XLSX.PPT.PPTX' })
         break
 
       case 'videos':
-        r = this.aget('files', { metadata: true, magics: 'RM.RMVB.WMV.AVI.MP4.3GP.MKV.MOV.FLV' })
+        r = this.aget('files', { metadata: 'true', magics: 'RM.RMVB.WMV.AVI.MP4.3GP.MKV.MOV.FLV' })
         break
 
       /* device api */
@@ -352,7 +360,7 @@ class Fruitmix extends EventEmitter {
     switch (name) {
       /* file api */
       case 'listNavDir':
-        r = this.aget(`drives/${args.driveUUID}/dirs/${args.dirUUID}`, { metadata: true, counter: true })
+        r = this.aget(`drives/${args.driveUUID}/dirs/${args.dirUUID}`, { metadata: 'true', counter: 'true' })
         break
 
       case 'users':

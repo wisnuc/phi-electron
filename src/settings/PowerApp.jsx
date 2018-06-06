@@ -16,17 +16,21 @@ class Power extends React.Component {
       status: '' // busy, success, error
     }
 
-    this.reboot = () => {
-      this.setState({ confirm: false })
-      setTimeout(() => this.setState({ status: 'busy' }), 500)
-      setTimeout(() => this.setState({ status: 'error' }), 2000)
-      this.props.apis.request('reboot', (err, res) => {
+    this.fire = () => {
+      this.setState({ status: 'busy' })
+      this.props.apis.request('reboot', null, (err, res) => {
         if (err) {
+          console.error('reboot error', err, res)
           this.setState({ status: 'error' })
         } else {
-          this.setState({ status: 'success' })
+          setTimeout(() => this.setState({ status: 'success' }), 10000)
         }
       })
+    }
+
+    this.reboot = () => {
+      this.setState({ confirm: false })
+      setTimeout(this.fire, 500)
     }
 
     this.onSuccess = () => {

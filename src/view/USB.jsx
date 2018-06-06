@@ -50,10 +50,9 @@ class USB extends Home {
 
     /* file or dir operations */
     this.upload = (type) => {
-      const dirPath = this.state.path
-      const dirUUID = dirPath[dirPath.length - 1].uuid
-      const driveUUID = dirPath[0].uuid
-      ipcRenderer.send('UPLOAD', { dirUUID, driveUUID, type })
+      const path = this.state.path.map(p => p.data).filter(p => !!p).join('/')
+      const id = this.phyDrive.id
+      ipcRenderer.send('UPLOAD', { dirUUID: path, driveUUID: id, type })
     }
 
     this.download = () => {
@@ -65,6 +64,27 @@ class USB extends Home {
       console.log('this.download', id, path, entries)
       ipcRenderer.send('DOWNLOAD', { entries, dirUUID: path, driveUUID: id })
     }
+
+    this.deleteAsync = async () => {
+      let path = this.state.path.map(p => p.data).filter(p => !!p).join('/')
+      if (path) path = `${path}/`
+      const entries = this.state.select.selected.map(index => this.state.entries[index])
+      const queryStrings = entries.map(e => `${path}${e.name}`)
+      console.log('this.deleteAsync', path, entries, queryStrings)
+      for (let i = 0; i < queryStrings.length; i++) {
+        const p = queryStrings[i]
+        await this.ctx.props.apis.requestAsync('deletePhyDirOrFile', { id: this.phyDrive.id, qs: { path: p } })
+      }
+      await this.ctx.props.apis.requestAsync('listPhyDir', { id: this.phyDrive.id, path })
+    }
+
+    ipcRenderer.on('driveListUpdate', (e, dir) => {
+      console.log('driveListUpdate', dir, this.state.path)
+      if (this.state.contextMenuOpen) return
+      if (this.state.select && this.state.select.selected && this.state.select.selected.length > 1) return
+      const path = this.state.path && this.state.path.map(p => p.data).filter(p => !!p).join('/')
+      if (this.isNavEnter && dir.uuid === path) this.refresh({ noloading: true })
+    })
   }
 
   willReceiveProps (nextProps) {

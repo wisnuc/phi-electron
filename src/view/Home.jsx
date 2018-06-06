@@ -136,22 +136,14 @@ class Home extends Base {
       const dirUUID = path[path.length - 1].uuid
       const driveUUID = this.state.path[0].uuid
 
-      if (this.ctx.props.selectedDevice.token.data.stationID) {
-        for (let i = 0; i < selected.length; i++) {
-          const entryName = entries[selected[i]].name
-          const entryUUID = entries[selected[i]].uuid
-          await this.ctx.props.apis.requestAsync('deleteDirOrFile', { driveUUID, dirUUID, entryName, entryUUID })
-        }
-      } else {
-        const op = []
-        for (let i = 0; i < selected.length; i++) {
-          const entryName = entries[selected[i]].name
-          const entryUUID = entries[selected[i]].uuid
-          op.push({ driveUUID, dirUUID, entryName, entryUUID })
-        }
-        for (let j = 0; j <= (op.length - 1) / 512; j++) { // delete no more than 512 files per post
-          await this.ctx.props.apis.requestAsync('deleteDirOrFile', op.filter((a, i) => (i >= j * 512) && (i < (j + 1) * 512)))
-        }
+      const op = []
+      for (let i = 0; i < selected.length; i++) {
+        const entryName = entries[selected[i]].name
+        const entryUUID = entries[selected[i]].uuid
+        op.push({ driveUUID, dirUUID, entryName, entryUUID })
+      }
+      for (let j = 0; j <= (op.length - 1) / 512; j++) { // delete no more than 512 files per post
+        await this.ctx.props.apis.requestAsync('deleteDirOrFile', op.filter((a, i) => (i >= j * 512) && (i < (j + 1) * 512)))
       }
 
       if (this.state.path[this.state.path.length - 1].uuid === dirUUID) {

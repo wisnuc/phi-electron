@@ -33,12 +33,14 @@ class Photo extends Home {
       if (this.preValue === this.state[type] && !this.force) return
 
       const entries = this.state[type].map((entry) => {
-        const { metadata } = entry
-        if (!metadata) return entry
+        // const { metadata } = entry
+        // if (!metadata) return entry
         const newEntry = {
           type: 'file',
-          size: metadata.size,
-          mtime: toTimeSecond(metadata.date || '')
+          size: 0,
+          mtime: 1182376418760
+          // size: metadata.size,
+          // mtime: toTimeSecond(metadata.date || '')
         }
         return Object.assign({}, newEntry, entry)
       })
