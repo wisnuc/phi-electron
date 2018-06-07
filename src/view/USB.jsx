@@ -52,7 +52,7 @@ class USB extends Home {
     this.upload = (type) => {
       const path = this.state.path.map(p => p.data).filter(p => !!p).join('/')
       const id = this.phyDrive.id
-      ipcRenderer.send('UPLOAD', { dirUUID: path, driveUUID: id, type })
+      ipcRenderer.send('UPLOAD', { dirUUID: path, driveUUID: id, type, domain: 'phy' })
     }
 
     this.download = () => {
@@ -62,7 +62,7 @@ class USB extends Home {
       const selected = this.state.select.selected
       const entries = selected.map(index => this.state.entries[index])
       console.log('this.download', id, path, entries)
-      ipcRenderer.send('DOWNLOAD', { entries, dirUUID: path, driveUUID: id })
+      ipcRenderer.send('DOWNLOAD', { entries, dirUUID: path, driveUUID: id, domain: 'phy' })
     }
 
     this.deleteAsync = async () => {

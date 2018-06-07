@@ -115,8 +115,8 @@ class Disk extends React.PureComponent {
               <div style={{ width: 150, height: 40 }}>
                 <RSButton
                   alt
-                  style={{ width: 100, height: 30 }}
-                  label={i18n.__('Format Disk')}
+                  style={{ width: 100 }}
+                  label={i18n.__('Remove Data')}
                   onClick={this.save}
                 />
               </div>
@@ -171,7 +171,7 @@ class Disk extends React.PureComponent {
             <div style={{ width: 150, height: 40 }}>
               <RSButton
                 alt
-                style={{ width: 100, height: 30 }}
+                style={{ width: 100 }}
                 label={i18n.__('Eject USB')}
                 onClick={this.save}
               />

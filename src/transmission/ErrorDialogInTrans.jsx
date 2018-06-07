@@ -79,7 +79,8 @@ class ErrorTree extends React.PureComponent {
   renderRow ({ node, key, style }) {
     const code = node.error.code ||
       (node.error.response && node.error.response[0] && node.error.response[0].error && node.error.response[0].error.code) ||
-      (node.error.response && node.error.response.error && node.error.response.error.code)
+      (node.error.response && node.error.response.error && node.error.response.error.code) ||
+      (node.error.response && node.error.response.code)
     const error = code ? convert(code) : translateStatus(node.error.status)
     let name = ''
     if (node.entry && typeof node.entry === 'object') name = node.entry.name
