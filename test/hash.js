@@ -105,7 +105,7 @@ const fire = async () => {
     sha256: parts[0].sha
   }
   console.log('fileName: \n', JSON.stringify(formDataOptions))
-  const url = reqCloud('/drives/18985a2b-936c-488d-b35c-1ddf583e364a/dirs/18985a2b-936c-488d-b35c-1ddf583e364a/entries')
+  const url = reqCloud('drives/645796d5-81be-4a5b-aa33-f28efd8936b8/dirs/645796d5-81be-4a5b-aa33-f28efd8936b8/entries')
   console.log('POST URL\n', url)
   // const readStreams = parts.map(p => fs.createReadStream(file, { start: p.start, end: Math.max(p.end, 0), autoClose: true }))
   // await reqAsync(parts, readStreams)
