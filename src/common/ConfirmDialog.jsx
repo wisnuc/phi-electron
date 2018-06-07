@@ -7,12 +7,19 @@ import Dialog from '../common/PureDialog'
 class ConfirmDialog extends React.PureComponent {
   constructor (props) {
     super(props)
-    this.state = { check: false }
+    this.state = { check: false, fired: false }
     this.handleCheck = () => this.setState({ check: !this.state.check })
+    this.onFire = () => {
+      this.setState({ fired: true }, () => this.props.onConfirm(this.state.check))
+    }
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.open && !this.props.open) this.setState({ fired: false })
   }
 
   render () {
-    const { open, onCancel, onConfirm, title, text, checkText } = this.props
+    const { open, onCancel, title, text, checkText } = this.props
     return (
       <Dialog open={open} onRequestClose={onCancel} modal >
         {
@@ -55,7 +62,7 @@ class ConfirmDialog extends React.PureComponent {
                 <div style={{ flexGrow: 1 }} />
                 <RSButton label={i18n.__('Cancel')} onClick={onCancel} alt />
                 <div style={{ width: 10 }} />
-                <RSButton label={i18n.__('Confirm')} onClick={() => onConfirm(this.state.check)} />
+                <RSButton label={i18n.__('Confirm')} onClick={this.onFire} disabled={this.state.fired} />
               </div>
             </div>
           )
