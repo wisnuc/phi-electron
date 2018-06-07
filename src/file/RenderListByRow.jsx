@@ -108,9 +108,7 @@ class Row extends React.PureComponent {
                 ? <FolderIcon style={{ color: 'rgba(0,0,0,0.54)', width: 24, height: 24 }} />
                 : entry.type === 'public'
                   ? <PublicIcon style={{ color: 'rgba(0,0,0,0.54)', width: 24, height: 24 }} />
-                  : entry.type === 'file'
-                    ? renderFileIcon(entry.name, entry.metadata, 24)
-                    : <ErrorIcon style={{ color: 'rgba(0,0,0,0.54)', width: 24, height: 24 }} />
+                  : renderFileIcon(entry.name, entry.metadata, 24)
             }
           </div>
           <div style={{ width: 12 }} />

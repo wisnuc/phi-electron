@@ -5,7 +5,6 @@ import Home from './Home'
 import Search from '../common/Search'
 import sortByType from '../common/sort'
 import { MyPicIcon } from '../common/Svg'
-import { toTimeSecond } from '../common/datetime'
 
 class Photo extends Home {
   constructor (ctx) {
@@ -83,7 +82,7 @@ class Photo extends Home {
         </div>
         <div style={{ flexGrow: 1 }} />
         <div style={{ marginRight: 15, height: 51, paddingTop: 19 }}>
-          <Search fire={() => {}} />
+          <Search fire={this.search} hint={i18n.__('Search') + this.title()} />
         </div>
       </div>
     )

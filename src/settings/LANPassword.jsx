@@ -23,11 +23,10 @@ class LANPassword extends React.Component {
     this.save = () => {
       this.setState({ loading: true })
       const userUUID = this.props.apis.account && this.props.apis.account.data.uuid
-      const deviceSN = this.props.selectedDevice && this.props.selectedDevice.mdev.deviceSN
-      this.props.phi.req('setLANPassword', { userUUID, password: this.state.pwd, deviceSN }, (err, res) => {
+      this.props.apis.pureRequest('setLANPassword', { userUUID, password: this.state.pwd }, (err, res) => {
         console.log('setLANPassword', err, res)
-        if (err || (res && res.data && res.data.error)) {
-          console.error('Set LAN Password Error', err || res.data.error)
+        if (err) {
+          console.error('Set LAN Password Error', err)
           this.props.openSnackBar(i18n.__('Set LAN Password Error'))
         } else this.props.openSnackBar(i18n.__('Set LAN Password Success'))
         this.setState({ loading: false })

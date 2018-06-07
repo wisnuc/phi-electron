@@ -357,11 +357,11 @@ class Preview extends React.Component {
   render () {
     if (!this.props.item || !this.props.item.name) return (<div />)
 
-    const { magic, metadata, hash } = this.props.item
+    const { metadata, hash } = this.props.item
     const photoMagic = ['JPEG', 'GIF', 'PNG']
-    const videoMagic = ['3GP', 'MP4', 'MOV']
-    const isPhoto = metadata && (photoMagic.includes(magic) || photoMagic.includes(metadata.m))
-    const isVideo = metadata && videoMagic.includes(magic)
+    // const videoMagic = ['3GP', 'MP4', 'MOV']
+    const isPhoto = metadata && photoMagic.includes(metadata.type)
+    const isVideo = false // metadata && videoMagic.includes(metadata.type)
 
     const extension = this.props.item.name.replace(/^.*\./, '').toUpperCase()
     const textExtension = ['TXT', 'MD', 'JS', 'JSX', 'TS', 'JSON', 'HTML', 'CSS', 'LESS', 'CSV', 'XML']

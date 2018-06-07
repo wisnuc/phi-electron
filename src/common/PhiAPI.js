@@ -125,7 +125,12 @@ class PhiAPI extends RequestManager {
       case 'newUser':
         r = this.command(
           args.deviceSN,
-          { verb: 'POST', urlPath: '/users', params: {}, body: { username: args.username, phicommUserId: args.phicommUserId } }
+          {
+            verb: 'POST',
+            urlPath: '/users',
+            params: {},
+            body: { username: args.username, phicommUserId: args.phicommUserId, phoneNumber: args.phoneNumber }
+          }
         )
         break
 

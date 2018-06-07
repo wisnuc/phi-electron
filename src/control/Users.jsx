@@ -86,7 +86,7 @@ class AdminUsersApp extends React.Component {
       const args = { deviceSN, phoneNumber: this.state.pn, nickName: this.state.nickName }
       const phicommUserId = (await phi.reqAsync('registerPhiUser', args)).result.uid
       console.log('this.inviteAsync phicommUserId', phicommUserId)
-      const user = await phi.reqAsync('newUser', { deviceSN, username: this.state.pn, phicommUserId })
+      const user = await phi.reqAsync('newUser', { deviceSN, username: this.state.pn, phoneNumber: this.state.pn, phicommUserId })
       console.log('this.inviteAsync res', user)
       if (!user || user.phicommUserId !== phicommUserId) throw Error('add local user error')
       const cloudUsers = (await phi.reqAsync('cloudUsers', { deviceSN })).result.users

@@ -477,6 +477,20 @@ class Home extends Base {
       document.addEventListener('mouseup', this.dragEnd, true)
     }
 
+    this.search = (name) => {
+      if (!name) return
+      console.log('this.search', name)
+      // this.refresh()
+      this.setState({ showSearch: name, loading: true })
+      this.ctx.props.apis.pureRequest('search', { name }, (err, res) => {
+        if (err) this.setState({ error: true, loading: false })
+        else {
+          console.log('this.search res', res)
+          this.setState({ entries: res, loading: false })
+        }
+      })
+    }
+
     ipcRenderer.on('driveListUpdate', (e, dir) => {
       if (this.state.contextMenuOpen) return
       if (this.state.select && this.state.select.selected && this.state.select.selected.length > 1) return
@@ -686,18 +700,25 @@ class Home extends Base {
 
   renderTitle ({ style }) {
     const breadCrumbStyle = { color: 'var(--grey-text)', width: '100%', display: 'flex', alignItems: 'center', flexWrap: 'wrap' }
-    // if (!this.state.listNavDir) return (<div />)
     return (
       <div style={style}>
-        <div style={{ height: 70 }}>
-          <div style={{ fontSize: 20, color: 'var(--dark-text)', marginTop: 12, marginLeft: 24 }}>
-            { this.menuName() }
-          </div>
-          { this.renderBreadCrumbItem({ style: breadCrumbStyle }) }
-        </div>
+        {
+          !this.state.showSearch ? (
+            <div style={{ height: 70 }}>
+              <div style={{ fontSize: 20, color: 'var(--dark-text)', marginTop: 12, marginLeft: 24 }}>
+                { this.menuName() }
+              </div>
+              { this.renderBreadCrumbItem({ style: breadCrumbStyle }) }
+            </div>
+          ) : (
+            <div style={{ fontSize: 20, color: 'var(--dark-text)', height: 70, marginLeft: 30, display: 'flex', alignItems: 'center' }}>
+              { i18n.__('Search Result of %s', this.state.showSearch) }
+            </div>
+          )
+        }
         <div style={{ flexGrow: 1 }} />
         <div style={{ marginRight: 15, height: 51, paddingTop: 19 }}>
-          <Search fire={() => {}} />
+          <Search fire={this.search} hint={i18n.__('Search') + this.title()} key={this.menuName()} />
         </div>
       </div>
     )
@@ -858,19 +879,26 @@ class Home extends Base {
               </div>
             ) : !itemSelected ? (
               <div>
-                <MenuItem
-                  primaryText={i18n.__('Upload File')}
-                  onClick={() => this.upload('file')}
-                />
-                <MenuItem
-                  primaryText={i18n.__('Upload Folder')}
-                  onClick={() => this.upload('directory')}
-                />
-                <MenuItem
-                  primaryText={i18n.__('Create New Folder')}
-                  onClick={() => this.toggleDialog('createNewFolder')}
-                />
-                <Divider style={{ marginLeft: 10, marginTop: 2, marginBottom: 2, width: 'calc(100% - 20px)' }} />
+                { !this.isMedia &&
+                <div>
+                  <MenuItem
+                    primaryText={i18n.__('Upload File')}
+                    onClick={() => this.upload('file')}
+                    disabled={this.isMedia}
+                  />
+                  <MenuItem
+                    primaryText={i18n.__('Upload Folder')}
+                    onClick={() => this.upload('directory')}
+                    disabled={this.isMedia}
+                  />
+                  <MenuItem
+                    primaryText={i18n.__('Create New Folder')}
+                    onClick={() => this.toggleDialog('createNewFolder')}
+                    disabled={this.isMedia}
+                  />
+                  <Divider style={{ marginLeft: 10, marginTop: 2, marginBottom: 2, width: 'calc(100% - 20px)' }} />
+                </div>
+                }
                 <MenuItem
                   primaryText={i18n.__('Toggle View Mode')}
                   onClick={() => this.toggleDialog('gridView')}
@@ -924,26 +952,31 @@ class Home extends Base {
                   primaryText={i18n.__('Download')}
                   onClick={this.download}
                 />
-                <Divider style={{ marginLeft: 10, marginTop: 2, marginBottom: 2, width: 'calc(100% - 20px)' }} />
-                <MenuItem
-                  primaryText={i18n.__('Copy')}
-                  onClick={() => {}}
-                />
-                <MenuItem
-                  primaryText={i18n.__('Cut')}
-                  onClick={() => {}}
-                />
                 {
-                  !multiSelected &&
-                    <MenuItem
-                      primaryText={i18n.__('Rename')}
-                      onClick={this.rename}
-                    />
+                  !this.isMedia &&
+                    <div>
+                      <Divider style={{ marginLeft: 10, marginTop: 2, marginBottom: 2, width: 'calc(100% - 20px)' }} />
+                      <MenuItem
+                        primaryText={i18n.__('Copy')}
+                        onClick={() => {}}
+                      />
+                      <MenuItem
+                        primaryText={i18n.__('Cut')}
+                        onClick={() => {}}
+                      />
+                      {
+                        !multiSelected &&
+                        <MenuItem
+                          primaryText={i18n.__('Rename')}
+                          onClick={this.rename}
+                        />
+                      }
+                      <MenuItem
+                        primaryText={i18n.__('Delete')}
+                        onClick={() => this.toggleDialog('delete')}
+                      />
+                    </div>
                 }
-                <MenuItem
-                  primaryText={i18n.__('Delete')}
-                  onClick={() => this.toggleDialog('delete')}
-                />
                 <Divider style={{ marginLeft: 10, marginTop: 2, marginBottom: 2, width: 'calc(100% - 20px)' }} />
                 <MenuItem
                   primaryText={i18n.__('Properties')}

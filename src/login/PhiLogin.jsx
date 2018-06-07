@@ -107,7 +107,11 @@ class PhiLogin extends React.Component {
       this.setState({ failed: false, pnError: '', pwdError: '' })
     }
 
-    this.passwordMode = () => {
+    this.onKeyDown = (e) => {
+      if (e.which === 13 && this.shouldFire()) {
+        if (this.state.showFakePwd) this.fakeLogin()
+        else this.login()
+      }
     }
   }
 

@@ -100,7 +100,7 @@ class FileContent extends React.Component {
       const dirUUID = dir[dir.length - 1].uuid
       const driveUUID = this.props.path[0].uuid
       if (!dirUUID || !driveUUID) {
-        this.props.openSnackBar(i18n.__('No Drag File Warning in Public'))
+        this.props.openSnackBar(i18n.__('No Drag File Warning'))
       } else {
         this.props.ipcRenderer.send('DRAG_FILE', { files, dirUUID, driveUUID })
       }

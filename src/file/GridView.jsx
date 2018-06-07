@@ -77,8 +77,9 @@ class Row extends React.Component {
                   >
                     {
                       entry.type === 'public' ? <PublicIcon style={{ width: 50, height: 50, color: '#ffa93e' }} />
-                        : entry.type === 'file'
-                          ? ((rowSum < 500 || !isScrolling) && entry.metadata
+                        : entry.type === 'directory'
+                          ? <AllFileIcon style={{ width: 50, height: 50, color: '#ffa93e' }} />
+                          : ((rowSum < 500 || !isScrolling) && entry.metadata
                             ? (
                               <Thumb
                                 full
@@ -89,7 +90,7 @@ class Row extends React.Component {
                                 width={108}
                               />
                             ) : renderFileIcon(entry.name, entry.metadata, 50)
-                          ) : <AllFileIcon style={{ width: 50, height: 50, color: '#ffa93e' }} />
+                          )
                     }
                   </div>
 

@@ -290,19 +290,19 @@ class Fruitmix extends EventEmitter {
 
       /* Media API */
       case 'photos':
-        r = this.aget('files', { metadata: 'true', magics: 'JPEG.PNG.JPG.GIF.BMP.RAW' })
+        r = this.aget('files', { types: 'JPEG.PNG.JPG.GIF.BMP.RAW' })
         break
 
       case 'music':
-        r = this.aget('files', { metadata: 'true', magics: 'WAV.MP3.APE.WMA.FLAC' })
+        r = this.aget('files', { types: 'WAV.MP3.APE.WMA.FLAC' })
         break
 
       case 'docs':
-        r = this.aget('files', { metadata: 'true', magics: 'PDF.TXT.DOCX.MD.DOC.XLS.XLSX.PPT.PPTX' })
+        r = this.aget('files', { types: 'PDF.TXT.DOCX.MD.DOC.XLS.XLSX.PPT.PPTX' })
         break
 
       case 'videos':
-        r = this.aget('files', { metadata: 'true', magics: 'RM.RMVB.WMV.AVI.MP4.3GP.MKV.MOV.FLV' })
+        r = this.aget('files', { types: 'RM.RMVB.WMV.AVI.MP4.3GP.MKV.MOV.FLV' })
         break
 
       /* device api */
@@ -367,8 +367,16 @@ class Fruitmix extends EventEmitter {
         r = this.aget('users')
         break
 
+      case 'search':
+        r = this.aget('files', { name: args.name })
+        break
+
       case 'randomSrc':
         r = this.aget(`media/${args.hash}`, { alt: 'random' })
+        break
+
+      case 'setLANPassword':
+        r = this.apatch(`users/${args.userUUID}`, { password: args.password, encrypted: false })
         break
 
       /* task api */

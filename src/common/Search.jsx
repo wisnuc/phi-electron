@@ -19,10 +19,14 @@ class Search extends Button {
     this.handleChange = (value) => {
       this.setState({ value, errorText: '' })
     }
+
+    this.onKeyDown = (e) => {
+      if (e.which === 13) this.fire()
+    }
   }
 
   render () {
-    const searchHint = '搜索全部文件'
+    const searchHint = this.props.hint
     const color = this.state.hover ? '#31a0f5' : 'rgba(82, 90, 96, 0.5)'
 
     return (
@@ -38,16 +42,19 @@ class Search extends Button {
       >
         <TextField
           name="search-input"
-          style={{ width: 215, marginLeft: 20, color: '#505259' }}
+          style={{ width: 215, marginLeft: 20 }}
+          inputStyle={{ color: '#505259', fontSize: 14 }}
           underlineStyle={{ display: 'none' }}
           hintText={searchHint}
           hintStyle={{ color: 'var(--light-grey-text)', fontSize: 14 }}
           value={this.state.value}
           errorText={this.state.errorText}
           onChange={e => this.handleChange(e.target.value)}
+          onKeyDown={this.onKeyDown}
         />
         <SearchIcon
           {...this.funcs}
+          onClick={() => this.fire()}
           style={{ color, cursor: 'pointer', margin: '0 10px' }}
         />
       </div>

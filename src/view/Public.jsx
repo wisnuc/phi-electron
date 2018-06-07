@@ -136,59 +136,31 @@ class Public extends Home {
     return PublicIcon
   }
 
-  /* renderers */
-  renderNoPublic () {
-    return (
-      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
-        <div
-          style={{
-            width: 360,
-            height: 360,
-            borderRadius: '180px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'column',
-            backgroundColor: '#FAFAFA'
-          }}
-        >
-          <div style={{ fontSize: 24, color: 'rgba(0,0,0,0.27)', height: 56 }}> { i18n.__('No Public Drive') } </div>
-          { this.ctx.props.apis.account && this.ctx.props.apis.account.data && this.ctx.props.apis.account.data.isAdmin &&
-            <div style={{ color: 'rgba(0,0,0,0.27)', height: 56 }}> { i18n.__('No Public Drive Text') } </div> }
-        </div>
-      </div>
-    )
-  }
-
   renderContent ({ toggleDetail, openSnackBar, getDetailStatus }) {
     const selected = this.state.select && this.state.select.selected
     return (
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-        {
-          (this.state.path && this.state.path.length === 1 && !this.state.entries.length) ? this.renderNoPublic()
-
-            : <FileContent
-              {...this.state}
-              listNavBySelect={this.listNavBySelect}
-              showContextMenu={this.showContextMenu}
-              setAnimation={this.setAnimation}
-              ipcRenderer={ipcRenderer}
-              download={this.download}
-              changeSortType={this.changeSortType}
-              openSnackBar={openSnackBar}
-              toggleDialog={this.toggleDialog}
-              showTakenTime={!!this.state.takenTime}
-              apis={this.ctx.props.apis}
-              refresh={this.refresh}
-              resetScrollTo={this.resetScrollTo}
-              rowDragStart={this.rowDragStart}
-              gridDragStart={this.gridDragStart}
-              setScrollTop={this.setScrollTop}
-              setGridData={this.setGridData}
-              inPublicRoot={this.state.inRoot}
-              openNewDrive={() => this.setState({ newDrive: 'new' })}
-            />
-        }
+        <FileContent
+          {...this.state}
+          listNavBySelect={this.listNavBySelect}
+          showContextMenu={this.showContextMenu}
+          setAnimation={this.setAnimation}
+          ipcRenderer={ipcRenderer}
+          download={this.download}
+          changeSortType={this.changeSortType}
+          openSnackBar={openSnackBar}
+          toggleDialog={this.toggleDialog}
+          showTakenTime={!!this.state.takenTime}
+          apis={this.ctx.props.apis}
+          refresh={this.refresh}
+          resetScrollTo={this.resetScrollTo}
+          rowDragStart={this.rowDragStart}
+          gridDragStart={this.gridDragStart}
+          setScrollTop={this.setScrollTop}
+          setGridData={this.setGridData}
+          inPublicRoot={this.state.inRoot}
+          openNewDrive={() => this.setState({ newDrive: 'new' })}
+        />
 
         {
           this.renderMenu(!!this.state.contextMenuOpen &&
