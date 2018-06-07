@@ -2,7 +2,6 @@ import React from 'react'
 import i18n from 'i18n'
 import { pinkA200 } from 'material-ui/styles/colors'
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu'
-import ErrorIcon from 'material-ui/svg-icons/alert/error'
 import { IconButton } from 'material-ui'
 import EventEmitter from 'eventemitter3'
 
@@ -157,20 +156,12 @@ class Base extends EventEmitter {
   renderDefaultError () {
     return (
       <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
-        <div
-          style={{
-            width: 360,
-            height: 360,
-            borderRadius: '180px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'column',
-            backgroundColor: '#FAFAFA'
-          }}
-        >
-          <ErrorIcon style={{ height: 64, width: 64, color: 'rgba(0,0,0,0.27)' }} />
-          <div style={{ fontSize: 20, color: 'rgba(0,0,0,0.27)' }}> { i18n.__('Error in Base Text') } </div>
+        <div>
+          <img src="./assets/images/pic_network_failed.png" alt="" width={320} height={180} />
+          <div style={{ marginTop: 30, height: 30, fontSize: 20, color: '#85868c' }} className="flexCenter" >
+            { i18n.__('Error in Base Text') }
+          </div>
+          <div style={{ height: 70 }} />
         </div>
       </div>
     )
