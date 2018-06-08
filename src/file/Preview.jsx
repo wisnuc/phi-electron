@@ -78,10 +78,12 @@ class Preview extends React.Component {
     }
 
     this.getRandomSrc = () => {
+      console.log('this.getRandomSrc')
       this.session = UUID.v4()
       this.props.apis.pureRequest('randomSrc', { hash: this.props.item.hash }, (error, data) => {
+        console.log('this.getRandomSrc', error, data)
         if (error) console.log('randomSrc error', error)
-        else this.setState({ filePath: `http://${this.props.apis.address}:3000/media/random/${data.key}` })
+        else this.setState({ filePath: `http://${this.props.apis.address}:3000/random/${data.key}` })
         this.session = ''
       })
     }
@@ -331,9 +333,9 @@ class Preview extends React.Component {
 
   renderPreview () {
     const extension = this.props.item.name.replace(/^.*\./, '').toUpperCase()
-    const videoExtension = ['MP4', 'MOV', 'AVI', 'MKV']
+    // const videoExtension = ['MP4', 'MOV', 'AVI', 'MKV']
     const audioExtension = ['MP3', 'APE', 'FLAC', 'WMA']
-    const isVideo = videoExtension.findIndex(t => t === extension) > -1
+    const isVideo = false // videoExtension.findIndex(t => t === extension) > -1
     const isAudio = audioExtension.findIndex(t => t === extension) > -1
     const isPDF = extension === 'PDF'
 
@@ -359,15 +361,15 @@ class Preview extends React.Component {
 
     const { metadata, hash } = this.props.item
     const photoMagic = ['JPEG', 'GIF', 'PNG']
-    // const videoMagic = ['3GP', 'MP4', 'MOV']
+    const videoMagic = ['3GP', 'MP4', 'MOV']
     const isPhoto = metadata && photoMagic.includes(metadata.type)
-    const isVideo = false // metadata && videoMagic.includes(metadata.type)
+    const isVideo = metadata && videoMagic.includes(metadata.type)
 
     const extension = this.props.item.name.replace(/^.*\./, '').toUpperCase()
     const textExtension = ['TXT', 'MD', 'JS', 'JSX', 'TS', 'JSON', 'HTML', 'CSS', 'LESS', 'CSV', 'XML']
     const isText = textExtension.findIndex(t => t === extension) > -1 && this.props.item.size < 1024 * 128
 
-    // console.log('isPhoto, isVideo', this.props.item, isPhoto, isVideo, isText)
+    console.log('isPhoto, isVideo', this.props.item, isPhoto, isVideo, isText)
 
     return (
       <div

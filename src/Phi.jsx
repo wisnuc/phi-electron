@@ -8,6 +8,7 @@ import Login from './login/Login'
 import Users from './control/Users'
 import PhiAPI from './common/PhiAPI'
 import Account from './common/Account'
+import Clipboard from './control/clipboard'
 import Navigation from './nav/Navigation'
 
 const defaultTheme = getMuiTheme({
@@ -29,6 +30,7 @@ class Fruitmix extends React.Component {
       account: null,
       showUsers: false,
       phi: new PhiAPI(),
+      clipboard: new Clipboard(),
       phiLogin: this.phiLogin.bind(this),
       deviceLogin: this.deviceLogin.bind(this),
       deviceLogout: this.deviceLogout.bind(this),

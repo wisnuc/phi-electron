@@ -7,6 +7,7 @@ class Video extends Photo {
     super(ctx)
     this.title = () => i18n.__('Video Menu Name')
     this.type = 'videos'
+    this.types = 'RM.RMVB.WMV.AVI.MP4.3GP.MKV.MOV.FLV'
   }
 
   menuIcon () {

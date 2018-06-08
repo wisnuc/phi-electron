@@ -18,6 +18,7 @@ class Search extends Button {
 
     this.handleChange = (value) => {
       this.setState({ value, errorText: '' })
+      if (!value) this.props.clear()
     }
 
     this.onKeyDown = (e) => {

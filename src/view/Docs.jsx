@@ -7,6 +7,7 @@ class Docs extends Photo {
     super(ctx)
     this.title = () => i18n.__('Docs Menu Name')
     this.type = 'docs'
+    this.types = 'PDF.TXT.DOCX.MD.DOC.XLS.XLSX.PPT.PPTX'
   }
 
   menuIcon () {

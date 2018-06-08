@@ -357,6 +357,7 @@ class Fruitmix extends EventEmitter {
 
   pureRequest (name, args, next) {
     let r
+    let qs
     switch (name) {
       /* file api */
       case 'listNavDir':
@@ -368,7 +369,11 @@ class Fruitmix extends EventEmitter {
         break
 
       case 'search':
-        r = this.aget('files', { name: args.name })
+        qs = { name: args.name }
+        if (args.order) Object.assign(qs, { order: args.order })
+        if (args.places) Object.assign(qs, { places: args.places })
+        if (args.types) Object.assign(qs, { types: args.types })
+        r = this.aget('files', qs)
         break
 
       case 'randomSrc':

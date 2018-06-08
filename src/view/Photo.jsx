@@ -18,6 +18,8 @@ class Photo extends Home {
 
     this.type = 'photos'
 
+    this.types = 'JPEG.PNG.JPG.GIF.BMP.RAW'
+
     this.refresh = (op) => {
       this.ctx.props.apis.request(this.type)
       if (op) this.setState({ scrollTo: op.fileName || op.uuid, loading: !op.noloading }) // fileName for files, uuid for drives
@@ -82,7 +84,7 @@ class Photo extends Home {
         </div>
         <div style={{ flexGrow: 1 }} />
         <div style={{ marginRight: 15, height: 51, paddingTop: 19 }}>
-          <Search fire={this.search} hint={i18n.__('Search') + this.title()} />
+          <Search fire={this.search} hint={i18n.__('Search') + this.title()} key={this.menuName()} clear={this.clearSearch} />
         </div>
       </div>
     )

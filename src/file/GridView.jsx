@@ -97,7 +97,7 @@ class Row extends React.Component {
                   {/* file name */}
                   <div
                     className="flexCenter"
-                    style={{ height: 40, width: 130, color: 'var(--dark-text)', paddingBottom: 4, position: 'relative' }}
+                    style={{ height: 40, width: 130, color: 'var(--dark-text)', marginLeft: 5, paddingBottom: 4, position: 'relative' }}
                   >
                     <Name
                       center

@@ -28,7 +28,6 @@ import ConfirmDialog from '../common/ConfirmDialog'
 ipcRenderer.setMaxListeners(1000)
 
 /* Drag Item's Coordinate */
-const DRAGLEFT = 180
 const DRAGTOP = 344
 
 class Home extends Base {
@@ -123,6 +122,26 @@ class Home extends Base {
           this.ctx.props.openSnackBar(i18n.__('Dup File Success'))
         }
       })
+    }
+
+    this.onCopy = () => {
+      console.log('this.onCopy', this.ctx.props)
+      const selected = this.state.select.selected
+      const entries = selected.map(index => this.state.entries[index])
+      const driveUUID = this.state.path[0].uuid
+      this.ctx.props.clipboard.set({ action: 'copy', loc: 'drive', driveUUID, entries })
+    }
+
+    this.onCut = () => {
+      const selected = this.state.select.selected
+      const entries = selected.map(index => this.state.entries[index])
+      const driveUUID = this.state.path[0].uuid
+      this.ctx.props.clipboard.set({ action: 'cut', loc: 'drive', driveUUID, entries })
+    }
+
+    this.onPaste = () => {
+      const pos = this.ctx.props.clipboard.get()
+      console.log('this.onPaste', pos)
     }
 
     this.rename = () => {
@@ -358,7 +377,7 @@ class Home extends Base {
         if (!s.top || s.top === RDTop) s.top = `${e.clientY + 2}px`
         else s.marginTop = `${e.clientY + 2 - parseInt(s.top, 10)}px`
 
-        if (!s.left || s.left === `${DRAGLEFT}px`) s.left = `${e.clientX + 2}px`
+        if (!s.left) s.left = `${e.clientX + 2}px`
         else s.marginLeft = `${e.clientX + 2 - parseInt(s.left, 10)}px`
       }
       if (!this.entry.type) this.forceUpdate()
@@ -403,7 +422,6 @@ class Home extends Base {
         s.width = '108px'
       } else {
         s.top = `${this.RDSI * 48 + DRAGTOP - (this.scrollTop || 0)}px`
-        s.left = `${DRAGLEFT}px`
         s.width = '108px'
       }
       s.marginTop = '0px'
@@ -481,16 +499,25 @@ class Home extends Base {
 
     this.search = (name) => {
       if (!name) return
-      console.log('this.search', name)
+      console.log('this.search', name, this.state)
       // this.refresh()
       this.setState({ showSearch: name, loading: true })
-      this.ctx.props.apis.pureRequest('search', { name }, (err, res) => {
+      const places = this.state.path[this.state.path.length - 1].uuid
+      const types = this.types
+      const order = types ? 'newest' : 'find'
+
+      this.ctx.props.apis.pureRequest('search', { name, places, types, order }, (err, res) => {
         if (err) this.setState({ error: true, loading: false })
         else {
           console.log('this.search res', res)
           this.setState({ entries: res, loading: false })
         }
       })
+    }
+
+    this.clearSearch = () => {
+      this.setState({ showSearch: false })
+      this.refresh()
     }
 
     ipcRenderer.on('driveListUpdate', (e, dir) => {
@@ -553,7 +580,8 @@ class Home extends Base {
       move: false,
       copy: false,
       share: false,
-      loading: false
+      loading: false,
+      showSearch: false
     })
   }
 
@@ -722,7 +750,7 @@ class Home extends Base {
         }
         <div style={{ flexGrow: 1 }} />
         <div style={{ marginRight: 15, height: 51, paddingTop: 19 }}>
-          <Search fire={this.search} hint={i18n.__('Search') + this.title()} key={this.menuName()} />
+          <Search fire={this.search} hint={i18n.__('Search') + this.title()} key={this.menuName()} clear={this.clearSearch} />
         </div>
       </div>
     )
@@ -855,6 +883,8 @@ class Home extends Base {
 
     const apis = this.ctx.props.apis
     const isAdmin = apis && apis.account && apis.account.data && apis.account.data.isFirstUser
+
+    // const pastable = true
     return (
       <ContextMenu
         open={open}
@@ -962,12 +992,19 @@ class Home extends Base {
                       <Divider style={{ marginLeft: 10, marginTop: 2, marginBottom: 2, width: 'calc(100% - 20px)' }} />
                       <MenuItem
                         primaryText={i18n.__('Copy')}
-                        onClick={() => {}}
+                        onClick={this.onCopy}
                       />
                       <MenuItem
                         primaryText={i18n.__('Cut')}
-                        onClick={() => {}}
+                        onClick={this.onCut}
                       />
+                      {/*
+                      <MenuItem
+                        primaryText={i18n.__('Paste')}
+                        disabled={!pastable}
+                        onClick={this.onPaste}
+                      />
+                      */}
                       {
                         !multiSelected &&
                         <MenuItem

@@ -248,6 +248,7 @@ class FileContent extends React.Component {
       const array = Array
         .from({ length }, (v, i) => i)
         .filter((v, i) => {
+          if (!mapData) return false
           const lineNum = mapData[i]
           const lineHeight = allHeight[lineNum] // 150
           const head = lineNum * lineHeight - scrollTop
