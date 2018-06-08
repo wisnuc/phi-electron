@@ -361,15 +361,15 @@ class Preview extends React.Component {
 
     const { metadata, hash } = this.props.item
     const photoMagic = ['JPEG', 'GIF', 'PNG']
-    const videoMagic = ['3GP', 'MP4', 'MOV']
+    // const videoMagic = ['3GP', 'MP4', 'MOV']
     const isPhoto = metadata && photoMagic.includes(metadata.type)
-    const isVideo = metadata && videoMagic.includes(metadata.type)
+    const isVideo = false // metadata && videoMagic.includes(metadata.type)
 
     const extension = this.props.item.name.replace(/^.*\./, '').toUpperCase()
     const textExtension = ['TXT', 'MD', 'JS', 'JSX', 'TS', 'JSON', 'HTML', 'CSS', 'LESS', 'CSV', 'XML']
     const isText = textExtension.findIndex(t => t === extension) > -1 && this.props.item.size < 1024 * 128
 
-    console.log('isPhoto, isVideo', this.props.item, isPhoto, isVideo, isText)
+    // console.log('isPhoto, isVideo', this.props.item, isPhoto, isVideo, isText)
 
     return (
       <div
