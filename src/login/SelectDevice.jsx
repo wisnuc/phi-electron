@@ -42,7 +42,7 @@ class DeviceSelect extends React.Component {
         if (type === 'owner' || (type === 'service' && inviteStatus === 'accept' && accountStatus === '1')) {
           this.setState({ dev, cloudLogin: dev, selectedDevice }) // cloud login: remote or LAN
         } else if (inviteStatus === 'pending' && accountStatus === '1') {
-          this.setState({ dev, invitation: dev }) // invitee confirm invitation
+          this.setState({ dev, invitation: dev, selectedDevice }) // invitee confirm invitation
         }
       } else if (this.props.type === 'BOUNDLIST' && dev.systemStatus() === 'noBoundVolume') {
         this.bindVolume(dev, selectedDevice)
@@ -51,11 +51,11 @@ class DeviceSelect extends React.Component {
       } else if (this.props.type === 'LANTOBIND') {
         this.setState({ dev, confirm: true, selectedDevice })
       } else if (this.props.type === 'CHANGEDEVICE') {
+        console.log('CHANGEDEVICE', this.props, this.state, dev)
         const currentSN = this.props.selectedDevice && this.props.selectedDevice.mdev && this.props.selectedDevice.mdev.deviceSN
         const newSN = dev && dev.mdev && dev.mdev.deviceSN
         if (currentSN && (currentSN === newSN)) return // the same device
-        console.log('CHANGEDEVICE', this.props, this.state, dev)
-        this.setState({ dev, changeDeviceConfirm: true })
+        this.setState({ dev, changeDeviceConfirm: true, selectedDevice })
       }
     }
 
@@ -191,7 +191,22 @@ class DeviceSelect extends React.Component {
   render () {
     console.log('DeviceSelect', this.state, this.props)
 
-    const arr = [...this.props.list]
+    let arr = [...this.props.list]
+    /* hide reject or inactive invitation */
+    if (['BOUNDLIST', 'CHANGEDEVICE'].includes(this.props.type)) {
+      arr = arr.filter(l => l.type === 'owner' || (l.accountStatus === '1' && l.inviteStatus !== 'reject'))
+    }
+
+    const currentSN = this.props.selectedDevice && this.props.selectedDevice.mdev && this.props.selectedDevice.mdev.deviceSN
+
+    /* sort list: current > online > offline */
+    arr = arr.sort((a, b) => {
+      if (currentSN && (a.deviceSN === currentSN)) return -1
+      if (currentSN && (b.deviceSN === currentSN)) return 1
+      if (a.onlineStatus === 'offline') return 1
+      if (b.onlineStatus === 'offline') return -1
+      return 0
+    })
 
     const title = this.props.type === 'LANTOBIND' ? i18n.__('Select Device To Bind')
       : this.props.type === 'LANTOLOGIN' ? i18n.__('Select LAN Device To Login') : i18n.__('Select Device To Login')

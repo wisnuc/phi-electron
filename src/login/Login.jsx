@@ -105,8 +105,8 @@ class Login extends React.Component {
       this.setState({ selectedDevice: null, status: 'deviceSelect', type: 'BOUNDLIST' }, () => this.refresh())
     }
 
-    this.onFormatSuccess = () => {
-      this.setState({ status: 'LANPwd' })
+    this.jumpToSetLANPwd = (dev) => {
+      this.setState({ status: 'LANPwd', selectedDevice: dev })
     }
 
     this.onSetLANPwdSuccess = () => {
@@ -157,6 +157,7 @@ class Login extends React.Component {
           manageDisk={this.manageDisk}
           addBindDevice={this.addBindDevice}
           refreshStationList={this.refreshStationList}
+          jumpToSetLANPwd={this.jumpToSetLANPwd}
           openLANLogin={this.openLANLogin}
         />
       </div>
@@ -169,7 +170,7 @@ class Login extends React.Component {
         {...this.props}
         selectedDevice={this.state.selectedDevice.state}
         backToList={this.backToList}
-        onFormatSuccess={this.onFormatSuccess}
+        onFormatSuccess={() => this.jumpToSetLANPwd(this.state.selectedDevice)}
       />
     )
   }

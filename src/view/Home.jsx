@@ -2,7 +2,7 @@ import i18n from 'i18n'
 import React from 'react'
 import { TweenMax } from 'gsap'
 import { ipcRenderer } from 'electron'
-import { Divider, Avatar } from 'material-ui'
+import { Divider } from 'material-ui'
 
 import Base from './Base'
 import FileDetail from '../file/FileDetail'
@@ -227,6 +227,7 @@ class Home extends Base {
 
     /* op: scrollTo file */
     this.refresh = (op) => {
+      if (!this.state.path) return
       const rUUID = this.state.path[0] && this.state.path[0].uuid
       const dUUID = this.state.path[0] && this.state.path[this.state.path.length - 1].uuid
       if (!rUUID || !dUUID) {
@@ -350,7 +351,7 @@ class Home extends Base {
       } else if (s.display !== 'flex') {
         s.display = 'flex'
       } else {
-        s.width = '180px'
+        s.width = '108px'
         s.opacity = 1
 
         const RDTop = `${this.RDSI * 48 + DRAGTOP - (this.scrollTop || 0)}px`
@@ -399,11 +400,11 @@ class Home extends Base {
         const { top, left } = this.getPosition(this.gridData, this.RDSI)
         s.top = `${top}px`
         s.left = `${left}px`
-        s.width = '180px'
+        s.width = '108px'
       } else {
         s.top = `${this.RDSI * 48 + DRAGTOP - (this.scrollTop || 0)}px`
         s.left = `${DRAGLEFT}px`
-        s.width = '100%'
+        s.width = '108px'
       }
       s.marginTop = '0px'
       s.marginLeft = '0px'
@@ -430,8 +431,9 @@ class Home extends Base {
 
       /* show drag item */
       // console.log('this.scrollTop', this.scrollTop)
+      console.log('this.rowDragStart', event.clientX)
       this.refDragedItems.style.top = `${this.RDSI * 48 + DRAGTOP - (this.scrollTop || 0)}px`
-      this.refDragedItems.style.left = `${DRAGLEFT}px`
+      this.refDragedItems.style.left = `${event.clientX}px`
 
       document.addEventListener('mousemove', this.dragRow)
       document.addEventListener('mouseup', this.dragEnd, true)
@@ -471,7 +473,7 @@ class Home extends Base {
       const { top, left } = this.getPosition(this.gridData, this.RDSI)
       this.refDragedItems.style.top = `${top}px`
       this.refDragedItems.style.left = `${left}px`
-      this.refDragedItems.style.width = '180px'
+      this.refDragedItems.style.width = '108px'
 
       document.addEventListener('mousemove', this.dragGrid)
       document.addEventListener('mouseup', this.dragEnd, true)
@@ -518,7 +520,12 @@ class Home extends Base {
 
     /* sort entries, reset select, stop loading */
     this.setState({
-      path, select, loading: false, entries: [...entries].sort((a, b) => sortByType(a, b, this.state.sortType)), counter
+      path,
+      select,
+      loading: false,
+      entries: [...entries].sort((a, b) => sortByType(a, b, this.state.sortType)),
+      counter,
+      showSearch: false
     })
   }
 
@@ -575,30 +582,27 @@ class Home extends Base {
           left: 0,
           marginLeft: 0,
           opacity: 0,
-          width: '100%',
-          height: 48,
+          width: 108,
+          height: 108,
           transition: 'all 225ms cubic-bezier(.4,0,1,1)',
           transitionProperty: 'top, left, width, opacity',
           display: 'none',
           alignItems: 'center',
-          color: '#FFF',
-          boxShadow: '2px 2px 2px rgba(0,0,0,0.27)',
-          backgroundColor: this.groupPrimaryColor()
+          backgroundColor: '#FFF',
+          boxShadow: '0 0 20px 0 rgba(23, 99, 207, 0.1)'
         }}
       >
-        <div style={{ flexGrow: 1, maxWidth: 48 }} />
         {/* file type may be: folder, public, directory, file, unsupported */}
-        <div style={{ width: 36, height: 36, display: 'flex', alignItems: 'center', margin: 12 }}>
-          <Avatar style={{ backgroundColor: 'white', width: 36, height: 36 }}>
-            {
-              this.entry.type === 'directory'
-                ? <AllFileIcon style={{ width: 24, height: 24 }} />
-                : this.entry.type === 'file'
-                  ? renderFileIcon(this.entry.name, this.entry.metadata, 24)
-                  : <div />
-            }
-          </Avatar>
+        <div style={{ width: 108, height: 108 }} className="flexCenter">
+          {
+            this.entry.type === 'directory'
+              ? <AllFileIcon style={{ width: 64, height: 64 }} />
+              : this.entry.type === 'file'
+                ? renderFileIcon(this.entry.name, this.entry.metadata, 64)
+                : <div />
+          }
         </div>
+        {/*
         <div
           style={{
             width: 114,
@@ -610,6 +614,7 @@ class Home extends Base {
         >
           { this.entry.name }
         </div>
+        */}
         {
           this.state.select.selected.length > 1 &&
             <div
@@ -621,8 +626,7 @@ class Home extends Base {
                 height: 24,
                 borderRadius: 12,
                 boxSizing: 'border-box',
-                backgroundColor: this.shouldFire() || this.dropHeader() ? this.groupPrimaryColor() : '#FF4081',
-                border: '1px solid rgba(0,0,0,0.18)',
+                backgroundColor: this.shouldFire() || this.dropHeader() ? '#31a0f5' : '#e63939',
                 color: '#FFF',
                 fontWeight: 500,
                 fontSize: 14,

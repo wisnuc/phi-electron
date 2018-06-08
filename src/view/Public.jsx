@@ -55,7 +55,7 @@ class Public extends Home {
         this.enter(pos, err => err && console.error('listNavBySelect error', err))
         this.history.add(pos)
       } else if (entry.type === 'public') {
-        const myUUID = this.ctx.props.apis.account.data.uuid
+        const myUUID = this.ctx.props.apis.account.data && this.ctx.props.apis.account.data.uuid
         const writable = entry.writelist === '*' || entry.writelist.findIndex(uuid => uuid === myUUID) > -1
         if (!writable) { // TODO need to define UE
           this.toggleDialog('noAccess')

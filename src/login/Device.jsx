@@ -25,14 +25,17 @@ class Device extends React.Component {
     /* cloud dev or mdns dev */
     const { mdev, cdev } = this.props
     if (cdev) {
-      if (cdev.onlineStatus !== 'online') return
       const dev = Object.assign(
         { address: cdev.localIp, domain: 'phiToLoacl', deviceSN: cdev.deviceSN, stationName: cdev.bindingName },
         cdev
       )
-      this.device = new DeviceAPI(dev)
-      this.device.on('updated', this.onUpdate)
-      this.device.start()
+      if (cdev.onlineStatus !== 'online') {
+        this.onUpdate(null, { mdev: dev })
+      } else {
+        this.device = new DeviceAPI(dev)
+        this.device.on('updated', this.onUpdate)
+        this.device.start()
+      }
     } else if (mdev) {
       this.device = new DeviceAPI(mdev)
       this.device.on('updated', this.onUpdate)
@@ -78,6 +81,7 @@ class Device extends React.Component {
       (type === 'LANTOBIND' && status === 'noBoundUser') ||
       (type === 'LANTOLOGIN' && status === 'ready') ||
       (type === 'CHANGEDEVICE' && status === 'ready') ||
+      (type === 'CHANGEDEVICE' && status === 'offline') ||
       (type === 'BOUNDLIST' && status === 'noBoundVolume') ||
       (type === 'BOUNDLIST' && status === 'ready' && (isAdmin || isUser)) ||
       (type === 'BOUNDLIST' && status === 'offline')
@@ -91,6 +95,12 @@ class Device extends React.Component {
     const mac = boot && boot.data && boot.data.device && boot.data.device.net && boot.data.device.net.mac
     if (mac) return `N2-${mac.slice(-2)}`
     return 'N2'
+  }
+
+  isCurrent () {
+    const currentSN = this.props.selectedDevice && this.props.selectedDevice.mdev && this.props.selectedDevice.mdev.deviceSN
+    const newSN = this.state.dev && this.state.dev.mdev && this.state.dev.mdev.deviceSN
+    return !!currentSN && (currentSN === newSN)
   }
 
   renderStatus () {
@@ -113,16 +123,16 @@ class Device extends React.Component {
       case 'ready':
         if (this.props.type === 'LANTOBIND') text = i18n.__('Already Bound')
         else if (this.props.type === 'CHANGEDEVICE') {
-          const currentSN = this.props.selectedDevice && this.props.selectedDevice.mdev && this.props.selectedDevice.mdev.deviceSN
-          const newSN = this.state.dev && this.state.dev.mdev && this.state.dev.mdev.deviceSN
-          if (currentSN && (currentSN === newSN)) text = i18n.__('Current Logged Device')
+          if (this.isCurrent()) text = i18n.__('Current Logged Device')
           else text = ''
         } else text = ''
         break
 
       case 'offline':
-        if (this.onlineStatus()) text = ''
-        else text = i18n.__('System Error')
+        if (this.onlineStatus()) {
+          if (this.isCurrent()) text = i18n.__('Current Logged Device')
+          else text = ''
+        } else text = i18n.__('System Error')
         break
 
       case 'probing':
@@ -168,7 +178,7 @@ class Device extends React.Component {
       <div
         style={{
           width: 210,
-          cursor: isEnabled ? 'pointer' : 'not-allowed',
+          cursor: isEnabled && !this.isCurrent() ? 'pointer' : 'not-allowed',
           padding: '0 20px',
           margin: '30px 7px 0 7px'
         }}
@@ -212,9 +222,15 @@ class Device extends React.Component {
           }
           {
             !!this.renderStatus() &&
-            <div style={{ fontSize: 14, color: ['noBoundUser', 'ready'].includes(status) ? '#44c468' : '#fa5353' }}>
-              { this.renderStatus() }
-            </div>
+              <div
+                style={{
+                  fontSize: 14,
+                  color: ['noBoundUser', 'ready'].includes(status) ||
+                  (this.renderStatus() === i18n.__('Current Logged Device')) ? '#44c468' : '#fa5353'
+                }}
+              >
+                { this.renderStatus() }
+              </div>
           }
         </div>
         <div style={{ height: 230 }} className="flexCenter">

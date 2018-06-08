@@ -18,7 +18,7 @@ class Account extends React.Component {
       clearTimeout(this.timer)
       this.setState({ open: true, show: false, anchorEl: e.currentTarget })
       /* hide the status of position move */
-      this.timer = setTimeout(() => this.setState({ show: true }), 10)
+      this.timer = setTimeout(() => this.setState({ show: true }), 100)
     }
 
     this.openUsers = () => {
