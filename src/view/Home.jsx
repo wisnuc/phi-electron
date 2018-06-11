@@ -1,5 +1,6 @@
 import i18n from 'i18n'
 import React from 'react'
+import Promise from 'bluebird'
 import { TweenMax } from 'gsap'
 import { ipcRenderer } from 'electron'
 import { Divider } from 'material-ui'
@@ -128,20 +129,57 @@ class Home extends Base {
       console.log('this.onCopy', this.ctx.props)
       const selected = this.state.select.selected
       const entries = selected.map(index => this.state.entries[index])
-      const driveUUID = this.state.path[0].uuid
-      this.ctx.props.clipboard.set({ action: 'copy', loc: 'drive', driveUUID, entries })
+      const drive = this.state.path[0].uuid
+      const dir = this.state.path.slice(-1)[0].uuid
+      this.ctx.props.clipboard.set({ action: 'copy', loc: 'drive', drive, dir, entries })
     }
 
     this.onCut = () => {
       const selected = this.state.select.selected
       const entries = selected.map(index => this.state.entries[index])
-      const driveUUID = this.state.path[0].uuid
-      this.ctx.props.clipboard.set({ action: 'cut', loc: 'drive', driveUUID, entries })
+      const drive = this.state.path[0].uuid
+      const dir = this.state.path.slice(-1)[0].uuid
+      this.ctx.props.clipboard.set({ action: 'move', loc: 'drive', drive, dir, entries })
+    }
+
+    /* request task state */
+    this.getTaskState = async (uuid) => {
+      await Promise.delay(500)
+      const data = await this.ctx.props.apis.pureRequestAsync('task', { uuid })
+      if (data && data.nodes && data.nodes.findIndex(n => n.parent === null && n.state === 'Finished') > -1) return 'Finished'
+      if (data && data.nodes && data.nodes.findIndex(n => n.state === 'Conflict') > -1) return 'Conflict'
+      return 'Working'
+    }
+
+    /* finish post change dialog content to waiting/result */
+    this.finish = (error, data, action) => {
+      console.log('this.finish', error, data, action)
+      const type = action === 'copy' ? i18n.__('Copy') : i18n.__('Move')
+      if (error) this.ctx.props.openSnackBar(type.concat(i18n.__('+Failed')), { showTasks: true })
+      else {
+        this.getTaskState(data.uuid).asCallback((err, res) => {
+          if (err) {
+            console.error('this.getTaskState error', err)
+            this.ctx.props.openSnackBar(type.concat(i18n.__('+Failed')), { showTasks: true })
+          } else {
+            let text = 'Working'
+            if (res === 'Finished') text = xcopyMsg(this.xcopyData)
+            if (res === 'Conflict') text = i18n.__('Task Conflict Text')
+            this.refresh({ noloading: true })
+            this.ctx.props.openSnackBar(text, res !== 'Finished' ? { showTasks: true } : null)
+          }
+        })
+      }
     }
 
     this.onPaste = () => {
       const pos = this.ctx.props.clipboard.get()
-      console.log('this.onPaste', pos)
+      const driveUUID = this.state.path[0].uuid
+      const dirUUID = this.state.path.slice(-1)[0].uuid
+      console.log('this.onPaste', pos, driveUUID, dirUUID)
+      const entries = pos.entries.map(e => e.name)
+      const args = { type: pos.action, src: { drive: pos.drive, dir: pos.dir }, dst: { drive: driveUUID, dir: dirUUID }, entries }
+      this.ctx.props.apis.pureRequest('copy', args, (err, res) => this.finish(err, res, pos.action))
     }
 
     this.rename = () => {
@@ -301,34 +339,6 @@ class Home extends Base {
         if (status === 'Out') {
           TweenMax.to(transformItem, time, { rotation: -180, opacity: 0, ease })
         }
-      }
-    }
-
-    /* request task state */
-    this.getTaskState = async (uuid) => {
-      await Promise.delay(500)
-      const data = await this.ctx.props.apis.pureRequestAsync('task', { uuid })
-      if (data && data.nodes && data.nodes.findIndex(n => n.parent === null && n.state === 'Finished') > -1) return 'Finished'
-      if (data && data.nodes && data.nodes.findIndex(n => n.state === 'Conflict') > -1) return 'Conflict'
-      return 'Working'
-    }
-
-    /* finish post change dialog content to waiting/result */
-    this.finish = (error, data) => {
-      const type = i18n.__('Move')
-      if (error) this.ctx.props.openSnackBar(type.concat(i18n.__('+Failed')), { showTasks: true })
-      else {
-        this.getTaskState(data.uuid).asCallback((err, res) => {
-          if (err) {
-            this.ctx.props.openSnackBar(type.concat(i18n.__('+Failed')), { showTasks: true })
-          } else {
-            let text = 'Working'
-            if (res === 'Finished') text = xcopyMsg(this.xcopyData)
-            if (res === 'Conflict') text = i18n.__('Task Conflict Text')
-            this.refresh({ noloading: true })
-            this.ctx.props.openSnackBar(text, res !== 'Finished' ? { showTasks: true } : null)
-          }
-        })
       }
     }
 
@@ -884,7 +894,7 @@ class Home extends Base {
     const apis = this.ctx.props.apis
     const isAdmin = apis && apis.account && apis.account.data && apis.account.data.isFirstUser
 
-    // const pastable = true
+    const pastable = true
     return (
       <ContextMenu
         open={open}
@@ -929,6 +939,11 @@ class Home extends Base {
                     primaryText={i18n.__('Create New Folder')}
                     onClick={() => this.toggleDialog('createNewFolder')}
                     disabled={this.isMedia}
+                  />
+                  <MenuItem
+                    primaryText={i18n.__('Paste')}
+                    disabled={!pastable}
+                    onClick={this.onPaste}
                   />
                   <Divider style={{ marginLeft: 10, marginTop: 2, marginBottom: 2, width: 'calc(100% - 20px)' }} />
                 </div>
@@ -998,13 +1013,6 @@ class Home extends Base {
                         primaryText={i18n.__('Cut')}
                         onClick={this.onCut}
                       />
-                      {/*
-                      <MenuItem
-                        primaryText={i18n.__('Paste')}
-                        disabled={!pastable}
-                        onClick={this.onPaste}
-                      />
-                      */}
                       {
                         !multiSelected &&
                         <MenuItem

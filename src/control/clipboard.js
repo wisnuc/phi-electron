@@ -6,7 +6,7 @@ class Clipboard {
   }
 
   set (pos) {
-    if (pos && pos.type) this.pos = pos
+    if (pos && pos.action) this.pos = pos
     return pos
   }
 

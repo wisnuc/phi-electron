@@ -280,10 +280,6 @@ class Fruitmix extends EventEmitter {
           .field(`${args.oldName}|${args.newName}`, JSON.stringify({ op: 'dup' }))
         break
 
-      case 'copy':
-        r = this.apost('tasks', args)
-        break
-
       case 'task':
         r = this.aget(`tasks/${args.taskUUID}`)
         break
@@ -369,7 +365,7 @@ class Fruitmix extends EventEmitter {
         break
 
       case 'search':
-        qs = { name: args.name }
+        qs = { name: args.name, namepath: 'true' }
         if (args.order) Object.assign(qs, { order: args.order })
         if (args.places) Object.assign(qs, { places: args.places })
         if (args.types) Object.assign(qs, { types: args.types })
@@ -385,6 +381,10 @@ class Fruitmix extends EventEmitter {
         break
 
       /* task api */
+      case 'copy':
+        r = this.apost('tasks', args)
+        break
+
       case 'tasks':
         r = this.aget('tasks')
         break

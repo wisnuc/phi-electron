@@ -83,7 +83,7 @@ class Row extends React.Component {
                             ? (
                               <Thumb
                                 full
-                                bgColor="#f3f8ff"
+                                bgColor="#FFFFFF"
                                 digest={entry.hash}
                                 ipcRenderer={this.props.ipcRenderer}
                                 height={80}
