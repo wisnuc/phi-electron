@@ -14,7 +14,7 @@ import { formatMtime } from '../common/datetime'
 
 const hasThumb = (metadata) => {
   if (!metadata) return false
-  const arr = ['PNG', 'JPEG', 'GIF', 'MOV', '3GP', 'MP4']
+  const arr = ['PNG', 'JPEG', 'GIF', 'MOV', '3GP', 'MP4', 'PDF']
   if (arr.includes(metadata.type)) return true
   return false
 }

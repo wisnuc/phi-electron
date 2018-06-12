@@ -244,16 +244,25 @@ class Preview extends React.Component {
   }
 
   renderPDF () {
+    if (this.name === this.props.item.name && this.state.filePath) {
+      return (
+        <div
+          className="flexCenter"
+          onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
+          style={{ height: '100%', width: '100%', overflowY: 'auto', overflowX: 'hidden' }}
+        >
+          <PDFView filePath={this.state.filePath} />
+        </div>
+      )
+    }
+
+    if (!this.session) {
+      this.name = this.props.item.name
+      this.startDownload()
+      this.state = Object.assign({}, this.state, { filePath: '', pages: null })
+    }
     return (
-      <div
-        className="flexCenter"
-        onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
-        style={{ height: '100%', width: '100%', overflowY: 'auto', overflowX: 'hidden' }}
-      >
-        <PDFView
-          filePath={this.state.filePath}
-        />
-      </div>
+      <CircularLoading />
     )
   }
 
@@ -292,12 +301,24 @@ class Preview extends React.Component {
   renderAudio () {
     return (
       <div onClick={(e) => { e.preventDefault(); e.stopPropagation() }} >
-        <audio width="100%" height="100%" controls >
+        <audio width="100%" height="100%" controls controlsList="nodownload">
           <source src={this.state.filePath} />
           <track kind="captions" />
         </audio>
       </div>
     )
+  }
+
+  renderKnownAudio () {
+    if (this.name === this.props.item.name && this.state.filePath) return this.renderAudio()
+
+    if (!this.session) {
+      this.name = this.props.item.name
+      this.getRandomSrc()
+      this.state = Object.assign({}, this.state, { filePath: '', pages: null })
+    }
+
+    return (<CircularLoading />)
   }
 
   renderOtherFiles () {
@@ -331,39 +352,19 @@ class Preview extends React.Component {
     )
   }
 
-  renderPreview () {
-    const extension = this.props.item.name.replace(/^.*\./, '').toUpperCase()
-    // const videoExtension = ['MP4', 'MOV', 'AVI', 'MKV']
-    const audioExtension = ['MP3', 'APE', 'FLAC', 'WMA']
-    const isVideo = false // videoExtension.findIndex(t => t === extension) > -1
-    const isAudio = audioExtension.findIndex(t => t === extension) > -1
-    const isPDF = extension === 'PDF'
-
-    if ((!isVideo && !isAudio && !isPDF) || this.props.item.size > 1024 * 1024 * 50) return this.renderOtherFiles()
-
-    if (this.name === this.props.item.name && this.state.filePath) {
-      return isVideo ? this.renderVideo() : isPDF ? this.renderDoc('pdf') : isAudio ? this.renderAudio() : <div />
-    }
-
-    // debug('before this.startDownload()', this.props.item.name, this.name, this.session)
-    if (!this.session) {
-      this.name = this.props.item.name
-      this.startDownload()
-      this.state = Object.assign({}, this.state, { filePath: '', pages: null })
-    }
-    return (
-      <CircularLoading />
-    )
-  }
-
   render () {
     if (!this.props.item || !this.props.item.name) return (<div />)
+    console.log('preview', this.props)
+    const isCloud = this.props && this.props.apis && this.props.apis.isCloud
 
     const { metadata, hash } = this.props.item
     const photoMagic = ['JPEG', 'GIF', 'PNG']
     const videoMagic = ['3GP', 'MP4', 'MOV']
+    const audioMagic = ['MP3', 'FLAC']
     const isPhoto = metadata && photoMagic.includes(metadata.type)
-    const isVideo = metadata && videoMagic.includes(metadata.type)
+    const isVideo = metadata && videoMagic.includes(metadata.type) && !isCloud
+    const isAudio = metadata && audioMagic.includes(metadata.type) && !isCloud
+    const isPDF = metadata && metadata.type === 'PDF' && (this.props.item.size < 1024 * 1024 * 50)
 
     const extension = this.props.item.name.replace(/^.*\./, '').toUpperCase()
     const textExtension = ['TXT', 'MD', 'JS', 'JSX', 'TS', 'JSON', 'HTML', 'CSS', 'LESS', 'CSV', 'XML']
@@ -374,20 +375,16 @@ class Preview extends React.Component {
     return (
       <div
         ref={ref => (this.refBackground = ref)}
-        style={{
-          height: '100%',
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          WebkitAppRegion: 'no-drag'
-        }}
+        style={{ height: '100%', width: '100%', WebkitAppRegion: 'no-drag' }}
+        className="flexCenter"
       >
         {
           isPhoto ? this.renderPhoto(hash, metadata)
             : isVideo ? this.renderKnownVideo()
-              : isText ? this.renderDoc('text')
-                : this.renderPreview()
+              : isAudio ? this.renderKnownAudio()
+                : isText ? this.renderDoc('text')
+                  : isPDF ? this.renderDoc('pdf')
+                    : this.renderOtherFiles()
         }
         {/* dialog */}
         <DialogOverlay open={this.state.alert} >

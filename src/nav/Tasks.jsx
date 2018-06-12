@@ -1,17 +1,13 @@
 import React from 'react'
 import i18n from 'i18n'
-import { LinearProgress, IconButton, Divider } from 'material-ui'
+import { LinearProgress, Divider } from 'material-ui'
 import { AutoSizer } from 'react-virtualized'
 import DoneIcon from 'material-ui/svg-icons/action/done'
-import CloseIcon from 'material-ui/svg-icons/navigation/close'
-import WarningIcon from 'material-ui/svg-icons/alert/warning'
-import FolderSvg from 'material-ui/svg-icons/file/folder'
-import FileSvg from 'material-ui/svg-icons/editor/insert-drive-file'
-import MultiSvg from 'material-ui/svg-icons/content/content-copy'
 import ErrorBox from '../common/ErrorBox'
-import { FLButton } from '../common/Buttons'
+import { FLButton, SIButton } from '../common/Buttons'
 import CircularLoading from '../common/CircularLoading'
 import ScrollBar from '../common/ScrollBar'
+import { CloseIcon, SmallErrorIcon } from '../common/Svg'
 
 class Tasks extends React.Component {
   constructor (props) {
@@ -34,13 +30,20 @@ class Tasks extends React.Component {
       })
     }
 
+    this.clearFinished = () => {
+      if (!this.state.tasks || !this.state.tasks.length) return
+      this.state.tasks.filter(t => !!t.finished).forEach((t) => {
+        this.props.apis.pureRequest('deleteTask', { uuid: t.uuid })
+      })
+    }
+
     this.refresh = () => {
       this.props.apis.pureRequest('tasks', null, (err, res) => {
-        if (err || !res) {
+        if (err || !Array.isArray(res)) {
           this.setState({ error: 'NoData', loading: false })
-        } else {
-          this.setState({ tasks: [...res].reverse(), loading: false })
-        }
+        } else if (res.length) {
+          this.setState({ tasks: [...res].reverse(), loading: false }, () => this.clearFinished())
+        } else this.props.onRequestClose()
       })
     }
 
@@ -65,8 +68,7 @@ class Tasks extends React.Component {
 
   componentDidMount () {
     this.refresh()
-    this.timer = setInterval(() => this.state.tasks.some(t => t && t.nodes && t.nodes[0] && t.nodes[0].state !== 'Finished') &&
-      this.refresh(), 20000)
+    this.timer = setInterval(() => this.state.tasks.some(t => !t.finished) && this.refresh(), 2000)
   }
 
   componentWillUnmount () {
@@ -95,94 +97,67 @@ class Tasks extends React.Component {
   renderTask ({ style, key, task }) {
     const { uuid, type, entries, nodes } = task
     const action = type === 'copy' ? i18n.__('Copying') : i18n.__('Moving')
-    const tStyles = { marginTop: -8 }
-    const svgStyle = { color: '#000', opacity: 0.54 }
     const conflict = nodes.filter(n => n.state === 'Conflict')
     const error = nodes.filter(n => n.state === 'Failed')
-    const finished = nodes.findIndex(n => n.parent === null && n.state === 'Finished') > -1
+    const finished = !!task.finished
 
     return (
       <div style={style} key={key}>
-        <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center' }}>
-          {/* Icon */}
-          <div style={{ width: 40, display: 'flex', alignItems: 'center' }} >
-            {
-              entries.length > 1 ? <MultiSvg style={svgStyle} />
-                : entries[0].type === 'file' ? <FileSvg style={svgStyle} /> : <FolderSvg style={svgStyle} />
-            }
-          </div>
-
+        <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center', color: '#85868c', fontSize: 11 }}>
           {/* Progress */}
           <div style={{ flexGrow: 1 }} >
-            <div style={{ width: '100%', display: 'flex', alignItems: 'center', fontSize: 13 }} >
+            <div style={{ width: '100%', height: 20, display: 'flex', alignItems: 'center' }} >
               { action }
               <div style={{ width: 4 }} />
               <div
                 style={{
-                  fontSize: 13,
+                  fontSize: 11,
                   overflow: 'hidden',
                   whiteSpace: 'nowrap',
                   textOverflow: 'ellipsis',
-                  maxWidth: entries.length > 1 ? 96 : 192
+                  maxWidth: entries.length > 1 ? 20 : 120
                 }}
               >
-                { entries[0].name }
+                { entries[0] }
               </div>
               <div style={{ width: 4 }} />
               { entries.length > 1 && i18n.__('And Other %s Items', entries.length) }
+              <div style={{ flexGrow: 1 }} />
+              {
+                finished ? i18n.__('Finished') : error.length ? i18n.__('Task Failed')
+                  : conflict.length ? i18n.__('Task Conflict Text') : ''
+              }
             </div>
 
-            <div style={{ height: 16, width: '100%', display: 'flex', alignItems: 'center', fontSize: 13 }}>
+            <div style={{ height: 10, width: '100%', display: 'flex', alignItems: 'center', fontSize: 11 }}>
               <LinearProgress
                 mode={(finished || conflict.length > 0 || error.length > 0) ? 'determinate' : 'indeterminate'}
                 value={finished ? 100 : 61.8}
                 style={{ backgroundColor: '#E0E0E0' }}
               />
             </div>
-
-            <div style={{ fontSize: 13, color: 'rgba(0,0,0,0.54)' }}>
-              {
-                finished ? i18n.__('Finished') : error.length ? i18n.__('Task Failed')
-                  : conflict.length ? i18n.__('Task Conflict Text') : ''
-              }
-            </div>
           </div>
 
           {/* Button */}
           <div style={{ width: 8 }} />
-          <IconButton
-            iconStyle={{ color: '#9E9E9E' }}
-            tooltipStyles={tStyles}
-            onTouchTap={() => this.cancelTask(uuid)}
-            tooltip={finished ? i18n.__('OK') : i18n.__('Cancel')}
-          >
-            { finished ? <DoneIcon /> : <CloseIcon /> }
-          </IconButton>
-          <div style={{ marginLeft: -8, marginRight: -12 }}>
-            {
-              error.length
+          {
+            finished ? (<SIButton onClick={() => this.cancelTask(uuid)} tooltip={i18n.__('OK')} > <DoneIcon /> </SIButton>)
+              : error.length ? (
+                <ErrorBox
+                  style={{ display: 'flex', alignItems: 'center' }}
+                  tooltip={i18n.__('Detail')}
+                  iconStyle={{ color: '#db4437' }}
+                  error={error}
+                />
+              ) : conflict.length
                 ? (
-                  <ErrorBox
-                    style={{ display: 'flex', alignItems: 'center' }}
-                    tooltip={i18n.__('Detail')}
-                    iconStyle={{ color: '#db4437' }}
-                    error={error}
-                  />
+                  <SIButton tooltip={i18n.__('Detail')} onClick={() => this.handleConflict(uuid, type, conflict)}>
+                    <SmallErrorIcon />
+                  </SIButton>
                 )
-                : conflict.length
-                  ? (
-                    <IconButton
-                      tooltip={i18n.__('Detail')}
-                      iconStyle={{ color: '#fb8c00' }}
-                      tooltipStyles={tStyles}
-                      onTouchTap={() => this.handleConflict(uuid, type, conflict)}
-                    >
-                      <WarningIcon />
-                    </IconButton>
-                  )
-                  : <div style={{ width: 48 }} />
-            }
-          </div>
+                : (<SIButton onClick={() => this.cancelTask(uuid)} tooltip={i18n.__('Cancel')} > <CloseIcon /> </SIButton>)
+          }
+          <div style={{ width: 16 }} />
         </div>
       </div>
     )
@@ -213,6 +188,7 @@ class Tasks extends React.Component {
   }
 
   render () {
+    const height = Math.min(Math.max(50, 10 + this.state.tasks.length * 40), 130)
     return (
       <div
         style={{
@@ -220,7 +196,7 @@ class Tasks extends React.Component {
           bottom: 30,
           right: 30,
           width: 312,
-          minHeight: 80,
+          minHeight: 90,
           backgroundColor: '#FFF',
           boxShadow: '0 0 30px 0 rgba(23, 99, 207, 0.2)'
         }}
@@ -239,7 +215,7 @@ class Tasks extends React.Component {
           </div>
         </div>
         <Divider style={{ marginLeft: 16, width: 280 }} className="divider" />
-        <div style={{ height: 130, width: 280, marginLeft: 16, padding: '5px 0' }} className="flexCenter">
+        <div style={{ height, width: 296, marginLeft: 16, padding: '5px 0', position: 'relative' }} className="flexCenter">
           {
             this.state.loading ? this.renderLoading() : this.state.error ? this.renderError()
               : this.state.tasks.length ? this.renderTasks(this.state.tasks) : this.renderNoTask()

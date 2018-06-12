@@ -43,6 +43,7 @@ class Tooltip extends React.PureComponent {
 
     const style = Object.assign({
       position: 'absolute',
+      pointerEvents: 'none', // ignore all mouse event, important
       width: 'max-content', // important
       top: (status === 'opening' || status === 'closing') ? -this.distance : 0,
       zIndex: 100,

@@ -29,6 +29,7 @@ class Fruitmix extends EventEmitter {
       token,
       deviceSN,
       update: this.update,
+      isCloud: this.isCloud,
       request: this.request.bind(this),
       requestAsync: this.requestAsync.bind(this),
       pureRequest: this.pureRequest.bind(this),
@@ -286,19 +287,19 @@ class Fruitmix extends EventEmitter {
 
       /* Media API */
       case 'photos':
-        r = this.aget('files', { types: 'JPEG.PNG.JPG.GIF.BMP.RAW', places: args.places })
+        r = this.aget('files', { class: 'image', places: args.places })
         break
 
       case 'music':
-        r = this.aget('files', { types: 'WAV.MP3.APE.WMA.FLAC', places: args.places })
+        r = this.aget('files', { class: 'audio', places: args.places })
         break
 
       case 'docs':
-        r = this.aget('files', { types: 'PDF.DOCX.DOC.XLS.XLSX.PPT.PPTX', places: args.places })
+        r = this.aget('files', { class: 'document', places: args.places })
         break
 
       case 'videos':
-        r = this.aget('files', { types: 'RM.RMVB.WMV.AVI.MP4.3GP.MKV.MOV.FLV', places: args.places })
+        r = this.aget('files', { class: 'video', places: args.places })
         break
 
       /* device api */
