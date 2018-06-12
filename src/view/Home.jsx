@@ -155,18 +155,22 @@ class Home extends Base {
     this.finish = (error, data, action) => {
       console.log('this.finish', error, data, action)
       const type = action === 'copy' ? i18n.__('Copy') : i18n.__('Move')
-      if (error) this.ctx.props.openSnackBar(type.concat(i18n.__('+Failed')), { showTasks: true })
-      else {
+      if (error) {
+        this.ctx.props.openSnackBar(type.concat(i18n.__('+Failed')))
+        this.ctx.setState({ showTasks: true })
+      } else {
         this.getTaskState(data.uuid).asCallback((err, res) => {
           if (err) {
             console.error('this.getTaskState error', err)
-            this.ctx.props.openSnackBar(type.concat(i18n.__('+Failed')), { showTasks: true })
+            this.ctx.props.openSnackBar(type.concat(i18n.__('+Failed')))
+            this.ctx.setState({ showTasks: true })
           } else {
             let text = 'Working'
             if (res === 'Finished') text = xcopyMsg(this.xcopyData)
             if (res === 'Conflict') text = i18n.__('Task Conflict Text')
             this.refresh({ noloading: true })
-            this.ctx.props.openSnackBar(text, res !== 'Finished' ? { showTasks: true } : null)
+            this.ctx.props.openSnackBar(text)
+            if (res !== 'Finished') this.ctx.setState({ showTasks: true })
           }
         })
       }

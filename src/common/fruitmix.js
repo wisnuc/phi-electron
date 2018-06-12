@@ -286,19 +286,19 @@ class Fruitmix extends EventEmitter {
 
       /* Media API */
       case 'photos':
-        r = this.aget('files', { types: 'JPEG.PNG.JPG.GIF.BMP.RAW' })
+        r = this.aget('files', { types: 'JPEG.PNG.JPG.GIF.BMP.RAW', places: args.places })
         break
 
       case 'music':
-        r = this.aget('files', { types: 'WAV.MP3.APE.WMA.FLAC' })
+        r = this.aget('files', { types: 'WAV.MP3.APE.WMA.FLAC', places: args.places })
         break
 
       case 'docs':
-        r = this.aget('files', { types: 'PDF.TXT.DOCX.MD.DOC.XLS.XLSX.PPT.PPTX' })
+        r = this.aget('files', { types: 'PDF.DOCX.DOC.XLS.XLSX.PPT.PPTX', places: args.places })
         break
 
       case 'videos':
-        r = this.aget('files', { types: 'RM.RMVB.WMV.AVI.MP4.3GP.MKV.MOV.FLV' })
+        r = this.aget('files', { types: 'RM.RMVB.WMV.AVI.MP4.3GP.MKV.MOV.FLV', places: args.places })
         break
 
       /* device api */

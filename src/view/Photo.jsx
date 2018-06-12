@@ -21,7 +21,9 @@ class Photo extends Home {
     this.types = 'JPEG.PNG.JPG.GIF.BMP.RAW'
 
     this.refresh = (op) => {
-      this.ctx.props.apis.request(this.type)
+      const apis = this.ctx.props.apis
+      const places = apis && apis.drives && apis.drives.data && apis.drives.data.map(d => d.uuid).join('.')
+      this.ctx.props.apis.request(this.type, { places })
       if (op) this.setState({ scrollTo: op.fileName || op.uuid, loading: !op.noloading }) // fileName for files, uuid for drives
       else this.setState({ loading: true })
     }
@@ -34,6 +36,7 @@ class Photo extends Home {
       if (this.preValue === this.state[type] && !this.force) return
 
       const entries = this.state[type].map((entry) => {
+        if (!entry || !entry.hash) return null
         // const { metadata } = entry
         // if (!metadata) return entry
         const newEntry = {
@@ -44,7 +47,7 @@ class Photo extends Home {
           // mtime: toTimeSecond(metadata.date || '')
         }
         return Object.assign({}, newEntry, entry)
-      })
+      }).filter(e => !!e)
       const path = [{ name: this.title(), uuid: null, type: 'mediaRoot' }]
       const select = this.select.reset(entries.length)
 

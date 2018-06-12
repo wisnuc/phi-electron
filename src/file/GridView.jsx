@@ -12,6 +12,13 @@ import renderFileIcon from '../common/renderFileIcon'
 import { AllFileIcon, PublicIcon } from '../common/Svg'
 import { formatMtime } from '../common/datetime'
 
+const hasThumb = (metadata) => {
+  if (!metadata) return false
+  const arr = ['PNG', 'JPEG', 'GIF', 'MOV', '3GP', 'MP4']
+  if (arr.includes(metadata.type)) return true
+  return false
+}
+
 class Row extends React.Component {
   shouldComponentUpdate (nextProps) {
     return (!nextProps.isScrolling)
@@ -79,7 +86,7 @@ class Row extends React.Component {
                       entry.type === 'public' ? <PublicIcon style={{ width: 50, height: 50, color: '#ffa93e' }} />
                         : entry.type === 'directory'
                           ? <AllFileIcon style={{ width: 50, height: 50, color: '#ffa93e' }} />
-                          : ((rowSum < 500 || !isScrolling) && entry.metadata
+                          : ((rowSum < 500 || !isScrolling) && entry.metadata && hasThumb(entry.metadata)
                             ? (
                               <Thumb
                                 full

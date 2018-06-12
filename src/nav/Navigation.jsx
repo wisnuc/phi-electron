@@ -3,6 +3,7 @@ import React from 'react'
 import { ipcRenderer } from 'electron'
 import { FlatButton } from 'material-ui'
 
+import Tasks from './Tasks'
 import Policy from './Policy'
 import FileMenu from './FileMenu'
 import TransMenu from './TransMenu'
@@ -159,6 +160,14 @@ class NavViews extends React.Component {
     this.jumpTo = (nav) => {
       if (nav === 'changeDevice') this.showBoundList()
       else if (nav === 'settings') this.navGroup('settings')
+    }
+
+    this.openTasks = () => {
+      this.setState({ showTask: true })
+    }
+
+    this.openMovePolicy = (data) => {
+      this.setState({ conflicts: data })
     }
   }
 
@@ -346,7 +355,17 @@ class NavViews extends React.Component {
         {/* drag item */}
         { this.views[this.state.nav].renderDragItems() }
 
-        {/* upload policy */}
+        {/* Tasks */}
+        {
+          this.state.showTasks &&
+            <Tasks
+              apis={this.props.apis}
+              onRequestClose={() => this.setState({ showTasks: false })}
+              openMovePolicy={this.openMovePolicy}
+            />
+        }
+
+        {/* upload policy: upload -> ipc || tasks -> handleTask */}
         <DialogOverlay open={!!this.state.conflicts} onRequestClose={() => this.setState({ conflicts: null })} modal >
           {
             this.state.conflicts &&

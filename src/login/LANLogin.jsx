@@ -37,10 +37,11 @@ class LANLogin extends React.Component {
     this.togglePwd = () => this.setState({ showPwd: !this.state.showPwd })
 
     this.login = () => {
+      console.log('this.login this.props.dev.users', this.props.dev.users)
       const users = this.props.dev.users && this.props.dev.users.data
-      const user = users && users.find(u => u.username === this.state.pn)
+      const user = users && users.find(u => u.phoneNumber === this.state.pn)
       if (!user) {
-        this.setState({ pnError: '账户不存在' })
+        this.setState({ pnError: i18n.__('User Not Exist') })
         return
       }
       this.setState({ loading: true })

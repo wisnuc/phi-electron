@@ -83,7 +83,7 @@ class Preview extends React.Component {
       this.props.apis.pureRequest('randomSrc', { hash: this.props.item.hash }, (error, data) => {
         console.log('this.getRandomSrc', error, data)
         if (error) console.log('randomSrc error', error)
-        else this.setState({ filePath: `http://${this.props.apis.address}:3000/random/${data.key}` })
+        else this.setState({ filePath: `http://${this.props.apis.address}:3000/media/${data.random}` })
         this.session = ''
       })
     }
@@ -361,9 +361,9 @@ class Preview extends React.Component {
 
     const { metadata, hash } = this.props.item
     const photoMagic = ['JPEG', 'GIF', 'PNG']
-    // const videoMagic = ['3GP', 'MP4', 'MOV']
+    const videoMagic = ['3GP', 'MP4', 'MOV']
     const isPhoto = metadata && photoMagic.includes(metadata.type)
-    const isVideo = false // metadata && videoMagic.includes(metadata.type)
+    const isVideo = metadata && videoMagic.includes(metadata.type)
 
     const extension = this.props.item.name.replace(/^.*\./, '').toUpperCase()
     const textExtension = ['TXT', 'MD', 'JS', 'JSX', 'TS', 'JSON', 'HTML', 'CSS', 'LESS', 'CSV', 'XML']
