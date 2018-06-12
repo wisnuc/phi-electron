@@ -61,11 +61,12 @@ class Preview extends React.Component {
     }
 
     this.startDownload = () => {
+      console.log('this.startDownload', this.state, this.props)
+      const isMedia = this.props.isMedia
       this.session = UUID.v4()
-      // debug('this.startDownload', this.state, this.props)
-      const driveUUID = this.props.path[0].uuid
-      const dirUUID = this.props.path[this.props.path.length - 1].uuid
-      const entryUUID = this.props.item.uuid
+      const driveUUID = isMedia ? 'media' : this.props.path[0].uuid
+      const dirUUID = isMedia ? 'media' : this.props.path[this.props.path.length - 1].uuid
+      const entryUUID = isMedia ? this.props.item.hash : this.props.item.uuid
       const fileName = this.props.item.name
       this.props.ipcRenderer.send('TEMP_DOWNLOADING', {
         session: this.session,
@@ -78,10 +79,10 @@ class Preview extends React.Component {
     }
 
     this.getRandomSrc = () => {
-      console.log('this.getRandomSrc')
+      // console.log('this.getRandomSrc')
       this.session = UUID.v4()
       this.props.apis.pureRequest('randomSrc', { hash: this.props.item.hash }, (error, data) => {
-        console.log('this.getRandomSrc', error, data)
+        // console.log('this.getRandomSrc', error, data)
         if (error) console.log('randomSrc error', error)
         else this.setState({ filePath: `http://${this.props.apis.address}:3000/media/${data.random}` })
         this.session = ''
@@ -354,7 +355,6 @@ class Preview extends React.Component {
 
   render () {
     if (!this.props.item || !this.props.item.name) return (<div />)
-    console.log('preview', this.props)
     const isCloud = this.props && this.props.apis && this.props.apis.isCloud
 
     const { metadata, hash } = this.props.item

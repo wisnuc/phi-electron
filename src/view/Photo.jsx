@@ -10,7 +10,7 @@ class Photo extends Home {
   constructor (ctx) {
     super(ctx)
 
-    this.state = Object.assign(this.state, { gridView: true })
+    this.state = Object.assign(this.state, { gridView: true, isMedia: true })
 
     this.title = () => i18n.__('Photo Menu Name')
 

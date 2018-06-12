@@ -42,6 +42,7 @@ class Home extends Base {
     this.select.on('updated', next => this.setState({ select: next }))
 
     this.state = {
+      isMedia: false,
       gridView: false, // false: list, true: grid
       sortType: 'nameUp', // nameUp, nameDown, timeUp, timeDown, sizeUp, sizeDown, takenUp, takenDown
       select: this.select.state,
