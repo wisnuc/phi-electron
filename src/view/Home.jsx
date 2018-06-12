@@ -84,10 +84,30 @@ class Home extends Base {
     }
 
     this.download = () => {
-      const selected = this.state.select.selected
-      const entries = selected.map(index => this.state.entries[index])
-      const path = this.state.path
-      ipcRenderer.send('DOWNLOAD', { entries, dirUUID: path[path.length - 1].uuid, driveUUID: path[0].uuid })
+      if (this.state.showSearch) { // search result
+        const selected = this.state.select.selected
+        const entries = selected.map(index => this.state.entries[index])
+        const path = this.state.path
+        const places = [path[path.length - 1].uuid]
+        const entriesByDir = entries.sort((a, b) => a.pdir.localeCompare(b.pdir)).reduce((acc, cur) => {
+          if (!acc[0]) acc.push([cur])
+          else if (acc.slice(-1)[0][0].pdir === cur.pdir) acc.slice(-1)[0].push(cur)
+          else acc.push([cur])
+          return acc
+        }, [])
+        console.log('download in media', entries, path, entriesByDir)
+        entriesByDir.forEach((arr) => {
+          const place = arr[0].place
+          const driveUUID = places[place]
+          const dirUUID = arr[0].pdir
+          ipcRenderer.send('DOWNLOAD', { entries: arr, dirUUID, driveUUID })
+        })
+      } else {
+        const selected = this.state.select.selected
+        const entries = selected.map(index => this.state.entries[index])
+        const path = this.state.path
+        ipcRenderer.send('DOWNLOAD', { entries, dirUUID: path[path.length - 1].uuid, driveUUID: path[0].uuid })
+      }
     }
 
     this.dupFile = () => {
@@ -526,9 +546,9 @@ class Home extends Base {
 
     this.search = (name) => {
       if (!name) return
-      console.log('this.search', name, this.state)
-      // this.refresh()
-      this.setState({ showSearch: name, loading: true })
+      // console.log('this.search', name, this.state)
+      const select = this.select.reset(this.state.entries.length)
+      this.setState({ showSearch: name, loading: true, select })
       const places = this.state.path[this.state.path.length - 1].uuid
       const types = this.types
       const order = types ? 'newest' : 'find'
@@ -536,7 +556,7 @@ class Home extends Base {
       this.ctx.props.apis.pureRequest('search', { name, places, types, order }, (err, res) => {
         if (err) this.setState({ error: true, loading: false })
         else {
-          console.log('this.search res', res)
+          // console.log('this.search res', res)
           this.setState({ entries: res, loading: false })
         }
       })

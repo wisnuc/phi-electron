@@ -86,7 +86,7 @@ class Row extends React.Component {
                       entry.type === 'public' ? <PublicIcon style={{ width: 50, height: 50, color: '#ffa93e' }} />
                         : entry.type === 'directory'
                           ? <AllFileIcon style={{ width: 50, height: 50, color: '#ffa93e' }} />
-                          : ((rowSum < 500 || !isScrolling) && entry.metadata && hasThumb(entry.metadata)
+                          : ((rowSum < 500 || !isScrolling) && entry.hash && hasThumb(entry.metadata)
                             ? (
                               <Thumb
                                 full

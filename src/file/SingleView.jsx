@@ -155,6 +155,7 @@ class ContainerOverlayInline extends React.Component {
                   apis={this.props.apis}
                   parent={this[`refPreview_${index}`]}
                   close={this.close}
+                  isMedia={this.props.isMedia}
                 />
               </div>
             ))

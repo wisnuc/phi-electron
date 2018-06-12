@@ -361,16 +361,16 @@ class Preview extends React.Component {
     const photoMagic = ['JPEG', 'GIF', 'PNG']
     const videoMagic = ['3GP', 'MP4', 'MOV']
     const audioMagic = ['MP3', 'FLAC']
-    const isPhoto = metadata && photoMagic.includes(metadata.type)
-    const isVideo = metadata && videoMagic.includes(metadata.type) && !isCloud
-    const isAudio = metadata && audioMagic.includes(metadata.type) && !isCloud
-    const isPDF = metadata && metadata.type === 'PDF' && (this.props.item.size < 1024 * 1024 * 50)
+    const isPhoto = metadata && photoMagic.includes(metadata.type) && hash
+    const isVideo = metadata && videoMagic.includes(metadata.type) && !isCloud && hash
+    const isAudio = metadata && audioMagic.includes(metadata.type) && !isCloud && hash
+    const isPDF = metadata && metadata.type === 'PDF' && (this.props.item.size < 1024 * 1024 * 50) && hash
 
     const extension = this.props.item.name.replace(/^.*\./, '').toUpperCase()
     const textExtension = ['TXT', 'MD', 'JS', 'JSX', 'TS', 'JSON', 'HTML', 'CSS', 'LESS', 'CSV', 'XML']
-    const isText = textExtension.findIndex(t => t === extension) > -1 && this.props.item.size < 1024 * 128
+    const isText = textExtension.findIndex(t => t === extension) > -1 && (this.props.item.size < 1024 * 128) && !this.props.isMedia
 
-    // console.log('isPhoto, isVideo', this.props.item, isPhoto, isVideo, isText)
+    console.log('isPhoto, isVideo', this.props, isPhoto, isVideo, isText)
 
     return (
       <div
