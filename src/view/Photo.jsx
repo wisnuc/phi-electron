@@ -1,5 +1,6 @@
 import i18n from 'i18n'
 import React from 'react'
+import { ipcRenderer } from 'electron'
 
 import Home from './Home'
 import Search from '../common/Search'
@@ -56,6 +57,27 @@ class Photo extends Home {
       /* sort entries, reset select, stop loading */
       this.setState({
         path, select, loading: false, entries: [...entries].sort((a, b) => sortByType(a, b, this.state.sortType))
+      })
+    }
+
+    this.download = () => {
+      const selected = this.state.select.selected
+      const entries = selected.map(index => this.state.entries[index])
+      const path = this.state.path
+      const apis = this.ctx.props.apis
+      const places = apis && apis.drives && apis.drives.data && apis.drives.data.map(d => d.uuid)
+      const entriesByDir = entries.sort((a, b) => a.pdir.localeCompare(b.pdir)).reduce((acc, cur) => {
+        if (!acc[0]) acc.push([cur])
+        else if (acc.slice(-1)[0][0].pdir === cur.pdir) acc.slice(-1)[0].push(cur)
+        else acc.push([cur])
+        return acc
+      }, [])
+      console.log('download in media', entries, path, entriesByDir)
+      entriesByDir.forEach((arr) => {
+        const place = arr[0].place
+        const driveUUID = places[place]
+        const dirUUID = arr[0].pdir
+        ipcRenderer.send('DOWNLOAD', { entries: arr, dirUUID, driveUUID })
       })
     }
   }

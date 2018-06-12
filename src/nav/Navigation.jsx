@@ -85,7 +85,7 @@ class NavViews extends React.Component {
 
     this.navTo = (nav, target) => {
       console.log('this.navTo', nav, target, this.state, this.views)
-      if (nav !== this.state.nav) {
+      if ((nav !== this.state.nav) || (target && target.dirUUID)) {
         this.setState({ nav })
         if (this.state.nav) this.views[this.state.nav].navLeave()
         this.views[nav].navEnter(target)
@@ -94,7 +94,8 @@ class NavViews extends React.Component {
 
     this.navToDrive = (driveUUID, dirUUID) => {
       const drives = this.props.apis.drives.data // no drives ?
-      const drive = drives.find(d => d.uuid === driveUUID)
+      const drive = drives && drives.find(d => d.uuid === driveUUID)
+      if (!drive) return
       if (drive.tag === 'home') this.navTo('home', { driveUUID, dirUUID })
       else if (drive.type === 'public') this.navTo('public', { driveUUID, dirUUID })
     }

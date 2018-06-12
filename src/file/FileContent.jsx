@@ -397,7 +397,7 @@ class FileContent extends React.Component {
           this.state.seqIndex > -1 && this.props.entries[this.state.seqIndex] && this.props.entries[this.state.seqIndex].metadata &&
             <ContainerOverlay
               onRequestClose={() => this.setState({ preview: false })}
-              isMedia={this.props.isMedia}
+              isMedia={this.props.isMedia || this.props.showSearch}
               open={this.state.preview}
               items={this.props.entries}
               seqIndex={this.state.seqIndex}
@@ -417,7 +417,7 @@ class FileContent extends React.Component {
           this.state.seqIndex > -1 && this.props.entries[this.state.seqIndex] && !this.props.entries[this.state.seqIndex].metadata &&
             <SingleView
               onRequestClose={() => this.setState({ preview: false })}
-              isMedia={this.props.isMedia}
+              isMedia={this.props.isMedia || this.props.showSearch}
               open={this.state.preview}
               items={this.props.entries}
               seqIndex={this.state.seqIndex}

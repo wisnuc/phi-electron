@@ -231,6 +231,18 @@ class Home extends Base {
       this.setState({ fakeOpen: { index: selected[0] } })
     }
 
+    this.openInFolder = () => {
+      const selected = this.state.select && this.state.select.selected
+      if (!selected || selected.length !== 1) return
+
+      const entry = selected.map(index => this.state.entries[index])[0]
+      const apis = this.ctx.props.apis
+      const places = apis && apis.drives && apis.drives.data && apis.drives.data.map(d => d.uuid)
+      const driveUUID = places[entry.place]
+      const dirUUID = entry.pdir
+      this.ctx.navToDrive(driveUUID, dirUUID)
+    }
+
     this.clearFakeOpen = () => {
       this.setState({ fakeOpen: null })
     }
@@ -578,7 +590,7 @@ class Home extends Base {
     if (target && target.driveUUID) { // jump to specific dir
       const { driveUUID, dirUUID } = target
       apis.request('listNavDir', { driveUUID, dirUUID })
-      this.setState({ loading: true })
+      this.setState({ loading: true, showSearch: false })
     } else this.refresh()
   }
 
@@ -1000,6 +1012,13 @@ class Home extends Base {
                     <MenuItem
                       primaryText={i18n.__('Open')}
                       onClick={() => this.fakeOpen()}
+                    />
+                }
+                {
+                  !multiSelected && this.state.showSearch &&
+                    <MenuItem
+                      primaryText={i18n.__('Open In Folder')}
+                      onClick={() => this.openInFolder()}
                     />
                 }
                 <MenuItem
