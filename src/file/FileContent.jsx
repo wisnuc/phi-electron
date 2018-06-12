@@ -54,8 +54,7 @@ class FileContent extends React.Component {
       /* disabled in select box mode */
       if (this.selectBox) return
 
-      /* disabled when selecting folder */
-      if (this.props.fileSelect && this.props.entries[index] && this.props.entries[index].type !== 'file') return
+      // if (this.props.entries[index] && this.props.entries[index].type !== 'file') return
 
       this.props.select.touchTap(0, index)
       this.props.resetScrollTo()
@@ -77,9 +76,8 @@ class FileContent extends React.Component {
       if (index === -1) return
       const entry = this.props.entries[index]
       this.props.listNavBySelect(entry)
-      if (entry.type === 'file') {
-        /* do nothing when fileSelect is true */
-        if (!this.props.fileSelect) this.setState({ seqIndex: index, preview: true })
+      if (entry.type === 'file' || entry.metadata) {
+        this.setState({ seqIndex: index, preview: true })
       } else {
         this.setState({ loading: true })
       }
@@ -217,7 +215,7 @@ class FileContent extends React.Component {
       const array = Array
         .from({ length }, (v, i) => i)
         .filter((v, i) => {
-          if (this.props.fileSelect && this.props.entries[i].type !== 'file') return false
+          if (this.props.entries[i].type !== 'file') return false
           const head = (i + 1) * lineHeight - scrollTop // row.tail > top && row.head < top + height
           return ((parseInt(s.top, 10) < head + lineHeight) &&
             (head < parseInt(s.top, 10) + parseInt(s.height, 10)))

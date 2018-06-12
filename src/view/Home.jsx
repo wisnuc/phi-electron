@@ -88,7 +88,7 @@ class Home extends Base {
         const selected = this.state.select.selected
         const entries = selected.map(index => this.state.entries[index])
         const path = this.state.path
-        const places = [path[path.length - 1].uuid]
+        const places = [path[0].uuid]
         const entriesByDir = entries.sort((a, b) => a.pdir.localeCompare(b.pdir)).reduce((acc, cur) => {
           if (!acc[0]) acc.push([cur])
           else if (acc.slice(-1)[0][0].pdir === cur.pdir) acc.slice(-1)[0].push(cur)
@@ -256,10 +256,9 @@ class Home extends Base {
       if (!selected || selected.length !== 1) return
 
       const entry = selected.map(index => this.state.entries[index])[0]
-      const apis = this.ctx.props.apis
-      const places = apis && apis.drives && apis.drives.data && apis.drives.data.map(d => d.uuid)
-      const driveUUID = places[entry.place]
+      const driveUUID = this.state.path[0] && this.state.path[0].uuid
       const dirUUID = entry.pdir
+      if (!driveUUID || !dirUUID) return
       this.ctx.navToDrive(driveUUID, dirUUID)
     }
 
@@ -549,8 +548,10 @@ class Home extends Base {
       // console.log('this.search', name, this.state)
       const select = this.select.reset(this.state.entries.length)
       this.setState({ showSearch: name, loading: true, select })
-      const places = this.state.path[this.state.path.length - 1].uuid
-      const types = this.types
+      const types = this.types // photo, docs, video, audio
+      const apis = this.ctx.props.apis
+      const places = types ? apis && apis.drives && apis.drives.data && apis.drives.data.map(d => d.uuid).join('.')
+        : this.state.path[0].uuid
       const order = types ? 'newest' : 'find'
 
       this.ctx.props.apis.pureRequest('search', { name, places, types, order }, (err, res) => {
@@ -1035,7 +1036,7 @@ class Home extends Base {
                     />
                 }
                 {
-                  !multiSelected && this.state.showSearch &&
+                  !multiSelected && this.state.showSearch && !this.isMedia &&
                     <MenuItem
                       primaryText={i18n.__('Open In Folder')}
                       onClick={() => this.openInFolder()}

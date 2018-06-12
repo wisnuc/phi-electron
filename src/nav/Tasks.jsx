@@ -7,7 +7,7 @@ import ErrorBox from '../common/ErrorBox'
 import { FLButton, SIButton } from '../common/Buttons'
 import CircularLoading from '../common/CircularLoading'
 import ScrollBar from '../common/ScrollBar'
-import { CloseIcon, SmallErrorIcon } from '../common/Svg'
+import { CloseIcon, TransErrorIcon } from '../common/Svg'
 
 class Tasks extends React.Component {
   constructor (props) {
@@ -151,8 +151,12 @@ class Tasks extends React.Component {
                 />
               ) : conflict.length
                 ? (
-                  <SIButton tooltip={i18n.__('Detail')} onClick={() => this.handleConflict(uuid, type, conflict)}>
-                    <SmallErrorIcon />
+                  <SIButton
+                    tooltip={i18n.__('Detail')}
+                    iconStyle={{ width: 24, height: 24 }}
+                    onClick={() => this.handleConflict(uuid, type, conflict)}
+                  >
+                    <TransErrorIcon />
                   </SIButton>
                 )
                 : (<SIButton onClick={() => this.cancelTask(uuid)} tooltip={i18n.__('Cancel')} > <CloseIcon /> </SIButton>)

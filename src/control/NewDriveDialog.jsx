@@ -20,9 +20,10 @@ class NewDriveDialog extends PureComponent {
     this.newDrive = () => {
       this.setState({ loading: true })
       const apis = this.props.apis
+      const adminUUID = this.props.users.find(u => u.isFirstUser).uuid
       const args = {
         label: this.state.label,
-        writelist: this.state.writelist
+        writelist: [adminUUID, ...this.state.writelist]
       }
       apis.request('adminCreateDrive', args, (err) => {
         if (!err) {
@@ -93,6 +94,7 @@ class NewDriveDialog extends PureComponent {
 
   render () {
     const { type, users } = this.props
+    console.log('users', users)
     return (
       <div style={{ width: 280, padding: '0 20px 20px 20px', zIndex: 2000 }}>
         <div style={{ height: 59, display: 'flex', alignItems: 'center' }} className="title">
@@ -151,10 +153,11 @@ class NewDriveDialog extends PureComponent {
               <div style={{ width: '100%', height: 40, display: 'flex', alignItems: 'center' }} key={user.username} >
                 <Checkbox
                   alt
-                  label={user.username}
-                  checked={this.state.writelist === '*' || (this.state.writelist && this.state.writelist.includes(user.uuid))}
+                  label={user.phoneNumber}
+                  checked={this.state.writelist === '*' ||
+                      (this.state.writelist && this.state.writelist.includes(user.uuid)) || user.isFirstUser}
                   onCheck={() => this.handleCheck(user.uuid)}
-                  disabled={this.isBuiltIn}
+                  disabled={this.isBuiltIn || user.isFirstUser}
                 />
               </div>
             ))
@@ -172,7 +175,7 @@ class NewDriveDialog extends PureComponent {
           <div style={{ width: 10 }} />
           <RSButton
             label={type === 'new' ? i18n.__('Create') : i18n.__('Modify')}
-            disabled={this.state.label.length === 0 || !!this.state.errorText || this.state.loading || !this.state.writelist.length}
+            disabled={this.state.label.length === 0 || !!this.state.errorText || this.state.loading}
             onClick={this.fire}
           />
         </div>
