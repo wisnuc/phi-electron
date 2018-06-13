@@ -36,6 +36,8 @@ class DeviceInfo extends React.PureComponent {
             this.setState({ modify: false, progress: false, label: '' })
           } else {
             this.newName = this.state.label
+
+            Object.assign(this.props.selectedDevice.mdev, { bindingName: this.newName })
             this.props.openSnackBar(i18n.__('Modify Device Name Success'))
             this.setState({ modify: false, progress: false, label: '' })
           }
