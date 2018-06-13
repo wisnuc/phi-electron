@@ -54,9 +54,11 @@ class LANPassword extends React.Component {
             disabled={this.state.loading}
           />
           {/* show password */}
+          {/*
           <div style={{ position: 'absolute', right: 0, top: 35 }}>
             <TFButton icon={this.state.showPwd ? EyeOpenIcon : EyeOffIcon} onClick={this.togglePwd} />
           </div>
+          */}
         </div>
       </div>
     )
@@ -81,6 +83,10 @@ class LANPassword extends React.Component {
 
           <div style={{ height: 30 }} />
 
+          { this.renderPassword() }
+          <div style={{ height: 30 }} />
+          { this.renderPassword() }
+          <div style={{ height: 30 }} />
           { this.renderPassword() }
 
           <div style={{ height: 40 }} />

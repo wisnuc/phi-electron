@@ -25,6 +25,7 @@ class Public extends Home {
       if (pos.type === 'publicRoot') {
         this.rootDrive = null
         this.ctx.props.apis.request('drives')
+        this.ctx.props.apis.request('users')
       } else {
         this.enter(pos, err => err && console.error('back error', err))
       }

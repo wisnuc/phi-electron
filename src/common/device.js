@@ -200,7 +200,11 @@ class Device extends RequestManager {
   systemStatus () {
     if (['info', 'boot', 'users'].some(v => (!this[v] || this[v].isPending()))) return 'probing'
     else if (this.info.isRejected()) return 'offline'
-    else if (this.boot.isRejected()) return 'systemError'
+    const info = this.info.value()
+
+    /* make sure the same deviceSN */
+    if (this.mdev.deviceSN && info && info.deviceSN && (this.mdev.deviceSN !== info.deviceSN)) return 'offline'
+    if (this.boot.isRejected()) return 'systemError'
 
     const boot = this.boot.value()
     const users = this.users && !this.users.isRejected() && this.users.value()

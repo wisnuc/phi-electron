@@ -326,6 +326,7 @@ class Home extends Base {
       if (!rUUID || !dUUID) {
         this.setState({ loading: true })
         this.ctx.props.apis.request('drives') // drive root
+        this.ctx.props.apis.request('users') // drive root
       } else {
         this.ctx.props.apis.request('listNavDir', { driveUUID: rUUID, dirUUID: dUUID })
       }
@@ -728,6 +729,7 @@ class Home extends Base {
         this.setState({ loading: true })
         if (node.type === 'publicRoot') { // public drives
           this.rootDrive = null
+          this.ctx.props.apis.request('users')
           this.ctx.props.apis.request('drives')
         } else if (node.type === 'phy') { // phyDrives
           const newPath = [...path.slice(0, index + 1).map(p => p.data).filter(p => !!p)].join('/')
