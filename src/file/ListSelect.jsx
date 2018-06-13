@@ -13,6 +13,7 @@ class ListSelect extends EventEmitter {
       mouseEnter: this.mouseEnter.bind(this),
       mouseLeave: this.mouseLeave.bind(this),
       touchTap: this.touchTap.bind(this),
+      ctrlLeftClick: this.ctrlLeftClick.bind(this),
       rowColor: this.rowColor.bind(this),
       rowLeading: this.rowLeading.bind(this),
       rowCheck: this.rowCheck.bind(this),

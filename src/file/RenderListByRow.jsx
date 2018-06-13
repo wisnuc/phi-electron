@@ -1,7 +1,6 @@
 import React from 'react'
 import i18n from 'i18n'
 import prettysize from 'prettysize'
-import ErrorIcon from 'material-ui/svg-icons/alert/error'
 import ToggleCheckBox from 'material-ui/svg-icons/toggle/check-box'
 import ToggleCheckBoxOutlineBlank from 'material-ui/svg-icons/toggle/check-box-outline-blank'
 import { AutoSizer } from 'react-virtualized'
@@ -90,7 +89,10 @@ class Row extends React.PureComponent {
           onDoubleClick={e => this.props.onRowDoubleClick(e, index)}
           onMouseDown={e => onRowMouseDown(e, index)}
         >
-          <div style={{ width: 36, display: 'flex', alignItems: 'center' }}>
+          <div
+            style={{ width: 36, display: 'flex', alignItems: 'center' }}
+            onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); this.props.onRowClick(e, index, true) }}
+          >
             {
               isSelected
                 ? <ToggleCheckBox style={Object.assign({ color: '#31a0f5' }, checkStyle)} />
@@ -102,6 +104,7 @@ class Row extends React.PureComponent {
           <div
             style={{ width: 32 }}
             onMouseDown={e => onContentMouseDown(e, index)}
+            className="flexCenter"
           >
             {
               entry.type === 'directory'

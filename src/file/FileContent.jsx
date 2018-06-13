@@ -46,17 +46,18 @@ class FileContent extends React.Component {
     this.handleResize = () => this.forceUpdate()
 
     /* left click file */
-    this.onRowClick = (e, index) => {
+    this.onRowClick = (e, index, fakeCtrl) => {
       e.preventDefault() // important, to prevent other event
       e.stopPropagation()
 
-      console.log('this.onRowClick', this.selectBox, index, this.props.select)
+      console.log('this.onRowClick', this.selectBox, index, this.props.select, fakeCtrl)
       /* disabled in select box mode */
       if (this.selectBox) return
 
       // if (this.props.entries[index] && this.props.entries[index].type !== 'file') return
 
-      this.props.select.touchTap(0, index)
+      if (fakeCtrl) this.props.select.ctrlLeftClick(index)
+      else this.props.select.touchTap(0, index)
       this.props.resetScrollTo()
     }
 
