@@ -26,8 +26,8 @@ class FileContent extends React.Component {
 
     /* cathc key action */
     this.keyDown = (e) => {
-      const { copy, createNewFolder, loading, move, rename, share } = this.props
-      if (copy || createNewFolder || this.props.delete || loading || move || rename || share) return
+      const { copy, createNewFolder, loading, move, rename, share, newDrive } = this.props
+      if (copy || createNewFolder || this.props.delete || loading || move || rename || share || newDrive) return
       if (this.props.select) {
         if (e.ctrlKey && e.key === 'a') {
           this.props.select.addByArray(Array.from({ length: this.props.entries.length }, (v, i) => i)) // [0, 1, ..., N]
@@ -50,7 +50,7 @@ class FileContent extends React.Component {
       e.preventDefault() // important, to prevent other event
       e.stopPropagation()
 
-      // console.log('this.onRowClick', this.selectBox, index, this.props.select)
+      console.log('this.onRowClick', this.selectBox, index, this.props.select)
       /* disabled in select box mode */
       if (this.selectBox) return
 
@@ -156,7 +156,7 @@ class FileContent extends React.Component {
       s.height = '0px'
       this.selectBox = null
       this.preScrollTop = 0
-      this.scrollTop = 0
+      // this.scrollTop = 0
     }
 
     /* draw select box */
@@ -167,8 +167,10 @@ class FileContent extends React.Component {
       if (dy < 0) this.up = true
       else this.up = false
 
-      if (dx > 0) s.width = `${dx}px`
-      else if (event.clientX - LEFT > 0) {
+      if (dx > 0) {
+        s.width = `${dx}px`
+        s.left = `${this.selectBox.x - LEFT}px`
+      } else if (event.clientX - LEFT > 0) {
         s.width = `${-dx}px`
         s.left = `${event.clientX - LEFT}px`
       } else {
@@ -176,8 +178,10 @@ class FileContent extends React.Component {
         s.left = '0px'
       }
 
-      if (dy > 0) s.height = `${dy}px`
-      else if (event.clientY - TOP > 40) {
+      if (dy > 0) {
+        s.height = `${dy}px`
+        s.top = `${this.selectBox.y - TOP}px`
+      } else if (event.clientY - TOP > 40) {
         s.height = `${-dy}px`
         s.top = `${event.clientY - TOP}px`
       } else {
@@ -188,6 +192,7 @@ class FileContent extends React.Component {
 
     this.onScroll = (scrollTop) => {
       this.props.setScrollTop(scrollTop)
+      this.scrollTop = scrollTop
       if (!this.selectBox) return
       const s = this.refSelectBox.style
       const dy = scrollTop - this.preScrollTop
@@ -215,16 +220,17 @@ class FileContent extends React.Component {
       const array = Array
         .from({ length }, (v, i) => i)
         .filter((v, i) => {
-          if (this.props.entries[i].type !== 'file') return false
           const head = (i + 1) * lineHeight - scrollTop // row.tail > top && row.head < top + height
           return ((parseInt(s.top, 10) < head + lineHeight) &&
             (head < parseInt(s.top, 10) + parseInt(s.height, 10)))
         })
 
+      console.log('scrollTop this.calcRow', scrollTop, array)
       this.props.select.addByArray(array, this.selectBox.session)
     }
 
     this.selectRow = (event, scrollTop) => {
+      // console.log('this.selectRow', scrollTop, this.selectBox)
       if (!this.selectBox) return
       this.scrollTop = scrollTop || this.scrollTop || 0
       this.preScrollTop = this.scrollTop
@@ -279,7 +285,10 @@ class FileContent extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.loading) this.setState({ loading: true })
+    if (nextProps.loading) {
+      this.setState({ loading: true })
+      this.scrollTop = 0
+    }
     if (nextProps.entries && this.props.entries !== nextProps.entries) this.setState({ loading: false })
     if (nextProps.fakeOpen) {
       const index = nextProps.fakeOpen.index

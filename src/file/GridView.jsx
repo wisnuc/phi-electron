@@ -30,10 +30,7 @@ class Row extends React.Component {
     return (
       <div style={{ height: '100%', width: '100%', marginLeft: 10 }} >
         {/* onMouseDown: clear select and start grid select */}
-        <div
-          style={{ display: 'flex', height: 144 }}
-          onMouseDown={e => select.selected.length && (this.props.onRowClick(e, -1) || this.props.selectStart(e))}
-        >
+        <div style={{ display: 'flex', height: 144 }} >
           {
             list.entries.map((item) => {
               const { index, entry } = item
@@ -283,7 +280,12 @@ class GridView extends React.Component {
 
     if (!this.props.entries || this.props.entries.length === 0) return (<div />)
     return (
-      <div style={{ width: '100%', height: '100%' }} onDrop={this.props.drop} onMouseMove={this.onMouseMove}>
+      <div
+        style={{ width: '100%', height: '100%' }}
+        onDrop={this.props.drop}
+        onMouseMove={this.onMouseMove}
+        onMouseDown={e => this.props.onRowClick(e, -1) || this.props.selectStart(e)}
+      >
         <AutoSizer key={this.props.entries && this.props.entries[0] && this.props.entries[0].uuid}>
           {({ height, width }) => {
             const gridInfo = calcGridInfo(height, width, this.props.entries)
@@ -311,10 +313,10 @@ class GridView extends React.Component {
             return (
               <div
                 role="presentation"
-                onMouseDown={e => this.props.selectStart(e)}
                 onMouseUp={e => this.props.onRowClick(e, -1)}
                 onContextMenu={e => this.props.onRowContextMenu(e, -1)}
                 onMouseMove={e => this.props.selectGrid(e, this.getStatus())}
+                onMouseDown={e => this.props.onRowClick(e, -1) || this.props.selectStart(e)}
               >
                 <ScrollBar
                   ref={ref => (this.ListRef = ref)}
