@@ -358,8 +358,8 @@ class Preview extends React.Component {
     const isCloud = this.props && this.props.apis && this.props.apis.isCloud
 
     const { metadata, hash } = this.props.item
-    const photoMagic = ['JPEG', 'GIF', 'PNG']
-    const videoMagic = ['3GP', 'MP4', 'MOV']
+    const photoMagic = ['JPEG', 'GIF', 'PNG', 'BMP']
+    const videoMagic = ['3GP', 'MP4', 'MOV', 'MKV', 'AVI']
     const audioMagic = ['MP3', 'FLAC']
     const isPhoto = metadata && photoMagic.includes(metadata.type) && hash
     const isVideo = metadata && videoMagic.includes(metadata.type) && !isCloud && hash

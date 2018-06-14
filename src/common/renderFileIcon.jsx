@@ -16,6 +16,9 @@ const renderFileIcon = (name, metadata, setSize) => {
     XLSX: EXCELIcon,
     PPT: PPTIcon,
     PPTX: PPTIcon,
+    RA: AudioIcon,
+    OGG: AudioIcon,
+    MKA: AudioIcon,
     WAV: AudioIcon,
     MP3: AudioIcon,
     APE: AudioIcon,
@@ -30,11 +33,13 @@ const renderFileIcon = (name, metadata, setSize) => {
     MKV: VideoIcon,
     MOV: VideoIcon,
     FLV: VideoIcon,
+    MPEG: VideoIcon,
     PNG: PhotoIcon,
     JPG: PhotoIcon,
     JPEG: PhotoIcon,
     GIF: PhotoIcon,
     BMP: PhotoIcon,
+    TIFF: PhotoIcon,
     RAW: PhotoIcon,
     RAR: RARIcon,
     ZIP: RARIcon,
@@ -44,7 +49,7 @@ const renderFileIcon = (name, metadata, setSize) => {
     OTHER: TypeUnknownIcon
   }
 
-  let type = extension.toUpperCase()
+  let type = (metadata && metadata.type) || extension.toUpperCase()
   // debug('renderFileIcon', name, metadata, extension, iconArray, type)
   if (!iconArray[type]) type = 'OTHER'
 
