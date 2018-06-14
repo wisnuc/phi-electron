@@ -9,22 +9,37 @@ class LANPassword extends React.Component {
     this.state = {
       pwd: '',
       pwdError: '',
+      newPwd: '',
+      newPwdError: '',
+      pwdAgain: '',
+      pwdAgainError: '',
       error: '',
       loading: false,
       showPwd: false
     }
 
-    this.onPassword = (pwd) => {
+    this.onPwd = (pwd) => {
       this.setState({ pwd, pwdError: '' })
+    }
+
+    this.onNewPwd = (pwd) => {
+      this.setState({ newPwd: pwd, newPwdError: '' })
+    }
+
+    this.onPwdAgain = (pwd) => {
+      this.setState({ pwdAgain: pwd, pwdAgainError: '' })
+      if (pwd.length >= this.state.newPwd.length && pwd !== this.state.newPwd) {
+        this.setState({ pwdAgainError: i18n.__('Inconsistent Password Error') })
+      }
     }
 
     this.save = () => {
       this.setState({ loading: true })
-      const userUUID = this.props.apis.account && this.props.apis.account.data.uuid
-      this.props.apis.pureRequest('setLANPassword', { userUUID, password: this.state.pwd }, (err, res) => {
+      this.props.apis.pureRequest('setLANPassword', { prePwd: this.state.pwd, newPwd: this.state.newPwd }, (err, res) => {
         console.log('setLANPassword', err, res)
         if (err) {
           console.error('Set LAN Password Error', err)
+          if (err && err.message === 'Unauthorized') this.setState({ pwdError: i18n.__('Previous Password Wrong') })
           this.props.openSnackBar(i18n.__('Set LAN Password Error'))
         } else this.props.openSnackBar(i18n.__('Set LAN Password Success'))
         this.setState({ loading: false })
@@ -32,6 +47,11 @@ class LANPassword extends React.Component {
     }
 
     this.togglePwd = () => this.setState({ showPwd: !this.state.showPwd })
+  }
+
+  shouldFire () {
+    return this.state.pwd && !this.state.pwdError && !this.state.loading && this.state.pwdAgain &&
+      this.state.newPwd && !this.state.pwdAgainError && !this.state.newPwdError
   }
 
   render () {
@@ -55,17 +75,16 @@ class LANPassword extends React.Component {
           <div style={{ height: 30 }} />
           <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center' }}>
             <div style={{ width: 130, textAlign: 'right', color: '#525a60' }}>
-              { i18n.__('Password') }
+              { i18n.__('Pre Password') }
             </div>
             <div style={{ width: 30 }} />
             <div style={{ width: 320, marginTop: -30, position: 'relative' }}>
               <TextField
-                hintText={i18n.__('LAN Password Hint')}
-                type={this.state.showPwd ? 'text' : 'password'}
+                hintText={i18n.__('Pre LAN Password Hint')}
+                type="password"
                 errorText={this.state.pwdError}
                 value={this.state.pwd}
-                onChange={e => this.onPassword(e.target.value)}
-                onKeyDown={this.onKeyDown}
+                onChange={e => this.onPwd(e.target.value)}
                 disabled={this.state.loading}
               />
             </div>
@@ -75,17 +94,16 @@ class LANPassword extends React.Component {
           <div style={{ height: 30 }} />
           <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center' }}>
             <div style={{ width: 130, textAlign: 'right', color: '#525a60' }}>
-              { i18n.__('Password') }
+              { i18n.__('New Password') }
             </div>
             <div style={{ width: 30 }} />
             <div style={{ width: 320, marginTop: -30, position: 'relative' }}>
               <TextField
-                hintText={i18n.__('LAN Password Hint')}
-                type={this.state.showPwd ? 'text' : 'password'}
-                errorText={this.state.pwdError}
-                value={this.state.pwd}
-                onChange={e => this.onPassword(e.target.value)}
-                onKeyDown={this.onKeyDown}
+                hintText={i18n.__('New LAN Password Hint')}
+                type="password"
+                errorText={this.state.newPwdError}
+                value={this.state.newPwd}
+                onChange={e => this.onNewPwd(e.target.value)}
                 disabled={this.state.loading}
               />
             </div>
@@ -95,16 +113,16 @@ class LANPassword extends React.Component {
           <div style={{ height: 30 }} />
           <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center' }}>
             <div style={{ width: 130, textAlign: 'right', color: '#525a60' }}>
-              { i18n.__('Password') }
+              { i18n.__('New Password Again') }
             </div>
             <div style={{ width: 30 }} />
             <div style={{ width: 320, marginTop: -30, position: 'relative' }}>
               <TextField
-                hintText={i18n.__('LAN Password Hint')}
-                type={this.state.showPwd ? 'text' : 'password'}
-                errorText={this.state.pwdError}
-                value={this.state.pwd}
-                onChange={e => this.onPassword(e.target.value)}
+                hintText={i18n.__('New LAN Password Again Hint')}
+                type="password"
+                errorText={this.state.pwdAgainError}
+                value={this.state.pwdAgain}
+                onChange={e => this.onPwdAgain(e.target.value)}
                 onKeyDown={this.onKeyDown}
                 disabled={this.state.loading}
               />
@@ -116,7 +134,7 @@ class LANPassword extends React.Component {
             <RRButton
               label={this.state.loading ? i18n.__('Saving') : i18n.__('Save')}
               onClick={this.save}
-              disabled={!this.state.pwd || this.state.pwdError || this.state.loading}
+              disabled={!this.shouldFire()}
               loading={this.state.loading}
             />
           </div>

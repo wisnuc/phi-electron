@@ -47,6 +47,7 @@ class SambaApp extends Base {
       <Samba
         {...this.ctx.props}
         {...this.state}
+        refresh={this.refresh}
         openSnackBar={openSnackBar}
       />
     )

@@ -313,6 +313,13 @@
   "Previous Password Hint": "请输入原密码",
   "New Password Hint": "请输入新密码",
   "New Password Again Hint": "请再次输入新密码",
+	"New LAN Password Again Hint": "请再次输入新密码",
+	"New LAN Password Hint": "请输入新密码",
+	"New Password": "新密码",
+	"New Password Again": "确认密码",
+	"Password Disabled": "密码不可用",
+	"Pre LAN Password Hint": "请输入原密码",
+	"Pre Password": "原密码",
 
   "==== control/ClientUpdateApp.jsx ====": "",
   "New Version Detected %s": "发现新版本： %s",

@@ -34,7 +34,8 @@ class Menu extends React.Component {
   render () {
     const { views, navTo } = this.props
     const group = 'settings'
-    const list = Object.keys(views).filter(key => views[key].navGroup() === group && key !== 'settings')
+    let list = Object.keys(views).filter(key => views[key].navGroup() === group && key !== 'settings')
+    if (!this.props.isAdmin) list = [...list].slice(0, -2)
     return (
       <div style={{ width: '100%', height: '100%', boxSizing: 'border-box', paddingBottom: 130 }} className="flexCenter" >
         <div

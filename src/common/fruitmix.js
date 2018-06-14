@@ -378,7 +378,14 @@ class Fruitmix extends EventEmitter {
         break
 
       case 'setLANPassword':
-        r = this.apatch(`users/${args.userUUID}`, { password: args.password, encrypted: false })
+        if (this.isCloud) {
+          r = this.apatch(`users/${this.userUUID}`, { password: args.password, encrypted: false })
+        } else {
+          r = request
+            .patch(`http://${this.address}:3000/users/${this.userUUID}`, { password: args.newPwd })
+            .auth(this.userUUID, args.prePwd)
+            .set('Accept', 'application/json')
+        }
         break
 
       /* task api */

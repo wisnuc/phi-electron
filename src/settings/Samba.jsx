@@ -31,10 +31,13 @@ class Samba extends React.Component {
     }
 
     this.saveAsync = async (open, encrypted, pwd) => {
-      await this.props.apis.pureRequestAsync('sambaStatus', { op: open ? 'start' : 'close' })
+      const isAdmin = this.props.apis.account && this.props.apis.account.data && this.props.apis.account.data.isFirstUser
+      if (isAdmin) await this.props.apis.pureRequestAsync('sambaStatus', { op: open ? 'start' : 'close' })
       const driveUUID = this.drive && this.drive.uuid
       if (open) await this.props.apis.pureRequestAsync('sambaEncrypted', { encrypted, driveUUID })
       if (open && encrypted && pwd) await this.props.apis.pureRequestAsync('sambaPwd', { pwd })
+      await this.props.apis.requestAsync('drives')
+      await this.props.apis.requestAsync('samba')
     }
 
     this.save = () => {
@@ -54,14 +57,19 @@ class Samba extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (!nextProps.samba || !this.props.samba) return
-    if (nextProps.samba.isActive && !this.props.samba.isActive) {
-      this.setState({ open: true })
+    console.log('componentWillReceiveProps', nextProps)
+    if (Array.isArray(nextProps.drives)) {
+      const drive = nextProps.drives.find(d => d.type === 'private')
+      if (drive !== this.drive) {
+        this.drive = drive
+        const encrypted = drive && drive.smb
+        this.setState({ encrypted })
+      }
     }
-    if (!Array.isArray(nextProps.drives)) return
-    const drive = nextProps.drives.find(d => d.type === 'private')
-    const encrypted = drive && drive.smb
-    this.setState({ encrypted })
+
+    if (nextProps.samba) {
+      this.setState({ open: nextProps.samba.isActive })
+    }
   }
 
   renderRow ({ type, enabled, func }) {
@@ -117,12 +125,13 @@ class Samba extends React.Component {
   }
 
   render () {
-    if (!this.props.samba) return <div />
+    if (!this.props.samba) return (<div />)
+    const isAdmin = this.props.apis.account && this.props.apis.account.data && this.props.apis.account.data.isFirstUser
     const settings = [
       {
         type: i18n.__('Samba'),
         enabled: this.state.open,
-        func: () => this.hanldeStatus()
+        func: () => isAdmin && this.hanldeStatus()
       },
       {
         type: i18n.__('Samba Encrypt'),
@@ -162,7 +171,7 @@ class Samba extends React.Component {
               label={this.state.loading ? i18n.__('Saving') : i18n.__('Save')}
               onClick={this.save}
               loading={this.state.loading}
-              disabled={this.state.open && this.state.encrypted && !this.state.pwd}
+              disabled={(this.state.open && this.state.encrypted && !this.state.pwd) || (!this.state.open && !isAdmin)}
             />
           </div>
         </div>
