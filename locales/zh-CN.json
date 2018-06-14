@@ -187,6 +187,10 @@
   "Moving": "移动",
   "Task Conflict Text": "出现命名冲突",
   "Tasks": "任务",
+	"Cancel All": "全部取消",
+	"Paste": "粘贴",
+	"Xcopy Tasks": "本地任务",
+	"Working": "任务进行中",
 
   "==== common/msg.js ====": "",
   "Moved": "移动",

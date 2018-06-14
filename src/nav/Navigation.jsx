@@ -361,7 +361,7 @@ class NavViews extends React.Component {
           this.state.showTasks &&
             <Tasks
               apis={this.props.apis}
-              onRequestClose={() => this.setState({ showTasks: false })}
+              onRequestClose={() => this.setState({ showTasks: false }, () => this.views[this.state.nav].navEnter())}
               openMovePolicy={this.openMovePolicy}
             />
         }

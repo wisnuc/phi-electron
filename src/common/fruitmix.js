@@ -383,6 +383,7 @@ class Fruitmix extends EventEmitter {
 
       /* task api */
       case 'copy':
+        console.log('xcopy args', args)
         r = this.apost('tasks', args)
         break
 

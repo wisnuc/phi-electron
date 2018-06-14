@@ -63,12 +63,22 @@ class Tasks extends React.Component {
     }
 
     this.onCancelAll = () => {
+      if (!this.state.tasks || !this.state.tasks.length) return
+      this.state.tasks.forEach((t) => {
+        this.props.apis.pureRequest('deleteTask', { uuid: t.uuid })
+      })
+      setTimeout(() => this.refresh(), 200)
     }
   }
 
   componentDidMount () {
     this.refresh()
     this.timer = setInterval(() => this.state.tasks.some(t => !t.finished) && this.refresh(), 2000)
+  }
+  componentDidUpdate () {
+    if (this.state.tasks && this.state.tasks.length && ![...this.state.tasks].filter(t => !t.finished).length) {
+      this.props.onRequestClose()
+    }
   }
 
   componentWillUnmount () {
@@ -115,7 +125,7 @@ class Tasks extends React.Component {
                   overflow: 'hidden',
                   whiteSpace: 'nowrap',
                   textOverflow: 'ellipsis',
-                  maxWidth: entries.length > 1 ? 20 : 120
+                  maxWidth: entries.length > 1 ? 60 : 120
                 }}
               >
                 { entries[0] }
@@ -192,7 +202,8 @@ class Tasks extends React.Component {
   }
 
   render () {
-    const height = Math.min(Math.max(50, 10 + this.state.tasks.length * 40), 130)
+    const tasks = [...this.state.tasks].filter(t => !t.finished)
+    const height = Math.min(Math.max(50, 10 + tasks.length * 40), 130)
     return (
       <div
         style={{
@@ -202,9 +213,10 @@ class Tasks extends React.Component {
           width: 312,
           minHeight: 90,
           backgroundColor: '#FFF',
+          transition: 'all 175ms',
           boxShadow: '0 0 30px 0 rgba(23, 99, 207, 0.2)'
         }}
-        onTouchTap={(e) => { e.preventDefault(); e.stopPropagation() }}
+        onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
       >
         <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center' }}>
           <div style={{ color: '#85868c', fontSize: 14, marginLeft: 16 }}>
@@ -212,17 +224,21 @@ class Tasks extends React.Component {
           </div>
           <div style={{ flexGrow: 1 }} />
           <div style={{ marginRight: 16 }}>
-            <FLButton
-              label={i18n.__('Cancel All')}
-              onClick={this.onCancelAll}
-            />
+            {
+              this.state.error
+                ? <SIButton onClick={this.props.onRequestClose} tooltip={i18n.__('Close')} > <CloseIcon /> </SIButton>
+                : <FLButton label={i18n.__('Cancel All')} onClick={this.onCancelAll} />
+            }
           </div>
         </div>
         <Divider style={{ marginLeft: 16, width: 280 }} className="divider" />
-        <div style={{ height, width: 296, marginLeft: 16, padding: '5px 0', position: 'relative' }} className="flexCenter">
+        <div
+          style={{ height, width: 296, marginLeft: 16, padding: '5px 0', position: 'relative', fontSize: 14, color: '#85868c' }}
+          className="flexCenter"
+        >
           {
             this.state.loading ? this.renderLoading() : this.state.error ? this.renderError()
-              : this.state.tasks.length ? this.renderTasks(this.state.tasks) : this.renderNoTask()
+              : tasks.length ? this.renderTasks(tasks) : this.renderNoTask()
           }
         </div>
       </div>

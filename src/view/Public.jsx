@@ -159,6 +159,9 @@ class Public extends Home {
           gridDragStart={this.gridDragStart}
           setScrollTop={this.setScrollTop}
           setGridData={this.setGridData}
+          onPaste={this.onPaste}
+          onCopy={this.onCopy}
+          onCut={this.onCut}
           inPublicRoot={this.state.inRoot}
           openNewDrive={() => this.setState({ newDrive: 'new' })}
         />

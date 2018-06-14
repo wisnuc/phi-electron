@@ -26,21 +26,25 @@ class FileContent extends React.Component {
 
     /* cathc key action */
     this.keyDown = (e) => {
-      const { copy, createNewFolder, loading, move, rename, share, newDrive } = this.props
-      if (copy || createNewFolder || this.props.delete || loading || move || rename || share || newDrive) return
-      if (this.props.select) {
-        if (e.ctrlKey && e.key === 'a') {
-          this.props.select.addByArray(Array.from({ length: this.props.entries.length }, (v, i) => i)) // [0, 1, ..., N]
-        }
-        if (e.key === 'Delete') this.props.toggleDialog('delete')
-        this.props.select.keyEvent(e.ctrlKey, e.shiftKey)
+      console.log('this.keyDown', this.props)
+      const { createNewFolder, loading, newDrive, select } = this.props
+      const isModifyName = select && select.modify !== -1
+      if (createNewFolder || this.props.delete || loading || newDrive || isModifyName || !select) return
+      if (e.ctrlKey && e.key === 'a') {
+        select.addByArray(Array.from({ length: this.props.entries.length }, (v, i) => i)) // [0, 1, ..., N]
       }
+      if (e.key === 'Delete') this.props.toggleDialog('delete')
+      if (e.ctrlKey && e.key === 'c') this.props.onCopy()
+      if (e.ctrlKey && e.key === 'x') this.props.onCut()
+      if (e.ctrlKey && e.key === 'v') this.props.onPaste()
+      select.keyEvent(e.ctrlKey, e.shiftKey)
     }
 
     this.keyUp = (e) => {
-      const { copy, createNewFolder, loading, move, rename, share } = this.props
-      if (copy || createNewFolder || this.props.delete || loading || move || rename || share) return
-      if (this.props.select) this.props.select.keyEvent(e.ctrlKey, e.shiftKey)
+      const { createNewFolder, loading, newDrive, select } = this.props
+      const isModifyName = select && select.modify !== -1
+      if (createNewFolder || this.props.delete || loading || newDrive || isModifyName || !select) return
+      select.keyEvent(e.ctrlKey, e.shiftKey)
     }
 
     this.handleResize = () => this.forceUpdate()

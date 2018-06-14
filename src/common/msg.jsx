@@ -8,7 +8,7 @@ import i18n from 'i18n'
 export const xcopyMsg = (props) => {
   const getName = (node) => {
     let name
-    switch (node.type) {
+    switch (node && node.type) {
       case 'home':
         name = i18n.__('Home Title')
         break
@@ -18,11 +18,12 @@ export const xcopyMsg = (props) => {
       default:
         name = node.name
     }
-    if (name.length > 20) return `${name.slice(0, 17)}...`
+    if (name && name.length > 20) return `${name.slice(0, 17)}...`
     return name
   }
 
   const { type, srcDir, dstDir, entries } = props
+  console.log('xcopyMsg', props)
   const action = type === 'move' ? i18n.__('Moved') : type === 'copy' ? i18n.__('Copied') : i18n.__('Shared')
   const srcName = getName(srcDir)
   const dstName = getName(dstDir)

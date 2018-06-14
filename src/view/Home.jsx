@@ -147,27 +147,33 @@ class Home extends Base {
     }
 
     this.onCopy = () => {
+      if (this.isMedia || this.state.inRoot) return
       console.log('this.onCopy', this.ctx.props)
       const selected = this.state.select.selected
+      if (!selected && !selected.length) return
       const entries = selected.map(index => this.state.entries[index])
       const drive = this.state.path[0].uuid
-      const dir = this.state.path.slice(-1)[0].uuid
-      this.ctx.props.clipboard.set({ action: 'copy', loc: 'drive', drive, dir, entries })
+      const srcPath = this.state.path.slice(-1)[0]
+      const dir = srcPath.uuid
+      this.ctx.props.clipboard.set({ action: 'copy', loc: 'drive', drive, dir, entries, srcPath })
     }
 
     this.onCut = () => {
+      if (this.isMedia || this.state.inRoot) return
       const selected = this.state.select.selected
+      if (!selected && !selected.length) return
       const entries = selected.map(index => this.state.entries[index])
       const drive = this.state.path[0].uuid
-      const dir = this.state.path.slice(-1)[0].uuid
-      this.ctx.props.clipboard.set({ action: 'move', loc: 'drive', drive, dir, entries })
+      const srcPath = this.state.path.slice(-1)[0]
+      const dir = srcPath.uuid
+      this.ctx.props.clipboard.set({ action: 'move', loc: 'drive', drive, dir, entries, srcPath })
     }
 
     /* request task state */
     this.getTaskState = async (uuid) => {
       await Promise.delay(500)
       const data = await this.ctx.props.apis.pureRequestAsync('task', { uuid })
-      if (data && data.nodes && data.nodes.findIndex(n => n.parent === null && n.state === 'Finished') > -1) return 'Finished'
+      if (data && data.finished) return 'Finished'
       if (data && data.nodes && data.nodes.findIndex(n => n.state === 'Conflict') > -1) return 'Conflict'
       return 'Working'
     }
@@ -186,7 +192,7 @@ class Home extends Base {
             this.ctx.props.openSnackBar(type.concat(i18n.__('+Failed')))
             this.ctx.setState({ showTasks: true })
           } else {
-            let text = 'Working'
+            let text = i18n.__('Working')
             if (res === 'Finished') text = xcopyMsg(this.xcopyData)
             if (res === 'Conflict') text = i18n.__('Task Conflict Text')
             this.refresh({ noloading: true })
@@ -198,12 +204,19 @@ class Home extends Base {
     }
 
     this.onPaste = () => {
+      if (this.isMedia || this.state.inRoot) return
       const pos = this.ctx.props.clipboard.get()
       const driveUUID = this.state.path[0].uuid
       const dirUUID = this.state.path.slice(-1)[0].uuid
       console.log('this.onPaste', pos, driveUUID, dirUUID)
       const entries = pos.entries.map(e => e.name)
       const args = { type: pos.action, src: { drive: pos.drive, dir: pos.dir }, dst: { drive: driveUUID, dir: dirUUID }, entries }
+      this.xcopyData = {
+        type: pos.action,
+        entries: pos.entries,
+        srcDir: pos.srcPath,
+        dstDir: this.state.path.slice(-1)[0]
+      }
       this.ctx.props.apis.pureRequest('copy', args, (err, res) => this.finish(err, res, pos.action))
     }
 
@@ -345,8 +358,14 @@ class Home extends Base {
       const x = clientX > maxLeft ? maxLeft : clientX
       /* calc positon of menu using height of menu which is related to number of selected items */
       const length = (this.select.state && this.select.state.selected && this.select.state.selected.length) || 0
-      const adjust = !length ? 170 : length > 1 ? 140 : 200
-      const maxTop = containerDom.offsetTop + containerDom.offsetHeight - adjust + 80
+      let itemNum = 7
+      if (this.isMedia) {
+        if (!length || length === 1) itemNum = 3
+        else itemNum = 2
+      } else if (length > 1) itemNum = 5
+      else itemNum = 7
+
+      const maxTop = containerDom.offsetTop + containerDom.offsetHeight - itemNum * 30 + 90
       const y = clientY > maxTop ? maxTop : clientY
       this.setState({
         contextMenuOpen: true,
@@ -447,8 +466,8 @@ class Home extends Base {
         const src = { drive, dir }
         const dst = { drive, dir: shouldFire ? this.state.entries[hover].uuid : dropHeader.uuid }
 
-        const entries = this.state.select.selected.map(i => this.state.entries[i].uuid)
-        const policies = { dir: ['keep', null] }
+        const entries = this.state.select.selected.map(i => this.state.entries[i].name)
+        // const policies = { dir: ['keep', null] }
 
         this.xcopyData = {
           type,
@@ -457,7 +476,7 @@ class Home extends Base {
           entries: this.state.select.selected.map(i => this.state.entries[i])
         }
 
-        this.ctx.props.apis.request('copy', { type, src, dst, entries, policies }, this.finish)
+        this.ctx.props.apis.pureRequest('copy', { type, src, dst, entries }, this.finish)
       }
       const s = this.refDragedItems.style
       s.transition = 'all 225ms cubic-bezier(.4,0,1,1)'
@@ -934,7 +953,8 @@ class Home extends Base {
     const apis = this.ctx.props.apis
     const isAdmin = apis && apis.account && apis.account.data && apis.account.data.isFirstUser
 
-    const pastable = true
+    const pos = this.ctx.props.clipboard.get()
+    const pastable = pos && pos.action
     return (
       <ContextMenu
         open={open}
@@ -1108,6 +1128,9 @@ class Home extends Base {
           gridDragStart={this.gridDragStart}
           setScrollTop={this.setScrollTop}
           setGridData={this.setGridData}
+          onPaste={this.onPaste}
+          onCopy={this.onCopy}
+          onCut={this.onCut}
         />
 
         { this.renderMenu(this.state.contextMenuOpen) }
