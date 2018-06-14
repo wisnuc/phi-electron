@@ -8,9 +8,27 @@ class Dlna extends React.Component {
     super(props)
 
     this.state = {
+      loading: false,
+      open: this.props.dlna && !!this.props.dlna.isActive
     }
 
     this.save = () => {
+      this.setState({ loading: true })
+      const op = this.state.open ? 'start' : 'close'
+      this.props.apis.pureRequest('updateDlna', { op }, (err, res) => {
+        if (err) {
+          this.props.openSnackBar(i18n.__('Operation Failed'))
+        } else {
+          this.props.openSnackBar(i18n.__('Operation Success'))
+        }
+        this.setState({ loading: false })
+      })
+    }
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.dlna && nextProps.dlna.isActive && this.props.dlna && !this.props.dlna.isActive) {
+      this.setState({ open: true })
     }
   }
 
@@ -30,11 +48,13 @@ class Dlna extends React.Component {
   }
 
   render () {
+    if (!this.props.dlna) return <div />
+    console.log('dlna', this.props)
     const settings = [
       {
         type: i18n.__('Dlna'),
-        enabled: true,
-        func: () => {}
+        enabled: this.state.open,
+        func: () => this.setState({ open: !this.state.open })
       }
     ]
     return (
@@ -58,8 +78,9 @@ class Dlna extends React.Component {
 
           <div style={{ width: 240, height: 40, margin: '0 auto', paddingLeft: 160 }}>
             <RRButton
-              label={i18n.__('Save')}
+              label={this.state.loading ? i18n.__('Saving') : i18n.__('Save')}
               onClick={this.save}
+              loading={this.state.loading}
             />
           </div>
         </div>

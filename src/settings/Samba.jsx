@@ -5,7 +5,7 @@ import { Divider } from 'material-ui'
 import { EyeOpenIcon, EyeOffIcon } from '../common/Svg'
 import { RRButton, Toggle, TFButton, TextField } from '../common/Buttons'
 
-class SleepMode extends React.Component {
+class Samba extends React.Component {
   constructor (props) {
     super(props)
 
@@ -14,53 +14,102 @@ class SleepMode extends React.Component {
       pwdError: '',
       error: '',
       loading: false,
-      showPwd: false
+      showPwd: false,
+      open: this.props.samba && !!this.props.samba.isActive
     }
 
     this.onPassword = (pwd) => {
       this.setState({ pwd, pwdError: '' })
     }
 
-    this.save = () => {
+    this.hanldeStatus = () => {
+      if (this.state.open) {
+        this.setState({ open: false, pwd: '', pwdError: '' })
+      } else {
+        this.setState({ open: true, pwd: '', pwdError: '' })
+      }
     }
 
-    this.togglePwd = () => this.setState({ showPwd: !this.state.showPwd })
+    this.saveAsync = async (open, encrypted, pwd) => {
+      await this.props.apis.pureRequestAsync('sambaStatus', { op: open ? 'start' : 'close' })
+      const driveUUID = this.drive && this.drive.uuid
+      if (open) await this.props.apis.pureRequestAsync('sambaEncrypted', { encrypted, driveUUID })
+      if (open && encrypted && pwd) await this.props.apis.pureRequestAsync('sambaPwd', { pwd })
+    }
+
+    this.save = () => {
+      this.setState({ loading: true })
+      this.saveAsync(this.state.open, this.state.encrypted, this.state.pwd).asCallback((err) => {
+        if (err) {
+          console.error('samba error', err)
+          this.props.openSnackBar(i18n.__('Operation Failed'))
+        } else {
+          this.props.openSnackBar(i18n.__('Operation Success'))
+        }
+        this.setState({ loading: false })
+      })
+    }
+
+    this.toggle = op => this.setState({ [op]: !this.state[op] })
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (!nextProps.samba || !this.props.samba) return
+    if (nextProps.samba.isActive && !this.props.samba.isActive) {
+      this.setState({ open: true })
+    }
+    if (!Array.isArray(nextProps.drives)) return
+    const drive = nextProps.drives.find(d => d.type === 'private')
+    const encrypted = drive && drive.smb
+    this.setState({ encrypted })
   }
 
   renderRow ({ type, enabled, func }) {
+    const grey = !this.state.open && (type !== i18n.__('Samba'))
     return (
-      <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center' }} key={type}>
-        <div style={{ width: 150, textAlign: 'right', color: '#525a60' }}>
+      <div
+        style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center', filter: grey ? 'grayscale(100%)' : '' }}
+        key={type}
+      >
+        <div style={{ width: 130, textAlign: 'right', color: grey ? '#c4c5cc' : '#525a60' }}>
           { type }
         </div>
         <div style={{ flexGrow: 1 }} />
-        <Toggle
-          toggled={enabled}
-          onToggle={func}
-        />
+        <div style={{ opacity: grey ? 0.5 : 1 }}>
+          <Toggle
+            toggled={enabled}
+            onToggle={func}
+          />
+        </div>
       </div>
     )
   }
 
   renderPassword () {
+    const disabled = !this.state.encrypted || !this.state.open
     return (
-      <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center', filter: 'grayscale(10%)' }}>
-        <div style={{ width: 130, textAlign: 'right', color: '#525a60' }}>
+      <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center' }}>
+        <div style={{ width: 130, textAlign: 'right', color: disabled ? '#c4c5cc' : '#525a60' }}>
           { i18n.__('Password') }
         </div>
         <div style={{ width: 30 }} />
         <div style={{ width: 320, marginTop: -30, position: 'relative' }}>
           <TextField
-            hintText={i18n.__('Samba Password Hint')}
+            hintText={disabled ? i18n.__('Password Disabled') : i18n.__('Samba Password Hint')}
             type={this.state.showPwd ? 'text' : 'password'}
             errorText={this.state.pwdError}
             value={this.state.pwd}
             onChange={e => this.onPassword(e.target.value)}
             onKeyDown={this.onKeyDown}
+            disabled={!this.state.encrypted || !this.state.open}
           />
           {/* show password */}
           <div style={{ position: 'absolute', right: 0, top: 35 }}>
-            <TFButton icon={this.state.showPwd ? EyeOpenIcon : EyeOffIcon} onClick={this.togglePwd} />
+            <TFButton
+              disabled={disabled}
+              onClick={() => this.toggle('showPwd')}
+              icon={this.state.showPwd ? EyeOpenIcon : EyeOffIcon}
+            />
           </div>
         </div>
       </div>
@@ -68,16 +117,17 @@ class SleepMode extends React.Component {
   }
 
   render () {
+    if (!this.props.samba) return <div />
     const settings = [
       {
         type: i18n.__('Samba'),
-        enabled: true,
-        func: () => {}
+        enabled: this.state.open,
+        func: () => this.hanldeStatus()
       },
       {
         type: i18n.__('Samba Encrypt'),
-        enabled: true,
-        func: () => {}
+        enabled: this.state.encrypted,
+        func: () => this.state.open && this.toggle('encrypted')
       }
     ]
     return (
@@ -109,8 +159,10 @@ class SleepMode extends React.Component {
 
           <div style={{ width: 240, height: 40, margin: '0 auto', paddingLeft: 160 }}>
             <RRButton
-              label={i18n.__('Save')}
+              label={this.state.loading ? i18n.__('Saving') : i18n.__('Save')}
               onClick={this.save}
+              loading={this.state.loading}
+              disabled={this.state.open && this.state.encrypted && !this.state.pwd}
             />
           </div>
         </div>
@@ -119,4 +171,4 @@ class SleepMode extends React.Component {
   }
 }
 
-export default SleepMode
+export default Samba

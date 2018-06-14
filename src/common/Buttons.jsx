@@ -18,6 +18,11 @@ class LoadingLabel extends React.PureComponent {
     if (this.props.loading) this.timer = setInterval(this.changeCount, 1000)
   }
 
+  componentWillReceiveProps (nextProps) {
+    if (!this.props.loading && nextProps.loading) this.timer = setInterval(this.changeCount, 1000)
+    else if (!nextProps.loading) clearInterval(this.timer)
+  }
+
   componentWillUnmount () {
     clearInterval(this.timer)
   }

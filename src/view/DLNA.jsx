@@ -8,18 +8,16 @@ class DlnaApp extends Base {
     super(ctx)
 
     this.refresh = () => {
-      this.ctx.props.apis.request('samba')
       this.ctx.props.apis.request('dlna')
-      this.ctx.props.apis.request('bt')
     }
   }
 
   willReceiveProps (nextProps) {
-    // this.handleProps(nextProps.apis, ['samba', 'dlna', 'bt'])
+    this.handleProps(nextProps.apis, ['dlna'])
   }
 
   navEnter () {
-    // this.refresh()
+    this.refresh()
   }
 
   navGroup () {
@@ -47,6 +45,7 @@ class DlnaApp extends Base {
     return (
       <Dlna
         {...this.ctx.props}
+        {...this.state}
         openSnackBar={openSnackBar}
       />
     )

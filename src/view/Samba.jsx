@@ -9,17 +9,16 @@ class SambaApp extends Base {
 
     this.refresh = () => {
       this.ctx.props.apis.request('samba')
-      this.ctx.props.apis.request('dlna')
-      this.ctx.props.apis.request('bt')
+      this.ctx.props.apis.request('drives')
     }
   }
 
   willReceiveProps (nextProps) {
-    // this.handleProps(nextProps.apis, ['samba', 'dlna', 'bt'])
+    this.handleProps(nextProps.apis, ['samba', 'drives'])
   }
 
   navEnter () {
-    // this.refresh()
+    this.refresh()
   }
 
   navGroup () {
@@ -47,6 +46,7 @@ class SambaApp extends Base {
     return (
       <Samba
         {...this.ctx.props}
+        {...this.state}
         openSnackBar={openSnackBar}
       />
     )

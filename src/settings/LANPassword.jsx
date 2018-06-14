@@ -1,8 +1,6 @@
 import i18n from 'i18n'
 import React from 'react'
-
-import { EyeOpenIcon, EyeOffIcon } from '../common/Svg'
-import { RRButton, TFButton, TextField } from '../common/Buttons'
+import { RRButton, TextField } from '../common/Buttons'
 
 class LANPassword extends React.Component {
   constructor (props) {
@@ -36,34 +34,6 @@ class LANPassword extends React.Component {
     this.togglePwd = () => this.setState({ showPwd: !this.state.showPwd })
   }
 
-  renderPassword () {
-    return (
-      <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center' }}>
-        <div style={{ width: 130, textAlign: 'right', color: '#525a60' }}>
-          { i18n.__('Password') }
-        </div>
-        <div style={{ width: 30 }} />
-        <div style={{ width: 320, marginTop: -30, position: 'relative' }}>
-          <TextField
-            hintText={i18n.__('LAN Password Hint')}
-            type={this.state.showPwd ? 'text' : 'password'}
-            errorText={this.state.pwdError}
-            value={this.state.pwd}
-            onChange={e => this.onPassword(e.target.value)}
-            onKeyDown={this.onKeyDown}
-            disabled={this.state.loading}
-          />
-          {/* show password */}
-          {/*
-          <div style={{ position: 'absolute', right: 0, top: 35 }}>
-            <TFButton icon={this.state.showPwd ? EyeOpenIcon : EyeOffIcon} onClick={this.togglePwd} />
-          </div>
-          */}
-        </div>
-      </div>
-    )
-  }
-
   render () {
     console.log('LANPassword', this.props)
     return (
@@ -81,16 +51,67 @@ class LANPassword extends React.Component {
             { i18n.__('LAN Password Description') }
           </div>
 
+          {/* prePassword */}
           <div style={{ height: 30 }} />
+          <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center' }}>
+            <div style={{ width: 130, textAlign: 'right', color: '#525a60' }}>
+              { i18n.__('Password') }
+            </div>
+            <div style={{ width: 30 }} />
+            <div style={{ width: 320, marginTop: -30, position: 'relative' }}>
+              <TextField
+                hintText={i18n.__('LAN Password Hint')}
+                type={this.state.showPwd ? 'text' : 'password'}
+                errorText={this.state.pwdError}
+                value={this.state.pwd}
+                onChange={e => this.onPassword(e.target.value)}
+                onKeyDown={this.onKeyDown}
+                disabled={this.state.loading}
+              />
+            </div>
+          </div>
 
-          { this.renderPassword() }
+          {/* new Password */}
           <div style={{ height: 30 }} />
-          { this.renderPassword() }
+          <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center' }}>
+            <div style={{ width: 130, textAlign: 'right', color: '#525a60' }}>
+              { i18n.__('Password') }
+            </div>
+            <div style={{ width: 30 }} />
+            <div style={{ width: 320, marginTop: -30, position: 'relative' }}>
+              <TextField
+                hintText={i18n.__('LAN Password Hint')}
+                type={this.state.showPwd ? 'text' : 'password'}
+                errorText={this.state.pwdError}
+                value={this.state.pwd}
+                onChange={e => this.onPassword(e.target.value)}
+                onKeyDown={this.onKeyDown}
+                disabled={this.state.loading}
+              />
+            </div>
+          </div>
+
+          {/* new Password again */}
           <div style={{ height: 30 }} />
-          { this.renderPassword() }
+          <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center' }}>
+            <div style={{ width: 130, textAlign: 'right', color: '#525a60' }}>
+              { i18n.__('Password') }
+            </div>
+            <div style={{ width: 30 }} />
+            <div style={{ width: 320, marginTop: -30, position: 'relative' }}>
+              <TextField
+                hintText={i18n.__('LAN Password Hint')}
+                type={this.state.showPwd ? 'text' : 'password'}
+                errorText={this.state.pwdError}
+                value={this.state.pwd}
+                onChange={e => this.onPassword(e.target.value)}
+                onKeyDown={this.onKeyDown}
+                disabled={this.state.loading}
+              />
+            </div>
+          </div>
 
           <div style={{ height: 40 }} />
-
           <div style={{ width: 240, height: 40, margin: '0 auto', paddingLeft: 160 }}>
             <RRButton
               label={this.state.loading ? i18n.__('Saving') : i18n.__('Save')}

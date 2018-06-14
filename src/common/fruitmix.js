@@ -333,11 +333,11 @@ class Fruitmix extends EventEmitter {
 
       /* Plugin API */
       case 'samba':
-        r = this.aget('features/samba/status')
+        r = this.aget('samba')
         break
 
       case 'dlna':
-        r = this.aget('features/dlna/status')
+        r = this.aget('dlna')
         break
 
       default:
@@ -401,6 +401,22 @@ class Fruitmix extends EventEmitter {
 
       case 'handleTask':
         r = this.apatch(`tasks/${args.taskUUID}/nodes/${args.nodeUUID}`, { policy: args.policy })
+        break
+
+      case 'updateDlna':
+        r = this.apatch('dlna', { op: args.op })
+        break
+
+      case 'sambaStatus':
+        r = this.apatch('samba', { op: args.op })
+        break
+
+      case 'sambaEncrypted':
+        r = this.apatch(`drives/${args.driveUUID}`, { smb: args.encrypted })
+        break
+
+      case 'sambaPwd':
+        r = this.apatch(`users/${this.userUUID}`, { smbPassword: args.pwd })
         break
 
       default:
