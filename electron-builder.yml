@@ -29,7 +29,7 @@ mac:
     - dmg
     - zip
   category: public.app-category.tools
-  icon: logo/icon.png
+  icon: logo/icon.icns
 
 win:
   target: nsis
