@@ -568,6 +568,8 @@
   "Properties": "属性",
   "Confirm Delete Items Text": "确定删除选中的文件或文件夹吗？",
   "Confirm Delete Items Title": "删除确认",
+	"Download To": "下载到",
+	"Browse": "浏览",
 
   "==== view/Public.jsx ====": "",
   "Public Drive": "共享盘",

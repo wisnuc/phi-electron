@@ -6,6 +6,7 @@ import { ipcRenderer } from 'electron'
 import { Divider } from 'material-ui'
 
 import Base from './Base'
+import DownloadDialog from '../file/DownloadDialog'
 import FileDetail from '../file/FileDetail'
 import ListSelect from '../file/ListSelect'
 import FileContent from '../file/FileContent'
@@ -84,10 +85,14 @@ class Home extends Base {
     }
 
     this.download = () => {
+      const selected = this.state.select.selected
+      const entries = selected.map(index => this.state.entries[index])
+      const path = this.state.path
+      this.setState({ onDownload: { selected, entries, path } })
+    }
+
+    this.downloadFire = ({ selected, entries, path, downloadPath }) => {
       if (this.state.showSearch) { // search result
-        const selected = this.state.select.selected
-        const entries = selected.map(index => this.state.entries[index])
-        const path = this.state.path
         const places = [path[0].uuid]
         const entriesByDir = entries.sort((a, b) => a.pdir.localeCompare(b.pdir)).reduce((acc, cur) => {
           if (!acc[0]) acc.push([cur])
@@ -103,11 +108,9 @@ class Home extends Base {
           ipcRenderer.send('DOWNLOAD', { entries: arr, dirUUID, driveUUID })
         })
       } else {
-        const selected = this.state.select.selected
-        const entries = selected.map(index => this.state.entries[index])
-        const path = this.state.path
         ipcRenderer.send('DOWNLOAD', { entries, dirUUID: path[path.length - 1].uuid, driveUUID: path[0].uuid })
       }
+      this.setState({ onDownload: null })
     }
 
     this.dupFile = () => {
@@ -902,6 +905,13 @@ class Home extends Base {
   renderDialogs (openSnackBar, navTo) {
     return (
       <div style={{ width: '100%', height: '100%' }}>
+        <DownloadDialog
+          open={!!this.state.onDownload}
+          data={this.state.onDownload}
+          onCancel={() => this.setState({ onDownload: null })}
+          onConfirm={this.downloadFire}
+        />
+
         <DialogOverlay open={!!this.state.createNewFolder} onRequestClose={() => this.toggleDialog('createNewFolder')}>
           { this.state.createNewFolder &&
             <NewFolderDialog
