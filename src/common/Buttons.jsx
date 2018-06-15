@@ -42,6 +42,7 @@ export class Button extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
+      mouse: {},
       hover: false,
       pressed: false
     }
@@ -50,7 +51,7 @@ export class Button extends React.PureComponent {
 
     this.onMouseUp = () => this.setState({ pressed: false })
 
-    this.onMouseMove = () => this.setState({ hover: true })
+    this.onMouseMove = e => this.setState({ hover: true, mouse: { x: e.clientX, y: e.clientY } })
 
     this.onMouseLeave = () => this.setState({ pressed: false, hover: false })
 
@@ -67,6 +68,33 @@ export class Button extends React.PureComponent {
       onMouseLeave: this.onMouseLeave,
       onClick: this.onClick
     }
+  }
+
+  renderTootip () {
+    const left = this.state.mouse.x
+    const top = this.state.mouse.y + 20
+    return (
+      <div
+        className="flexCenter"
+        style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 1000 }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            width: 'max-content',
+            backgroundColor: '#FFF',
+            border: 'solid 1px #d9d9d9',
+            padding: 5,
+            top,
+            left,
+            fontSize: 12,
+            color: '#292936'
+          }}
+        >
+          { this.props.tooltip }
+        </div>
+      </div>
+    )
   }
 
   render () {
@@ -124,7 +152,7 @@ export class RSButton extends Button {
 /* Raised Button with BorderRadius */
 export class RRButton extends Button {
   render () {
-    const { label, style, labelStyle, disabled, alt, loading } = this.props
+    const { label, style, labelStyle, disabled, alt, loading, tooltip } = this.props
     const height = 40
     const width = 240
     const cursor = disabled ? 'default' : 'pointer'
@@ -151,6 +179,7 @@ export class RRButton extends Button {
       <div {...this.funcs} style={buttonStyle} className="flexCenter" >
         <LoadingLabel style={textStyle} loading={loading} label={label} />
         <div style={overlayStyle} />
+        { this.state.hover && tooltip && this.renderTootip(tooltip) }
       </div>
     )
   }

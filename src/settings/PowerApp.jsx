@@ -18,9 +18,9 @@ class Power extends React.Component {
 
     this.fire = () => {
       this.setState({ status: 'busy' })
-      this.props.apis.request('reboot', null, (err, res) => {
+      this.props.apis.request('power', { state: this.state.type }, (err, res) => {
         if (err) {
-          console.error('reboot error', err, res)
+          console.error('power fire error', err, res)
           this.setState({ status: 'error' })
         } else {
           setTimeout(() => this.setState({ status: 'success' }), 10000)
@@ -29,7 +29,12 @@ class Power extends React.Component {
     }
 
     this.reboot = () => {
-      this.setState({ confirm: false })
+      this.setState({ confirm: false, type: 'reboot' })
+      setTimeout(this.fire, 500)
+    }
+
+    this.powerOff = () => {
+      this.setState({ confirm: false, type: 'poweroff' })
       setTimeout(this.fire, 500)
     }
 
@@ -41,10 +46,11 @@ class Power extends React.Component {
       this.props.deviceLogout()
     }
 
-    this.showConfirm = () => this.setState({ confirm: true })
+    this.showConfirm = op => this.setState({ confirm: op })
   }
 
   render () {
+    const reboot = this.state.confirm === 'reboot'
     return (
       <div style={{ width: '100%', height: '100%', boxSizing: 'border-box', paddingBottom: 60 }} className="flexCenter" >
         <div style={{ width: 320 }}>
@@ -56,19 +62,18 @@ class Power extends React.Component {
             />
           </div>
           <div style={{ height: 40 }} />
-          <div style={{ color: '#888a8c', marginBottom: 40, height: 80, display: 'flex', alignItems: 'center' }}>
-            { i18n.__('Reboot Text')}
-          </div>
           <div style={{ width: 270, height: 40, margin: '0 auto', display: 'flex', alignItems: 'center' }}>
             <RRButton
               alt
+              tooltip={i18n.__('Reboot Text')}
               label={i18n.__('Reboot Menu Name')}
-              onClick={this.showConfirm}
+              onClick={() => this.showConfirm('reboot')}
             />
             <div style={{ width: 18 }} />
             <RRButton
-              label={i18n.__('Poweroff Menu Name')}
-              onClick={this.showConfirm}
+              tooltip={i18n.__('PowerOff Text')}
+              label={i18n.__('PowerOff Menu Name')}
+              onClick={() => this.showConfirm('powerOff')}
             />
           </div>
           <div style={{ height: 40 }} />
@@ -76,9 +81,9 @@ class Power extends React.Component {
         <ConfirmDialog
           open={this.state.confirm}
           onCancel={() => this.setState({ confirm: false })}
-          onConfirm={() => this.reboot()}
-          title={i18n.__('Confirm Reboot Title')}
-          text={i18n.__('Confirm Reboot Text')}
+          onConfirm={() => (reboot ? this.reboot() : this.powerOff())}
+          title={reboot ? i18n.__('Confirm Reboot Title') : i18n.__('Confirm PowerOff Title')}
+          text={reboot ? i18n.__('Confirm Reboot Text') : i18n.__('Confirm PowerOff Text')}
         />
 
         <Dialog open={!!this.state.status} onRequestClose={() => this.setState({ status: false })} modal transparent >

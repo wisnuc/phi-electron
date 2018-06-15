@@ -319,12 +319,8 @@ class Fruitmix extends EventEmitter {
         r = this.aget('device/memInfo')
         break
 
-      case 'poweroff':
-        r = this.apatch('boot', { state: 'poweroff' })
-        break
-
-      case 'reboot':
-        r = this.apatch('boot', { state: 'reboot' })
+      case 'power':
+        r = this.apatch('boot', { state: args.state })
         break
 
       case 'speed':
