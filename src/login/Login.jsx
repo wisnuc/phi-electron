@@ -93,7 +93,13 @@ class Login extends React.Component {
     this.manageDisk = (dev) => {
       console.log('this.manageDisk dev', dev, this.state)
       this.setState({ loading: true })
-      const isAdmin = dev.state && dev.state.mdev && dev.state.mdev.type === 'owner'
+      if (!dev || !dev.mdev) {
+        this.setState({ type: 'BOUNDLIST' }, () => this.refresh())
+        return
+      }
+      /* bind device and jump to manageDisk: should regard as admin */
+      if (dev.mdev.domain === 'local') Object.assign(dev.mdev, { type: 'owner' })
+      const isAdmin = dev.mdev.type === 'owner'
       dev.refreshSystemState(() => {
         if (dev.systemStatus() === 'noBoundVolume' && isAdmin) this.setState({ selectedDevice: dev, status: 'diskManage' })
         else if (dev.systemStatus() === 'noBoundVolume' && !isAdmin) this.setState({ status: 'diskError' })
