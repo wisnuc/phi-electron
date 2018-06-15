@@ -12,11 +12,16 @@ class Dlna extends React.Component {
       open: this.props.dlna && !!this.props.dlna.isActive
     }
 
+    this.saveAsync = async (open) => {
+      await this.props.apis.pureRequestAsync('updateDlna', { op: open ? 'start' : 'close' })
+      await this.props.apis.requestAsync('dlna')
+    }
+
     this.save = () => {
       this.setState({ loading: true })
-      const op = this.state.open ? 'start' : 'close'
-      this.props.apis.pureRequest('updateDlna', { op }, (err, res) => {
+      this.saveAsync(this.state.open).asCallback((err) => {
         if (err) {
+          console.error('dlna error', err)
           this.props.openSnackBar(i18n.__('Operation Failed'))
         } else {
           this.props.openSnackBar(i18n.__('Operation Success'))
@@ -27,8 +32,8 @@ class Dlna extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.dlna && nextProps.dlna.isActive) {
-      this.setState({ open: true })
+    if (nextProps.dlna) {
+      this.setState({ open: nextProps.dlna.isActive })
     }
   }
 
