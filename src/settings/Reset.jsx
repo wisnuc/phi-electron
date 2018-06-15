@@ -9,13 +9,17 @@ class ResetDevice extends React.Component {
 
     this.state = { confirm: false }
 
-    this.reset = (check) => {
-      console.log('this.reset', this.props, check)
-      /* check clean data TODO */
+    this.resetAsync = async (check) => {
       const { phi, selectedDevice } = this.props
       const deviceSN = selectedDevice.mdev.deviceSN
-      phi.req('unbindStation', { deviceSN }, (err, res) => {
-        console.log('this.reset err res', err, res)
+      await this.props.apis.pureRequest('unBindVolume', { format: !!check })
+      console.log('deviceSN', deviceSN)
+      await phi.reqAsync('unbindStation', { deviceSN })
+    }
+
+    this.reset = (check) => {
+      this.resetAsync(check).asCallback((err) => {
+        if (err) console.error('unbindStation error', err)
         this.props.deviceLogout()
       })
     }

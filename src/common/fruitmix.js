@@ -422,6 +422,10 @@ class Fruitmix extends EventEmitter {
         r = this.apatch(`users/${this.userUUID}`, { smbPassword: args.pwd })
         break
 
+      case 'unBindVolume':
+        r = this.adel('boot/boundVolume', { format: args.format })
+        break
+
       default:
         break
     }

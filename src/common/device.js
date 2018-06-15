@@ -215,7 +215,11 @@ class Device extends RequestManager {
 
     if (!boot || !states.includes(boot.state)) return 'systemError'
 
-    const { state, boundUser } = boot
+    const { state, boundUser, device } = boot
+
+    /* assign deviceSN */
+    if (device && device.deviceSN && !this.mdev.deviceSN) Object.assign(this.mdev, { deviceSN: device.deviceSN })
+
     if (state === 'PENDING' && !boundUser) return 'noBoundUser'
     else if (state === 'UNAVAILABLE' && boundUser) return 'noBoundVolume'
     else if (state === 'STARTED' && Array.isArray(users)) return 'ready'
