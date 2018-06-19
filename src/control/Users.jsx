@@ -278,7 +278,8 @@ class AdminUsersApp extends React.Component {
     const { open, onCancel } = this.props
     const isModify = this.state.status === 'modify'
     const isAddUser = this.state.status === 'addUser'
-    const height = Math.min(Math.max(60, this.state.users && this.state.users.length * 60), 180)
+    const height = !isAddUser && this.state.users && this.state.users.length > 0 ? Math.min(this.state.users.length * 60, 180)
+      : undefined
 
     return (
       <Dialog open={open} onRequestClose={onCancel} modal >
