@@ -1,7 +1,9 @@
 import i18n from 'i18n'
 import React from 'react'
-import { Checkbox, RadioButtonGroup, RadioButton } from 'material-ui'
-import FlatButton from '../common/FlatButton'
+import { Checkbox, RadioButtonGroup, RadioButton, Divider } from 'material-ui'
+import { RSButton } from '../common/Buttons'
+import renderFileIcon from '../common/renderFileIcon'
+import { AllFileIcon, PublicIcon } from '../common/Svg'
 
 class PolicyDialog extends React.PureComponent {
   constructor (props) {
@@ -88,8 +90,17 @@ class PolicyDialog extends React.PureComponent {
     return (
       <div>
         {/* title */}
-        <div style={{ wordBreak: 'break-all' }}> { text } </div>
-        <div style={{ height: 20 }} />
+        <div style={{ height: 60, display: 'flex', alignItems: 'center' }} >
+          <div style={{ marginRight: 4, marginLeft: -6 }} className="flexCenter">
+            {
+              type === 'public' ? <PublicIcon style={{ width: 60, height: 60, color: '#ffa93e' }} />
+                : type === 'directory' ? <AllFileIcon style={{ width: 60, height: 60, color: '#ffa93e' }} />
+                  : renderFileIcon(name, null, 60)
+            }
+          </div>
+          <div style={{ wordBreak: 'break-all', color: '#85868c' }}> { text } </div>
+        </div>
+        <div style={{ height: 10 }} />
 
         {/* choice */}
         <RadioButtonGroup
@@ -101,10 +112,11 @@ class PolicyDialog extends React.PureComponent {
           {
             choices.map(c => (
               <RadioButton
+                disableTouchRipple
                 key={c.value}
-                style={{ marginBottom: 16 }}
-                labelStyle={{ color: '#757575', fontSize: 14 }}
-                iconStyle={{ fill: this.state.value === c.value ? this.props.primaryColor : '#757575' }}
+                style={{ margin: '16px 0', height: 24 }}
+                labelStyle={{ color: '#505259', fontSize: 14, marginLeft: -4 }}
+                iconStyle={{ fill: this.state.value === c.value ? '#31a0f5' : '#85868c', width: 16 }}
                 value={c.value}
                 label={c.label}
               />
@@ -118,27 +130,36 @@ class PolicyDialog extends React.PureComponent {
   render () {
     const c = this.props.data.conflicts
     const leftCount = c.filter((conflict, index) => index > this.state.current && conflict.type === c[this.state.current].type).length
+
     return (
-      <div style={{ width: 576, padding: '24px 24px 0px 24px' }}>
+      <div style={{ width: 380, padding: '0 20px' }}>
+        <div style={{ height: 60, display: 'flex', alignItems: 'center' }} className="title">
+          { i18n.__('Name Conflict') }
+        </div>
+        <Divider style={{ width: 380 }} className="divider" />
+        <div style={{ height: 20 }} />
 
-        {/* title and choice */}
         { this.renderChoice() }
-        <div style={{ height: 24 }} />
-
-        <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-          { leftCount > 0 &&
-            <Checkbox
-              label={i18n.__('Apply All Text %d', leftCount)}
-              labelStyle={{ color: '#757575', fontSize: 14 }}
-              iconStyle={{ fill: this.state.checked ? this.props.primaryColor : '#757575' }}
-              checked={this.state.checked}
-              onCheck={this.toggleCheck}
-              style={{ width: 410 }}
-            />
-          }
+        <div style={{ height: 10 }} />
+        {
+          leftCount > 0 &&
+            <div style={{ height: 40, display: 'flex', alignItems: 'center' }} >
+              <Checkbox
+                label={i18n.__('Apply All Text %d', leftCount)}
+                disableTouchRipple
+                style={{ width: 380 }}
+                iconStyle={{ height: 18, width: 18, marginTop: 2, fill: this.state.checked ? '#31a0f5' : 'rgba(0,0,0,.25)' }}
+                labelStyle={{ fontSize: 14, color: '#85868c', marginLeft: -9 }}
+                checked={this.state.checked}
+                onCheck={this.toggleCheck}
+              />
+            </div>
+        }
+        <div style={{ height: 74, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
           <div style={{ flexGrow: 1 }} />
-          <FlatButton label={i18n.__('Cancel')} onClick={this.cancel} primary />
-          <FlatButton label={i18n.__('Confirm')} onClick={this.next} primary />
+          <RSButton label={i18n.__('Cancel')} onClick={this.cancel} alt />
+          <div style={{ width: 10 }} />
+          <RSButton label={i18n.__('Confirm')} onClick={this.next} disabled={this.state.fired} />
         </div>
       </div>
     )
