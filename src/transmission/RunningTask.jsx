@@ -33,6 +33,7 @@ class RunningTask extends React.Component {
 
   statusOrSpeed (task) {
     if (task.state === 'failed') return i18n.__('Task Failed')
+    if (task.waiting) return i18n.__('Task Waiting')
     if (task.paused) return i18n.__('Task Paused')
     if (task.state === 'uploading' || task.state === 'downloading') return this.formatSpeed(task.speed)
     if (task.state === 'visitless') return i18n.__('Task Visitless')

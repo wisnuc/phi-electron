@@ -109,7 +109,7 @@ class TrsContainer extends React.Component {
     this.state.userTasks.forEach((task) => {
       completeSize += task.completeSize
       size += task.size
-      speed += task.speed
+      speed += task.paused ? 0 : task.speed
     })
 
     const percent = (Math.min(completeSize / size || 0, 1) * 100).toFixed(2)

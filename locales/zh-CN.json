@@ -168,6 +168,7 @@
   "Avaliable Device List": "可登录设备列表",
 
   "==== common/Policy.jsx ====": "",
+	"Name Conflict": "命名冲突",
   "Directory": "文件夹",
   "File": "文件",
   "Rename Text {{type}} {{action}}": "保留，两个项目均保留，自动重命名新{{action}}的{{type}}",
@@ -825,6 +826,7 @@
   "==== file/RunningTask.jsx ====": "",
   "Task Failed": "已停止",
   "Task Paused": "已暂停",
+	"Task Waiting": "等待中",
   "Task Visitless": "正在校验",
   "Task Hashing": "正在校验",
   "Task Diffing": "正在校验",
