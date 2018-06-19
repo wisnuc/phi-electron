@@ -40,7 +40,7 @@ class NetworkInfo extends React.Component {
     if (nextProps.network && (!this.state.dns || !this.state.ip)) {
       const NIC = nextProps.network.find(card => card && card.ipAddresses && card.ipAddresses.length > 0) || {}
       const ip = NIC.ipAddresses.find(addr => (addr.family === 'IPv4')).address
-      this.setState({ ip })
+      this.setState({ ip, mac: NIC.address })
     }
   }
 
@@ -113,6 +113,7 @@ class NetworkInfo extends React.Component {
           </div>
           <div style={{ height: 50 }} />
 
+          {/*
           <div style={{ position: 'relative', height: 30, width: 480, display: 'flex', alignItems: 'center' }}>
             <div style={{ width: 130, textAlign: 'right', color: '#525a60' }}>
               { i18n.__('Network Mode') }
@@ -165,8 +166,9 @@ class NetworkInfo extends React.Component {
               </div>
             </Popover>
           </div>
-
           <div style={{ height: 30 }} />
+          */}
+
           <div style={{ height: 30, width: '100%', display: 'flex', alignItems: 'center' }}>
             <div style={{ width: 130, textAlign: 'right', color: '#525a60' }}>
               { i18n.__('IP Address') }
@@ -202,6 +204,7 @@ class NetworkInfo extends React.Component {
             </div>
           </div>
 
+          {/*
           <div style={{ height: 40 }} />
           <div style={{ width: 240, height: 40, margin: '0 auto', paddingLeft: 160 }}>
             <RRButton
@@ -209,6 +212,7 @@ class NetworkInfo extends React.Component {
               onClick={this.save}
             />
           </div>
+          */}
         </div>
       </div>
     )
