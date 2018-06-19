@@ -143,6 +143,8 @@ class Public extends Home {
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
         <FileContent
           {...this.state}
+          apis={this.ctx.props.apis}
+          showUsers={this.ctx.props.showUsers}
           listNavBySelect={this.listNavBySelect}
           showContextMenu={this.showContextMenu}
           setAnimation={this.setAnimation}
@@ -152,7 +154,6 @@ class Public extends Home {
           openSnackBar={openSnackBar}
           toggleDialog={this.toggleDialog}
           showTakenTime={!!this.state.takenTime}
-          apis={this.ctx.props.apis}
           refresh={this.refresh}
           resetScrollTo={this.resetScrollTo}
           rowDragStart={this.rowDragStart}

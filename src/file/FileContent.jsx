@@ -27,9 +27,9 @@ class FileContent extends React.Component {
     /* cathc key action */
     this.keyDown = (e) => {
       console.log('this.keyDown', this.props)
-      const { createNewFolder, loading, newDrive, select } = this.props
+      const { createNewFolder, loading, newDrive, select, showUsers } = this.props
       const isModifyName = select && select.modify !== -1
-      if (createNewFolder || this.props.delete || loading || newDrive || isModifyName || !select) return
+      if (createNewFolder || this.props.delete || loading || newDrive || isModifyName || !select || showUsers) return
       if (e.ctrlKey && e.key === 'a') {
         select.addByArray(Array.from({ length: this.props.entries.length }, (v, i) => i)) // [0, 1, ..., N]
       }
@@ -41,9 +41,9 @@ class FileContent extends React.Component {
     }
 
     this.keyUp = (e) => {
-      const { createNewFolder, loading, newDrive, select } = this.props
+      const { createNewFolder, loading, newDrive, select, showUsers } = this.props
       const isModifyName = select && select.modify !== -1
-      if (createNewFolder || this.props.delete || loading || newDrive || isModifyName || !select) return
+      if (createNewFolder || this.props.delete || loading || newDrive || isModifyName || !select || showUsers) return
       select.keyEvent(e.ctrlKey, e.shiftKey)
     }
 
@@ -54,7 +54,7 @@ class FileContent extends React.Component {
       e.preventDefault() // important, to prevent other event
       e.stopPropagation()
 
-      console.log('this.onRowClick', this.selectBox, index, this.props.select, fakeCtrl)
+      // console.log('this.onRowClick', this.selectBox, index, this.props.select, fakeCtrl)
       /* disabled in select box mode */
       if (this.selectBox) return
 
@@ -230,7 +230,7 @@ class FileContent extends React.Component {
             (head < parseInt(s.top, 10) + parseInt(s.height, 10)))
         })
 
-      console.log('scrollTop this.calcRow', scrollTop, array)
+      // console.log('scrollTop this.calcRow', scrollTop, array)
       this.props.select.addByArray(array, this.selectBox.session)
     }
 
@@ -370,7 +370,7 @@ class FileContent extends React.Component {
 
     /* got list */
     return (
-      <div style={{ width: '100%', height: '100%', position: 'relatvie' }}>
+      <div style={{ width: '100%', height: '100%', position: 'relatvie' }} >
         <EventListener target="window" onResize={this.handleResize} />
         {/* render list */}
         {
