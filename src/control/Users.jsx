@@ -1,11 +1,14 @@
 import i18n from 'i18n'
 import React from 'react'
 import { Divider } from 'material-ui'
+import { AutoSizer } from 'react-virtualized'
+
 import Dialog from '../common/PureDialog'
-import { CloseIcon, BackIcon } from '../common/Svg'
-import { RSButton, LIButton, Checkbox, TextField } from '../common/Buttons'
-import CircularLoading from '../common/CircularLoading'
+import ScrollBar from '../common/ScrollBar'
 import { isPhoneNumber } from '../common/validate'
+import { CloseIcon, BackIcon } from '../common/Svg'
+import CircularLoading from '../common/CircularLoading'
+import { RSButton, LIButton, Checkbox, TextField } from '../common/Buttons'
 
 class AdminUsersApp extends React.Component {
   constructor (props) {
@@ -139,41 +142,6 @@ class AdminUsersApp extends React.Component {
     )
   }
 
-  renderRow (user) {
-    const { driveList, inviteStatus, nickname, username, uuid } = user
-    return (
-      <div style={{ height: 60, display: 'flex' }} key={uuid}>
-        {
-          this.state.status === 'modify' &&
-          (
-            <div style={{ marginTop: -2 }}>
-              <Checkbox
-                onCheck={() => this.onCheck(uuid)}
-                checked={this.state.checkList.includes(uuid)}
-              />
-            </div>
-          )
-        }
-
-        <div style={{ height: 60 }}>
-          <div style={{ height: 20, color: '#505259', display: 'flex', alignItems: 'center' }}>
-            { `${nickname} (${username})` }
-          </div>
-          <div style={{ height: 40, display: 'flex', alignItems: 'center' }}>
-            {
-              inviteStatus === 'accept' ? this.renderUser(driveList)
-                : (
-                  <div style={{ color: inviteStatus === 'reject' ? '#f53131' : '#31a0f5' }}>
-                    { inviteStatus === 'reject' ? i18n.__('Invite Rejected') : i18n.__('Invite Pending') }
-                  </div>
-                )
-            }
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   renderAddUser () {
     return (
       <div style={{ width: 280 }}>
@@ -246,10 +214,71 @@ class AdminUsersApp extends React.Component {
     )
   }
 
+  renderRow ({ style, key, user }) {
+    const { driveList, inviteStatus, nickname, username, uuid } = user
+    return (
+      <div style={style} key={key}>
+        <div style={{ height: 60, display: 'flex' }}>
+          {
+            this.state.status === 'modify' &&
+            (
+              <div style={{ marginTop: -2 }}>
+                <Checkbox
+                  onCheck={() => this.onCheck(uuid)}
+                  checked={this.state.checkList.includes(uuid)}
+                />
+              </div>
+            )
+          }
+
+          <div style={{ height: 60 }}>
+            <div style={{ height: 20, color: '#505259', display: 'flex', alignItems: 'center' }}>
+              { `${nickname} (${username})` }
+            </div>
+            <div style={{ height: 40, display: 'flex', alignItems: 'center' }}>
+              {
+                inviteStatus === 'accept' ? this.renderUser(driveList)
+                  : (
+                    <div style={{ color: inviteStatus === 'reject' ? '#f53131' : '#31a0f5' }}>
+                      { inviteStatus === 'reject' ? i18n.__('Invite Rejected') : i18n.__('Invite Pending') }
+                    </div>
+                  )
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  renderUsers (users) {
+    const rowCount = users.length
+    const rowHeight = 60
+    return (
+      <div style={{ width: '100%', height: '100%' }}>
+        <AutoSizer>
+          {({ height, width }) => (
+            <ScrollBar
+              allHeight={rowHeight * rowCount}
+              height={height}
+              width={width}
+              rowHeight={rowHeight}
+              rowRenderer={({ style, key, index }) => this.renderRow({ style, key, user: users[index] })}
+              rowCount={rowCount}
+              overscanRowCount={3}
+              style={{ outline: 'none' }}
+            />
+          )}
+        </AutoSizer>
+      </div>
+    )
+  }
+
   render () {
     const { open, onCancel } = this.props
     const isModify = this.state.status === 'modify'
     const isAddUser = this.state.status === 'addUser'
+    const height = Math.min(Math.max(60, this.state.users && this.state.users.length * 60), 180)
 
     return (
       <Dialog open={open} onRequestClose={onCancel} modal >
@@ -273,15 +302,15 @@ class AdminUsersApp extends React.Component {
               <div style={{ height: 30 }} />
               <div
                 style={{
+                  height,
                   width: 380,
-                  minHeight: 60,
                   padding: '0 20px'
                 }}
               >
                 {
                   this.state.loading ? this.renderLoading()
                     : isAddUser ? this.renderAddUser()
-                      : this.state.users.length ? this.state.users.map(user => this.renderRow(user)) : this.renderNoUser()
+                      : this.state.users.length ? this.renderUsers(this.state.users) : this.renderNoUser()
                 }
               </div>
               <div style={{ height: 20 }} />
