@@ -894,10 +894,10 @@
   "Hide Photo Dialog Text 2": "内容被隐藏后，我的照片内将不显示，可在智能助理中恢复。",
 
   "==== node/lib/window.js ====": "",
-  "Confirm Close Title": "确认关闭",
+  "Confirm Close Title": "退出客户端",
   "Close": "关闭",
   "Do not Show again": "不再提醒",
-  "Confirm Close Text": "确定退出并关闭应用吗？",
+  "Confirm Close Text": "退出客户端，当前传输任务将终止，请确实是否退出",
   "About": "关于",
   "No Device": "暂无设备",
   "No Storage Info": "暂无存储信息",
