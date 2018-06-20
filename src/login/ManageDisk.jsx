@@ -58,6 +58,14 @@ class ManageDisk extends React.Component {
       v.users.find(u => u.isFirstUser && u.phicommUserId === boundUser.phicommUserId))
   }
 
+  brokenVolume () {
+    const { boundVolume, storage } = this.props.selectedDevice.boot.data
+    if (!boundVolume || !boundVolume.uuid) return false
+    const volume = storage && storage.volumes.find(v => (v.uuid === boundVolume.uuid))
+    console.log('volume', volume)
+    return true
+  }
+
   volumeStatus () {
     const { storage, boundVolume, boundUser } = this.props.selectedDevice.boot.data
     console.log('volumeStatus', storage, boundVolume, boundUser)
