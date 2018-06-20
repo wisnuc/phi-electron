@@ -327,6 +327,10 @@ class Fruitmix extends EventEmitter {
         r = this.aget('device/speed')
         break
 
+      case 'sleep':
+        r = this.aget('device/sleep')
+        break
+
       /* Plugin API */
       case 'samba':
         r = this.aget('samba')
@@ -434,6 +438,10 @@ class Fruitmix extends EventEmitter {
         r = this.apatch(`phy-drives/${args.id}`, { op: 'eject' })
         break
 
+      case 'modifySleep':
+        r = this.apatch('device/sleep', args)
+        break
+
       default:
         break
     }
@@ -452,7 +460,6 @@ class Fruitmix extends EventEmitter {
     this.request('account')
     this.request('users')
     this.request('phyDrives')
-    this.timer = setInterval(() => this.request('phyDrives'), 3000)
     this.requestAsync('drives').asCallback((err, drives) => {
       if (err || !drives) console.error('requestAsync drives error', err)
       else {

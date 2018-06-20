@@ -4,6 +4,14 @@ import Base from './Base'
 import SleepMode from '../settings/SleepMode'
 
 class Sleep extends Base {
+  constructor (ctx) {
+    super(ctx)
+
+    this.refresh = () => {
+      this.ctx.props.apis.request('sleep')
+    }
+  }
+
   navGroup () {
     return 'settings'
   }
@@ -25,9 +33,19 @@ class Sleep extends Base {
     return Pic
   }
 
+  willReceiveProps (nextProps) {
+    this.handleProps(nextProps.apis, ['sleep'])
+  }
+
+  navEnter () {
+    this.refresh()
+   }
+
   renderContent ({ openSnackBar }) {
     return (
       <SleepMode
+        {...this.state}
+        {...this.ctx.props}
         apis={this.ctx.props.apis}
         openSnackBar={openSnackBar}
       />

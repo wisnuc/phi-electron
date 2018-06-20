@@ -125,6 +125,8 @@ class NavViews extends React.Component {
 
     this.init = () => {
       this.navTo('home')
+      this.timer = setInterval(() => (this.views[this.state.nav].navGroup() === 'file') &&
+        this.props.apis.request('phyDrives'), 3000)
     }
 
     this.handleTask = (uuid, response, conflicts) => {
@@ -185,6 +187,7 @@ class NavViews extends React.Component {
   }
 
   componentWillUnmount () {
+    clearInterval(this.timer)
     ipcRenderer.removeAllListeners('snackbarMessage')
     ipcRenderer.removeAllListeners('conflicts')
     ipcRenderer.removeAllListeners('JUMP_TO')
