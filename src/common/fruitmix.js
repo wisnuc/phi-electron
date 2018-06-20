@@ -423,7 +423,7 @@ class Fruitmix extends EventEmitter {
         break
 
       case 'unBindVolume':
-        r = this.adel('boot/boundVolume', { format: args.format })
+        r = this.adel('boot/boundVolume', { format: args.format, reset: args.reset })
         break
 
       default:
