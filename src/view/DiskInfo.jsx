@@ -55,7 +55,7 @@ class DiskInfo extends Base {
     return (
       <Disk
         {...this.state}
-        selectedDevice={this.ctx.props.selectedDevice}
+        {...this.ctx.props}
         openSnackBar={openSnackBar}
       />
     )

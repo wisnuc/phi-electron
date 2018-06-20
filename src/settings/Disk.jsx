@@ -6,12 +6,25 @@ import DiskModeGuide from '../login/DiskModeGuide'
 import Dialog from '../common/PureDialog'
 import { HelpIcon, DiskIcon, DiskAltIcon } from '../common/Svg'
 import { RSButton } from '../common/Buttons'
+import ConfirmDialog from '../common/ConfirmDialog'
 
 class Disk extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
       showGuide: false
+    }
+    this.removeData = () => {
+      const uuid = this.props.apis.drives.data.find(d => d.type === 'private').uuid
+      this.props.apis.pureRequest('removeData', { driveUUID: uuid }, (err, res) => {
+        if (!err) {
+          this.props.openSnackbar(i18n.__('Operation Success'))
+          this.setState({ confirmRemoveData: false })
+        } else {
+          this.props.openSnackbar(i18n.__('Operation Failed'))
+          this.setState({ confirmRemoveData: false })
+        }
+      })
     }
   }
 
@@ -117,7 +130,7 @@ class Disk extends React.PureComponent {
                   alt
                   style={{ width: 100 }}
                   label={i18n.__('Remove Data')}
-                  onClick={this.save}
+                  onClick={() => this.setState({ confirmRemoveData: true })}
                 />
               </div>
             </div>
@@ -198,6 +211,14 @@ class Disk extends React.PureComponent {
             />
           }
         </Dialog>
+
+        <ConfirmDialog
+          open={this.state.confirmRemoveData}
+          onCancel={() => this.setState({ confirmRemoveData: false })}
+          onConfirm={() => this.removeData()}
+          title={i18n.__('Confirm Clear Data Title')}
+          text={i18n.__('Confirm Clear Data Text')}
+        />
       </div>
     )
   }

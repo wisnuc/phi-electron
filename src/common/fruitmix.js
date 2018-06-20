@@ -426,6 +426,10 @@ class Fruitmix extends EventEmitter {
         r = this.adel('boot/boundVolume', { format: args.format, reset: args.reset })
         break
 
+      case 'removeData':
+        r = this.apatch(`drives/${args.driveUUID}/dirs/${args.driveUUID}`, { op: 'format' })
+        break
+
       default:
         break
     }
