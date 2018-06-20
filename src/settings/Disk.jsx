@@ -18,14 +18,35 @@ class Disk extends React.PureComponent {
       const uuid = this.props.apis.drives.data.find(d => d.type === 'private').uuid
       this.props.apis.pureRequest('removeData', { driveUUID: uuid }, (err, res) => {
         if (!err) {
-          this.props.openSnackbar(i18n.__('Operation Success'))
+          this.props.openSnackBar(i18n.__('Operation Success'))
           this.setState({ confirmRemoveData: false })
         } else {
-          this.props.openSnackbar(i18n.__('Operation Failed'))
+          this.props.openSnackBar(i18n.__('Operation Failed'))
           this.setState({ confirmRemoveData: false })
         }
       })
     }
+
+    this.fireEject = () => {
+      // if (!this.shouldEject()) return
+      const id = this.props.apis.phyDrives.data.filter(d => d.isUSB)[0].id
+      console.log('id', id, this.props)
+      this.props.apis.pureRequest('ejectUSB', { id }, (err, res) => {
+        if (!err) {
+          this.props.openSnackBar(i18n.__('Operation Success'))
+          this.setState({ ejectUSB: false })
+        } else {
+          this.props.openSnackBar(i18n.__('Operation Failed'))
+          this.setState({ ejectUSB: false })
+        }
+      })
+    }
+  }
+
+  shouldEject () {
+    const phyDrives = this.props.apis.phyDrives && this.props.apis.phyDrives.data 
+    if (!Array.isArray(phyDrives) || !phyDrives.filter(d => d.isUSB).length) return false
+    return true
   }
 
   /* data: [{ title, percent, color }]  */
@@ -186,7 +207,7 @@ class Disk extends React.PureComponent {
                 alt
                 style={{ width: 100 }}
                 label={i18n.__('Eject USB')}
-                onClick={this.save}
+                onClick={() => this.setState({ ejectUSB: true })}
               />
             </div>
           </div>
@@ -218,6 +239,14 @@ class Disk extends React.PureComponent {
           onConfirm={() => this.removeData()}
           title={i18n.__('Confirm Clear Data Title')}
           text={i18n.__('Confirm Clear Data Text')}
+        />
+
+        <ConfirmDialog
+          open={this.state.ejectUSB}
+          onCancel={() => this.setState({ ejectUSB: false })}
+          onConfirm={() => this.fireEject()}
+          title={i18n.__('Confirm Eject USB Title')}
+          text={i18n.__('Confirm Eject USB Text')}
         />
       </div>
     )

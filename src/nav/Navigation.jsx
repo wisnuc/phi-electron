@@ -295,7 +295,7 @@ class NavViews extends React.Component {
     const titleStyle = { height: 70, width: '100%', display: 'flex', alignItems: 'center' }
 
     const phyDrives = this.props.apis && this.props.apis.phyDrives
-    const hasUSB = phyDrives && phyDrives.data && Array.isArray(phyDrives.data) && phyDrives.data.length
+    const hasUSB = phyDrives && phyDrives.data && Array.isArray(phyDrives.data) && phyDrives.data.filter(d => d.isUSB).length
     return (
       <div
         style={{

@@ -430,6 +430,10 @@ class Fruitmix extends EventEmitter {
         r = this.apatch(`drives/${args.driveUUID}/dirs/${args.driveUUID}`, { op: 'format' })
         break
 
+      case 'ejectUSB':
+        r = this.apatch(`phy-drives/${args.id}`, { op: 'eject' })
+        break
+
       default:
         break
     }
@@ -448,6 +452,7 @@ class Fruitmix extends EventEmitter {
     this.request('account')
     this.request('users')
     this.request('phyDrives')
+    this.timer = setInterval(() => this.request('phyDrives'), 3000)
     this.requestAsync('drives').asCallback((err, drives) => {
       if (err || !drives) console.error('requestAsync drives error', err)
       else {

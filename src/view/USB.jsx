@@ -118,7 +118,7 @@ class USB extends Home {
     if (!apis || !apis.phyDrives || !apis.phyDrives.data) return
     if (this.firstEnter) {
       this.firstEnter = false
-      this.phyDrive = apis.phyDrives.data[0]
+      this.phyDrive = apis.phyDrives.data.filter(d => d.isUSB)[0]
       apis.request('listPhyDir', { id: this.phyDrive.id })
     } else this.refresh()
   }
