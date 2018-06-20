@@ -5,7 +5,7 @@ import querystring from 'querystring'
 import parseRes from './parseRes'
 import Request from './Request'
 
-const cloudAddress = 'http://sohon2dev.phicomm.com'
+const cloudAddress = process.env.CLOUD_TEST === 'dev' ? 'sohon2dev.phicomm.com' : 'sohon2test.phicomm.com'
 
 /* this module encapsulate most fruitmix apis */
 class Fruitmix extends EventEmitter {
