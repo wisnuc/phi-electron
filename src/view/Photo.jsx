@@ -23,7 +23,8 @@ class Photo extends Home {
 
     this.refresh = (op) => {
       const apis = this.ctx.props.apis
-      const places = apis && apis.drives && apis.drives.data && apis.drives.data.map(d => d.uuid).join('.')
+      const places = apis && apis.drives && apis.drives.data && apis.drives.data.filter(d => d.type === 'private').map(d => d.uuid).join('.')
+      console.log('places', places)
       this.ctx.props.apis.request(this.type, { places })
       if (op) this.setState({ scrollTo: op.fileName || op.uuid, loading: !op.noloading }) // fileName for files, uuid for drives
       else this.setState({ loading: true })
