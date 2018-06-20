@@ -61,6 +61,14 @@ class LANLogin extends React.Component {
         this.setState({ loading: false })
       })
     }
+
+    this.onKeyDown = (e) => {
+      if (e.which === 13 && this.shouldFire()) this.login()
+    }
+  }
+
+  shouldFire () {
+    return !this.state.pnError && !this.state.pwdError && this.state.pn && this.state.pwd
   }
 
   getStationName () {
@@ -95,7 +103,7 @@ class LANLogin extends React.Component {
         </div>
         <div style={{ width: 280, margin: '-10px auto 0px auto', position: 'relative' }}>
           <TextField
-            hintText={i18n.__('Username Hint')}
+            hintText={i18n.__('Phone Number Hint')}
             type="text"
             errorText={this.state.pnError}
             value={this.state.pn}
@@ -128,7 +136,7 @@ class LANLogin extends React.Component {
           <RRButton
             label={this.state.loading ? i18n.__('Logging') : i18n.__('Login')}
             onClick={this.login}
-            disabled={this.state.pnError || this.state.pwdError || !this.state.pn || !this.state.pwd}
+            disabled={!this.shouldFire()}
             loading={this.state.loading}
           />
         </div>
