@@ -1,6 +1,7 @@
 import React from 'react'
 import i18n from 'i18n'
-import { shell, remote } from 'electron'
+import UUID from 'uuid'
+import { shell, remote, ipcRenderer } from 'electron'
 import { orange500 } from 'material-ui/styles/colors'
 import NewReleases from 'material-ui/svg-icons/av/new-releases'
 import CheckIcon from 'material-ui/svg-icons/navigation/check'
@@ -60,21 +61,25 @@ class Update extends React.Component {
       return this.setState({ rel, filePath, status, error: null })
     }
 
-    this.sendCheck = () => {
-      this.setState({ status: 'checking' }, () => this.props.ipcRenderer.send('CHECK_UPDATE'))
-    }
-
     this.onChoose = () => {
-      remote.dialog.showOpenDialog({ properties: ['openFile'], filters: [{ name: 'Roms', extensions: ['bin'] }] }, (filePaths) => {
+      remote.dialog.showOpenDialog({ properties: ['openFile'], filters: [{ name: 'image', extensions: ['img'] }] }, (filePaths) => {
         if (!filePaths || !filePaths.length) return
         this.setState({ path: filePaths[0] })
       })
     }
+
+    this.fire = () => {
+      this.session = UUID.v4()
+      // ipcRenderer.send('UPLOAD_FIRM', { session: this.session, absPath: this.state.path })
+    }
+
+    this.openWeb = () => {
+      shell.openExternal('https://sohon2test.phicomm.com/v1/ui/index')
+    }
   }
 
   componentDidMount () {
-    // this.sendCheck()
-    // this.props.ipcRenderer.on('NEW_RELEASE', this.newRelease)
+    // ipcRenderer.on('UPLOAD_FIRM_RESULT')
   }
 
   componentWillUnmount () {
@@ -222,13 +227,14 @@ class Update extends React.Component {
               alt
               style={{ width: 131 }}
               label={i18n.__('Open Web to Download Firmware')}
-              onClick={this.save}
+              onClick={this.openWeb}
             />
             <div style={{ width: 20 }} />
             <RRButton
               style={{ width: 131 }}
               label={i18n.__('Update Immediately')}
-              onClick={this.save}
+              onClick={this.fire}
+              disabled={!this.state.path}
             />
           </div>
         </div>
