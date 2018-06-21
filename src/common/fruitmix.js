@@ -172,6 +172,14 @@ class Fruitmix extends EventEmitter {
         r = this.aget('drives')
         break
 
+      case 'stats':
+        r = this.aget('fruitmix/stats')
+        break
+
+     case 'boot':
+        r = this.aget('boot')
+        break
+
       /* account APIs */
       case 'account':
         r = this.aget(`users/${this.userUUID}`)
@@ -243,7 +251,7 @@ class Fruitmix extends EventEmitter {
         break
 
       case 'phyDrives':
-        r = this.aget('phy-drives')
+        r = this.aget('phy-drives', { usage: 'true' })
         break
 
       case 'listPhyDir':

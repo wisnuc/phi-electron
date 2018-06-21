@@ -7,27 +7,22 @@ class DiskInfo extends Base {
   constructor (ctx) {
     super(ctx)
 
-    this.address = ctx.props.selectedDevice.mdev.address // TODO
-
     this.state = {
-      device: null,
-      storage: null,
-      boot: null,
-      info: null
+    }
+
+    this.refresh = () => {
+      this.ctx.props.apis.request('boot')
+      this.ctx.props.apis.request('phyDrives')
+      this.ctx.props.apis.request('stats')
     }
   }
 
   willReceiveProps (nextProps) {
-    // this.handleProps(nextProps.selectedDevice, ['device', 'storage', 'boot', 'info'])
+    this.handleProps(nextProps.apis, ['boot', 'phyDrives', 'stats'])
   }
 
   navEnter () {
-    /*
-    this.ctx.props.selectedDevice.request('device')
-    this.ctx.props.selectedDevice.request('storage')
-    this.ctx.props.selectedDevice.request('boot')
-    this.ctx.props.selectedDevice.request('info')
-    */
+    this.refresh()
   }
 
   navGroup () {
@@ -56,6 +51,7 @@ class DiskInfo extends Base {
       <Disk
         {...this.state}
         {...this.ctx.props}
+        refresh={this.refresh}
         openSnackBar={openSnackBar}
       />
     )

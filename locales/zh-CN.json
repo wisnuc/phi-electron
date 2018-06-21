@@ -657,6 +657,10 @@
   "Video": "视频",
   "Disk 1": "磁盘1",
   "Disk 2": "磁盘2",
+  "Confirm Clear Data Text": "该操作会清除当前用户所有个人文件且不可恢复，确定进行吗？",
+  "Confirm Clear Data Title": "清除用户数据",
+  "Confirm Eject USB Text": "确定弹出USB设备吗？",
+  "Confirm Eject USB Title": "安全弹出",
 
   "==== view/Networking.jsx ====": "",
   "Networking Menu Name": "网络设置",

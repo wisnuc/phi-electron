@@ -1,12 +1,13 @@
 import React from 'react'
 import i18n from 'i18n'
-// import prettysize from 'prettysize'
+import prettysize from 'prettysize'
 import { IconButton } from 'material-ui'
-import DiskModeGuide from '../login/DiskModeGuide'
 import Dialog from '../common/PureDialog'
-import { HelpIcon, DiskIcon, DiskAltIcon } from '../common/Svg'
 import { RSButton } from '../common/Buttons'
+import interpretModel from '../common/diskModel'
+import DiskModeGuide from '../login/DiskModeGuide'
 import ConfirmDialog from '../common/ConfirmDialog'
+import { HelpIcon, DiskIcon, DiskAltIcon } from '../common/Svg'
 
 class Disk extends React.PureComponent {
   constructor (props) {
@@ -34,17 +35,17 @@ class Disk extends React.PureComponent {
       this.props.apis.pureRequest('ejectUSB', { id }, (err, res) => {
         if (!err) {
           this.props.openSnackBar(i18n.__('Operation Success'))
-          this.setState({ ejectUSB: false })
         } else {
           this.props.openSnackBar(i18n.__('Operation Failed'))
-          this.setState({ ejectUSB: false })
         }
+        this.setState({ ejectUSB: false })
+        this.props.refresh()
       })
     }
   }
 
   shouldEject () {
-    const phyDrives = this.props.apis.phyDrives && this.props.apis.phyDrives.data 
+    const phyDrives = this.props.apis.phyDrives && this.props.apis.phyDrives.data
     if (!Array.isArray(phyDrives) || !phyDrives.filter(d => d.isUSB).length) return false
     return true
   }
@@ -59,11 +60,11 @@ class Disk extends React.PureComponent {
 
     const d = [
       { strokeColor: '#f5f7fa', progress: 100 },
-      { strokeColor: '#7597bf', progress: 45 },
-      { strokeColor: '#f48c12', progress: 35 },
-      { strokeColor: '#f2497d', progress: 20 },
-      { strokeColor: '#37a7f4', progress: 15 },
-      { strokeColor: '#8a69ed', progress: 10 }
+      { strokeColor: '#7597bf', progress: data[4].progress },
+      { strokeColor: '#f48c12', progress: data[3].progress },
+      { strokeColor: '#f2497d', progress: data[2].progress },
+      { strokeColor: '#37a7f4', progress: data[1].progress },
+      { strokeColor: '#8a69ed', progress: data[0].progress }
     ]
     return (
       <div style={{ position: 'relative', width: 360, height: 360 }} className="flexCenter">
@@ -84,7 +85,7 @@ class Disk extends React.PureComponent {
             {
               d.map(({ strokeColor, progress }) => (
                 <circle
-                  key={progress.toString()}
+                  key={strokeColor}
                   stroke={strokeColor}
                   fill="transparent"
                   strokeWidth={stroke}
@@ -103,21 +104,55 @@ class Disk extends React.PureComponent {
   }
 
   render () {
-    const data = [
-      { color: '#8a69ed', progress: 10, title: i18n.__('Video') },
-      { color: '#37a7f4', progress: 15, title: i18n.__('Picture') },
-      { color: '#f2497d', progress: 20, title: i18n.__('Music') },
-      { color: '#f48c12', progress: 35, title: i18n.__('Document') },
-      { color: '#7597bf', progress: 45, title: i18n.__('Others') }
-    ]
+    const { boot, phyDrives, stats } = this.props
+    if (!boot || !phyDrives || !stats) return (<div />)
+    console.log('Disk.jsx', boot, phyDrives, stats)
+    const { storage, boundVolume } = boot
+    const b1 = storage.blocks.find(b => (b.isDisk && !b.unformattable && b.slotNumber === 1))
+    const b2 = storage.blocks.find(b => (b.isDisk && !b.unformattable && b.slotNumber === 2))
+    const mode = boundVolume && boundVolume.usage && boundVolume.usage.data && boundVolume.usage.data.mode
 
     const disks = [
-      { pos: i18n.__('Disk 1'), status: i18n.__('Disk Found'), model: '希捷', size: '1T' },
-      { pos: i18n.__('Disk 2'), status: i18n.__('Disk Not Found'), model: i18n.__('Unknown Model'), size: i18n.__('Unknown Size') }
+      {
+        pos: i18n.__('Disk 1'),
+        status: b1 ? i18n.__('Disk Found') : i18n.__('Disk Not Found'),
+        model: b1 ? interpretModel(b1.model) : i18n.__('Unknown Model'),
+        size: b1 ? prettysize(b1.size * 512) : i18n.__('Unknown Size')
+      },
+      {
+        pos: i18n.__('Disk 2'),
+        status: b2 ? i18n.__('Disk Found') : i18n.__('Disk Not Found'),
+        model: b2 ? interpretModel(b2.model) : i18n.__('Unknown Model'),
+        size: b2 ? prettysize(b2.size * 512) : i18n.__('Unknown Size')
+      }
     ]
+
+    const { audio, document, image, video } = stats
+    const usage = phyDrives.find(d => d.isFruitFS).usage
+    const phyUsage = phyDrives.find(d => d.isUSB) && phyDrives.find(d => d.isUSB).usage
+    if (!audio || !document || !image || !video || !usage) return (<div />)
+    const { total, used } = usage
+
+    const k = 100
+    const videoSize = video.totalSize / 1024 / total * k
+    const imageSize = image.totalSize / 1024 / total * k + videoSize
+    const audioSize = audio.totalSize / 1024 / total * k + imageSize
+    const documentSize = document.totalSize / 1024 / total * k + audioSize
+    const otherSize = used / total * k
+    console.log('size by type', [video, image, audio, document, otherSize].map(v => prettysize(v.totalSize)), prettysize(used * 1024))
+
+    const data = [
+      { color: '#8a69ed', progress: videoSize, title: i18n.__('Video') },
+      { color: '#37a7f4', progress: imageSize, title: i18n.__('Picture') },
+      { color: '#f2497d', progress: audioSize, title: i18n.__('Music') },
+      { color: '#f48c12', progress: documentSize, title: i18n.__('Document') },
+      { color: '#7597bf', progress: otherSize, title: i18n.__('Others') }
+    ]
+
     const progressTitle = i18n.__('Storage Space')
-    const storageUsage = i18n.__('Storage Usage %s %s', '500GB', '1024GB')
-    const USBUsage = i18n.__('Storage Usage %s %s', '2.5GB', '8GB')
+    const storageUsage = i18n.__('Storage Usage %s %s', prettysize(used * 1024), prettysize(total * 1024))
+    const USBUsage = phyUsage ? i18n.__('Storage Usage %s %s', prettysize(phyUsage.used * 1024), prettysize(phyUsage.total * 1024))
+      : '--'
     const iconStyle = { width: 20, height: 20, color: '#31a0f5' }
     const buttonStyle = { width: 24, height: 24, padding: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }
     return (
@@ -141,7 +176,7 @@ class Disk extends React.PureComponent {
           <div style={{ width: 30 }} />
           <div style={{ width: 500, height: 300, padding: '30px 0', position: 'relative' }}>
             <div style={{ width: '100%', height: 40, color: '#888a8c', display: 'flex', alignItems: 'center' }}>
-              { i18n.__('Current Mode %s', 'RAID 1') }
+              { i18n.__('Current Mode %s', mode) }
               <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={() => this.setState({ showGuide: true })}>
                 <HelpIcon />
               </IconButton>
@@ -191,7 +226,7 @@ class Disk extends React.PureComponent {
           </div>
         </div>
         <div style={{ height: 20 }} />
-        <div style={{ width: 1000, height: 110, margin: '0 auto' }}>
+        <div style={{ width: 1000, height: 110, margin: '0 auto', opacity: phyUsage ? 1 : 0.5 }}>
           <div style={{ width: '100%', height: 40, color: '#888a8c', display: 'flex', alignItems: 'center', marginTop: 10 }}>
             <div style={{ height: 40 }}>
               <div style={{ height: 20, display: 'flex', alignItems: 'center', color: '#505259' }} >
@@ -207,6 +242,7 @@ class Disk extends React.PureComponent {
                 alt
                 style={{ width: 100 }}
                 label={i18n.__('Eject USB')}
+                disabled={!phyUsage}
                 onClick={() => this.setState({ ejectUSB: true })}
               />
             </div>
@@ -220,7 +256,13 @@ class Disk extends React.PureComponent {
               backgroundColor: '#f5f7fa'
             }}
           >
-            <div style={{ height: '100%', width: '30%', backgroundColor: '#7597bf' }} />
+            <div
+              style={{
+                height: '100%',
+                backgroundColor: '#7597bf',
+                width: phyUsage ? `${(phyUsage.used / phyUsage.total * 100)}%` : 0
+              }}
+            />
           </div>
         </div>
         <Dialog open={!!this.state.showGuide} onRequestClose={() => this.setState({ showGuide: false })}>
