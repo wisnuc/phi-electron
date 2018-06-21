@@ -21,7 +21,7 @@ class AdminUsersApp extends React.Component {
       pnError: '',
       nickName: '',
       nickNameError: '',
-      status: 'view' // view, modify, add
+      status: 'view' // view, modify, add, confirm
     }
 
     this.reqUsersAsync = async () => {
@@ -121,6 +121,10 @@ class AdminUsersApp extends React.Component {
       if (isPhoneNumber(pn)) this.setState({ pn, pnError: '' })
       else this.setState({ pn, pnError: i18n.__('Invalid Phone Number') })
     }
+
+    this.confirmDelete = () => {
+      this.setState({ status: 'confirm' })
+    }
   }
 
   componentWillReceiveProps (nextProps) {
@@ -216,11 +220,12 @@ class AdminUsersApp extends React.Component {
 
   renderRow ({ style, key, user }) {
     const { driveList, inviteStatus, nickname, username, uuid } = user
+    const isModify = this.state.status === 'modify'
     return (
       <div style={style} key={key}>
         <div style={{ height: 60, display: 'flex' }}>
           {
-            this.state.status === 'modify' &&
+            isModify &&
             (
               <div style={{ marginTop: -2 }}>
                 <Checkbox
@@ -232,7 +237,16 @@ class AdminUsersApp extends React.Component {
           }
 
           <div style={{ height: 60 }}>
-            <div style={{ height: 20, color: '#505259', display: 'flex', alignItems: 'center' }}>
+            <div
+              style={{
+                height: 20,
+                color: '#505259',
+                display: 'flex',
+                alignItems: 'center',
+                cursor: isModify ? 'pointer' : 'default'
+              }}
+              onClick={() => isModify && this.onCheck(uuid)}
+            >
               { `${nickname} (${username})` }
             </div>
             <div style={{ height: 40, display: 'flex', alignItems: 'center' }}>
@@ -278,47 +292,52 @@ class AdminUsersApp extends React.Component {
     const { open, onCancel } = this.props
     const isModify = this.state.status === 'modify'
     const isAddUser = this.state.status === 'addUser'
-    const height = !isAddUser && this.state.users && this.state.users.length > 0 ? Math.min(this.state.users.length * 60, 180)
-      : undefined
+    const isConfirm = this.state.status === 'confirm'
+    const height = isConfirm ? 60
+      : !isAddUser && this.state.users && this.state.users.length > 0 ? Math.min(this.state.users.length * 60, 180)
+        : undefined
 
     return (
       <Dialog open={open} onRequestClose={onCancel} modal >
         {
           open && (
-            <div style={{ width: isAddUser ? 320 : 420, transition: 'all 175ms' }} >
+            <div style={{ width: (isAddUser || isConfirm) ? 320 : 420, transition: 'all 175ms' }} >
               <div
                 className="title"
-                style={{ height: 60, display: 'flex', alignItems: 'center', paddingLeft: isAddUser ? 0 : 20 }}
+                style={{ height: 60, display: 'flex', alignItems: 'center', paddingLeft: isAddUser || isConfirm ? 0 : 20 }}
               >
-                { isAddUser && <LIButton onClick={this.backToView}> <BackIcon /> </LIButton>}
-                { isAddUser ? i18n.__('Add User') : isModify ? i18n.__('Modify Users') : i18n.__('User Management') }
+                { (isAddUser || isConfirm) && <LIButton onClick={this.backToView}> <BackIcon /> </LIButton>}
+                { isAddUser ? i18n.__('Add User') : isConfirm ? i18n.__('Confirm Delete User Title')
+                  : isModify ? i18n.__('Modify Users') : i18n.__('User Management') }
                 <div style={{ flexGrow: 1 }} />
-                { !isAddUser && <LIButton onClick={onCancel}> <CloseIcon /> </LIButton> }
+                { (!isAddUser && !isConfirm) && <LIButton onClick={onCancel}> <CloseIcon /> </LIButton> }
                 <div style={{ width: 10 }} />
               </div>
               <Divider
-                style={{ marginLeft: 20, width: isAddUser ? 280 : 380, transition: 'all 175ms' }}
+                style={{ marginLeft: 20, width: (isAddUser || isConfirm) ? 280 : 380, transition: 'all 175ms' }}
                 className="divider"
               />
               <div style={{ height: 30 }} />
               <div
                 style={{
                   height,
-                  width: 380,
+                  lineHeight: '30px',
+                  color: '#888a8c',
                   padding: '0 20px'
                 }}
               >
                 {
                   this.state.loading ? this.renderLoading()
                     : isAddUser ? this.renderAddUser()
-                      : this.state.users.length ? this.renderUsers(this.state.users) : this.renderNoUser()
+                      : isConfirm ? i18n.__('Confirm Delete User Text')
+                        : this.state.users.length ? this.renderUsers(this.state.users) : this.renderNoUser()
                 }
               </div>
               <div style={{ height: 20 }} />
               <div style={{ height: 34, width: 'calc(100% - 40px)', display: 'flex', alignItems: 'center', padding: 20 }}>
                 <div style={{ flexGrow: 1 }} />
                 {
-                  !isAddUser && (
+                  (!isAddUser && !isConfirm) && (
                     <RSButton
                       alt
                       disabled={!isModify && (!this.state.users || !this.state.users.length)}
@@ -329,9 +348,11 @@ class AdminUsersApp extends React.Component {
                 }
                 <div style={{ width: 10 }} />
                 <RSButton
-                  label={isAddUser ? i18n.__('Send Invite') : isModify ? i18n.__('Delete') : i18n.__('Add User')}
+                  label={isAddUser ? i18n.__('Send Invite') : isConfirm ? i18n.__('Confirm')
+                    : isModify ? i18n.__('Delete') : i18n.__('Add User')}
                   disabled={(isModify && !this.state.checkList.length) || (isAddUser && !this.shouldAddUser())}
-                  onClick={() => (isAddUser ? this.invite() : isModify ? this.deleteUser() : this.addUser())}
+                  onClick={() => (isAddUser ? this.invite() : isConfirm ? this.deleteUser()
+                    : isModify ? this.confirmDelete() : this.addUser())}
                 />
               </div>
             </div>

@@ -251,6 +251,8 @@
   "Rejected Invitaion": "邀请已拒绝",
   "Inactive Invitaion": "邀请已失效",
   "Rejected And Inactive Invitaion": "邀请已拒绝（已失效）",
+  "Confirm Delete User Text": "删除用户或邀请，该用户数据将被清除，并不能访问设备，请确认是否删除",
+  "Confirm Delete User Title": "删除用户或邀请",
 
   "==== control/AdminDriversApp.jsx ====": "",
   "Name": "名称",
