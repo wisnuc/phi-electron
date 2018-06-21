@@ -27,7 +27,6 @@ import Settings from '../view/Settings'
 import CacheClean from '../view/CacheClean'
 import Device from '../view/Device'
 import DiskInfo from '../view/DiskInfo'
-import Networking from '../view/Networking'
 import Sleep from '../view/Sleep'
 import ClientUpdate from '../view/ClientUpdate'
 import FirmwareUpdate from '../view/FirmwareUpdate'
@@ -71,7 +70,6 @@ class NavViews extends React.Component {
       { name: 'settings', View: Settings },
       { name: 'device', View: Device },
       { name: 'diskInfo', View: DiskInfo },
-      { name: 'networking', View: Networking },
       { name: 'sleep', View: Sleep },
       { name: 'clientUpdate', View: ClientUpdate },
       { name: 'firmwareUpdate', View: FirmwareUpdate },
