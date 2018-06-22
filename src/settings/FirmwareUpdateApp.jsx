@@ -1,16 +1,10 @@
 import React from 'react'
 import i18n from 'i18n'
-import UUID from 'uuid'
-import { shell, remote, ipcRenderer } from 'electron'
-import { orange500 } from 'material-ui/styles/colors'
-import NewReleases from 'material-ui/svg-icons/av/new-releases'
-import CheckIcon from 'material-ui/svg-icons/navigation/check'
-import CloseIcon from 'material-ui/svg-icons/navigation/close'
-import InfoIcon from 'material-ui/svg-icons/action/info'
-import FlatButton from '../common/FlatButton'
-import ErrorBox from '../common/ErrorBox'
+import { shell, remote } from 'electron'
+
+import UploadingFirmware from './UploadingFirmware'
+import Dialog from '../common/PureDialog'
 import { RRButton, RSButton } from '../common/Buttons'
-import CircularLoading from '../common/CircularLoading'
 
 const compareVerison = (a, b) => {
   const aArray = a.split('.')
@@ -31,26 +25,7 @@ class Update extends React.Component {
     super(props)
 
     this.state = {
-      status: 'checking',
-      confirm: false,
-      error: null,
-      rel: null
-    }
-
-    this.toggleDialog = op => this.setState({ [op]: !this.state[op] })
-
-    this.moreVersion = () => {
-      const platform = global.config.platform
-      const type = platform === 'win32'
-        ? 'wisnuc-desktop-windows/releases'
-        : platform === 'darwin'
-          ? 'wisnuc-desktop-mac/releases'
-          : 'fruitmix-desktop'
-      shell.openExternal(`https://github.com/wisnuc/${type}`)
-    }
-
-    this.openOfficial = () => {
-      shell.openExternal('http://www.wisnuc.com/download')
+      uploading: false
     }
 
     this.newRelease = (event, result) => {
@@ -68,94 +43,15 @@ class Update extends React.Component {
       })
     }
 
-    this.fire = () => {
-      this.session = UUID.v4()
-      // ipcRenderer.send('UPLOAD_FIRM', { session: this.session, absPath: this.state.path })
-    }
-
     this.openWeb = () => {
       shell.openExternal('https://sohon2test.phicomm.com/v1/ui/index')
     }
   }
 
   componentDidMount () {
-    // ipcRenderer.on('UPLOAD_FIRM_RESULT')
   }
 
   componentWillUnmount () {
-    // this.props.ipcRenderer.removeListener('NEW_RELEASE', this.newRelease)
-  }
-
-  renderCheckUpdate () {
-    const rel = this.state.rel
-    const date = rel.published_at.split('T')[0]
-    return (
-      <div style={{ marginTop: -4 }}>
-        <div>
-          { i18n.__('New Version Detected %s', rel.name) }
-          <FlatButton style={{ marginLeft: 16 }} primary label={i18n.__('Official Download')} onClick={this.openOfficial} />
-          <FlatButton primary label={i18n.__('Github Download')} onClick={this.moreVersion} />
-        </div>
-        <div style={{ height: 16 }} />
-        <div> { i18n.__('Publish Date %s', date) } </div>
-        <div style={{ height: 16 }} />
-        <div> { i18n.__('Updates') } </div>
-        <div style={{ height: 8 }} />
-        {
-          rel.body ? rel.body.split(/[1-9]\./).map(list => list && (
-            <div style={{ marginLeft: 24, height: 40, display: 'flex', alignItems: 'center' }} key={list}>
-              { '*' }
-              <div style={{ width: 16 }} />
-              { list }
-            </div>
-          ))
-            : (
-              <div style={{ marginLeft: 24, height: 40, display: 'flex', alignItems: 'center' }}>
-                { '*' }
-                <div style={{ width: 16 }} />
-                { i18n.__('Bug Fixes') }
-              </div>
-            )
-        }
-      </div>
-    )
-  }
-
-  renderReleases () {
-    const platform = global.config.platform
-    // const platform = 'darwin'
-    const unSupport = platform !== 'darwin' && platform !== 'win32'
-    return (
-      <div style={{ display: 'flex', width: '100%', marginTop: 12 }}>
-        <div style={{ flex: '0 0 24px' }} />
-        <div style={{ flex: '0 0 56px' }} >
-          {
-            unSupport ? <InfoIcon color={this.props.primaryColor} />
-              : this.state.status === 'checking' ? <CircularLoading />
-                : this.state.status === 'needUpdate' ? <NewReleases color={this.props.primaryColor} />
-                  : this.state.status === 'latest' ? <CheckIcon color={this.props.primaryColor} />
-                    : <CloseIcon color={this.props.primaryColor} />
-          }
-        </div>
-        {
-          unSupport ? i18n.__('Unsupported to Update')
-            : this.state.status === 'checking' ? i18n.__('Checking Update')
-              : this.state.status === 'needUpdate' ? this.renderCheckUpdate()
-                : (
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', height: 48, marginTop: -12 }}>
-                      { this.state.status === 'latest' && i18n.__('Already LTS Text') }
-                      { this.state.status === 'error' && i18n.__('Check Update Failed Text') }
-                      { !!this.state.error && <ErrorBox error={this.state.error} iconStyle={{ color: orange500 }} /> }
-                    </div>
-                    <div style={{ margin: '8px 0 0 -8px' }}>
-                      <FlatButton primary label={i18n.__('Check Update')} onClick={this.sendCheck} disabled={this.state.loading} />
-                    </div>
-                  </div>
-                )
-        }
-      </div>
-    )
   }
 
   render () {
@@ -165,7 +61,6 @@ class Update extends React.Component {
     return (
       <div style={{ width: '100%', height: '100%' }} className="flexCenter" >
         <div style={{ width: 480, paddingRight: 160, paddingBottom: 60 }}>
-
           <div style={{ width: 320, height: 180, marginLeft: 160 }}>
             <img
               style={{ width: 320, height: 180 }}
@@ -233,11 +128,20 @@ class Update extends React.Component {
             <RRButton
               style={{ width: 131 }}
               label={i18n.__('Update Immediately')}
-              onClick={this.fire}
+              onClick={() => this.setState({ uploading: true })}
               disabled={!this.state.path}
             />
           </div>
         </div>
+        <Dialog open={!!this.state.uploading} onRequestClose={() => this.setState({ uploading: false })} modal transparent >
+          {
+            !!this.state.uploading &&
+              <UploadingFirmware
+                absPath={this.state.path}
+                onRequestClose={() => this.setState({ uploading: false })}
+              />
+          }
+        </Dialog>
       </div>
     )
   }
