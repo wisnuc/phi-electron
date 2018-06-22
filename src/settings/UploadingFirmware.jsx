@@ -20,6 +20,17 @@ class UploadingFirmware extends React.PureComponent {
       ipcRenderer.send('UPLOAD_FIRM', { session: this.session, absPath: this.props.absPath })
     }
 
+    this.upgrade = () => {
+      this.props.apis.pureRequest('firmwareUpgrade', null, (err, res) => {
+        if (!err && res && res.error === '0') this.setState({ status: 'success' })
+        else this.setState({ status: 'error', error: '' })
+      })
+    }
+
+    this.onSuccess = () => {
+      this.props.deviceLogout()
+    }
+
     this.onFirmRes = (event, data) => {
       console.log('this.onFirmRes', data)
       const { success, reason, session } = data
@@ -31,7 +42,7 @@ class UploadingFirmware extends React.PureComponent {
         console.error('upload firm error', reason)
         this.setState({ status: 'error', error: i18n.__('Check Firmware Failed Text') })
       } else {
-        this.setState({ status: 'success', error: '' })
+        this.upgrade()
       }
     }
 
@@ -71,11 +82,11 @@ class UploadingFirmware extends React.PureComponent {
         text = i18n.__('Upload Firmware Success Text')
         color = '#31a0f5'
         label = i18n.__('OK')
-        func = () => onRequestClose()
+        func = () => this.onSuccess()
         break
       case 'error':
         img = <img src="./assets/images/pic-loadingfailed.png" width={52} height={52} />
-        text = i18n.__('Upload Firmware Error Text')
+        text = this.state.error || i18n.__('Upload Firmware Error Text')
         color = '#fa5353'
         label = i18n.__('OK')
         func = () => onRequestClose()

@@ -58,14 +58,9 @@ class FirmwareUpdate extends Base {
     return (
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
         <FirmwareUpdateApp
-          firm={this.state.firm}
-          error={this.state.error}
+          {...this.state}
+          {...this.ctx.props}
           refresh={this.refresh}
-          checkUpdates={this.checkUpdates}
-          apis={this.ctx.props.apis}
-          nav={this.ctx.props.nav}
-          selectedDevice={this.ctx.props.selectedDevice}
-          primaryColor={this.groupPrimaryColor()}
           openSnackBar={openSnackBar}
         />
       </div>

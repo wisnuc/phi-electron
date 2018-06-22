@@ -137,6 +137,7 @@ class Update extends React.Component {
           {
             !!this.state.uploading &&
               <UploadingFirmware
+                {...this.props}
                 absPath={this.state.path}
                 onRequestClose={() => this.setState({ uploading: false })}
               />

@@ -463,7 +463,7 @@
   "Upload Firmware Error Text": "固件上传失败",
   "Upload Firmware Success Text": "固件上传成功",
   "Uploading Firmware Text %s": "文件上传中，已完成：%s",
-  "Check Firmware Failed Text": "固件校验失败，请确认上传的固件是否正确",
+  "Check Firmware Failed Text": "校验失败，请确认固件是否正确",
   "Checking Firmware": "校验固件中",
 
   "==== device/NetworkInfo.jsx ====": "",

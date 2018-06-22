@@ -176,7 +176,7 @@ class Fruitmix extends EventEmitter {
         r = this.aget('fruitmix/stats')
         break
 
-     case 'boot':
+      case 'boot':
         r = this.aget('boot')
         break
 
@@ -448,6 +448,10 @@ class Fruitmix extends EventEmitter {
 
       case 'modifySleep':
         r = this.apatch('device/sleep', args)
+        break
+
+      case 'firmwareUpgrade':
+        r = request.post(`http://${this.address}:3001/v1/firmwareUpgrade`)
         break
 
       default:
