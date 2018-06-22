@@ -32,7 +32,7 @@ class ConfirmBind extends React.PureComponent {
 
     this.bindDevice = () => {
       console.log('this.bindDevice', this.state, this.props)
-      const deviceSN = this.props.dev.boot.data.device.deviceSN
+      const deviceSN = this.props.dev.info.data.deviceSN
       console.log('deviceSN token', deviceSN)
       if (!deviceSN) this.setState({ status: 'failed' })
       else {

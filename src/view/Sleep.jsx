@@ -39,7 +39,7 @@ class Sleep extends Base {
 
   navEnter () {
     this.refresh()
-   }
+  }
 
   renderContent ({ openSnackBar }) {
     return (

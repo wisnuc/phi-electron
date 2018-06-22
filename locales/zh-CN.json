@@ -916,6 +916,8 @@
 
   "==== node/lib/transmissionUpdate.js ====": "",
   "Transmission Finished": "文件传输完成",
+  "%s Download Finished": "%s 下载成功",
+  "%s Upload Finished": "%s 上传成功",
 
   "==== node/lib/newUpload.js ====": "",
   "%s Add to Transfer List": {

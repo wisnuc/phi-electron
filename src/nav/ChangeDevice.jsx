@@ -2,7 +2,6 @@ import i18n from 'i18n'
 import React from 'react'
 
 import reqMdns from '../common/mdns'
-import Dialog from '../common/PureDialog'
 import SelectDevice from '../login/SelectDevice'
 import ConfirmDialog from '../common/ConfirmDialog'
 

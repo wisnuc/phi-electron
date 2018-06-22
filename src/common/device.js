@@ -176,10 +176,11 @@ class Device extends RequestManager {
   }
 
   refreshSystemState (next) {
-    let count = 3
+    let count = 4
     const done = next ? () => !(count -= 1) && next() : undefined
     this.request('info', null, done)
     this.request('boot', null, done)
+    this.request('network', null, done)
     this.request('users', null, done)
   }
 
