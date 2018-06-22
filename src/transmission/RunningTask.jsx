@@ -146,7 +146,10 @@ class RunningTask extends React.Component {
         </div>
 
         {/* Pause, resume and delete task */}
-        <div style={{ width: 174, display: 'flex', alignItems: 'center' }} >
+        <div
+          style={{ width: 174, display: 'flex', alignItems: 'center' }}
+          onDoubleClick={(e) => { e.preventDefault(); e.stopPropagation() }}
+        >
           <div style={{ width: 44 }} />
           {
             task.state === 'failed'

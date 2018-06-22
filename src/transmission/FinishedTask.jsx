@@ -106,7 +106,10 @@ class FinishedTask extends React.Component {
           { this.getFinishDate(task.finishDate) }
         </div>
 
-        <div style={{ width: 170, display: 'flex', alignItems: 'center' }} >
+        <div
+          style={{ width: 170, display: 'flex', alignItems: 'center' }}
+          onDoubleClick={(e) => { e.preventDefault(); e.stopPropagation() }}
+        >
           <div style={{ width: 40 }} />
           <LIButton onClick={() => this.openFileLocation(task)} tooltip={i18n.__('Open In Folder')} >
             <OpenFolderIcon />

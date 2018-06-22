@@ -408,10 +408,12 @@ class NavViews extends React.Component {
 
   renderSettings () {
     const isAdmin = this.props.apis.account && this.props.apis.account.data && this.props.apis.account.data.isFirstUser
+    const isLAN = this.props.account && this.props.account.lan
     if (this.state.nav === 'settings') {
       return (
         <div style={{ height: '100%', width: '100%', position: 'relative' }}>
           <SettingsMenu
+            isLAN={!!isLAN}
             isAdmin={isAdmin}
             isCloud={this.props.isCloud}
             views={this.views}
