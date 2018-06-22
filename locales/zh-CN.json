@@ -460,6 +460,11 @@
   "Install Firmware Text 1 %s": "将要为您安装版本号为%s的固件程序。",
   "Install Firmware Text 2": "建议配合最新客户端使用。",
   "Firmware Error Text": "当前设备的固件版本需要手动升级，升级流程可以到 http://www.wisnuc.com/support 或 http://bbs.wisnuc.com 论坛中获取相关资料。",
+  "Upload Firmware Error Text": "固件上传失败",
+  "Upload Firmware Success Text": "固件上传成功",
+  "Uploading Firmware Text %s": "文件上传中，已完成：%s",
+  "Check Firmware Failed Text": "固件校验失败，请确认上传的固件是否正确",
+  "Checking Firmware": "校验固件中",
 
   "==== device/NetworkInfo.jsx ====": "",
   "NIC Name": "网卡名称",

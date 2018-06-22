@@ -24,14 +24,22 @@ class UploadingFirmware extends React.PureComponent {
       console.log('this.onFirmRes', data)
       const { success, reason, session } = data
       if (session !== this.session) return
-      this.setState({ status: success ? 'success' : 'error', error: reason })
+      if (!success) {
+        console.error('upload firm error', reason)
+        this.setState({ status: 'error', error: i18n.__('Upload Firmware Error Text') })
+      } else if (reason && reason.desc === 'Check firmware failed!') {
+        console.error('upload firm error', reason)
+        this.setState({ status: 'error', error: i18n.__('Check Firmware Failed Text') })
+      } else {
+        this.setState({ status: 'success', error: '' })
+      }
     }
 
     this.onProcess = (event, data) => {
       console.log('this.onProcess', data)
       const { progress, session } = data
       if (session !== this.session) return
-      this.setState({ progress: `${progress.toFixed(2)}%` })
+      this.setState({ progress: `${progress.toFixed(0)}%` })
     }
   }
 
@@ -54,7 +62,8 @@ class UploadingFirmware extends React.PureComponent {
     switch (status) {
       case 'busy':
         img = <CircularLoading />
-        text = i18n.__('Uploading Firmware Text %s', this.state.progress)
+        text = this.state.progress !== '100%' ? i18n.__('Uploading Firmware Text %s', this.state.progress)
+          : i18n.__('Checking Firmware')
         color = '#31a0f5'
         break
       case 'success':

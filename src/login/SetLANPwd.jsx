@@ -95,6 +95,7 @@ class SetLANPwd extends React.Component {
             label={i18n.__('Save') + (this.state.loading ? '中...' : '')}
             onClick={this.fire}
             disabled={!this.state.pwd || this.state.loading}
+            loading={this.state.loading}
           />
         </div>
         <div style={{ height: 30 }} />
