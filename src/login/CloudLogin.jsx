@@ -64,9 +64,11 @@ class CloudLogin extends React.PureComponent {
               isFulfilled: () => true, ctx: user, data: boot
             }
           })
-          this.props.onRequestClose()
-          const { selectedDevice } = this.props
-          this.props.deviceLogin({ dev, user, selectedDevice, isCloud: true })
+          if (user.password) {
+            this.props.onRequestClose()
+            const { selectedDevice } = this.props
+            this.props.deviceLogin({ dev, user, selectedDevice, isCloud: true })
+          } else this.props.jumpToSetLANPwd(this.props.selectedDevice)
         })
         .catch((error) => {
           console.error('this.getLANToken', error)
