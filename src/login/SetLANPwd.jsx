@@ -52,6 +52,10 @@ class SetLANPwd extends React.Component {
           this.setState({ status: 'error', error, loading: false, pwdError: '设置失败' }) // TODO
         })
     }
+
+    this.onKeyDown = (e) => {
+      if (e.which === 13 && this.state.pwd && !this.state.loading) this.fire()
+    }
   }
 
   render () {
