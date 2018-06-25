@@ -51,7 +51,7 @@ class LANPassword extends React.Component {
 
   shouldFire () {
     return this.state.pwd && !this.state.pwdError && !this.state.loading && this.state.pwdAgain &&
-      this.state.newPwd && !this.state.pwdAgainError && !this.state.newPwdError && (this.state.pwd === this.state.pwdAgain)
+      this.state.newPwd && !this.state.pwdAgainError && !this.state.newPwdError && (this.state.newPwd === this.state.pwdAgain)
   }
 
   render () {
