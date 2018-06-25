@@ -1,5 +1,6 @@
 import React from 'react'
 import UUID from 'uuid'
+import { PhotoIcon } from '../common/Svg'
 
 class Thumb extends React.PureComponent {
   constructor (props) {
@@ -10,6 +11,14 @@ class Thumb extends React.PureComponent {
     this.updatePath = (event, session, path) => {
       if (this.session === session) {
         this.path = path
+        this.thumb = false
+        this.forceUpdate()
+      }
+    }
+
+    this.onFailed = (event, session) => {
+      if (this.session === session) {
+        this.thumb = true
         this.forceUpdate()
       }
     }
@@ -19,6 +28,7 @@ class Thumb extends React.PureComponent {
     this.session = UUID.v4()
     this.props.ipcRenderer.send('mediaShowThumb', this.session, this.props.digest, 200, 200, this.props.station)
     this.props.ipcRenderer.on('getThumbSuccess', this.updatePath)
+    this.props.ipcRenderer.on('getThumbFailed', this.onFailed)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -30,6 +40,7 @@ class Thumb extends React.PureComponent {
 
   componentWillUnmount () {
     this.props.ipcRenderer.removeListener('getThumbSuccess', this.updatePath)
+    this.props.ipcRenderer.removeListener('getThumbFailed', this.onFailed)
     this.props.ipcRenderer.send('mediaHideThumb', this.session)
   }
 
@@ -50,6 +61,10 @@ class Thumb extends React.PureComponent {
               style={style}
               draggable={false}
             />
+        }
+        {
+          this.thumb &&
+            <PhotoIcon style={{ height: this.props.height, width: this.props.width }} />
         }
       </div>
     )
