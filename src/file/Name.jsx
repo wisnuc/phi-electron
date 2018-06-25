@@ -45,8 +45,6 @@ class Name extends React.PureComponent {
           this.setState({ errorText: i18n.__('Rename Failed') })
           this.props.openSnackBar(i18n.__('Rename Failed'))
         } else {
-          // this.props.onRequestClose(true)
-          // this.props.openSnackBar(i18n.__('Rename Success'))
           this.props.refresh()
         }
       })
@@ -56,12 +54,13 @@ class Name extends React.PureComponent {
       if (this.fired) return
       console.log('this.onBlur', this.props, this.state)
       if (this.shouldFire()) this.fire()
+      else if (this.state.errorText) this.props.openSnackBar(this.state.errorText)
       else this.props.refresh()
     }
 
     this.onKeyDown = (e) => {
       if (e.which === 13 && this.shouldFire()) this.fire()
-      else if (e.which === 13 && this.state.errorText) this.props.openSnackBar(i18n.__('Rename Failed'))
+      else if (e.which === 13 && this.state.errorText) this.props.openSnackBar(this.state.errorText)
       else if (e.which === 13) this.props.refresh()
     }
 
