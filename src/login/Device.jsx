@@ -98,7 +98,7 @@ class Device extends React.Component {
   }
 
   isCurrent () {
-    const currentSN = this.props.selectedDevice && this.props.selectedDevice.mdev && this.props.selectedDevice.mdev.deviceSN
+    const currentSN = (this.props.selectedDevice && this.props.selectedDevice.mdev && this.props.selectedDevice.mdev.deviceSN)
     const newSN = this.state.dev && this.state.dev.mdev && this.state.dev.mdev.deviceSN
     return !!currentSN && (currentSN === newSN)
   }
@@ -122,7 +122,7 @@ class Device extends React.Component {
 
       case 'ready':
         if (this.props.type === 'LANTOBIND') text = i18n.__('Already Bound')
-        else if (this.props.type === 'CHANGEDEVICE') {
+        else if (['CHANGEDEVICE', 'LANTOLOGIN'].includes(this.props.type)) {
           if (this.isCurrent()) text = i18n.__('Current Logged Device')
           else text = ''
         } else text = ''
@@ -183,7 +183,7 @@ class Device extends React.Component {
           margin: '30px 7px 0 7px'
         }}
         className="paper"
-        onClick={() => isEnabled && this.select()}
+        onClick={() => isEnabled && !this.isCurrent() && this.select()}
       >
         <div style={{ height: 20, width: '100%', paddingTop: 20, display: 'flex', alignItems: 'center' }}>
           <div

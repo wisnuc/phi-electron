@@ -19,13 +19,6 @@ class ChangeDevice extends React.Component {
       this.props.openSnackBar(i18n.__('MDNS Search Error'))
     }
 
-    this.showDeviceToBind = () => {
-      this.setState({ list: [], loading: true, type: 'LANTOBIND', status: 'deviceSelect' })
-      reqMdns()
-        .then(mdns => this.setState({ loading: false, list: mdns }))
-        .catch(this.onMDNSError)
-    }
-
     this.refreshStationList = () => {
       this.setState({ loading: true })
       this.props.phi.req('stationList', null, (e, r) => {
@@ -63,13 +56,30 @@ class ChangeDevice extends React.Component {
         }
       })
     }
+
+    this.showLANToLogin = () => {
+      this.setState({ list: [], loading: true, type: 'LANTOLOGIN', status: 'deviceSelect' })
+      reqMdns()
+        .then(mdns => this.setState({ loading: false, list: mdns }))
+        .catch(this.onMDNSError)
+    }
+
+    this.onConfirmLANLogin = (dev) => {
+      this.setState({ confirm: dev })
+    }
   }
 
   componentDidMount () {
-    this.refreshList()
+    console.log('componentDidMount ChangeDevice.jsx', this.props)
+    if (this.props.account.lan) this.showLANToLogin()
+    else this.refreshList()
   }
 
   render () {
+    const lan = this.props.account && this.props.account.lan
+    const title = lan ? i18n.__('Confirm Logout To LANLogin Title') : i18n.__('Confirm Logout To Bind Device Title')
+    const text = lan ? i18n.__('Confirm Logout To LANLogin Text') : i18n.__('Confirm Logout To Bind Device Text')
+    const onConfirm = () => (lan ? this.props.jumpToLANLogin(this.state.confirm) : this.props.jumpToBindDevice())
     return (
       <div style={{ width: '100%', height: '100%' }}>
         <SelectDevice
@@ -78,15 +88,16 @@ class ChangeDevice extends React.Component {
           manageDisk={this.manageDisk}
           addBindDevice={this.addBindDevice}
           refreshStationList={this.refreshStationList}
-          refresh={this.refreshList}
-          type="CHANGEDEVICE"
+          refresh={() => (this.props.account.lan ? this.showLANToLogin() : this.refreshList())}
+          type={this.props.account.lan ? 'LANTOLOGIN' : 'CHANGEDEVICE'}
+          openLANLogin={this.onConfirmLANLogin}
         />
         <ConfirmDialog
-          open={this.state.confirm}
+          open={!!this.state.confirm}
           onCancel={() => this.setState({ confirm: false })}
-          onConfirm={() => this.props.jumpToBindDevice()}
-          title={i18n.__('Confirm Logout To Bind Device Title')}
-          text={i18n.__('Confirm Logout To Bind Device Text')}
+          onConfirm={onConfirm}
+          title={title}
+          text={text}
         />
       </div>
     )

@@ -35,6 +35,7 @@ class Fruitmix extends React.Component {
       deviceLogin: this.deviceLogin.bind(this),
       deviceLogout: this.deviceLogout.bind(this),
       openSnackBar: this.openSnackBar.bind(this),
+      jumpToLANLogin: this.jumpToLANLogin.bind(this),
       jumpToBindDevice: this.jumpToBindDevice.bind(this)
     }
   }
@@ -73,6 +74,10 @@ class Fruitmix extends React.Component {
 
   jumpToBindDevice () {
     this.setState({ view: 'login', selectedDevice: null, jump: { status: 'deviceSelect', type: 'LANTOBIND' } })
+  }
+
+  jumpToLANLogin (dev) {
+    this.setState({ view: 'login', selectedDevice: null, jump: { selectedDevice: dev, status: 'LANLogin' } })
   }
 
   openSnackBar (message) {
