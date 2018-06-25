@@ -18,6 +18,53 @@ class USB extends Home {
       this.ctx.props.apis.request('listPhyDir', pos, cb)
     }
 
+    this.onCopy = () => {
+      if (this.isMedia || this.state.inRoot) return
+      console.log('this.onCopy', this.ctx.props)
+      const selected = this.state.select.selected
+      if (!selected && !selected.length) return
+      const entries = selected.map(index => this.state.entries[index])
+      const drive = this.state.path[0].id
+      const srcPath = this.state.path.slice(-1)[0]
+      let dir = this.state.path.map(p => p.data).filter(p => !!p).join('/')
+      if (dir) dir = `${dir}/`
+      this.ctx.props.clipboard.set({ action: 'copy', loc: 'phy', drive, dir, entries, srcPath })
+    }
+
+    this.onCut = () => {
+      if (this.isMedia || this.state.inRoot) return
+      const selected = this.state.select.selected
+      if (!selected && !selected.length) return
+      const entries = selected.map(index => this.state.entries[index])
+      const drive = this.state.path[0].id
+      const srcPath = this.state.path.slice(-1)[0]
+      let dir = this.state.path.map(p => p.data).filter(p => !!p).join('/')
+      if (dir) dir = `${dir}/`
+      this.ctx.props.clipboard.set({ action: 'move', loc: 'phy', drive, dir, entries, srcPath })
+    }
+
+    this.onPaste = () => {
+      if (this.isMedia || this.state.inRoot) return
+      const pos = this.ctx.props.clipboard.get()
+      const drive = this.state.path[0].id
+      let dir = this.state.path.map(p => p.data).filter(p => !!p).join('/')
+      if (dir) dir = `${dir}/`
+      const entries = pos.entries.map(e => e.name)
+      const args = {
+        entries,
+        type: pos.loc === 'phy' ? `n${pos.action}` : pos.loc === 'drive' ? `e${pos.action}` : '',
+        src: { drive: pos.drive, dir: pos.dir },
+        dst: { drive, dir }
+      }
+      this.xcopyData = {
+        type: pos.action,
+        entries: pos.entries,
+        srcDir: pos.srcPath,
+        dstDir: this.state.path.slice(-1)[0]
+      }
+      this.ctx.props.apis.pureRequest('copy', args, (err, res) => this.finish(err, res, pos.action))
+    }
+
     this.listNavBySelect = () => {
       const selected = this.select.state.selected
       if (selected.length !== 1) return

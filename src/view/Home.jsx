@@ -213,7 +213,12 @@ class Home extends Base {
       const dirUUID = this.state.path.slice(-1)[0].uuid
       console.log('this.onPaste', pos, driveUUID, dirUUID)
       const entries = pos.entries.map(e => e.name)
-      const args = { type: pos.action, src: { drive: pos.drive, dir: pos.dir }, dst: { drive: driveUUID, dir: dirUUID }, entries }
+      const args = {
+        entries,
+        type: pos.loc === 'phy' ? `i${pos.action}` : pos.loc === 'drive' ? pos.action : '',
+        src: { drive: pos.drive, dir: pos.dir },
+        dst: { drive: driveUUID, dir: dirUUID }
+      }
       this.xcopyData = {
         type: pos.action,
         entries: pos.entries,
