@@ -52,10 +52,12 @@ class DeviceSelect extends React.Component {
         this.setState({ dev, confirm: true, selectedDevice })
       } else if (this.props.type === 'CHANGEDEVICE') {
         console.log('CHANGEDEVICE', this.props, this.state, dev)
-        const currentSN = this.props.selectedDevice && this.props.selectedDevice.mdev && this.props.selectedDevice.mdev.deviceSN
-        const newSN = dev && dev.mdev && dev.mdev.deviceSN
-        if (currentSN && (currentSN === newSN)) return // the same device
-        this.setState({ dev, changeDeviceConfirm: true, selectedDevice })
+        const { inviteStatus, accountStatus, type } = dev.mdev
+        if (type === 'owner' || (type === 'service' && inviteStatus === 'accept' && accountStatus === '1')) {
+          this.setState({ dev, changeDeviceConfirm: true, selectedDevice })
+        } else if (inviteStatus === 'pending' && accountStatus === '1') {
+          this.setState({ dev, invitation: dev, selectedDevice })
+        }
       }
     }
 
