@@ -37,7 +37,8 @@ class ConfirmBind extends React.PureComponent {
       if (!deviceSN) this.setState({ status: 'failed' })
       else {
         this.props.phi.req('bindDevice', { deviceSN }, (err, res) => {
-          if (err) {
+          if (err || (res && res.error && res.error !== '0')) {
+            this.setState({ error: 'bind error', status: 'failed' })
             console.error('bindDevice, error', err, res)
           } else {
             console.log('bindDevice req success', res)
