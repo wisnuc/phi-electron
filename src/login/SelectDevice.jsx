@@ -182,6 +182,20 @@ class DeviceSelect extends React.Component {
     )
   }
 
+  renderListError () {
+    return (
+      <div style={{ width: '100%', height: '100%' }} className="flexCenter">
+        <div>
+          <img src="./assets/images/pic_network_failed.png" alt="" width={320} height={180} />
+          <div style={{ marginTop: 30, height: 30, fontSize: 14, color: '#31a0f5' }} className="flexCenter" >
+            { i18n.__('Error in Base Text') }
+          </div>
+          <div style={{ height: 70 }} />
+        </div>
+      </div>
+    )
+  }
+
   renderLoading () {
     return (
       <div style={{ width: '100%', height: '100%' }} className="flexCenter">
@@ -237,7 +251,9 @@ class DeviceSelect extends React.Component {
         <Divider style={{ marginLeft: 30, width: 'calc(100% - 60px)' }} />
 
         <div style={{ width: '100%', height: 'calc(100% - 50px)' }} >
-          { this.props.loading ? this.renderLoading() : arr.length ? this.renderDevs(arr) : this.renderNoDev() }
+          { this.props.loading ? this.renderLoading()
+            : this.props.status === 'listError' ? this.renderListError()
+              : arr.length ? this.renderDevs(arr) : this.renderNoDev() }
         </div>
 
         {/* Connection Hint */}

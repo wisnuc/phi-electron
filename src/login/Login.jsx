@@ -58,7 +58,7 @@ class Login extends React.Component {
       this.setState({ loading: true, type: 'BOUNDLIST' })
       this.props.phi.req('stationList', null, (e, r) => {
         if (e || !r.result || !Array.isArray(r.result.list) || r.error !== '0') {
-          this.setState({ loading: false, list: [], status: 'phiNoBound', error: true }) // TODO Error
+          this.setState({ loading: false, list: [], status: 'listError', type: 'BOUNDLIST' })
         } else {
           const list = r.result.list
           const status = !list.length ? 'phiNoBound' : 'deviceSelect'
@@ -272,6 +272,10 @@ class Login extends React.Component {
 
       case 'phiNoBound':
         view = this.renderNoBound()
+        break
+
+      case 'listError':
+        view = this.renderDeviceSelect(props)
         break
 
       case 'deviceSelect':

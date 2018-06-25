@@ -1,7 +1,9 @@
 import i18n from 'i18n'
 import React from 'react'
+import Promise from 'bluebird'
 
 import Rebooting from './Rebooting'
+import reqMdns from '../common/mdns'
 import Dialog from '../common/PureDialog'
 import { RRButton } from '../common/Buttons'
 import ConfirmDialog from '../common/ConfirmDialog'
@@ -16,14 +18,52 @@ class Power extends React.Component {
       status: '' // busy, success, error
     }
 
+    this.getStatus = async (lan) => {
+      /* LAN mode */
+      await Promise.delay(3000)
+      if (lan) {
+        const mdns = await reqMdns()
+        console.log('mdns scan!', mdns, this.props.selectedDevice.mdev)
+        if (!Array.isArray(mdns)) return ({ error: i18n.__('Get StationList Error') })
+        const dev = mdns.find(d => d.host === this.props.selectedDevice.mdev.host) // TODO, use deviceSN
+        return ({ isOnline: !!dev })
+      }
+
+      /* Online mode */
+      const res = await this.props.phi.reqAsync('stationList', null)
+      console.log('this.getStatus list', res)
+      if (!res || res.error !== '0' || !Array.isArray(res.result.list)) return ({ error: i18n.__('Get StationList Error') })
+      const dev = res.result.list.find(d => d.deviceSN === this.deviceSN())
+      if (!dev) return ({ error: i18n.__('Station Not Found') })
+      return ({ isOnline: dev.onlineStatus === 'online' })
+    }
+
+    this.polling = async (lan) => {
+      let finished = false
+      const startTime = new Date().getTime()
+      await Promise.delay(5000)
+      while (!finished && (new Date().getTime() - startTime < 120 * 1000)) {
+        const status = await this.getStatus(lan)
+        const { error, isOnline } = status
+        console.log('status', status, new Date().getTime() - startTime)
+        if (error) throw error
+        else finished = !!isOnline
+      }
+      return true
+    }
+
     this.fire = () => {
       this.setState({ status: 'busy' })
       this.props.apis.request('power', { state: this.state.type }, (err, res) => {
         if (err) {
           console.error('power fire error', err, res)
           this.setState({ status: 'error' })
+        } else if (this.state.type === 'poweroff') {
+          setTimeout(() => this.setState({ status: 'success' }), 5000)
         } else {
-          setTimeout(() => this.setState({ status: 'success' }), 10000)
+          this.polling(this.props.account.lan)
+            .then(() => this.setState({ status: 'success' }))
+            .catch(error => this.setState({ status: 'error', error }))
         }
       })
     }
@@ -47,6 +87,10 @@ class Power extends React.Component {
     }
 
     this.showConfirm = op => this.setState({ confirm: op })
+  }
+
+  deviceSN () {
+    return this.props.selectedDevice && this.props.selectedDevice.mdev.deviceSN
   }
 
   render () {

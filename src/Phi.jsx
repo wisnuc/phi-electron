@@ -65,7 +65,11 @@ class Fruitmix extends React.Component {
       this.selectedDevice.removeAllListeners('updated')
       this.selectedDevice = null
     }
-    this.setState({ view: 'login', selectedDevice: null, jump: { status: 'deviceSelect', type: 'BOUNDLIST' } })
+    this.setState({
+      view: 'login',
+      selectedDevice: null,
+      jump: { status: 'deviceSelect', type: this.state.account && this.state.account.lan ? 'LANTOLOGIN' : 'BOUNDLIST' }
+    })
   }
 
   logout () {

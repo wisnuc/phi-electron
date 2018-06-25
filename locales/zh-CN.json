@@ -514,6 +514,8 @@
   "Reboot To Maintenance": "重启进入维护模式",
   "Maintenance Title": "维护模式",
   "Maintenance Text": "重启设备并进入维护模式，可以在维护模式下执行磁盘操作或系统维护任务。",
+  "Get StationList Error": "获取设备列表失败",
+  "Station Not Found": "设备未找到",
 
   "==== device/TimeDateInfo.jsx ====": "",
   "Local Time": "本地时间",
@@ -1047,6 +1049,8 @@
   "Current Logged Device": "当前登录",
   "Confirm Change Device Text": "切换设备会停止当前设备正在传输的任务，确定继续吗？",
   "Confirm Change Device Title": "切换设备",
+  "Confirm Logout To LANLogin Text": "切换设备会停止当前设备正在传输的任务，确定继续吗？",
+  "Confirm Logout To LANLogin Title": "切换设备",
 
   "==== nav/FileMenu.jsx ====": "",
   "File Menu Title": "N2家庭"

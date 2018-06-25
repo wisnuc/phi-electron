@@ -158,7 +158,7 @@ class Base extends EventEmitter {
       <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
         <div>
           <img src="./assets/images/pic_network_failed.png" alt="" width={320} height={180} />
-          <div style={{ marginTop: 30, height: 30, fontSize: 20, color: '#85868c' }} className="flexCenter" >
+          <div style={{ marginTop: 30, height: 30, fontSize: 14, color: '#31a0f5' }} className="flexCenter" >
             { i18n.__('Error in Base Text') }
           </div>
           <div style={{ height: 70 }} />
