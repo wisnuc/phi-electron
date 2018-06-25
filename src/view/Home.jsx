@@ -833,7 +833,7 @@ class Home extends Base {
     )
   }
 
-  renderToolBar ({ style }) {
+  renderToolBar ({ style, openHelp }) {
     const { curr, queue } = this.history.get()
     const noBack = curr < 1
     const noForward = curr > queue.length - 2
@@ -899,7 +899,7 @@ class Home extends Base {
         <FlatButton
           label={i18n.__('Help')}
           labelStyle={{ fontSize: 14, marginLeft: 4 }}
-          onClick={() => {}}
+          onClick={openHelp}
           icon={<HelpIcon style={iconStyle()} />}
         />
         <div style={{ width: 10 }} />

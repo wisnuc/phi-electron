@@ -170,6 +170,11 @@ class NavViews extends React.Component {
     this.openMovePolicy = (data) => {
       this.setState({ conflicts: data })
     }
+
+    this.openHelp = () => {
+      console.log('this.openHelp', this.state)
+      this.setState({ onHelp: true })
+    }
   }
 
   componentDidMount () {
@@ -335,7 +340,7 @@ class NavViews extends React.Component {
 
         <div style={{ height: '100%', width: 'calc(100% - 220px)', position: 'relative' }}>
           {/* Toolbar */}
-          { this.views[this.state.nav].renderToolBar({ style: toolBarStyle }) }
+          { this.views[this.state.nav].renderToolBar({ style: toolBarStyle, openHelp: this.openHelp }) }
 
           {/* Title and BreadCrumbItem */}
           { this.views[this.state.nav].renderTitle({ style: titleStyle }) }
@@ -357,6 +362,45 @@ class NavViews extends React.Component {
             backgroundImage: 'linear-gradient(to right, rgba(23,99,207,.03), transparent)'
           }}
         />
+
+        {/* help frame */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: this.state.onHelp ? 0 : '100%',
+            width: '100%',
+            height: '100%',
+            zIndex: 100,
+            transition: 'left 175ms'
+          }}
+          onMouseDown={() => this.setState({ onHelp: false })}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: 280,
+              width: 30,
+              height: '100%',
+              backgroundImage: 'linear-gradient(to left, rgba(23,99,207,.03), transparent)'
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              zIndex: 100,
+              top: 0,
+              right: 0,
+              width: 280,
+              height: '100%',
+              backgroundColor: '#FFF'
+            }}
+            onMouseDown={(e) => { e.preventDefault(); e.stopPropagation() }}
+          >
+            { this.views[this.state.nav].renderHelp(this.state.nav) }
+          </div>
+        </div>
 
         {/* drag item */}
         { this.views[this.state.nav].renderDragItems() }

@@ -1052,6 +1052,13 @@
   "Confirm Logout To LANLogin Text": "切换设备会停止当前设备正在传输的任务，确定继续吗？",
   "Confirm Logout To LANLogin Title": "切换设备",
 
+  "==== commom/HelpMsg.jsx ====": "",
+  "Home Help Title": "全部文件的帮助信息",
+  "Home Help Download Text": "您可以选中需要下载的文件或文件夹，点击“下载”按钮或在右键菜单中选择“下载”，即可完成下载。",
+  "Home Help Summary Text": "您可以在此页面查看和编辑您的文件或文件夹。",
+  "Home Help Upload Text": "您可以将本地文件或文件夹上传至设备，点击“上传”按钮，或直接将文件或文件夹拖拽至窗口，即可完成上传。",
+  "Home Help Warning Text": "请注意：默认下载路径为您系统下载目录下的“Phicomm”文件夹，如您需要更改下载路径，请在下载弹窗内更改。",
+
   "==== nav/FileMenu.jsx ====": "",
   "File Menu Title": "N2家庭"
 }

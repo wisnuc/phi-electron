@@ -4,6 +4,7 @@ import { pinkA200 } from 'material-ui/styles/colors'
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu'
 import { IconButton } from 'material-ui'
 import EventEmitter from 'eventemitter3'
+import HelpMsg from '../common/HelpMsg'
 
 class Base extends EventEmitter {
   constructor (ctx) {
@@ -165,6 +166,10 @@ class Base extends EventEmitter {
         </div>
       </div>
     )
+  }
+
+  renderHelp (nav) {
+    return (<HelpMsg nav={nav} />)
   }
 
   renderContent () {
