@@ -11,6 +11,10 @@ class Transmission extends Base {
     ipcRenderer.send('GET_TRANSMISSION')
   }
 
+  navLeave () {
+    console.clear()
+  }
+
   navGroup () {
     return 'transmission'
   }

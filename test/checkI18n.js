@@ -11,7 +11,7 @@ const dir = './src ./lib'
 const lines_src = child.execSync(`grep -r ${string} ${dir}`).toString().split('\n').map(l => l.trim()).filter(l => l.length)
 const keys_src = lines_src.map(l => l.split('i18n.')).join('__').split('__')
   .filter(l => l.startsWith('(\'') || l.startsWith('n(\'')).map(l => l.split('\'')[1])
-const unique_src = new Set([...keys_src.sort()])
+const unique_src = new Set([...keys_src])
 
 const entries = fs.readdirSync('./locales').map(p => path.join('./locales', p)).slice(1, 2)
 
@@ -20,7 +20,7 @@ entries.forEach(filePath => {
   const lines_loc = fs.readFileSync(filePath).toString().split('\n').map(l => l.trim()).filter(l => l.length)
   const filtered_loc = lines_loc.filter(l => !(/====/.test(l)))
   const keys_loc = filtered_loc.map(l => l.split('"')[1]).filter(k => !!k)
-  const unique_loc = new Set([...keys_loc.sort()]);
+  const unique_loc = new Set([...keys_loc]);
 
   ['zero', 'one', 'other', 'zh-CN', 'en-US'].forEach(k => unique_loc.delete(k))
 

@@ -123,7 +123,7 @@ class NavViews extends React.Component {
 
     this.init = () => {
       this.navTo('home')
-      this.timer = setInterval(() => (this.views[this.state.nav].navGroup() === 'file') &&
+      this.timer = setInterval(() => process.env.NODE_ENV !== 'dev' && (this.views[this.state.nav].navGroup() === 'file') &&
         this.props.apis.request('phyDrives'), 3000)
     }
 
@@ -305,6 +305,7 @@ class NavViews extends React.Component {
   renderFileGroup () {
     const toolBarStyle = { height: 50, width: '100%', display: 'flex', alignItems: 'center', backgroundColor: '#f8f8f8' }
     const titleStyle = { height: 70, width: '100%', display: 'flex', alignItems: 'center' }
+    const isAdmin = this.props.apis.account && this.props.apis.account.data && this.props.apis.account.data.isFirstUser
 
     return (
       <div
@@ -394,11 +395,13 @@ class NavViews extends React.Component {
               right: 0,
               width: 280,
               height: '100%',
-              backgroundColor: '#FFF'
+              backgroundColor: '#FFF',
+              overflowY: 'auto',
+              overflowX: 'hidden'
             }}
             onMouseDown={(e) => { e.preventDefault(); e.stopPropagation() }}
           >
-            { this.views[this.state.nav].renderHelp(this.state.nav) }
+            { this.views[this.state.nav].renderHelp({ nav: this.state.nav, isAdmin }) }
           </div>
         </div>
 

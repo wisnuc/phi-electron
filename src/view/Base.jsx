@@ -168,8 +168,8 @@ class Base extends EventEmitter {
     )
   }
 
-  renderHelp (nav) {
-    return (<HelpMsg nav={nav} />)
+  renderHelp ({ nav, isAdmin }) {
+    return (<HelpMsg nav={nav} isAdmin={isAdmin} isPublicContent={nav === 'public' && this.rootDrive} />)
   }
 
   renderContent () {
