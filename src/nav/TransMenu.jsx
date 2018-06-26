@@ -1,9 +1,10 @@
 import React from 'react'
+import TransCount from './TransCount'
 import { Button } from '../common/Buttons'
 
 class MenuItem extends Button {
   render () {
-    const { text, selected } = this.props
+    const { text, selected, type, index } = this.props
 
     const Icon = this.props.icon
 
@@ -28,6 +29,9 @@ class MenuItem extends Button {
         </div>
         <div style={{ flex: '0 0 16px' }} />
         <div style={{ flexGrow: 1 }} />
+        <div style={{ position: 'absolute', top: 0, left: 220 * index + 150, width: 30, height: 30 }} >
+          <TransCount type={type} />
+        </div>
       </div>
     )
   }
@@ -44,9 +48,11 @@ class NavDrawer extends React.Component {
         {
           Object.keys(views)
             .filter(key => views[key].navGroup() === group)
-            .map(key => (
+            .map((key, index) => (
               <MenuItem
                 key={key}
+                type={key}
+                index={index}
                 icon={views[key].menuIcon()}
                 text={views[key].menuName()}
                 primaryColor={primaryColor}

@@ -8,8 +8,13 @@ class TransCount extends React.PureComponent {
       num: 0
     }
 
-    this.updateTransmission = (e, userTasks) => {
-      const num = Math.min(userTasks.length, 100)
+    this.updateTransmission = (e, userTasks, finishedTasks) => {
+      let length = 0
+      if (!this.props.type) length = userTasks.length
+      else if (this.props.type === 'finished') length = finishedTasks.length
+      else if (this.props.type === 'uploading') length = userTasks.filter(t => t.trsType === 'upload').length
+      else if (this.props.type === 'downloading') length = userTasks.filter(t => t.trsType === 'download').length
+      const num = Math.min(length, 100)
       if (num !== this.state.num) {
         this.setState({ num })
       }
