@@ -13,18 +13,17 @@ class ConfirmBind extends React.PureComponent {
 
     this.getBindState = (deviceSN) => {
       this.props.phi.req('getBindState', { deviceSN }, (err, res) => {
-        if (err) {
-          this.setState({ error: err, confirm: false })
-        } else {
-          /* res.result.status: 'binded', 'binding-*', 'error-*' */
-          if (res && res.result && res.result.status === 'binded') this.setState({ status: 'success' })
-          else if (res && (
-            (res.error && res.error !== '0') ||
-            ['error-timeout', 'error-station_offline', 'error-station_error'].includes(res.result && res.result.status)
-          )) {
-            this.setState({ error: 'bind error', status: 'failed' })
-          } else setTimeout(() => this.getBindState(deviceSN), 1000)
-        }
+        if (err) { // Error
+          console.error('getBindState error', err)
+          this.setState({ error: 'bind error', status: 'failed' })
+        } else if (res && res.result && res.result.status === 'binded') { // Success
+          this.setState({ status: 'success' })
+        } else if (res && (
+          (res.error && res.error !== '0') ||
+          ['error-timeout', 'error-station_offline', 'error-station_error'].includes(res.result && res.result.status)
+        )) { /* res.result.status: 'binded', 'binding-*', 'error-*' */
+          this.setState({ error: 'bind error', status: 'failed' })
+        } else setTimeout(() => this.getBindState(deviceSN), 1000) // Pending
       })
     }
 
