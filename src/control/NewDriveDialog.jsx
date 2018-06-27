@@ -10,7 +10,7 @@ class NewDriveDialog extends PureComponent {
 
     this.state = {
       loading: false,
-      label: '',
+      label: (this.props.drive && this.props.drive.label) || '',
       writelist: (this.props.drive && this.props.drive.writelist) || [],
       errorText: ''
     }
@@ -69,7 +69,7 @@ class NewDriveDialog extends PureComponent {
       this.setState({ label: value, errorText: '' })
       return
     }
-    const drives = this.props.drives
+    const drives = this.props.drives.filter(d => d.label !== (this.props.drive && this.props.drive.label))
     const newValue = sanitize(value)
     if (drives.findIndex(drive => drive.label === value) > -1) {
       this.setState({ label: value, errorText: i18n.__('Drive Name Exist Error') })
