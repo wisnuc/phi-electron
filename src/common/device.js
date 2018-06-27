@@ -188,6 +188,15 @@ class Device extends RequestManager {
     return Promise.promisify(this.refreshSystemState).bind(this)()
   }
 
+  refreshLater () {
+    if (this.refreshing) return
+    this.refreshing = true
+    setTimeout(() => {
+      this.refreshSystemState()
+      this.refreshing = false
+    }, 3000)
+  }
+
   /**
    probing -> wait
    offline -> not in LAN
@@ -223,10 +232,10 @@ class Device extends RequestManager {
     if (state === 'PENDING' && !boundUser) return 'noBoundUser'
     else if (state === 'UNAVAILABLE' && boundUser) return 'noBoundVolume'
     else if (state === 'STARTED' && Array.isArray(users)) return 'ready'
-    else if (['PENDING', 'UNAVAILABLE', 'STARTED'].includes(state)) return 'systemError'
+    else if (['PENDING', 'UNAVAILABLE', 'STARTED', 'PROBEFAILED'].includes(state)) return 'systemError'
 
     /* treat other state as booting and refresh 2000ms later */
-    setTimeout(() => this.refreshSystemState(), 2000)
+    this.refreshLater()
     return 'booting'
   }
 }
