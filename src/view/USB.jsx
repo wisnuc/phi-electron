@@ -20,7 +20,6 @@ class USB extends Home {
 
     this.onCopy = () => {
       if (this.isMedia || this.state.inRoot) return
-      console.log('this.onCopy', this.ctx.props)
       const selected = this.state.select.selected
       if (!selected && !selected.length) return
       const entries = selected.map(index => this.state.entries[index])
@@ -108,7 +107,6 @@ class USB extends Home {
       const id = this.phyDrive.id
       const selected = this.state.select.selected
       const entries = selected.map(index => this.state.entries[index])
-      console.log('this.download', id, path, entries)
       ipcRenderer.send('DOWNLOAD', { entries, dirUUID: path, driveUUID: id, domain: 'phy' })
     }
 
@@ -117,7 +115,6 @@ class USB extends Home {
       if (path) path = `${path}/`
       const entries = this.state.select.selected.map(index => this.state.entries[index])
       const queryStrings = entries.map(e => `${path}${e.name}`)
-      console.log('this.deleteAsync', path, entries, queryStrings)
       for (let i = 0; i < queryStrings.length; i++) {
         const p = queryStrings[i]
         await this.ctx.props.apis.requestAsync('deletePhyDirOrFile', { id: this.phyDrive.id, qs: { path: p } })
@@ -126,7 +123,6 @@ class USB extends Home {
     }
 
     ipcRenderer.on('driveListUpdate', (e, dir) => {
-      console.log('driveListUpdate', dir, this.state.path)
       if (this.state.contextMenuOpen) return
       if (this.state.select && this.state.select.selected && this.state.select.selected.length > 1) return
       const path = this.state.path && this.state.path.map(p => p.data).filter(p => !!p).join('/')

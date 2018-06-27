@@ -32,7 +32,6 @@ class ContextMenu extends PureComponent {
 
   // top, left, onRequestClose
   render () {
-    // console.log('in ContextMenu', this.state, this.props)
     if (this.state.stage === 0) return null
 
     const overlayStyle = {

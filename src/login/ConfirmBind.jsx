@@ -12,12 +12,10 @@ class ConfirmBind extends React.PureComponent {
     }
 
     this.getBindState = (deviceSN) => {
-      console.log('this.getBindState', deviceSN)
       this.props.phi.req('getBindState', { deviceSN }, (err, res) => {
         if (err) {
           this.setState({ error: err, confirm: false })
         } else {
-          console.log('getBindState', res)
           /* res.result.status: 'binded', 'binding-*', 'error-*' */
           if (res && res.result && res.result.status === 'binded') this.setState({ status: 'success' })
           else if (res && (
@@ -31,9 +29,7 @@ class ConfirmBind extends React.PureComponent {
     }
 
     this.bindDevice = () => {
-      console.log('this.bindDevice', this.state, this.props)
       const deviceSN = this.props.dev.info.data.deviceSN
-      console.log('deviceSN token', deviceSN)
       if (!deviceSN) this.setState({ status: 'failed' })
       else {
         this.props.phi.req('bindDevice', { deviceSN }, (err, res) => {
@@ -41,7 +37,6 @@ class ConfirmBind extends React.PureComponent {
             this.setState({ error: 'bind error', status: 'failed' })
             console.error('bindDevice, error', err, res)
           } else {
-            console.log('bindDevice req success', res)
             setTimeout(() => this.getBindState(deviceSN), 1000)
           }
         })

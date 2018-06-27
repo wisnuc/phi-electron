@@ -32,14 +32,13 @@ class NewDriveDialog extends PureComponent {
           this.props.openSnackBar(i18n.__('Create Drive Success'))
         } else {
           this.setState({ loading: false })
-          console.log('adminCreateDrive failed', err)
+          console.error('adminCreateDrive failed', err)
           this.props.openSnackBar(i18n.__('Create Drive Failed'))
         }
       })
     }
 
     this.modifyDrive = () => {
-      console.log('this.modifyDrive', this.props)
       this.setState({ loading: true })
       const apis = this.props.apis
       const args = {
@@ -54,7 +53,7 @@ class NewDriveDialog extends PureComponent {
           this.props.openSnackBar(i18n.__('Modify Drive Success'))
         } else {
           this.setState({ loading: false })
-          console.log('adminUpdateDrive failed', err)
+          console.error('adminUpdateDrive failed', err)
           this.props.openSnackBar(i18n.__('Modify Drive Failed'))
         }
       })
@@ -64,7 +63,6 @@ class NewDriveDialog extends PureComponent {
   }
 
   updateLabel (value) {
-    console.log('updateLabel', value)
     if (!value) {
       this.setState({ label: value, errorText: '' })
       return
@@ -94,7 +92,6 @@ class NewDriveDialog extends PureComponent {
 
   render () {
     const { type, users } = this.props
-    console.log('users', users)
     return (
       <div style={{ width: 280, padding: '0 20px 20px 20px', zIndex: 2000 }}>
         <div style={{ height: 59, display: 'flex', alignItems: 'center' }} className="title">

@@ -23,7 +23,6 @@ class MDNS {
     this.handleUpdate = (event, session, device) => {
       /* discard out-dated session data */
       if (this.session !== session) return
-      console.log('MDNS_UPDATE', session, device, this.store.length)
 
       /* discard existing result */
       if (this.store.find(dev => dev.host === device.host)) return

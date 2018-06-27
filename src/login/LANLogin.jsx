@@ -37,7 +37,6 @@ class LANLogin extends React.Component {
     this.togglePwd = () => this.setState({ showPwd: !this.state.showPwd })
 
     this.login = () => {
-      console.log('this.login this.props.dev.users', this.props.dev.users)
       const users = this.props.dev.users && this.props.dev.users.data
       const user = users && users.find(u => u.phoneNumber === this.state.pn)
       if (!user) {
@@ -47,7 +46,6 @@ class LANLogin extends React.Component {
       this.setState({ loading: true })
       const { uuid } = user
       const password = this.state.pwd
-      console.log('uuid pwd', uuid, password)
       this.props.dev.request('token', { uuid, password }, (err, data) => {
         if (err) {
           console.error(`login err: ${err}`)
@@ -81,7 +79,6 @@ class LANLogin extends React.Component {
   }
 
   render () {
-    console.log('LANLogin', this.props, this.state)
     return (
       <div style={{ width: 320, zIndex: 100 }} className="paper" >
         <div style={{ height: 59, display: 'flex', alignItems: 'center', paddingLeft: 5 }} className="title">

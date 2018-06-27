@@ -12,7 +12,6 @@ class ConfirmDialog extends React.PureComponent {
 
     this.onConfirm = (accept) => {
       const deviceSN = this.props.dev && this.props.dev.mdev.deviceSN
-      console.log('this.onConfirm', deviceSN, accept)
       this.props.phi.req('invitation', { deviceSN, accept }, (err, res) => {
         let msg = ''
         if (!err && res && res.error === '0') {

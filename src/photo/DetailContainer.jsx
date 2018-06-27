@@ -138,7 +138,6 @@ class DetailContainerInline extends React.Component {
     }
 
     this.close = () => {
-      console.log('close !')
       this.props.onRequestClose()
     }
 

@@ -31,7 +31,6 @@ class Disk extends React.PureComponent {
     this.fireEject = () => {
       // if (!this.shouldEject()) return
       const id = this.props.apis.phyDrives.data.filter(d => d.isUSB)[0].id
-      console.log('id', id, this.props)
       this.props.apis.pureRequest('ejectUSB', { id }, (err, res) => {
         if (!err) {
           this.props.openSnackBar(i18n.__('Operation Success'))
@@ -106,7 +105,6 @@ class Disk extends React.PureComponent {
   render () {
     const { boot, phyDrives, stats } = this.props
     if (!boot || !phyDrives || !stats) return (<div />)
-    console.log('Disk.jsx', boot, phyDrives, stats)
     const { storage, boundVolume } = boot
     const b1 = storage.blocks.find(b => (b.isDisk && !b.unformattable && b.slotNumber === 1))
     const b2 = storage.blocks.find(b => (b.isDisk && !b.unformattable && b.slotNumber === 2))
@@ -139,7 +137,6 @@ class Disk extends React.PureComponent {
     const audioSize = audio.totalSize / 1024 / total * k + imageSize
     const documentSize = document.totalSize / 1024 / total * k + audioSize
     const otherSize = used / total * k
-    console.log('size by type', [video, image, audio, document, otherSize].map(v => prettysize(v.totalSize)), prettysize(used * 1024))
 
     const data = [
       { color: '#8a69ed', progress: videoSize, title: i18n.__('Video') },

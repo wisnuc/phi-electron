@@ -36,7 +36,6 @@ class LANPassword extends React.Component {
     this.save = () => {
       this.setState({ loading: true })
       this.props.apis.pureRequest('setLANPassword', { prePwd: this.state.pwd, newPwd: this.state.newPwd }, (err, res) => {
-        console.log('setLANPassword', err, res)
         if (err) {
           console.error('Set LAN Password Error', err)
           if (err && err.message === 'Unauthorized') this.setState({ pwdError: i18n.__('Previous Password Wrong') })
@@ -55,7 +54,6 @@ class LANPassword extends React.Component {
   }
 
   render () {
-    console.log('LANPassword', this.props)
     return (
       <div style={{ width: '100%', height: '100%' }} className="flexCenter" >
         <div style={{ width: 480, paddingRight: 160, paddingBottom: 60 }}>

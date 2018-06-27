@@ -29,13 +29,11 @@ class DeviceSelect extends React.Component {
     }
 
     this.bindVolume = (dev, selectedDevice) => { // dev === selectedDevice.state
-      console.log('this.bindVolume', dev, selectedDevice)
       this.setState({ confirm: false, dev })
       this.props.manageDisk(selectedDevice)
     }
 
     this.slDevice = (dev, selectedDevice) => {
-      console.log('this.slDevice', dev, selectedDevice)
       clearTimeout(this.timer)
       if (this.props.type === 'BOUNDLIST' && ['ready', 'offline'].includes(dev.systemStatus())) {
         const { inviteStatus, accountStatus, type } = dev.mdev
@@ -51,7 +49,6 @@ class DeviceSelect extends React.Component {
       } else if (this.props.type === 'LANTOBIND') {
         this.setState({ dev, confirm: true, selectedDevice })
       } else if (this.props.type === 'CHANGEDEVICE') {
-        console.log('CHANGEDEVICE', this.props, this.state, dev)
         const { inviteStatus, accountStatus, type } = dev.mdev
         if (type === 'owner' || (type === 'service' && inviteStatus === 'accept' && accountStatus === '1')) {
           this.setState({ dev, changeDeviceConfirm: true, selectedDevice })
@@ -205,8 +202,6 @@ class DeviceSelect extends React.Component {
   }
 
   render () {
-    console.log('DeviceSelect', this.state, this.props)
-
     let arr = [...this.props.list]
     /* hide reject or inactive invitation */
     if (['BOUNDLIST', 'CHANGEDEVICE'].includes(this.props.type)) {

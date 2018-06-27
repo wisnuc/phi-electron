@@ -180,7 +180,6 @@ class Tasks extends React.Component {
   renderTasks (tasks) {
     const rowCount = tasks.length
     const rowHeight = 40
-    console.log('renderTasks', tasks, rowCount, rowHeight)
     return (
       <div style={{ width: '100%', height: '100%' }}>
         <AutoSizer>

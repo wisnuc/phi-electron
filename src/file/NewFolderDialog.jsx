@@ -35,7 +35,7 @@ class NewFolderDialog extends React.PureComponent {
       }
       apis.request('mkdir', args, (err) => {
         if (err) {
-          console.log('mkdir error', err, err.code)
+          console.error('mkdir error', err, err.code)
           this.setState({ errorText: i18n.__('Mkdir Failed'), loading: false })
         } else {
           this.props.onRequestClose(true)
@@ -55,7 +55,7 @@ class NewFolderDialog extends React.PureComponent {
       }
       apis.request('mkPhyDir', args, (err) => {
         if (err) {
-          console.log('mkdir error', err, err.code)
+          console.error('mkdir error', err, err.code)
           this.setState({ errorText: i18n.__('Mkdir Failed'), loading: false })
         } else {
           this.props.onRequestClose(true)

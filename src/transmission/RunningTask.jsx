@@ -87,7 +87,6 @@ class RunningTask extends React.Component {
   }
 
   render () {
-    console.log('RunningTask.jsx', this.props)
     const { index, task } = this.props
     const pColor = task.paused ? 'rgba(0,0,0,.12)' : '#31a0f5'
     let pWidth = task.completeSize / task.size * 100

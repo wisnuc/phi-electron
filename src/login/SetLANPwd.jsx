@@ -25,16 +25,13 @@ class SetLANPwd extends React.Component {
 
     this.fireAsync = async () => {
       const { dev, account } = this.props
-      console.log('this.props SetLANPwd', this.props)
       const deviceSN = dev.mdev.deviceSN || (dev.info && dev.info.data && dev.info.data.deviceSN)
       const args = { deviceSN }
       const users = (await this.props.phi.reqAsync('localUsers', args))
       const user = Array.isArray(users) && users.find(u => u.phicommUserId === account.phicommUserId)
-      console.log('fireAsync users', users, user)
       const userUUID = user.uuid
       const newUser = (await this.props.phi.reqAsync('setLANPassword', { deviceSN, password: this.state.pwd, userUUID }))
       const token = (await this.props.phi.reqAsync('LANToken', args)).token
-      console.log('fireAsync newUser', newUser)
       if (!newUser || !newUser.uuid || !token) throw Error('fireAsync Error')
       return ({ dev, user: newUser, token })
     }

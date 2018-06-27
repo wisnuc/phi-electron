@@ -32,7 +32,6 @@ class UploadingFirmware extends React.PureComponent {
     }
 
     this.onFirmRes = (event, data) => {
-      console.log('this.onFirmRes', data)
       const { success, reason, session } = data
       if (session !== this.session) return
       if (!success) {
@@ -47,7 +46,6 @@ class UploadingFirmware extends React.PureComponent {
     }
 
     this.onProcess = (event, data) => {
-      console.log('this.onProcess', data)
       const { progress, session } = data
       if (session !== this.session) return
       this.setState({ progress: `${progress.toFixed(0)}%` })

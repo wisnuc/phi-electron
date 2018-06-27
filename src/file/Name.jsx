@@ -28,7 +28,6 @@ class Name extends React.PureComponent {
     }
 
     this.fire = () => {
-      console.log('rename this.fire', this.shouldFire(), this.fired, this.state, this.props)
       if (this.fired || !this.shouldFire()) return
       this.fired = true
       const { apis, path, entry } = this.props
@@ -52,7 +51,6 @@ class Name extends React.PureComponent {
 
     this.onBlur = () => {
       if (this.fired) return
-      console.log('this.onBlur', this.props, this.state)
       if (this.shouldFire()) this.fire()
       else if (this.state.errorText) this.props.openSnackBar(this.state.errorText)
       else this.props.refresh()
@@ -89,7 +87,6 @@ class Name extends React.PureComponent {
         </div>
       )
     }
-    console.log('Name.jsx', this.props, this.state)
     return (
       <div
         onClick={(e) => { e.stopPropagation() }}
@@ -123,7 +120,6 @@ class Name extends React.PureComponent {
           ref={(input) => { // forcus on TextField and autoselect file name without extension
             if (input && !this.notFirst) {
               this.input = input
-              console.log('input', input)
               input.focus()
               const end = input.value.lastIndexOf('.')
               input.selectionStart = 0

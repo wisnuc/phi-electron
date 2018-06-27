@@ -13,7 +13,6 @@ class RenderListByRow extends React.Component {
     }
 
     this.onSelectIconButton = () => {
-      // console.log('this.onSelectIconButton', this.props)
       if (!this.state.selected) {
         this.setState({ selected: true }, () => {
           this.props.addListToSelection(this.props.photoListWithSameDate.photos.map(p => p.hash))

@@ -37,7 +37,6 @@ class ChangeDevice extends React.Component {
     }
 
     this.manageDisk = (dev) => {
-      console.log('this.manageDisk dev', dev, this.state)
       this.setState({ loading: true })
       dev.refreshSystemState(() => {
         if (dev.systemStatus() === 'noBoundVolume') this.setState({ selectedDevice: dev, status: 'diskManage' })
@@ -70,7 +69,6 @@ class ChangeDevice extends React.Component {
   }
 
   componentDidMount () {
-    console.log('componentDidMount ChangeDevice.jsx', this.props)
     if (this.props.account.lan) this.showLANToLogin()
     else this.refreshList()
   }

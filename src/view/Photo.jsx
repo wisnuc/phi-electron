@@ -24,7 +24,6 @@ class Photo extends Home {
     this.refresh = (op) => {
       const apis = this.ctx.props.apis
       const places = apis && apis.drives && apis.drives.data && apis.drives.data.filter(d => d.type === 'private').map(d => d.uuid).join('.')
-      console.log('places', places)
       this.ctx.props.apis.request(this.type, { places })
       if (op) this.setState({ scrollTo: op.fileName || op.uuid, loading: !op.noloading }) // fileName for files, uuid for drives
       else this.setState({ loading: true })
@@ -73,7 +72,6 @@ class Photo extends Home {
         else acc.push([cur])
         return acc
       }, [])
-      console.log('download in media', entries, path, entriesByDir)
       entriesByDir.forEach((arr) => {
         const place = arr[0].place
         const driveUUID = places[place]

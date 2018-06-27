@@ -76,7 +76,7 @@ class Fruitmix extends EventEmitter {
     this[name].on('updated', (prev, curr) => {
       this.setState(name, curr)
 
-      console.log(`${name} updated`, prev, curr, this[name].isFinished(), typeof next === 'function')
+      // console.log(`${name} updated`, prev, curr, this[name].isFinished(), typeof next === 'function')
 
       if (this[name].isFinished() && next) {
         if (this[name].isRejected()) next(this[name].reason())
@@ -398,7 +398,6 @@ class Fruitmix extends EventEmitter {
 
       /* task api */
       case 'copy':
-        console.log('xcopy args', args)
         r = this.apost('tasks', args)
         break
 

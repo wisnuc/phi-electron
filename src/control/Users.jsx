@@ -31,7 +31,6 @@ class AdminUsersApp extends React.Component {
       const localUsers = await phi.reqAsync('localUsers', { deviceSN })
       const drives = await phi.reqAsync('drives', { deviceSN })
 
-      console.log('this.reqUsersAsync', cloudUsers, localUsers, drives)
       /* public drives */
       const builtIn = drives.find(d => d.tag === 'built-in')
       const publicDrives = drives.filter(d => d.type === 'public' && d.tag !== 'built-in')
@@ -59,7 +58,6 @@ class AdminUsersApp extends React.Component {
     }
 
     this.deleteUserAsync = async () => {
-      console.log('this.deleteUser', this.state.checkList)
       const { phi, device } = this.props
       const deviceSN = device.mdev.deviceSN
       for (let i = 0; i < this.state.checkList.length; i++) {
@@ -88,12 +86,9 @@ class AdminUsersApp extends React.Component {
       const deviceSN = device.mdev.deviceSN
       const args = { deviceSN, phoneNumber: this.state.pn, nickName: this.state.nickName }
       const phicommUserId = (await phi.reqAsync('registerPhiUser', args)).result.uid
-      console.log('this.inviteAsync phicommUserId', phicommUserId)
       const user = await phi.reqAsync('newUser', { deviceSN, username: this.state.pn, phoneNumber: this.state.pn, phicommUserId })
-      console.log('this.inviteAsync res', user)
       if (!user || user.phicommUserId !== phicommUserId) throw Error('add local user error')
       const cloudUsers = (await phi.reqAsync('cloudUsers', { deviceSN })).result.users
-      console.log('this.inviteAsync cloudUsers', cloudUsers)
       if (!cloudUsers.find(u => u.uid === phicommUserId)) throw Error('req cloud user error')
     }
 

@@ -4,7 +4,6 @@ import parseRes from './parseRes'
 import RequestManager from './reqman'
 
 const phiCloudAddress = process.env.CLOUD_TEST === 'dev' ? 'sohon2dev.phicomm.com' : 'sohon2test.phicomm.com'
-console.log('phiCloudAddress', phiCloudAddress)
 
 class PhiAPI extends RequestManager {
   constructor () {

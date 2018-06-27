@@ -91,7 +91,6 @@ class Login extends React.Component {
     }
 
     this.manageDisk = (dev) => {
-      console.log('this.manageDisk dev', dev, this.state)
       this.setState({ loading: true })
       if (!dev || !dev.mdev) {
         this.setState({ type: 'BOUNDLIST' }, () => this.refresh())
@@ -261,7 +260,6 @@ class Login extends React.Component {
   }
 
   render () {
-    console.log('Login', this.props, this.state)
     const props = this.props
     let view = null
 

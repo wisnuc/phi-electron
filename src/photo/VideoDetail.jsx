@@ -15,7 +15,7 @@ class PhotoDetail extends React.Component {
       this.props.apis.pureRequest('randomSrc', { hash: this.props.item.hash }, (err, res) => {
         if (err) {
           this.setState({ error: 'randomSrc' })
-          console.log('randomSrc error', err)
+          console.error('randomSrc error', err)
         } else this.setState({ filePath: `http://${this.props.apis.address}:3000/media/random/${res.key}` })
         this.session = ''
       })
@@ -26,7 +26,6 @@ class PhotoDetail extends React.Component {
       video.addEventListener('pause', () => {
         const playtime = video.currentTime
         const tmpSrc = video.src
-        console.log('this.addPauseEvent', video.src)
         video.src = ''
         video.load()
         video.src = tmpSrc

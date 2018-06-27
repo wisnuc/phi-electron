@@ -213,7 +213,6 @@ class Help extends React.PureComponent {
   }
 
   render () {
-    console.log('HelpMsg', this.props)
     let content = null
     switch (this.props.nav) {
       case 'home':

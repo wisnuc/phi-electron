@@ -100,7 +100,6 @@ class Home extends Base {
           else acc.push([cur])
           return acc
         }, [])
-        console.log('download in media', entries, path, entriesByDir)
         entriesByDir.forEach((arr) => {
           const place = arr[0].place
           const driveUUID = places[place]
@@ -151,7 +150,6 @@ class Home extends Base {
 
     this.onCopy = () => {
       if (this.isMedia || this.state.inRoot) return
-      console.log('this.onCopy', this.ctx.props)
       const selected = this.state.select.selected
       if (!selected && !selected.length) return
       const entries = selected.map(index => this.state.entries[index])
@@ -183,7 +181,6 @@ class Home extends Base {
 
     /* finish post change dialog content to waiting/result */
     this.finish = (error, data, action) => {
-      console.log('this.finish', error, data, action)
       const type = action === 'copy' ? i18n.__('Copy') : i18n.__('Move')
       if (error) {
         this.ctx.props.openSnackBar(type.concat(i18n.__('+Failed')))
@@ -211,7 +208,6 @@ class Home extends Base {
       const pos = this.ctx.props.clipboard.get()
       const driveUUID = this.state.path[0].uuid
       const dirUUID = this.state.path.slice(-1)[0].uuid
-      console.log('this.onPaste', pos, driveUUID, dirUUID)
       const entries = pos.entries.map(e => e.name)
       const args = {
         entries,
@@ -261,7 +257,6 @@ class Home extends Base {
         this.ctx.props.openSnackBar(i18n.__('Delete Success'))
       }).catch((e) => {
         this.setState({ deleteLoading: false, delete: false })
-        console.log('delete error', e)
         this.ctx.props.openSnackBar(i18n.__('Delete Failed'))
       })
     }
@@ -522,8 +517,6 @@ class Home extends Base {
       this.state.select.toggleDrag(selected.includes(this.RDSI) ? selected : [this.RDSI])
 
       /* show drag item */
-      // console.log('this.scrollTop', this.scrollTop)
-      console.log('this.rowDragStart', event.clientX)
       this.refDragedItems.style.top = `${this.RDSI * 48 + DRAGTOP - (this.scrollTop || 0)}px`
       this.refDragedItems.style.left = `${event.clientX}px`
 
@@ -573,7 +566,6 @@ class Home extends Base {
 
     this.search = (name) => {
       if (!name) return
-      // console.log('this.search', name, this.state)
       const select = this.select.reset(this.state.entries.length)
       this.setState({ showSearch: name, loading: true, select })
       const types = this.types // photo, docs, video, audio
@@ -585,7 +577,6 @@ class Home extends Base {
       this.ctx.props.apis.pureRequest('search', { name, places, types, order }, (err, res) => {
         if (err) this.setState({ error: true, loading: false })
         else {
-          // console.log('this.search res', res)
           this.setState({ entries: res, loading: false })
         }
       })
@@ -776,7 +767,6 @@ class Home extends Base {
       each one is assigned an action, except for the last one
     */
 
-    // console.log('renderBreadCrumbItem', path)
     return (
       <div style={Object.assign({}, style, { marginLeft: 20 })}>
         {

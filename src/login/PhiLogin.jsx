@@ -84,7 +84,6 @@ class PhiLogin extends React.Component {
 
     this.fakeLogin = () => {
       this.setState({ loading: true })
-      console.log('phi', this.props.phi, this.phi)
       /* assign token to PhiAPI */
       Object.assign(this.props.phi, { token: this.phi.token })
       this.props.phi.req('stationList', null, (e, r) => {
@@ -118,7 +117,6 @@ class PhiLogin extends React.Component {
   componentDidMount () {
     this.phi = window.config && window.config.global && window.config.global.phi
     if (this.phi) {
-      console.log('componentDidMount phi', this.phi, firstLogin)
       const { autoLogin, pn, token } = this.phi
       this.setState({ saveToken: !!token, autoLogin: !!autoLogin, pn: pn || '', showFakePwd: !!token })
       if (firstLogin && token && !!autoLogin) this.fakeLogin()

@@ -61,7 +61,6 @@ class Preview extends React.Component {
     }
 
     this.startDownload = () => {
-      console.log('this.startDownload', this.state, this.props)
       const isMedia = this.props.isMedia
       this.session = UUID.v4()
       const driveUUID = isMedia ? 'media' : this.props.path[0].uuid
@@ -79,10 +78,8 @@ class Preview extends React.Component {
     }
 
     this.getRandomSrc = () => {
-      // console.log('this.getRandomSrc')
       this.session = UUID.v4()
       this.props.apis.pureRequest('randomSrc', { hash: this.props.item.hash }, (error, data) => {
-        // console.log('this.getRandomSrc', error, data)
         if (error) console.log('randomSrc error', error)
         else this.setState({ filePath: `http://${this.props.apis.address}:3000/media/${data.random}` })
         this.session = ''
@@ -369,8 +366,6 @@ class Preview extends React.Component {
     const extension = this.props.item.name.replace(/^.*\./, '').toUpperCase()
     const textExtension = ['TXT', 'MD', 'JS', 'JSX', 'TS', 'JSON', 'HTML', 'CSS', 'LESS', 'CSV', 'XML']
     const isText = textExtension.findIndex(t => t === extension) > -1 && (this.props.item.size < 1024 * 128) && !this.props.isMedia
-
-    console.log('isPhoto, isVideo', this.props, isPhoto, isVideo, isText)
 
     return (
       <div

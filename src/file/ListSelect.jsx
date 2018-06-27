@@ -56,7 +56,6 @@ class ListSelect extends EventEmitter {
   }
 
   addByArray (array, session) {
-    // console.log('addByArray', array, session, this.state.ctrl, this.state.shift)
     if (this.state.shift) {
       const set = new Set([...array, ...this.state.selected])
       this.setState({ selected: [...set] })

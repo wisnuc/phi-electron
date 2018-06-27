@@ -76,7 +76,6 @@ class TrsContainer extends React.Component {
 
     this.updateTransmission = (e, userTasks, finishTasks) => {
       const { type } = this.props
-      console.log('this.updateTransmission', userTasks, finishTasks)
       if (type === 'u') {
         this.setState({ userTasks: userTasks.filter(u => u.trsType === 'upload') })
       } else if (type === 'd') {

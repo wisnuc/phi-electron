@@ -57,7 +57,6 @@ class Samba extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    console.log('componentWillReceiveProps', nextProps)
     if (Array.isArray(nextProps.drives)) {
       const drive = nextProps.drives.find(d => d.type === 'private')
       if (drive !== this.drive) {

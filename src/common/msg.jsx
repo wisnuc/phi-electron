@@ -23,7 +23,6 @@ export const xcopyMsg = (props) => {
   }
 
   const { type, srcDir, dstDir, entries } = props
-  console.log('xcopyMsg', props)
   const action = type === 'move' ? i18n.__('Moved') : type === 'copy' ? i18n.__('Copied') : i18n.__('Shared')
   const srcName = getName(srcDir)
   const dstName = getName(dstDir)

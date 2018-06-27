@@ -21,7 +21,6 @@ injectTapEventPlugin()
 
 /* render method */
 const render = () => {
-  console.log('app render')
   ReactDom.render(React.createElement(Phi), document.getElementById('app'))
 }
 
@@ -31,7 +30,7 @@ window.addEventListener('drop', e => e.preventDefault(), true)
 
 /* render after config loaded */
 ipcRenderer.on('CONFIG_UPDATE', (event, config) => {
-  console.log('CONFIG_UPDATE', config)
+  if (process.env.NODE_ENV === 'dev') console.log('CONFIG_UPDATE', config)
   global.config = config
   /*
   if (config.global && config.global.locales) i18n.setLocale(config.global.locales)

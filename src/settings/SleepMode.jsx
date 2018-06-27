@@ -138,7 +138,6 @@ class SleepMode extends React.Component {
         func: () => this.state.sleep && this.setState({ switch: !this.state.switch })
       }
     ]
-    console.log('sleep', this.props, this.state)
     return (
       <div style={{ width: '100%', height: '100%' }} className="flexCenter" >
         <div style={{ width: 480, paddingRight: 160, paddingBottom: 60 }}>

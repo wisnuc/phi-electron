@@ -12,7 +12,6 @@ class Device extends React.Component {
     }
 
     this.select = () => {
-      console.log('this.select', this.state.dev, this.device)
       this.props.slDevice(this.state.dev, this.device)
     }
 
@@ -165,7 +164,6 @@ class Device extends React.Component {
       const { deviceSize, free } = usage.overall
       devStorage = i18n.__('Storage Usage %s %s', prettysize(deviceSize - free), prettysize(deviceSize))
     } catch (e) {
-      // console.log('get devStorage err', e)
       devStorage = '--'
     }
 

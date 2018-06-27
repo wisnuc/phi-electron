@@ -54,7 +54,6 @@ class Dlna extends React.Component {
 
   render () {
     if (!this.props.dlna) return <div />
-    console.log('dlna', this.props)
     const isAdmin = this.props.apis.account && this.props.apis.account.data && this.props.apis.account.data.isFirstUser
     const settings = [
       {

@@ -21,7 +21,6 @@ class Public extends Home {
 
     this.back = () => {
       const pos = this.history.back()
-      console.log('this.back', pos)
       if (pos.type === 'publicRoot') {
         this.rootDrive = null
         this.ctx.props.apis.request('drives')
@@ -34,7 +33,6 @@ class Public extends Home {
     this.forward = () => {
       const { curr, queue } = this.history.get()
       const pos = this.history.forward()
-      console.log('this.forward', queue[curr].type, pos)
       if (queue[curr].type === 'publicRoot') {
         this.rootDrive = { type: 'public', uuid: pos.driveUUID }
         this.enter(pos, err => err && console.error('forward error', err))

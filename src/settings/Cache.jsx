@@ -19,12 +19,10 @@ class ResetDevice extends React.Component {
     }
 
     this.getCacheSize = (event, result) => {
-      console.log('this.getCacheSize', result)
       this.setState({ cacheSize: prettysize(result.size) })
     }
 
     this.getCleanCacheResult = (event, error) => {
-      console.log('CleanCacheResult error', error)
       this.setState({ loading: false })
       ipcRenderer.send('GetCacheSize')
       if (!error) this.props.openSnackBar(i18n.__('Clean Cache Success'))

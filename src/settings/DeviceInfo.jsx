@@ -28,7 +28,6 @@ class DeviceInfo extends React.PureComponent {
 
     this.changeDeviceName = () => {
       const deviceSN = this.props.selectedDevice && this.props.selectedDevice.mdev.deviceSN
-      console.log('this.changeDeviceName args', this.state.label)
       this.setState({ progress: true }, () => {
         this.props.phi.req('renameStation', { deviceSN, newName: this.state.label }, (err) => {
           if (err) {
@@ -202,7 +201,6 @@ class DeviceInfo extends React.PureComponent {
   }
 
   render () {
-    console.log('device this.props', this.props)
     const { device, network, cpus, memory, address } = this.props
 
     if (!device) return (<div />)

@@ -82,7 +82,6 @@ class NavViews extends React.Component {
     ])
 
     this.navTo = (nav, target) => {
-      console.log('this.navTo', nav, target, this.state, this.views)
       if ((nav !== this.state.nav) || (target && target.dirUUID)) {
         this.setState({ nav })
         if (this.state.nav) this.views[this.state.nav].navLeave()
@@ -128,7 +127,6 @@ class NavViews extends React.Component {
     }
 
     this.handleTask = (uuid, response, conflicts) => {
-      console.log('this.handleTask', uuid, response, conflicts)
       conflicts.forEach((c, index) => {
         let policy
         switch (response[index]) {
@@ -172,7 +170,6 @@ class NavViews extends React.Component {
     }
 
     this.openHelp = () => {
-      console.log('this.openHelp', this.state)
       this.setState({ onHelp: true })
     }
   }
@@ -537,7 +534,6 @@ class Navigation extends React.Component {
     super(props)
 
     /* init apis */
-    console.log('Navigation', props)
     const { isCloud, selectedDevice } = props
     const { mdev, token } = selectedDevice
     if (!token.isFulfilled()) throw new Error('token not fulfilled')

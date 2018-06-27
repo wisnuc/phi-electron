@@ -23,7 +23,6 @@ class Power extends React.Component {
       await Promise.delay(3000)
       if (lan) {
         const mdns = await reqMdns()
-        console.log('mdns scan!', mdns, this.props.selectedDevice.mdev)
         if (!Array.isArray(mdns)) return ({ error: i18n.__('Get StationList Error') })
         const dev = mdns.find(d => d.host === this.props.selectedDevice.mdev.host) // TODO, use deviceSN
         return ({ isOnline: !!dev })
@@ -31,7 +30,6 @@ class Power extends React.Component {
 
       /* Online mode */
       const res = await this.props.phi.reqAsync('stationList', null)
-      console.log('this.getStatus list', res)
       if (!res || res.error !== '0' || !Array.isArray(res.result.list)) return ({ error: i18n.__('Get StationList Error') })
       const dev = res.result.list.find(d => d.deviceSN === this.deviceSN())
       if (!dev) return ({ error: i18n.__('Station Not Found') })
@@ -42,10 +40,9 @@ class Power extends React.Component {
       let finished = false
       const startTime = new Date().getTime()
       await Promise.delay(5000)
-      while (!finished && (new Date().getTime() - startTime < 120 * 1000)) {
+      while (!finished && (new Date().getTime() - startTime < 150 * 1000)) {
         const status = await this.getStatus(lan)
         const { error, isOnline } = status
-        console.log('status', status, new Date().getTime() - startTime)
         if (error) throw error
         else finished = !!isOnline
       }

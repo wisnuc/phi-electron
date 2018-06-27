@@ -209,7 +209,6 @@ class Device extends RequestManager {
 
     const boot = this.boot.value()
     const users = this.users && !this.users.isRejected() && this.users.value()
-    // console.log('systemStatus', boot, users, this)
 
     const states = ['PROBING', 'PROBEFAILED', 'PENDING', 'PRESETTING', 'STARTING', 'STARTED',
       'UNAVAILABLE', 'INITIALIZING', 'IMPORTING', 'REPAIRING']

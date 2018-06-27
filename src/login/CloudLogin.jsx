@@ -17,7 +17,6 @@ class CloudLogin extends React.PureComponent {
       const token = (await this.props.phi.reqAsync('LANToken', args)).token
       const users = (await this.props.phi.reqAsync('localUsers', args))
       const user = Array.isArray(users) && users.find(u => u.phicommUserId === account.phicommUserId)
-      console.log('LANToken', token, user)
       if (!token || !user) throw Error('get LANToken or user error')
       return ({ dev, user, token })
     }
@@ -46,7 +45,6 @@ class CloudLogin extends React.PureComponent {
       const boot = (await this.props.phi.reqAsync('boot', args))
       const users = (await this.props.phi.reqAsync('localUsers', args))
       const user = Array.isArray(users) && users.find(u => u.phicommUserId === account.phicommUserId)
-      console.log('remoteLoginAsync', token, user, boot)
       if (!token || !user || !boot) throw Error('get LANToken or user error')
       if (boot.state !== 'STARTED') throw Error('station not started')
       return ({ dev, user, token, boot })

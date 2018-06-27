@@ -305,7 +305,6 @@ class PhotoList extends React.Component {
                 }
               })
             }
-            // console.log('get previousIndex', this.props.memoize(), previousScrollTop)
 
             /* function to render each row */
             const rowRenderer = ({ key, index, style, isScrolling }) => (

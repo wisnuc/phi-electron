@@ -49,7 +49,6 @@ class FinishedTask extends React.Component {
   }
 
   render () {
-    console.log('Finished', this.props)
     const { index, task } = this.props
     const backgroundColor = this.state.isSelected ? '#f4f4f4' : index % 2 ? '#fafbfc' : '#FFF'
 

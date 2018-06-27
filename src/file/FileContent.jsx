@@ -26,7 +26,6 @@ class FileContent extends React.Component {
 
     /* cathc key action */
     this.keyDown = (e) => {
-      console.log('this.keyDown', this.props)
       const { createNewFolder, loading, newDrive, select, showUsers } = this.props
       const isModifyName = select && select.modify !== -1
       if (createNewFolder || this.props.delete || loading || newDrive || isModifyName || !select || showUsers) return
@@ -54,7 +53,6 @@ class FileContent extends React.Component {
       e.preventDefault() // important, to prevent other event
       e.stopPropagation()
 
-      // console.log('this.onRowClick', this.selectBox, index, this.props.select, fakeCtrl)
       /* disabled in select box mode */
       if (this.selectBox) return
 
@@ -70,7 +68,6 @@ class FileContent extends React.Component {
       e.preventDefault() // important, to prevent other event
       e.stopPropagation()
 
-      // console.log('this.onRowContextMenu', e, e.type, e.nativeEvent.button, this.selectBox)
       this.props.select.touchTap(2, index)
       this.props.resetScrollTo()
 
@@ -122,7 +119,6 @@ class FileContent extends React.Component {
     this.selectBox = null
 
     this.selectStart = (event, scrollTop) => {
-      // console.log('this.selectStart', event, scrollTop)
       /* disabled in public root */
       if (this.props.inPublicRoot) return
 
@@ -147,7 +143,6 @@ class FileContent extends React.Component {
     }
 
     this.selectEnd = (event) => {
-      // console.log('this.selectEnd', this.selectBox)
       document.removeEventListener('mousemove', this.exSelect)
       document.removeEventListener('mouseup', this.selectEnd, true)
 
@@ -230,12 +225,10 @@ class FileContent extends React.Component {
             (head < parseInt(s.top, 10) + parseInt(s.height, 10)))
         })
 
-      // console.log('scrollTop this.calcRow', scrollTop, array)
       this.props.select.addByArray(array, this.selectBox.session)
     }
 
     this.selectRow = (event, scrollTop) => {
-      // console.log('this.selectRow', scrollTop, this.selectBox)
       if (!this.selectBox) return
       this.scrollTop = scrollTop || this.scrollTop || 0
       this.preScrollTop = this.scrollTop
@@ -355,7 +348,6 @@ class FileContent extends React.Component {
   }
 
   render () {
-    // console.log('render', this.state, this.props)
     /* loding */
     if (this.state.loading) return this.renderLoading()
 
