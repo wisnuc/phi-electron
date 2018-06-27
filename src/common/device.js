@@ -96,6 +96,18 @@ class Device extends RequestManager {
           .send({ target: args.target, mode: args.mode })
         break
 
+      case 'repairVolume':
+        r = request
+          .patch(`http://${this.mdev.address}:3000/boot/boundVolume`)
+          .send({ op: 'repair', value: { devices: args.devices, mode: args.mode } })
+        break
+
+      case 'extendVolume':
+        r = request
+          .patch(`http://${this.mdev.address}:3000/boot/boundVolume`)
+          .send({ op: 'add', value: { devices: args.devices, mode: args.mode } })
+        break
+
       case 'importVolume':
         r = request
           .put(`http://${this.mdev.address}:3000/boot/boundVolume`)

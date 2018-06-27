@@ -1,5 +1,6 @@
 import i18n from 'i18n'
 import React from 'react'
+import Promise from 'bluebird'
 import { RRButton } from '../common/Buttons'
 import ConfirmDialog from '../common/ConfirmDialog'
 
@@ -13,6 +14,7 @@ class ResetDevice extends React.Component {
       const { phi, selectedDevice } = this.props
       const deviceSN = selectedDevice.mdev.deviceSN
       await this.props.apis.pureRequest('unBindVolume', { format: !!check, reset: true })
+      await Promise.delay(200) // for Station to reboot
       await phi.reqAsync('unbindStation', { deviceSN })
     }
 

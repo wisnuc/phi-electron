@@ -129,7 +129,8 @@ class Disk extends React.PureComponent {
     const usage = phyDrives.find(d => d.isFruitFS).usage
     const phyUsage = phyDrives.find(d => d.isUSB) && phyDrives.find(d => d.isUSB).usage
     if (!audio || !document || !image || !video || !usage) return (<div />)
-    const { total, used } = usage
+    const { available, used } = usage
+    const total = available + used
 
     const k = 100
     const videoSize = video.totalSize / 1024 / total * k

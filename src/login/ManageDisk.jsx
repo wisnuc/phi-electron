@@ -1,5 +1,6 @@
 import i18n from 'i18n'
 import React from 'react'
+import Promise from 'bluebird'
 import { Divider } from 'material-ui'
 import prettysize from 'prettysize'
 
@@ -33,6 +34,15 @@ class ManageDisk extends React.Component {
       })
     }
 
+    this.repair = ({ mode, devices }) => {
+      this.setState({ format: 'busy' })
+      this.props.selectedDevice.request('repairVolume', { devices, mode }, (err, res) => {
+        console.log('boundVolume', err, res)
+        if (err) this.setState({ format: 'error', error: err })
+        else this.setState({ format: 'success' })
+      })
+    }
+
     this.recover = (volume) => {
       console.log('recover volume', volume)
       this.setState({ format: 'busy' })
@@ -41,6 +51,23 @@ class ManageDisk extends React.Component {
         if (err) this.setState({ format: 'error', error: err })
         else this.setState({ format: 'success' })
       })
+    }
+
+    /* import and add disk to volume */
+    this.importAndExtendAsync = async ({ volumeUUID, mode, devices }) => {
+      if (volumeUUID) await this.props.selectedDevice.requestAsync('importVolume', { volumeUUID })
+      await Promise.delay(5000)
+      await this.props.selectedDevice.requestAsync('extendVolume', { mode, devices })
+    }
+
+    this.add = (args) => {
+      this.setState({ format: 'busy' })
+      this.importAndExtendAsync(args)
+        .then(() => this.setState({ format: 'success' }))
+        .catch((err) => {
+          console.error('importAndExtend disk error', err)
+          this.setState({ format: 'error', error: err })
+        })
     }
 
     this.enterCreate = () => {
@@ -66,7 +93,8 @@ class ManageDisk extends React.Component {
     const { boundVolume, storage } = this.props.selectedDevice.boot.data
     if (!boundVolume || !boundVolume.uuid) return false
     const volume = storage && storage.volumes.find(v => v.isMissing && v.isMounted && (v.uuid === boundVolume.uuid))
-    if (volume) return volume
+    /* TODO can't repair single mode */
+    if (volume && volume.usage && volume.usage.data && volume.usage.data.mode !== 'single') return volume
     return false
   }
 
@@ -176,11 +204,45 @@ class ManageDisk extends React.Component {
   }
 
   renderRecover () {
+    /* assert Array.isArray(this.availableVolumes()) && this.availableVolumes().length > 0 */
     const blks = this.props.selectedDevice.boot.data.storage.blocks
+    const b1 = blks.find(b => (b.isDisk && !b.unformattable && b.slotNumber === 1))
+    const b2 = blks.find(b => (b.isDisk && !b.unformattable && b.slotNumber === 2))
+
+    const target = []
+    if (b1 && b1.name) target.push({ name: b1.name })
+    if (b2 && b2.name) target.push({ name: b2.name })
+
+    const { boundVolume } = this.props.selectedDevice.boot.data
+    const oldVolume = !!boundVolume && this.availableVolumes().find(v => v.uuid === boundVolume.uuid)
+
+    /* is Extend disk: 2 disk && oldVolume is exist */
+    const isExtend = target.length === 2 && oldVolume && oldVolume.total === 1
+    /* is pure import disk: only one availableVolumes && no more disk */
+    const isImport = this.availableVolumes().length === 1 && this.availableVolumes()[0].total === target.length
+    /* need import and then extend volume */
+    const isImportAndExtend = target.length === 2 && !oldVolume
+
+    const hasModeSelect = target.length === 2 && this.availableVolumes()[0].total === 1
+
+    console.log('renderRecover', isExtend, isImport, isImportAndExtend)
+
+    let fire = () => {}
+    if (isExtend) fire = () => this.add({ devices: target.filter(t => t.name !== oldVolume.devices[0].name) })
+    else if (isImport) fire = () => this.recover(this.availableVolumes()[0])
+    else if (isImportAndExtend) {
+      fire = index => this.add({
+        mode: this.state.mode,
+        volumeUUID: this.availableVolumes()[index].uuid,
+        devices: target.filter(t => t.name !== this.availableVolumes()[index].devices[0].name)
+      })
+    }
+
+    /*
     const storage = this.availableVolumes().slice(0, 2).map((v, index) => ({
       key: index.toString(),
       size: v.usage && prettysize(v.usage.overall.deviceSize),
-      mode: v.usage && v.usage.data.mode === 'raid1' ? i18n.__('Raid1 Mode') : i18n.__('Single Mode'),
+      mode: v.usage && v.usage.data.mode === 'RAID1' ? i18n.__('Raid1 Mode') : i18n.__('Single Mode'),
       fire: () => this.recover(v),
       devices: v.devices.map((d) => {
         const blk = blks.find(b => b.name === d.name)
@@ -188,53 +250,99 @@ class ManageDisk extends React.Component {
         return ({ model: interpretModel(model), size: prettysize(size * 512) })
       })
     }))
+    */
 
     return (
       <div>
         {
-          storage.map(disk => (
-            <div key={disk.key} >
-              <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
-              <div style={{ height: 10 }} />
-              <div style={{ height: 30, margin: '0 auto', width: 280, display: 'flex', color: '#888a8c', alignItems: 'center' }} >
-                <div style={{ color: '#525a60' }}> { i18n.__('Current Mode') } </div>
-                <div style={{ flexGrow: 1 }} />
-                <div> { disk.mode } </div>
-              </div>
-
-              <div style={{ height: 30, margin: '0 auto', width: 280, display: 'flex', color: '#888a8c', alignItems: 'center' }} >
-                <div style={{ color: '#525a60' }}> { i18n.__('Volume Size') } </div>
-                <div style={{ flexGrow: 1 }} />
-                <div> { disk.size } </div>
-              </div>
-
-              {
-                disk.devices.map((d, i) => (
-                  <div
-                    key={i.toString()}
-                    style={{ height: 30, margin: '0 auto', width: 280, display: 'flex', color: '#888a8c', alignItems: 'center' }}
-                  >
-                    <div style={{ color: '#525a60' }}> { !i ? i18n.__('Disk 1') : i18n.__('Disk 2') } </div>
-                    <div style={{ flexGrow: 1 }} />
-                    <div> { d.model } </div>
-                    <div style={{ width: 10 }} />
-                    <div> { d.size } </div>
-                  </div>
-                ))
-              }
-
-              <div style={{ height: 30 }} />
-              {/* this.renderArrowTips(i18n.__('%s Fortmat Disk Text', disk.posAlt), true) */}
-              <div style={{ width: 240, height: 40, margin: '0 auto' }}>
-                <RRButton
-                  label={i18n.__('Import')}
-                  onClick={disk.fire}
-                />
-              </div>
-              <div style={{ height: 30 }} />
+          [b1, b2].map((disk, index) => (
+            <div
+              style={{
+                height: 30,
+                width: 'calc(100% - 40px)',
+                marginLeft: 20,
+                display: 'flex',
+                color: '#888a8c',
+                alignItems: 'center'
+              }}
+              key={index.toString()}
+            >
+              <div style={{ color: '#525a60' }}> { !index ? i18n.__('Disk 1') : i18n.__('Disk 2') } </div>
+              <div style={{ flexGrow: 1 }} />
+              { disk && <div style={{ marginRight: 10 }}> { interpretModel(disk.model) } </div> }
+              { disk && <div> { prettysize(disk.size * 512) } </div> }
+              { !disk && <div> { i18n.__('Disk Not Found') } </div> }
             </div>
           ))
         }
+        <div
+          style={{
+            height: 30,
+            width: 'calc(100% - 40px)',
+            marginLeft: 20,
+            display: 'flex',
+            color: '#888a8c',
+            alignItems: 'center'
+          }}
+        >
+          <div style={{ color: '#525a60' }}> { hasModeSelect ? i18n.__('Select Disk Mode') : i18n.__('Current Mode') } </div>
+          <div style={{ flexGrow: 1 }} />
+          { !hasModeSelect && this.availableVolumes()[0].usage.data.mode }
+          <SIButton onClick={() => this.setState({ showGuide: true })} iconStyle={{ color: '#31a0f5' }}>
+            <SmallHelpIcon />
+          </SIButton>
+        </div>
+        <div style={{ height: 10 }} />
+        {
+          hasModeSelect &&
+            <div style={{ height: 50, width: 'calc(100% - 40px)', marginLeft: 20, display: 'flex', alignItems: 'center' }} >
+              <ModeSelect
+                selected={this.state.mode === 'single'}
+                disabled={!target.length}
+                label={i18n.__('Single Mode')}
+                onClick={() => target.length && this.setState({ mode: this.state.mode === 'single' ? '' : 'single' })}
+              />
+              <div style={{ width: 10 }} />
+              <ModeSelect
+                selected={this.state.mode === 'raid1'}
+                disabled={target.length !== 2}
+                label={i18n.__('Raid1 Mode')}
+                onClick={() => target.length === 2 && this.setState({ mode: this.state.mode === 'raid1' ? '' : 'raid1' })}
+              />
+            </div>
+        }
+        <div style={{ height: 30 }} />
+        {
+          isImportAndExtend && this.availableVolumes().length === 2
+            ? (
+              <div style={{ width: 270, height: 40, margin: '0 auto', display: 'flex', alignItems: 'center' }}>
+                <RRButton
+                  disabled={!isImport && (!this.state.mode || !target.length)}
+                  label={i18n.__('Import Disk 1')}
+                  onClick={() => fire(0)}
+                  tooltip={i18n.__('Disk 2 Will Be Formatted')}
+                />
+                <div style={{ width: 18 }} />
+                <RRButton
+                  disabled={!isImport && (!this.state.mode || !target.length)}
+                  label={i18n.__('Import Disk 2')}
+                  onClick={() => fire(1)}
+                  tooltip={i18n.__('Disk 1 Will Be Formatted')}
+                />
+              </div>
+            )
+            : (
+              <div style={{ width: 240, height: 40, margin: '0 auto' }}>
+                <RRButton
+                  disabled={!isImport && (!this.state.mode || !target.length)}
+                  label={i18n.__('Import')}
+                  onClick={() => fire(0)}
+                  tooltip={!isImport && i18n.__('Recovery Disk May Need Long Time')}
+                />
+              </div>
+            )
+        }
+        <div style={{ height: 30 }} />
       </div>
     )
   }
@@ -245,50 +353,65 @@ class ManageDisk extends React.Component {
     const b2 = blks.find(b => (b.isDisk && !b.unformattable && b.slotNumber === 2))
 
     const target = []
-    if (b1 && b1.name) target.push(b1.name)
-    if (b2 && b2.name) target.push(b2.name)
+    if (b1 && b1.name) target.push({ name: b1.name })
+    if (b2 && b2.name) target.push({ name: b2.name })
 
     const volume = this.brokenVolume()
+    const preMode = volume.usage && volume.usage.data && volume.usage.data.mode && volume.usage.data.mode.toLowerCase()
     console.log('renderRepair', b1, b2, volume)
-    const disk = { devices: [] }
+
+    const mode = target.length === 1 ? 'single' : preMode
+
+    const isDegrade = target.length === 1 && preMode === 'raid1'
 
     return (
       <div>
-        <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
-        <div style={{ height: 10 }} />
-        <div style={{ height: 30, margin: '0 auto', width: 280, display: 'flex', color: '#888a8c', alignItems: 'center' }} >
-          <div style={{ color: '#525a60' }}> { i18n.__('Current Mode') } </div>
-          <div style={{ flexGrow: 1 }} />
-          <div> { disk.mode } </div>
-        </div>
-
-        <div style={{ height: 30, margin: '0 auto', width: 280, display: 'flex', color: '#888a8c', alignItems: 'center' }} >
-          <div style={{ color: '#525a60' }}> { i18n.__('Volume Size') } </div>
-          <div style={{ flexGrow: 1 }} />
-          <div> { disk.size } </div>
-        </div>
-
         {
-          disk.devices.map((d, i) => (
+          [b1, b2].map((disk, index) => (
             <div
-              key={i.toString()}
-              style={{ height: 30, margin: '0 auto', width: 280, display: 'flex', color: '#888a8c', alignItems: 'center' }}
+              style={{
+                height: 30,
+                width: 'calc(100% - 40px)',
+                marginLeft: 20,
+                display: 'flex',
+                color: '#888a8c',
+                alignItems: 'center'
+              }}
+              key={index.toString()}
             >
-              <div style={{ color: '#525a60' }}> { !i ? i18n.__('Disk 1') : i18n.__('Disk 2') } </div>
+              <div style={{ color: '#525a60' }}> { !index ? i18n.__('Disk 1') : i18n.__('Disk 2') } </div>
               <div style={{ flexGrow: 1 }} />
-              <div> { d.model } </div>
-              <div style={{ width: 10 }} />
-              <div> { d.size } </div>
+              { disk && <div style={{ marginRight: 10 }}> { interpretModel(disk.model) } </div> }
+              { disk && <div> { prettysize(disk.size * 512) } </div> }
+              { !disk && <div> { i18n.__('Disk Not Found') } </div> }
             </div>
           ))
         }
 
+        <div
+          style={{
+            height: 30,
+            width: 'calc(100% - 40px)',
+            marginLeft: 20,
+            display: 'flex',
+            color: '#888a8c',
+            alignItems: 'center'
+          }}
+        >
+          <div style={{ color: '#525a60' }}> { i18n.__('Current Mode') } </div>
+          <div style={{ flexGrow: 1 }} />
+          { volume.usage.data.mode }
+          <SIButton onClick={() => this.setState({ showGuide: true })} iconStyle={{ color: '#31a0f5' }}>
+            <SmallHelpIcon />
+          </SIButton>
+        </div>
+
         <div style={{ height: 30 }} />
-        {/* this.renderArrowTips(i18n.__('%s Fortmat Disk Text', disk.posAlt), true) */}
         <div style={{ width: 240, height: 40, margin: '0 auto' }}>
           <RRButton
-            label={i18n.__('Import')}
-            onClick={disk.fire}
+            label={i18n.__('Repair Volume')}
+            onClick={() => this.repair({ mode, devices: target })}
+            tooltip={isDegrade ? i18n.__('Degrade From Raid1 Text') : i18n.__('Recovery Disk May Need Long Time')}
           />
         </div>
         <div style={{ height: 30 }} />
@@ -299,23 +422,26 @@ class ManageDisk extends React.Component {
   renderSelect (status) {
     return (
       <div>
-        <div style={{ width: '100%', height: 40, marginTop: -30, color: '#fa5353' }} className="flexCenter">
-          { i18n.__('Disk Change Text') }
-        </div>
-        { this.renderArrowTips(i18n.__('Format Current Disk')) }
+        {
+          ['repair', 'add'].includes(status) &&
+            <div style={{ width: '100%', height: 40, marginTop: -30, color: '#fa5353' }} className="flexCenter">
+              { i18n.__('Disk Change Text') }
+            </div>
+        }
         <div style={{ width: 240, height: 40, margin: '0 auto' }}>
           <RRButton
             label={i18n.__('Create Volume')}
             onClick={this.enterCreate}
+            tooltip={i18n.__('Format Current Disk')}
           />
         </div>
-        <div style={{ height: 10 }} />
-        { this.renderArrowTips(i18n.__('Recover Volume Text')) }
+        <div style={{ height: 20 }} />
         <div style={{ width: 240, height: 40, margin: '0 auto' }}>
           <RRButton
             alt
-            label={i18n.__('Recover Volume')}
+            label={status === 'repair' ? i18n.__('Repair Volume') : i18n.__('Recover Volume')}
             onClick={() => (status === 'repair' ? this.enterRepair() : this.enterRecover())}
+            tooltip={i18n.__('Recover Volume Text')}
           />
         </div>
         <div style={{ height: 30 }} />
@@ -342,6 +468,7 @@ class ManageDisk extends React.Component {
 
       case 'recover':
         title = i18n.__('Recover Volume')
+        imgSrc = 'pic-finddisk.png'
         content = this.renderRecover()
         break
 
