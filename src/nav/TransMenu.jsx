@@ -29,7 +29,7 @@ class MenuItem extends Button {
         </div>
         <div style={{ flex: '0 0 16px' }} />
         <div style={{ flexGrow: 1 }} />
-        <div style={{ position: 'absolute', top: 0, left: 220 * index + 150, width: 30, height: 30 }} >
+        <div style={{ position: 'absolute', top: 15, left: 220 * index + 155, width: 30, height: 30 }} >
           <TransCount type={type} />
         </div>
       </div>

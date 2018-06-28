@@ -32,6 +32,12 @@ class TransCount extends React.PureComponent {
   render () {
     const { num } = this.state
     const width = num < 10 ? 16 : num < 100 ? 25 : 30
+    if (this.props.type) {
+      return (
+        <div style={{ color: '#505259', fontSize: 16, opacity: !num ? 0 : 1 }}> {`(${num < 1000 ? num : '999+'})`}
+        </div>
+      )
+    }
     return (
       <div
         style={{ position: 'relative', width: '100%', height: '100%' }}
