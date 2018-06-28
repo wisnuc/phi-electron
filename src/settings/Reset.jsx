@@ -14,7 +14,7 @@ class ResetDevice extends React.Component {
       const { phi, selectedDevice } = this.props
       const deviceSN = selectedDevice.mdev.deviceSN
       await this.props.apis.pureRequest('unBindVolume', { format: !!check, reset: true })
-      await Promise.delay(200) // for Station to reboot
+      await Promise.delay(1200) // for Station to reboot
       await phi.reqAsync('unbindStation', { deviceSN })
     }
 

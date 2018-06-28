@@ -36,16 +36,18 @@ class AdminUsersApp extends React.Component {
       const publicDrives = drives.filter(d => d.type === 'public' && d.tag !== 'built-in')
 
       /* service users */
-      const users = cloudUsers.filter(u => u.type === 'service').map((u) => {
-        const localUser = localUsers.find(user => user.phicommUserId === u.uid)
-        if (!localUser) return null
-        const { uuid, username } = localUser
+      const users = localUsers.filter(u => !u.isFirstUser).map((u) => {
+        const { uuid, status } = u
         const driveList = []
+        const cloudUser = cloudUsers.find(user => user.uid === u.phicommUserId) || {}
         driveList.push(builtIn.label || i18n.__('Public Drive'))
         publicDrives.filter(p => p.writelist === '*' || p.writelist.includes(uuid)).forEach(d => driveList.push(d.label))
-        return Object.assign({ username, driveList, uuid }, u)
-      }).filter(u => !!u)
+        const inActive = status === 'INACTIVE'
 
+        return Object.assign({ driveList, inActive }, cloudUser, u)
+      })
+
+      console.log('this.reqUsersAsync', cloudUsers, localUsers)
       return users
     }
 
@@ -119,6 +121,28 @@ class AdminUsersApp extends React.Component {
 
     this.confirmDelete = () => {
       this.setState({ status: 'confirm' })
+    }
+
+    this.reActiveAsync = async (localUser) => {
+      console.log('this.props', this.props)
+      const { phi, device } = this.props
+      const { uuid, phoneNumber } = localUser
+      const deviceSN = device.mdev.deviceSN
+      const args = { deviceSN, phoneNumber, nickName: phoneNumber }
+      const phicommUserId = (await phi.reqAsync('registerPhiUser', args)).result.uid
+      const user = await phi.reqAsync('activeUser', { uuid, deviceSN })
+      if (!user || user.phicommUserId !== phicommUserId) throw Error('add local user error')
+      const cloudUsers = (await phi.reqAsync('cloudUsers', { deviceSN })).result.users
+      if (!cloudUsers.find(u => u.uid === phicommUserId)) throw Error('req cloud user error')
+    }
+
+    this.reActive = (user) => {
+      this.setState({ invited: true })
+      this.reActiveAsync(user).then(() => this.reqUsers()).catch((e) => {
+        console.error('this.invite error', e)
+        this.setState({ invited: false })
+        this.props.openSnackBar(i18n.__('Active User Error'))
+      })
     }
   }
 
@@ -214,7 +238,7 @@ class AdminUsersApp extends React.Component {
   }
 
   renderRow ({ style, key, user }) {
-    const { driveList, inviteStatus, nickname, username, uuid } = user
+    const { driveList, inviteStatus, nickname, username, uuid, inActive } = user
     const isModify = this.state.status === 'modify'
     return (
       <div style={style} key={key}>
@@ -242,16 +266,32 @@ class AdminUsersApp extends React.Component {
               }}
               onClick={() => isModify && this.onCheck(uuid)}
             >
-              { `${nickname} (${username})` }
+              { `${nickname || i18n.__('Normal User')} (${username})` }
             </div>
             <div style={{ height: 40, display: 'flex', alignItems: 'center' }}>
               {
-                inviteStatus === 'accept' ? this.renderUser(driveList)
-                  : (
-                    <div style={{ color: inviteStatus === 'reject' ? '#f53131' : '#31a0f5' }}>
-                      { inviteStatus === 'reject' ? i18n.__('Invite Rejected') : i18n.__('Invite Pending') }
+                inActive
+                  ? (
+                    <div style={{ color: '#31a0f5', display: 'flex', alignItems: 'center' }}>
+                      { i18n.__('InActive User') }
+                      <div style={{ width: 10 }} />
+                      <RSButton
+                        alt
+                        disabled={this.state.invited}
+                        style={{ height: 20 }}
+                        labelStyle={{ height: 20, fontSize: 12 }}
+                        label={i18n.__('Active')}
+                        onClick={() => this.reActive(user)}
+                      />
+
                     </div>
                   )
+                  : inviteStatus === 'accept' ? this.renderUser(driveList)
+                    : (
+                      <div style={{ color: inviteStatus === 'reject' ? '#f53131' : '#31a0f5' }}>
+                        { inviteStatus === 'reject' ? i18n.__('Invite Rejected') : i18n.__('Invite Pending') }
+                      </div>
+                    )
               }
             </div>
           </div>
@@ -335,7 +375,7 @@ class AdminUsersApp extends React.Component {
                   (!isAddUser && !isConfirm) && (
                     <RSButton
                       alt
-                      disabled={!isModify && (!this.state.users || !this.state.users.length)}
+                      disabled={(!isModify && (!this.state.users || !this.state.users.length)) || this.state.invited}
                       label={isModify ? i18n.__('Cancel') : i18n.__('Modify Users')}
                       onClick={() => this.setState({ status: isModify ? 'view' : 'modify', checkList: [] })}
                     />
@@ -345,7 +385,7 @@ class AdminUsersApp extends React.Component {
                 <RSButton
                   label={isAddUser ? i18n.__('Send Invite') : isConfirm ? i18n.__('Confirm')
                     : isModify ? i18n.__('Delete') : i18n.__('Add User')}
-                  disabled={(isModify && !this.state.checkList.length) || (isAddUser && !this.shouldAddUser())}
+                  disabled={(isModify && !this.state.checkList.length) || (isAddUser && !this.shouldAddUser()) || this.state.invited}
                   onClick={() => (isAddUser ? this.invite() : isConfirm ? this.deleteUser()
                     : isModify ? this.confirmDelete() : this.addUser())}
                 />

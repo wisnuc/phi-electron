@@ -142,6 +142,18 @@ class PhiAPI extends RequestManager {
         )
         break
 
+      case 'activeUser':
+        r = this.command(
+          args.deviceSN,
+          {
+            verb: 'PATCH',
+            urlPath: `/users/${args.uuid}`,
+            params: {},
+            body: { status: 'ACTIVE' }
+          }
+        )
+        break
+
       case 'boot':
         r = this.command(args.deviceSN, { verb: 'GET', urlPath: '/boot', params: {}, body: {} })
         break
