@@ -104,10 +104,15 @@ class USB extends Home {
     this.download = () => {
       let path = this.state.path.map(p => p.data).filter(p => !!p).join('/')
       if (path) path = `${path}/`
-      const id = this.phyDrive.id
       const selected = this.state.select.selected
       const entries = selected.map(index => this.state.entries[index])
+      this.setState({ onDownload: { selected, entries, path } })
+    }
+
+    this.downloadFire = ({ selected, entries, path }) => {
+      const id = this.phyDrive.id
       ipcRenderer.send('DOWNLOAD', { entries, dirUUID: path, driveUUID: id, domain: 'phy' })
+      this.setState({ onDownload: null })
     }
 
     this.deleteAsync = async () => {
