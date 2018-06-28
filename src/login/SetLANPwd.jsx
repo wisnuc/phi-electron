@@ -2,7 +2,6 @@ import i18n from 'i18n'
 import React from 'react'
 import { Divider } from 'material-ui'
 import { EyeOpenIcon, EyeOffIcon } from '../common/Svg'
-
 import { RRButton, TFButton, TextField } from '../common/Buttons'
 
 class SetLANPwd extends React.Component {

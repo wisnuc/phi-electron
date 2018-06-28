@@ -29,6 +29,7 @@ class LAN extends Base {
     return (
       <LANPassword
         {...this.ctx.props}
+        isLAN={!!this.ctx.props.account.lan}
         openSnackBar={openSnackBar}
       />
     )

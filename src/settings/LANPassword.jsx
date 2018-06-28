@@ -1,6 +1,7 @@
 import i18n from 'i18n'
 import React from 'react'
-import { RRButton, TextField } from '../common/Buttons'
+import { EyeOpenIcon, EyeOffIcon } from '../common/Svg'
+import { RRButton, TFButton, TextField } from '../common/Buttons'
 
 class LANPassword extends React.Component {
   constructor (props) {
@@ -11,12 +12,12 @@ class LANPassword extends React.Component {
       pwdError: '',
       newPwd: '',
       newPwdError: '',
-      pwdAgain: '',
-      pwdAgainError: '',
       error: '',
       loading: false,
       showPwd: false
     }
+
+    this.toggle = op => this.setState({ [op]: !this.state[op] })
 
     this.onPwd = (pwd) => {
       this.setState({ pwd, pwdError: '' })
@@ -26,34 +27,37 @@ class LANPassword extends React.Component {
       this.setState({ newPwd: pwd, newPwdError: '' })
     }
 
-    this.onPwdAgain = (pwd) => {
-      this.setState({ pwdAgain: pwd, pwdAgainError: '' })
-      if (pwd.length >= this.state.newPwd.length && pwd !== this.state.newPwd) {
-        this.setState({ pwdAgainError: i18n.__('Inconsistent Password Error') })
-      }
-    }
-
     this.save = () => {
       this.setState({ loading: true })
-      this.props.apis.pureRequest('setLANPassword', { prePwd: this.state.pwd, newPwd: this.state.newPwd }, (err, res) => {
+
+      const cb = (err, res) => {
         if (err) {
           console.error('Set LAN Password Error', err)
           if (err && err.message === 'Unauthorized') this.setState({ pwdError: i18n.__('Previous Password Wrong') })
           this.props.openSnackBar(i18n.__('Set LAN Password Error'))
         } else this.props.openSnackBar(i18n.__('Set LAN Password Success'))
         this.setState({ loading: false })
-      })
+      }
+
+      if (this.props.isLAN) this.props.apis.pureRequest('setLANPassword', { prePwd: this.state.pwd, newPwd: this.state.newPwd }, cb)
+      else {
+        const userUUID = this.props.apis.account && this.props.apis.account.data && this.props.apis.account.data.uuid
+        const deviceSN = this.props.selectedDevice && this.props.selectedDevice.mdev.deviceSN
+        this.props.phi.req('setLANPassword', { userUUID, password: this.state.newPwd, deviceSN }, cb)
+      }
     }
 
     this.togglePwd = () => this.setState({ showPwd: !this.state.showPwd })
   }
 
   shouldFire () {
-    return this.state.pwd && !this.state.pwdError && !this.state.loading && this.state.pwdAgain &&
-      this.state.newPwd && !this.state.pwdAgainError && !this.state.newPwdError && (this.state.newPwd === this.state.pwdAgain)
+    return this.props.isLAN
+      ? (this.state.pwd && !this.state.pwdError && !this.state.loading && this.state.newPwd && !this.state.newPwdError)
+      : (!this.state.loading && this.state.newPwd && !this.state.newPwdError)
   }
 
   render () {
+    const { isLAN } = this.props
     return (
       <div style={{ width: '100%', height: '100%' }} className="flexCenter" >
         <div style={{ width: 480, paddingRight: 160, paddingBottom: 60 }}>
@@ -66,27 +70,33 @@ class LANPassword extends React.Component {
           </div>
 
           <div style={{ width: 320, color: '#888a8c', paddingLeft: 160, height: 60, display: 'flex', alignItems: 'center' }} >
-            { i18n.__('LAN Password Description') }
+            { isLAN ? i18n.__('LAN Password Description') : i18n.__('Reset Password Description') }
           </div>
 
           {/* prePassword */}
-          <div style={{ height: 30 }} />
-          <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center' }}>
-            <div style={{ width: 130, textAlign: 'right', color: '#525a60' }}>
-              { i18n.__('Pre Password') }
-            </div>
-            <div style={{ width: 30 }} />
-            <div style={{ width: 320, marginTop: -30, position: 'relative' }}>
-              <TextField
-                hintText={i18n.__('Pre LAN Password Hint')}
-                type="password"
-                errorText={this.state.pwdError}
-                value={this.state.pwd}
-                onChange={e => this.onPwd(e.target.value)}
-                disabled={this.state.loading}
-              />
-            </div>
-          </div>
+          { isLAN && <div style={{ height: 30 }} /> }
+          {
+            isLAN &&
+              <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center' }}>
+                <div style={{ width: 130, textAlign: 'right', color: '#525a60' }}>
+                  { i18n.__('Pre Password') }
+                </div>
+                <div style={{ width: 30 }} />
+                <div style={{ width: 320, marginTop: -30, position: 'relative' }}>
+                  <TextField
+                    hintText={i18n.__('Pre LAN Password Hint')}
+                    type={this.state.showPwd ? 'text' : 'password'}
+                    errorText={this.state.pwdError}
+                    value={this.state.pwd}
+                    onChange={e => this.onPwd(e.target.value)}
+                    disabled={this.state.loading}
+                  />
+                  <div style={{ position: 'absolute', right: 0, top: 35 }}>
+                    <TFButton icon={this.state.showPwd ? EyeOpenIcon : EyeOffIcon} onClick={() => this.toggle('showPwd')} />
+                  </div>
+                </div>
+              </div>
+          }
 
           {/* new Password */}
           <div style={{ height: 30 }} />
@@ -98,32 +108,16 @@ class LANPassword extends React.Component {
             <div style={{ width: 320, marginTop: -30, position: 'relative' }}>
               <TextField
                 hintText={i18n.__('New LAN Password Hint')}
-                type="password"
+                type={this.state.showNewPwd ? 'text' : 'password'}
                 errorText={this.state.newPwdError}
                 value={this.state.newPwd}
                 onChange={e => this.onNewPwd(e.target.value)}
                 disabled={this.state.loading}
               />
-            </div>
-          </div>
-
-          {/* new Password again */}
-          <div style={{ height: 30 }} />
-          <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center' }}>
-            <div style={{ width: 130, textAlign: 'right', color: '#525a60' }}>
-              { i18n.__('New Password Again') }
-            </div>
-            <div style={{ width: 30 }} />
-            <div style={{ width: 320, marginTop: -30, position: 'relative' }}>
-              <TextField
-                hintText={i18n.__('New LAN Password Again Hint')}
-                type="password"
-                errorText={this.state.pwdAgainError}
-                value={this.state.pwdAgain}
-                onChange={e => this.onPwdAgain(e.target.value)}
-                onKeyDown={this.onKeyDown}
-                disabled={this.state.loading}
-              />
+              {/* clear password */}
+              <div style={{ position: 'absolute', right: 0, top: 35 }}>
+                <TFButton icon={this.state.showNewPwd ? EyeOpenIcon : EyeOffIcon} onClick={() => this.toggle('showNewPwd')} />
+              </div>
             </div>
           </div>
 
