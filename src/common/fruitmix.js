@@ -273,6 +273,10 @@ class Fruitmix extends EventEmitter {
           .field(`${args.oldName}|${args.newName}`, JSON.stringify({ op: 'rename' }))
         break
 
+      case 'renamePhyDirOrFile':
+        r = this.apatch(`phy-drives/${args.id}`, { oldPath: args.oldPath, newPath: args.newPath })
+        break
+
       case 'deleteDirOrFile':
         r = this.apost(`drives/${args[0].driveUUID}/dirs/${args[0].dirUUID}/entries`, null, true)
         for (let i = 0; i < args.length; i++) {

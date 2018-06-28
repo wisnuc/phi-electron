@@ -39,14 +39,27 @@ class Name extends React.PureComponent {
         newName: this.state.value,
         oldName: entry.name
       }
-      apis.request('renameDirOrFile', args, (err) => {
+      const cb = (err) => {
         if (err) {
           this.setState({ errorText: i18n.__('Rename Failed') })
           this.props.openSnackBar(i18n.__('Rename Failed'))
         } else {
           this.props.refresh()
         }
-      })
+      }
+
+      const isPhy = this.props.path[0].type === 'phy'
+      console.log('this.props', this.props, args, isPhy)
+      if (isPhy) {
+        let np = path.map(p => p.data).filter(p => !!p).join('/')
+        if (np) np = `${np}/`
+        const phyArgs = {
+          id: path[0].id,
+          newPath: np + this.state.value,
+          oldPath: np + entry.name
+        }
+        apis.request('renamePhyDirOrFile', phyArgs, cb)
+      } else apis.request('renameDirOrFile', args, cb)
     }
 
     this.onBlur = () => {
