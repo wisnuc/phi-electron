@@ -12,6 +12,8 @@ const startWord = [
   ['SD', '闪迪'],
   ['KE', '金胜'],
   ['MQ', '东芝'],
+  ['TOSHIBA', '东芝'],
+  ['HGST', 'HGST'],
   ['ADATA', '威刚'],
   ['VMware', 'VMware'],
   ['VBOX', 'VBOX']

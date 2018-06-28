@@ -79,8 +79,8 @@ class PhiAPI extends RequestManager {
         r = request
           .post(`http://${phiCloudAddress}/v1/login`)
           .timeout({
-            response: 5000, // Wait 5 seconds for the server to start sending,
-            deadline: 10000 // but allow 1 minute for the file to finish loading.
+            response: 30000, // Wait 30 seconds for the server to start sending,
+            deadline: 60000 // but allow 1 minute for the file to finish loading.
           })
           .query({
             authorizationcode: 'feixun*123.SH_2149773',
@@ -92,8 +92,8 @@ class PhiAPI extends RequestManager {
       case 'stationList':
         r = this.aget('StationManager/station')
           .timeout({
-            response: 5000, // Wait 5 seconds for the server to start sending,
-            deadline: 10000 // but allow 1 minute for the file to finish loading.
+            response: 30000, // Wait 30 seconds for the server to start sending,
+            deadline: 60000 // but allow 1 minute for the file to finish loading.
           })
         break
 
