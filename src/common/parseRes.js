@@ -22,7 +22,7 @@ const parseRes = (err, res) => {
     /* handle data from pipe command */
     if (body && body.result && body.result.data) {
       error = body.result.data.error
-      body = body.result.data.res
+      body = body.result.data.res || {}
     }
   }
 
