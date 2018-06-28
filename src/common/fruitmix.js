@@ -455,6 +455,7 @@ class Fruitmix extends EventEmitter {
 
       case 'firmwareUpgrade':
         r = request.post(`http://${this.address}:3001/v1/firmwareUpgrade`)
+          .set('Authorization', `JWT ${this.token}`)
         break
 
       default:
