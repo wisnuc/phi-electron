@@ -9,7 +9,7 @@ import CircularLoading from '../common/CircularLoading'
 const cpuUsage = (cpu) => {
   if (!cpu || !cpu.times) return 0
   const { idle, irq, nice, sys, user } = cpu.times
-  return (1 - (idle / (idle + irq + nice + sys + user)))
+  return (100 - ~~(idle / (idle + irq + nice + sys + user) * 100)) / 100 // eslint-disable-line
 }
 
 const parseData = value => prettysize(parseInt(value, 10) * 1024)
@@ -47,6 +47,10 @@ class DeviceInfo extends React.PureComponent {
     this.onKeyDown = (e) => {
       if (e.which === 13 && !this.state.errorText && this.state.label && this.state.label.length) this.changeDeviceName()
     }
+  }
+
+  componentWillUnmount () {
+    this.props.clearRefresh()
   }
 
   renderSector (color, percent) {
@@ -170,14 +174,14 @@ class DeviceInfo extends React.PureComponent {
                 >
                   { this.state.label ? this.state.label : name }
                   <div style={{ flexGrow: 1 }} />
-                  <ModeEdit color="#31a0f5" style={{ marginRight: 24 }} />
+                  <ModeEdit color={editable ? '#31a0f5' : '#85868c'} style={{ marginRight: 24 }} />
                 </div>
               )
           }
           {
             <Divider
-              color="rgba(0, 0, 0, 0.87)"
-              style={{ opacity: !this.state.modify ? 1 : 0, width: 267 }}
+              color="#85868c"
+              style={{ opacity: !editable || !this.state.modify ? 1 : 0, width: 267 }}
             />
           }
         </div>

@@ -18,6 +18,13 @@ class Device extends Base {
       this.ctx.props.apis.request('cpus')
       this.ctx.props.apis.request('network')
     }
+
+    this.refreshStat = () => {
+      this.ctx.props.apis.request('memory')
+      this.ctx.props.apis.request('cpus')
+    }
+
+    this.clearRefresh = () => clearInterval(this.timer)
   }
 
   willReceiveProps (nextProps) {
@@ -26,11 +33,11 @@ class Device extends Base {
 
   navEnter () {
     this.refresh()
-    // this.timer = setInterval(this.refresh, 1000)
+    this.timer = setInterval(this.refreshStat, 5000)
   }
 
   navLeave () {
-    // clearInterval(this.timer)
+    this.clearRefresh()
   }
 
   navGroup () {
@@ -58,6 +65,7 @@ class Device extends Base {
     return (
       <DeviceInfo
         {...this.state}
+        clearRefresh={this.clearRefresh}
         phi={this.ctx.props.phi}
         address={this.address}
         selectedDevice={this.ctx.props.selectedDevice}
