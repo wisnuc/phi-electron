@@ -1,8 +1,10 @@
 import i18n from 'i18n'
 import UUID from 'uuid'
 import React from 'react'
+import Promise from 'bluebird'
 import { ipcRenderer } from 'electron'
 import CheckIcon from 'material-ui/svg-icons/navigation/check'
+import reqMdns from '../common/mdns'
 import { RSButton } from '../common/Buttons'
 import CircularLoading from '../common/CircularLoading'
 
@@ -20,10 +22,45 @@ class UploadingFirmware extends React.PureComponent {
       ipcRenderer.send('UPLOAD_FIRM', { session: this.session, absPath: this.props.absPath })
     }
 
+    this.getStatus = async (lan) => {
+      /* LAN mode */
+      await Promise.delay(3000)
+      if (lan) {
+        const mdns = await reqMdns()
+        if (!Array.isArray(mdns)) return ({ error: i18n.__('Get StationList Error') })
+        const dev = mdns.find(d => d.host === this.props.selectedDevice.mdev.host)
+        return ({ isOnline: !!dev })
+      }
+
+      /* Online mode */
+      const res = await this.props.phi.reqAsync('stationList', null)
+      if (!res || res.error !== '0' || !Array.isArray(res.result.list)) return ({ error: i18n.__('Get StationList Error') })
+      const dev = res.result.list.find(d => d.deviceSN === this.deviceSN())
+      if (!dev) return ({ error: i18n.__('Station Not Found') })
+      return ({ isOnline: dev.onlineStatus === 'online' })
+    }
+
+    this.polling = async (lan) => {
+      let finished = false
+      const startTime = new Date().getTime()
+      await Promise.delay(5000)
+      while (!finished && (new Date().getTime() - startTime < 180 * 1000)) {
+        const status = await this.getStatus(lan)
+        const { error, isOnline } = status
+        if (error) throw error
+        else finished = !!isOnline
+      }
+      return true
+    }
+
     this.upgrade = () => {
       this.props.apis.pureRequest('firmwareUpgrade', null, (err, res) => {
-        if (!err && res && res.error === '0') this.setState({ status: 'success' })
-        else this.setState({ status: 'error', error: '' })
+        if (!err && res && res.error === '0') {
+          this.setState({ status: 'upgrading' })
+          this.polling(this.props.account.lan)
+            .then(() => this.setState({ status: 'success' }))
+            .catch(error => this.setState({ status: 'error', error }))
+        } else this.setState({ status: 'error', error: '' })
       })
     }
 
@@ -63,11 +100,15 @@ class UploadingFirmware extends React.PureComponent {
     ipcRenderer.on('FIRM_PROCESS', this.onProcess)
   }
 
+  deviceSN () {
+    return this.props.selectedDevice && this.props.selectedDevice.mdev.deviceSN
+  }
+
   render () {
     const { status } = this.state
     const { onRequestClose } = this.props
 
-    let [text, img, label, color, func] = ['', '', '', '#31a0f5', () => {}]
+    let [text, img, label, color, func] = ['', '', '', '#31a0f5', null]
     switch (status) {
       case 'busy':
         img = <CircularLoading />
@@ -75,9 +116,14 @@ class UploadingFirmware extends React.PureComponent {
           : i18n.__('Checking Firmware')
         color = '#31a0f5'
         break
+      case 'upgrading':
+        img = <CircularLoading />
+        text = i18n.__('Upgrading Firmware')
+        color = '#31a0f5'
+        break
       case 'success':
         img = <CheckIcon color="#31a0f5" style={{ width: 52, height: 52 }} />
-        text = i18n.__('Upload Firmware Success Text')
+        text = i18n.__('Upgrade Firmware Success Text')
         color = '#31a0f5'
         label = i18n.__('OK')
         func = () => this.onSuccess()
@@ -94,7 +140,7 @@ class UploadingFirmware extends React.PureComponent {
     }
     return (
       <div style={{ width: 240, height: 214, backgroundColor: 'transparent', paddingTop: 54 }}>
-        <div style={{ height: status !== 'busy' ? 214 : 160, backgroundColor: '#FFF', transition: 'height 175ms' }}>
+        <div style={{ height: func ? 214 : 160, backgroundColor: '#FFF', transition: 'height 175ms' }}>
           <div style={{ height: 40 }} />
           <div style={{ width: '100%', height: 60 }} className="flexCenter">
             { img }
@@ -103,7 +149,7 @@ class UploadingFirmware extends React.PureComponent {
             { text }
           </div>
           <div style={{ height: 40 }} />
-          <div style={{ height: 34, opacity: status !== 'busy' ? 1 : 0, transition: 'opacity 175ms 175ms' }} className="flexCenter" >
+          <div style={{ height: 34, opacity: func ? 1 : 0, transition: 'opacity 175ms 175ms' }} className="flexCenter" >
             <RSButton
               label={label}
               onClick={func}

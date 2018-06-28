@@ -55,9 +55,9 @@ class Update extends React.Component {
   }
 
   render () {
-    const currentVersion = 'v1.0.0'.toUpperCase()
-    const status = '版本检查中...'
-    const ltsValue = '检测中...'
+    const currentVersion = '--'
+    const status = '目前仅支持手动上传固件'
+    const ltsValue = '--'
     return (
       <div style={{ width: '100%', height: '100%' }} className="flexCenter" >
         <div style={{ width: 480, paddingRight: 160, paddingBottom: 60 }}>

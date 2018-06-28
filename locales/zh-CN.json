@@ -465,6 +465,8 @@
   "Uploading Firmware Text %s": "文件上传中，已完成：%s",
   "Check Firmware Failed Text": "校验失败，请确认固件是否正确",
   "Checking Firmware": "校验固件中",
+  "Upgrading Firmware": "升级固件中",
+  "Upgrade Firmware Success Text": "固件升级成功",
 
   "==== device/NetworkInfo.jsx ====": "",
   "NIC Name": "网卡名称",

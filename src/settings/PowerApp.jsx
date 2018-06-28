@@ -24,7 +24,7 @@ class Power extends React.Component {
       if (lan) {
         const mdns = await reqMdns()
         if (!Array.isArray(mdns)) return ({ error: i18n.__('Get StationList Error') })
-        const dev = mdns.find(d => d.host === this.props.selectedDevice.mdev.host) // TODO, use deviceSN
+        const dev = mdns.find(d => d.host === this.props.selectedDevice.mdev.host)
         return ({ isOnline: !!dev })
       }
 
