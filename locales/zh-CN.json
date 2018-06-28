@@ -1046,6 +1046,9 @@
   "Disk Manage": "配置磁盘",
   "Repair Disk": "修复磁盘",
   "Degrade From Raid1 Text": "当前磁盘为Raid1模式，1个磁盘不能组成Raid1模式，该修复操作后会将降级为Single模式",
+  "Confirm Format Disk Title": "格式化磁盘",
+  "Confirm Format Disk 2 Text": "磁盘2将被格式化,磁盘1数据及用户系统将被导入,请确认操作",
+  "Confirm Format Disk 1 Text": "磁盘1将被格式化,磁盘2数据及用户系统将被导入,请确认操作",
 
   "==== nav/Navigation.jsx ====": "",
   "Detail": "详情",

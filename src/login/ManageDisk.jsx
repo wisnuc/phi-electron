@@ -8,6 +8,7 @@ import DiskModeGuide from './DiskModeGuide'
 import DiskFormating from './DiskFormating'
 
 import Dialog from '../common/PureDialog'
+import ConfirmDialog from '../common/ConfirmDialog'
 import { SmallHelpIcon, BackIcon } from '../common/Svg'
 import interpretModel from '../common/diskModel'
 import { RRButton, ModeSelect, LIButton, SIButton } from '../common/Buttons'
@@ -70,6 +71,11 @@ class ManageDisk extends React.Component {
         })
     }
 
+    this.onConfirmRecover = (args) => {
+      this.setState({ confirm: false })
+      setTimeout(() => this.add(args), 300)
+    }
+
     this.enterCreate = () => {
       this.setState({ status: 'init' })
     }
@@ -80,6 +86,19 @@ class ManageDisk extends React.Component {
 
     this.enterRepair = () => {
       this.setState({ status: 'repair' })
+    }
+
+    this.confirmRecover = (blk, target) => {
+      const devName = blk.name
+      const volume = this.availableVolumes().find(v => v.devices[0].name === devName)
+      const args = {
+        mode: this.state.mode,
+        volumeUUID: volume.uuid,
+        slotNumber: blk.slotNumber, // for confirm text
+        devices: target.filter(t => t.name !== devName)
+      }
+
+      this.setState({ confirm: args })
     }
   }
 
@@ -230,27 +249,7 @@ class ManageDisk extends React.Component {
     let fire = () => {}
     if (isExtend) fire = () => this.add({ devices: target.filter(t => t.name !== oldVolume.devices[0].name) })
     else if (isImport) fire = () => this.recover(this.availableVolumes()[0])
-    else if (isImportAndExtend) {
-      fire = index => this.add({
-        mode: this.state.mode,
-        volumeUUID: this.availableVolumes()[index].uuid,
-        devices: target.filter(t => t.name !== this.availableVolumes()[index].devices[0].name)
-      })
-    }
-
-    /*
-    const storage = this.availableVolumes().slice(0, 2).map((v, index) => ({
-      key: index.toString(),
-      size: v.usage && prettysize(v.usage.overall.deviceSize),
-      mode: v.usage && v.usage.data.mode === 'RAID1' ? i18n.__('Raid1 Mode') : i18n.__('Single Mode'),
-      fire: () => this.recover(v),
-      devices: v.devices.map((d) => {
-        const blk = blks.find(b => b.name === d.name)
-        const { model, size } = blk
-        return ({ model: interpretModel(model), size: prettysize(size * 512) })
-      })
-    }))
-    */
+    else if (isImportAndExtend) fire = blk => this.confirmRecover(blk, target)
 
     return (
       <div>
@@ -319,14 +318,14 @@ class ManageDisk extends React.Component {
                 <RRButton
                   disabled={!isImport && (!this.state.mode || !target.length)}
                   label={i18n.__('Import Disk 1')}
-                  onClick={() => fire(0)}
+                  onClick={() => fire(b1)}
                   tooltip={i18n.__('Disk 2 Will Be Formatted')}
                 />
                 <div style={{ width: 18 }} />
                 <RRButton
                   disabled={!isImport && (!this.state.mode || !target.length)}
                   label={i18n.__('Import Disk 2')}
-                  onClick={() => fire(1)}
+                  onClick={() => fire(b2)}
                   tooltip={i18n.__('Disk 1 Will Be Formatted')}
                 />
               </div>
@@ -468,13 +467,13 @@ class ManageDisk extends React.Component {
 
       case 'recover':
         title = i18n.__('Recover Volume')
-        imgSrc = 'pic-finddisk.png'
+        imgSrc = 'pic-diskimport.png'
         content = this.renderRecover()
         break
 
       case 'repair':
         title = i18n.__('Repair Disk')
-        imgSrc = 'pic-login.png'
+        imgSrc = 'pic-diskimport.png'
         content = this.renderRepair()
         break
 
@@ -525,6 +524,16 @@ class ManageDisk extends React.Component {
             />
           }
         </Dialog>
+
+        <ConfirmDialog
+          open={!!this.state.confirm}
+          onCancel={() => this.setState({ confirm: false })}
+          onConfirm={() => this.onConfirmRecover(this.state.confirm)}
+          title={i18n.__('Confirm Format Disk Title')}
+          text={this.state.confirm && this.state.confirm.slotNumber === 1 ? i18n.__('Confirm Format Disk 2 Text')
+            : i18n.__('Confirm Format Disk 1 Text')}
+        />
+
       </div>
     )
   }
