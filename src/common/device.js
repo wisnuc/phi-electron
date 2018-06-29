@@ -188,11 +188,10 @@ class Device extends RequestManager {
   }
 
   refreshSystemState (next) {
-    let count = 4
+    let count = 3
     const done = next ? () => !(count -= 1) && next() : undefined
     this.request('info', null, done)
     this.request('boot', null, done)
-    this.request('network', null, done)
     this.request('users', null, done)
   }
 
@@ -240,6 +239,7 @@ class Device extends RequestManager {
 
     /* assign deviceSN */
     if (info && info.deviceSN && !this.mdev.deviceSN) Object.assign(this.mdev, { deviceSN: info.deviceSN })
+    if (info && info.mac && !this.mdev.mac) Object.assign(this.mdev, { mac: info.mac })
 
     if (state === 'PENDING' && !boundUser) return 'noBoundUser'
     else if (state === 'UNAVAILABLE' && boundUser) return 'noBoundVolume'

@@ -71,9 +71,9 @@ class LANLogin extends React.Component {
 
   getStationName () {
     if (!this.props.dev) return 'N2'
-    const { network, mdev } = this.props.dev
+    const { mdev } = this.props.dev
     if (mdev && mdev.stationName) return mdev.stationName
-    const mac = network && network.data && network.data[0] && network.data[0].address
+    const mac = mdev && mdev.mac
     if (mac) return `N2-${mac.slice(-2)}`
     return 'N2'
   }

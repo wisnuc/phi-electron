@@ -1,4 +1,3 @@
-import i18n from 'i18n'
 import React from 'react'
 import { Divider } from 'material-ui'
 import { MenuButton } from '../common/Buttons'
@@ -45,6 +44,9 @@ class NavDrawer extends React.Component {
     const { views } = this.props
     const { nav } = this.state
 
+    const mac = this.props.device.mac || ''
+    const name = this.props.device.bindingName || (mac ? `N2-${mac.slice(-2)}` : 'N2')
+
     return (
       <div style={{ width: '100%', height: '100%' }} >
         <div
@@ -58,7 +60,7 @@ class NavDrawer extends React.Component {
             color: '#505259'
           }}
         >
-          { i18n.__('File Menu Title') }
+          { name }
         </div>
 
         {

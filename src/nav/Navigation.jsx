@@ -333,6 +333,7 @@ class NavViews extends React.Component {
             nav={this.state.nav}
             navTo={this.navTo}
             hasUSB={!!this.hasUSB}
+            device={this.props.selectedDevice.mdev}
           />
         </div>
 

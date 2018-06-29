@@ -122,8 +122,9 @@ class DeviceInfo extends React.PureComponent {
   }
 
   renderDeviceName () {
-    const editable = this.props.selectedDevice.mdev && this.props.selectedDevice.mdev.bindingName
-    let name = 'N2'
+    const editable = this.props.selectedDevice.mdev.bindingName
+    const mac = this.props.selectedDevice.mdev.mac || ''
+    let name = mac ? `N2-${mac.slice(-2)}` : 'N2'
     if (editable) name = this.newName || this.props.selectedDevice.mdev.bindingName
     return (
       <div>
@@ -209,7 +210,7 @@ class DeviceInfo extends React.PureComponent {
 
     if (!device) return (<div />)
 
-    const { mode, swVersion, hwVersion } = device
+    const { model, swVersion, hwVersion } = device
 
     const memUsage = (memory && (1 - parseInt(memory.memAvailable, 10) / parseInt(memory.memTotal, 10))) || 0
 
@@ -223,7 +224,7 @@ class DeviceInfo extends React.PureComponent {
     ]
 
     const listData = [
-      { title: i18n.__('Device Model'), value: mode },
+      { title: i18n.__('Device Model'), value: model },
       { title: i18n.__('Current IP'), value: address },
       { title: i18n.__('Mac Address'), value: mac },
       { title: i18n.__('Hardware Version'), value: hwVersion },

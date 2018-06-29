@@ -89,9 +89,9 @@ class Device extends React.Component {
 
   getStationName () {
     if (!this.state.dev) return 'N2'
-    const { network, mdev } = this.state.dev
+    const { mdev } = this.state.dev
     if (mdev && mdev.stationName) return mdev.stationName
-    const mac = network && network.data && network.data[0] && network.data[0].address
+    const mac = mdev && mdev.mac
     if (mac) return `N2-${mac.slice(-2)}`
     return 'N2'
   }
