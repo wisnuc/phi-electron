@@ -5,6 +5,7 @@ import { AutoSizer } from 'react-virtualized'
 
 import Dialog from '../common/PureDialog'
 import ScrollBar from '../common/ScrollBar'
+import { formatTime } from '../common/datetime'
 import { isPhoneNumber } from '../common/validate'
 import { CloseIcon, BackIcon } from '../common/Svg'
 import CircularLoading from '../common/CircularLoading'
@@ -165,6 +166,10 @@ class AdminUsersApp extends React.Component {
     )
   }
 
+  renderError () {
+    return i18n.__('Failed To Load User Data')
+  }
+
   renderAddUser () {
     return (
       <div style={{ width: 280 }}>
@@ -238,7 +243,7 @@ class AdminUsersApp extends React.Component {
   }
 
   renderRow ({ style, key, user }) {
-    const { driveList, inviteStatus, nickname, username, uuid, inActive } = user
+    const { driveList, inviteStatus, nickname, username, uuid, inActive, createTime } = user
     const isModify = this.state.status === 'modify'
     return (
       <div style={style} key={key}>
@@ -283,13 +288,28 @@ class AdminUsersApp extends React.Component {
                         label={i18n.__('Active')}
                         onClick={() => this.reActive(user)}
                       />
-
                     </div>
                   )
                   : inviteStatus === 'accept' ? this.renderUser(driveList)
                     : (
-                      <div style={{ color: inviteStatus === 'reject' ? '#f53131' : '#31a0f5' }}>
-                        { inviteStatus === 'reject' ? i18n.__('Invite Rejected') : i18n.__('Invite Pending') }
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <div style={{ color: inviteStatus === 'reject' ? '#f53131' : '#31a0f5' }}>
+                          { inviteStatus === 'reject' ? i18n.__('Invite Rejected') : i18n.__('Invite Pending') }
+                        </div>
+                        <div style={{ backgroundColor: '#c4c5cc', height: 10, width: 1, margin: '0 8px' }} />
+                        { formatTime(createTime) }
+                        <div style={{ width: 10 }} />
+                        {
+                          inviteStatus === 'reject' &&
+                            <RSButton
+                              alt
+                              disabled={this.state.invited}
+                              style={{ height: 20 }}
+                              labelStyle={{ height: 20, fontSize: 12 }}
+                              label={i18n.__('Reinvite')}
+                              onClick={() => this.reActive(user)}
+                            />
+                        }
                       </div>
                     )
               }
@@ -363,9 +383,10 @@ class AdminUsersApp extends React.Component {
               >
                 {
                   this.state.loading ? this.renderLoading()
-                    : isAddUser ? this.renderAddUser()
-                      : isConfirm ? i18n.__('Confirm Delete User Text')
-                        : this.state.users.length ? this.renderUsers(this.state.users) : this.renderNoUser()
+                    : this.state.error ? this.renderError()
+                      : isAddUser ? this.renderAddUser()
+                        : isConfirm ? i18n.__('Confirm Delete User Text')
+                          : this.state.users.length ? this.renderUsers(this.state.users) : this.renderNoUser()
                 }
               </div>
               <div style={{ height: 20 }} />
