@@ -60,7 +60,7 @@ class Login extends React.Component {
         if (e || !r.result || !Array.isArray(r.result.list) || r.error !== '0') {
           this.setState({ loading: false, list: [], status: 'listError', type: 'BOUNDLIST' })
         } else {
-          const list = r.result.list
+          const list = r.result.list.filter(l => l.type === 'owner' || (l.accountStatus === '1' && l.inviteStatus !== 'reject'))
           const status = !list.length ? 'phiNoBound' : 'deviceSelect'
           this.setState({ list, loading: false, type: 'BOUNDLIST', status })
         }
@@ -135,12 +135,6 @@ class Login extends React.Component {
   /* make sure log out phi account success */
   componentWillReceiveProps (nextProps) {
     if (!nextProps.account && this.state.status !== 'phiLogin') this.setState({ status: 'phiLogin' })
-  }
-
-  /* make sure log out phi account success */
-  componentDidUpdate () {
-    // TODO
-    // if (!this.props.account && this.state.status !== 'phiLogin') this.setState({ status: 'phiLogin' })
   }
 
   renderDeviceSelect (props) {

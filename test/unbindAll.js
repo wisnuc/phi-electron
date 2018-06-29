@@ -82,7 +82,7 @@ const fire = async () => {
   for (let i = 0; i < list.length; i++) {
     const deviceSN = list[i].deviceSN
     console.log(deviceSN)
-    if (deviceSN === '1plp0panrup3jqphe') await unbindStationAsync({ token, deviceSN })
+    if (list[i].onlineStatus !== 'online') await unbindStationAsync({ token, deviceSN })
   }
   return list.length
 }
