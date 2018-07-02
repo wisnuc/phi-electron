@@ -7,6 +7,7 @@ import { RSButton } from '../common/Buttons'
 import interpretModel from '../common/diskModel'
 import DiskModeGuide from '../login/DiskModeGuide'
 import ConfirmDialog from '../common/ConfirmDialog'
+import CircularLoading from '../common/CircularLoading'
 import { HelpIcon, DiskIcon, DiskAltIcon } from '../common/Svg'
 
 class Disk extends React.PureComponent {
@@ -102,9 +103,17 @@ class Disk extends React.PureComponent {
     )
   }
 
+  renderLoading () {
+    return (
+      <div style={{ width: '100%', height: 'calc(100% - 60px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
+        <CircularLoading />
+      </div>
+    )
+  }
+
   render () {
     const { boot, phyDrives, stats } = this.props
-    if (!boot || !phyDrives || !stats) return (<div />)
+    if (!boot || !phyDrives || !stats) return this.renderLoading()
     const { storage, boundVolume } = boot
     const b1 = storage.blocks.find(b => (b.isDisk && !b.unformattable && b.slotNumber === 1))
     const b2 = storage.blocks.find(b => (b.isDisk && !b.unformattable && b.slotNumber === 2))

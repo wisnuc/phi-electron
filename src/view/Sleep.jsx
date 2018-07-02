@@ -41,6 +41,10 @@ class Sleep extends Base {
     this.refresh()
   }
 
+  navLeave () {
+    this.setState({ sleep: null })
+  }
+
   renderContent ({ openSnackBar }) {
     return (
       <SleepMode

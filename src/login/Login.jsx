@@ -370,7 +370,7 @@ class Login extends React.Component {
           }}
         >
           <div style={{ margin: '0px 24px' }}>
-            { i18n.__('Copyright Info') }
+            { `©${new Date().getFullYear()} ${i18n.__('Copyright Info')}` }
           </div>
           <div style={{ margin: '0px 16px' }}>
             { `${i18n.__('Version:')} ${global.config && global.config.appVersion}` }

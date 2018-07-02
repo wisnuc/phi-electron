@@ -2,6 +2,7 @@ import i18n from 'i18n'
 import React from 'react'
 
 import { RRButton, Toggle } from '../common/Buttons'
+import CircularLoading from '../common/CircularLoading'
 
 class Dlna extends React.Component {
   constructor (props) {
@@ -11,6 +12,8 @@ class Dlna extends React.Component {
       loading: false,
       open: this.props.dlna && !!this.props.dlna.isActive
     }
+
+    this.singleton = false
 
     this.saveAsync = async (open) => {
       await this.props.apis.pureRequestAsync('updateDlna', { op: open ? 'start' : 'close' })
@@ -32,7 +35,8 @@ class Dlna extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.dlna) {
+    if (nextProps.dlna && !this.singleton) {
+      this.singleton = true
       this.setState({ open: nextProps.dlna.isActive })
     }
   }
@@ -52,8 +56,16 @@ class Dlna extends React.Component {
     )
   }
 
+  renderLoading () {
+    return (
+      <div style={{ width: '100%', height: 'calc(100% - 60px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
+        <CircularLoading />
+      </div>
+    )
+  }
+
   render () {
-    if (!this.props.dlna) return <div />
+    if (!this.props.dlna) return this.renderLoading()
     const isAdmin = this.props.apis.account && this.props.apis.account.data && this.props.apis.account.data.isFirstUser
     const settings = [
       {

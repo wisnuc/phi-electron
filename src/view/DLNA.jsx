@@ -20,6 +20,10 @@ class DlnaApp extends Base {
     this.refresh()
   }
 
+  navLeave () {
+    this.setState({ dlna: null })
+  }
+
   navGroup () {
     return 'settings'
   }

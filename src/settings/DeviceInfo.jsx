@@ -205,10 +205,18 @@ class DeviceInfo extends React.PureComponent {
     )
   }
 
+  renderLoading () {
+    return (
+      <div style={{ width: '100%', height: 'calc(100% - 60px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
+        <CircularLoading />
+      </div>
+    )
+  }
+
   render () {
     const { device, network, cpus, memory, address } = this.props
 
-    if (!device) return (<div />)
+    if (!device || !network || !cpus || !memory || !address) return this.renderLoading()
 
     const { model, swVersion, hwVersion } = device
 

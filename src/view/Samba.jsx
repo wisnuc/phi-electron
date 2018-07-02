@@ -21,6 +21,10 @@ class SambaApp extends Base {
     this.refresh()
   }
 
+  navLeave () {
+    this.setState({ samba: null, drives: null })
+  }
+
   navGroup () {
     return 'settings'
   }

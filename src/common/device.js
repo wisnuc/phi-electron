@@ -47,7 +47,7 @@ class Device extends RequestManager {
         r = request
           .get(`http://${this.mdev.address}:3001/v1/info`)
           .timeout({
-            response: 5000, // Wait 5 seconds for the server to start sending,
+            response: 50000, // Wait 5 seconds for the server to start sending,
             deadline: 60000 // but allow 1 minute for the file to finish loading.
           })
         break

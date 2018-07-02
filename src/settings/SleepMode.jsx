@@ -2,12 +2,15 @@ import i18n from 'i18n'
 import React from 'react'
 import { Divider } from 'material-ui'
 import { RRButton, Toggle } from '../common/Buttons'
+import CircularLoading from '../common/CircularLoading'
 
 class SleepMode extends React.Component {
   constructor (props) {
     super(props)
 
-    this.state = {}
+    this.state = { sleep: null }
+
+    this.singleton = false
 
     this.save = () => {
       this.setState({ loading: true })
@@ -37,7 +40,8 @@ class SleepMode extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.sleep) {
+    if (nextProps.sleep && !this.singleton) {
+      this.singleton = true
       this.setState({
         sleep: !!nextProps.sleep.start,
         switch: !(nextProps.sleep.start === '00:00' && nextProps.sleep.end === '23:59'),
@@ -125,7 +129,18 @@ class SleepMode extends React.Component {
     )
   }
 
+  renderLoading () {
+    return (
+      <div style={{ width: '100%', height: 'calc(100% - 60px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
+        <CircularLoading />
+      </div>
+    )
+  }
+
   render () {
+    const { sleep } = this.props
+    if (!sleep) return this.renderLoading()
+
     const settings = [
       {
         type: i18n.__('Sleep Mode'),
@@ -138,6 +153,7 @@ class SleepMode extends React.Component {
         func: () => this.state.sleep && this.setState({ switch: !this.state.switch })
       }
     ]
+
     return (
       <div style={{ width: '100%', height: '100%' }} className="flexCenter" >
         <div style={{ width: 480, paddingRight: 160, paddingBottom: 60 }}>

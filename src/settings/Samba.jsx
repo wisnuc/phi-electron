@@ -3,6 +3,7 @@ import React from 'react'
 import { Divider } from 'material-ui'
 
 import { EyeOpenIcon, EyeOffIcon } from '../common/Svg'
+import CircularLoading from '../common/CircularLoading'
 import { RRButton, Toggle, TFButton, TextField } from '../common/Buttons'
 
 class Samba extends React.Component {
@@ -17,6 +18,8 @@ class Samba extends React.Component {
       showPwd: false,
       open: this.props.samba && !!this.props.samba.isActive
     }
+
+    this.singleton = false
 
     this.onPassword = (pwd) => {
       this.setState({ pwd, pwdError: '' })
@@ -44,7 +47,7 @@ class Samba extends React.Component {
       this.setState({ loading: true })
       this.saveAsync(this.state.open, this.state.encrypted, this.state.pwd).asCallback((err) => {
         if (err) {
-          console.error('samba error', err)
+          console.error('samba error', err, this.props)
           this.props.openSnackBar(i18n.__('Operation Failed'))
         } else {
           this.props.openSnackBar(i18n.__('Operation Success'))
@@ -57,16 +60,13 @@ class Samba extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (Array.isArray(nextProps.drives)) {
+    if (Array.isArray(nextProps.drives) && nextProps.samba && !this.singleton) {
+      this.singleton = true
       const drive = nextProps.drives.find(d => d.type === 'private')
-      if (drive !== this.drive) {
-        this.drive = drive
-        const encrypted = drive && drive.smb
-        this.setState({ encrypted })
-      }
-    }
-
-    if (nextProps.samba) {
+      console.log('componentWillReceiveProps', drive)
+      this.drive = drive
+      const encrypted = drive && drive.smb
+      this.setState({ encrypted })
       this.setState({ open: nextProps.samba.isActive })
     }
   }
@@ -123,8 +123,18 @@ class Samba extends React.Component {
     )
   }
 
+  renderLoading () {
+    return (
+      <div style={{ width: '100%', height: 'calc(100% - 60px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
+        <CircularLoading />
+      </div>
+    )
+  }
+
   render () {
-    if (!this.props.samba) return (<div />)
+    const { samba, drives } = this.props
+    if (!samba || !drives) return this.renderLoading()
+
     const isAdmin = this.props.apis.account && this.props.apis.account.data && this.props.apis.account.data.isFirstUser
     const settings = [
       {
