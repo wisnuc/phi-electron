@@ -754,6 +754,9 @@ class Home extends Base {
           const pos = { id: node.id, path: newPath }
           this.enter(pos, err => err && console.error('listNavBySelect error', err))
           this.history.add(pos)
+        } else if (node.type === 'phyRoot') { // phyRoot
+          this.phyDrive = null
+          this.ctx.props.apis.request('phyDrives')
         } else { // home drives
           const pos = { driveUUID: path[0].uuid, dirUUID: node.uuid }
           this.enter(pos, err => err && console.error('Jump via breadCrumb error', err))

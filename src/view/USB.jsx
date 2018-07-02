@@ -12,10 +12,24 @@ class USB extends Home {
     this.firstEnter = true
 
     this.enter = (pos, cb) => {
-      const path = pos.path.split('/').map(p => ({ name: p, id: pos.id, data: p, type: 'phy' })).filter(p => !!p.name)
-      path.unshift({ name: this.title(), id: this.phyDrive.id, data: '', type: 'phy' })
-      this.setState({ loading: true, path })
-      this.ctx.props.apis.request('listPhyDir', pos, cb)
+      console.log('this.enter', pos, this.state)
+      if (!pos.isPhyRoot) {
+        const path = pos.path.split('/').map(p => ({ name: p, id: pos.id, data: p, type: 'phy' })).filter(p => !!p.name)
+        if (!this.hasRoot) {
+          path.unshift({ name: this.title(), id: this.phyDrive.id, data: '', type: 'phy' })
+        } else {
+          path.unshift({ name: pos.name, id: pos.id, data: pos.name, type: 'phy' })
+          path.unshift({ name: this.title(), id: null, data: '', type: 'phyRoot' })
+        }
+        console.log('new Path', path)
+        this.setState({ loading: true, path })
+        this.ctx.props.apis.request('listPhyDir', pos, cb)
+      } else {
+        const path = [...this.state.path]
+        path.push({ name: pos.name, id: pos.id, data: '', type: 'phy' })
+        this.setState({ loading: true, path })
+        this.ctx.props.apis.request('listPhyDir', { id: pos.id }, cb)
+      }
     }
 
     this.onCopy = () => {
@@ -73,9 +87,16 @@ class USB extends Home {
 
       const entry = this.state.entries[selected[0]]
 
+      console.log('this.listNavBySelect', entry, this.state.path)
       if (entry.type === 'directory') {
         const path = [...this.state.path.map(p => p.data).filter(p => !!p), entry.name].join('/')
-        const pos = { id: this.phyDrive.id, path }
+        const pos = { id: this.phyDrive.id, path, name: this.phyDrive.name }
+        this.enter(pos, err => err && console.error('listNavBySelect error', err))
+        this.history.add(pos)
+      } else if (entry.isUSB) {
+        console.log('enter phy drive', entry)
+        this.phyDrive = entry
+        const pos = Object.assign({ isPhyRoot: true, path: '' }, entry)
         this.enter(pos, err => err && console.error('listNavBySelect error', err))
         this.history.add(pos)
       }
@@ -86,6 +107,8 @@ class USB extends Home {
         this.setState({ loading: true })
         const path = this.state.path.map(p => p.data).filter(p => !!p).join('/')
         this.ctx.props.apis.request('listPhyDir', { id: this.phyDrive.id, path })
+      } else {
+        this.ctx.props.apis.request('phyDrives')
       }
 
       this.resetScrollTo()
@@ -136,28 +159,50 @@ class USB extends Home {
   }
 
   willReceiveProps (nextProps) {
-    this.preValue = this.state.listPhyDir
-    this.handleProps(nextProps.apis, ['listPhyDir'])
+    if (this.phyDrive) {
+      this.preValue = this.state.listPhyDir
+      this.handleProps(nextProps.apis, ['listPhyDir'])
 
-    /* set force === true  to update sortType forcely */
-    if (this.preValue === this.state.listPhyDir && !this.force) return
+      /* set force === true  to update sortType forcely */
+      if (this.preValue === this.state.listPhyDir && !this.force) return
 
-    const entries = this.state.listPhyDir
-    const select = this.select.reset(entries.length)
+      const entries = this.state.listPhyDir
+      const select = this.select.reset(entries.length)
 
-    this.force = false
+      this.force = false
 
-    const path = [...this.state.path]
-    if (!path.length) path.push({ name: this.title(), id: this.phyDrive.id, data: '', type: 'phy' })
+      const path = [...this.state.path]
+      if (!path.length) path.push({ name: this.title(), id: this.phyDrive.id, data: '', type: 'phy' })
 
-    const pos = { id: this.phyDrive.id, path: path.map(p => p.data).filter(p => !!p).join('/') }
+      const pos = { id: this.phyDrive.id, path: path.map(p => p.data).filter(p => !!p).join('/') }
 
-    if (this.history.get().curr === -1) this.history.add(pos)
+      if (this.history.get().curr === -1) this.history.add(pos)
 
-    /* sort entries, reset select, stop loading */
-    this.setState({
-      path, select, loading: false, entries: [...entries].sort((a, b) => sortByType(a, b, this.state.sortType))
-    })
+      /* sort entries, reset select, stop loading */
+      this.setState({
+        path, select, loading: false, entries: [...entries].sort((a, b) => sortByType(a, b, this.state.sortType))
+      })
+    } else {
+      this.prePhyDrives = this.state.phyDrives
+      this.handleProps(nextProps.apis, ['phyDrives'])
+      if (this.prePhyDrives === this.state.phyDrives && !this.force) return
+      this.force = false
+      console.log('this.state', this.state)
+      const entries = this.state.phyDrives
+        .filter(d => d.isUSB)
+        .map((a, i) => Object.assign({ name: i18n.__('Disk Parition %s', i + 1), data: i18n.__('Disk Parition %s', i + 1) }, a))
+
+      const select = this.select.reset(entries.length)
+      const path = [{ name: this.title(), id: null, data: '', type: 'phyRoot' }]
+      const pos = { type: 'phyRoot' }
+
+      if (this.history.get().curr === -1) this.history.add(pos)
+
+      /* sort entries, reset select, stop loading */
+      this.setState({
+        path, select, loading: false, entries: [...entries].sort((a, b) => sortByType(a, b, this.state.sortType))
+      })
+    }
   }
 
   navEnter (target) {
@@ -166,8 +211,15 @@ class USB extends Home {
     if (!apis || !apis.phyDrives || !apis.phyDrives.data) return
     if (this.firstEnter) {
       this.firstEnter = false
-      this.phyDrive = apis.phyDrives.data.filter(d => d.isUSB)[0]
-      apis.request('listPhyDir', { id: this.phyDrive.id })
+      const usbDrive = apis.phyDrives.data.filter(d => d.isUSB)
+      if (usbDrive.length === 1) {
+        this.phyDrive = usbDrive[0]
+        apis.request('listPhyDir', { id: this.phyDrive.id })
+      } else if (usbDrive.length > 1) {
+        this.hasRoot = true
+        apis.request('phyDrives')
+        console.log('usbDrive', usbDrive)
+      }
     } else this.refresh()
   }
 
