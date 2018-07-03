@@ -143,6 +143,7 @@ class Public extends Home {
           {...this.state}
           apis={this.ctx.props.apis}
           showUsers={this.ctx.props.showUsers}
+          clearFakeOpen={this.clearFakeOpen}
           listNavBySelect={this.listNavBySelect}
           showContextMenu={this.showContextMenu}
           setAnimation={this.setAnimation}

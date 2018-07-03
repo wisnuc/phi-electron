@@ -12,23 +12,17 @@ class USB extends Home {
     this.firstEnter = true
 
     this.enter = (pos, cb) => {
-      console.log('this.enter', pos, this.state)
-      if (!pos.isPhyRoot) {
-        const path = pos.path.split('/').map(p => ({ name: p, id: pos.id, data: p, type: 'phy' })).filter(p => !!p.name)
-        if (!this.hasRoot) {
-          path.unshift({ name: this.title(), id: this.phyDrive.id, data: '', type: 'phy' })
-        } else {
-          path.unshift({ name: pos.name, id: pos.id, data: pos.name, type: 'phy' })
-          path.unshift({ name: this.title(), id: null, data: '', type: 'phyRoot' })
-        }
-        console.log('new Path', path)
-        this.setState({ loading: true, path })
-        this.ctx.props.apis.request('listPhyDir', pos, cb)
+      console.log('enter', pos)
+      if (pos.type === 'phyRoot') {
+        this.setState({ loading: true, path: pos.path })
+        this.ctx.props.apis.request('phyDrives', null, cb)
+      } else if (pos.isUSB) {
+        this.setState({ loading: true, path: pos.path })
+        this.ctx.props.apis.request('listPhyDir', { id: pos.id, path: '' }, cb)
       } else {
-        const path = [...this.state.path]
-        path.push({ name: pos.name, id: pos.id, data: '', type: 'phy' })
-        this.setState({ loading: true, path })
-        this.ctx.props.apis.request('listPhyDir', { id: pos.id }, cb)
+        this.setState({ loading: true, path: pos.path })
+        const path = pos.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
+        this.ctx.props.apis.request('listPhyDir', { id: pos.id, path }, cb)
       }
     }
 
@@ -39,7 +33,7 @@ class USB extends Home {
       const entries = selected.map(index => this.state.entries[index])
       const drive = this.state.path[0].id
       const srcPath = this.state.path.slice(-1)[0]
-      let dir = this.state.path.map(p => p.data).filter(p => !!p).join('/')
+      let dir = this.state.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
       if (dir) dir = `${dir}/`
       this.ctx.props.clipboard.set({ action: 'copy', loc: 'phy', drive, dir, entries, srcPath })
     }
@@ -51,7 +45,7 @@ class USB extends Home {
       const entries = selected.map(index => this.state.entries[index])
       const drive = this.state.path[0].id
       const srcPath = this.state.path.slice(-1)[0]
-      let dir = this.state.path.map(p => p.data).filter(p => !!p).join('/')
+      let dir = this.state.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
       if (dir) dir = `${dir}/`
       this.ctx.props.clipboard.set({ action: 'move', loc: 'phy', drive, dir, entries, srcPath })
     }
@@ -60,7 +54,7 @@ class USB extends Home {
       if (this.isMedia || this.state.inRoot) return
       const pos = this.ctx.props.clipboard.get()
       const drive = this.state.path[0].id
-      let dir = this.state.path.map(p => p.data).filter(p => !!p).join('/')
+      let dir = this.state.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
       if (dir) dir = `${dir}/`
       const entries = pos.entries.map(e => e.name)
       const args = {
@@ -89,14 +83,14 @@ class USB extends Home {
 
       console.log('this.listNavBySelect', entry, this.state.path)
       if (entry.type === 'directory') {
-        const path = [...this.state.path.map(p => p.data).filter(p => !!p), entry.name].join('/')
-        const pos = { id: this.phyDrive.id, path, name: this.phyDrive.name }
+        const path = [...this.state.path, Object.assign({ type: 'phy' }, entry)]
+        const pos = { id: this.phyDrive.id, path, name: this.phyDrive.name, type: 'phy' }
         this.enter(pos, err => err && console.error('listNavBySelect error', err))
         this.history.add(pos)
       } else if (entry.isUSB) {
-        console.log('enter phy drive', entry)
         this.phyDrive = entry
-        const pos = Object.assign({ isPhyRoot: true, path: '' }, entry)
+        const path = [...this.state.path, Object.assign({ type: 'partition' }, entry)]
+        const pos = { id: entry.id, path, name: entry.name, type: 'partition' }
         this.enter(pos, err => err && console.error('listNavBySelect error', err))
         this.history.add(pos)
       }
@@ -105,7 +99,7 @@ class USB extends Home {
     this.refresh = (op) => {
       if (this.phyDrive) {
         this.setState({ loading: true })
-        const path = this.state.path.map(p => p.data).filter(p => !!p).join('/')
+        const path = this.state.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
         this.ctx.props.apis.request('listPhyDir', { id: this.phyDrive.id, path })
       } else {
         this.ctx.props.apis.request('phyDrives')
@@ -119,13 +113,14 @@ class USB extends Home {
 
     /* file or dir operations */
     this.upload = (type) => {
-      const path = this.state.path.map(p => p.data).filter(p => !!p).join('/')
+      const path = this.state.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
       const id = this.phyDrive.id
       ipcRenderer.send('UPLOAD', { dirUUID: path, driveUUID: id, type, domain: 'phy' })
     }
 
     this.download = () => {
-      let path = this.state.path.map(p => p.data).filter(p => !!p).join('/')
+      console.log('this.download', this.state)
+      let path = this.state.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
       if (path) path = `${path}/`
       const selected = this.state.select.selected
       const entries = selected.map(index => this.state.entries[index])
@@ -139,7 +134,7 @@ class USB extends Home {
     }
 
     this.deleteAsync = async () => {
-      let path = this.state.path.map(p => p.data).filter(p => !!p).join('/')
+      let path = this.state.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
       if (path) path = `${path}/`
       const entries = this.state.select.selected.map(index => this.state.entries[index])
       const queryStrings = entries.map(e => `${path}${e.name}`)
@@ -153,7 +148,7 @@ class USB extends Home {
     ipcRenderer.on('driveListUpdate', (e, dir) => {
       if (this.state.contextMenuOpen) return
       if (this.state.select && this.state.select.selected && this.state.select.selected.length > 1) return
-      const path = this.state.path && this.state.path.map(p => p.data).filter(p => !!p).join('/')
+      const path = this.state.path && this.state.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
       if (this.isNavEnter && dir.uuid === path) this.refresh({ noloading: true })
     })
   }
@@ -174,7 +169,7 @@ class USB extends Home {
       const path = [...this.state.path]
       if (!path.length) path.push({ name: this.title(), id: this.phyDrive.id, data: '', type: 'phy' })
 
-      const pos = { id: this.phyDrive.id, path: path.map(p => p.data).filter(p => !!p).join('/') }
+      const pos = { id: this.phyDrive.id, path: path.filter(p => p.type === 'directory').map(p => p.name).join('/') }
 
       if (this.history.get().curr === -1) this.history.add(pos)
 
@@ -190,11 +185,11 @@ class USB extends Home {
       console.log('this.state', this.state)
       const entries = this.state.phyDrives
         .filter(d => d.isUSB)
-        .map((a, i) => Object.assign({ name: i18n.__('Disk Parition %s', i + 1), data: i18n.__('Disk Parition %s', i + 1) }, a))
+        .map((a, i) => Object.assign({ name: i18n.__('Disk Parition %s', i + 1) }, a))
 
       const select = this.select.reset(entries.length)
       const path = [{ name: this.title(), id: null, data: '', type: 'phyRoot' }]
-      const pos = { type: 'phyRoot' }
+      const pos = { type: 'phyRoot', path }
 
       if (this.history.get().curr === -1) this.history.add(pos)
 

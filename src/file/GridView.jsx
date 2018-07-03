@@ -9,7 +9,7 @@ import AddDrive from './AddDrive'
 import HoverTip from './HoverTip'
 import ScrollBar from '../common/ScrollBar'
 import renderFileIcon from '../common/renderFileIcon'
-import { AllFileIcon, PublicIcon } from '../common/Svg'
+import { AllFileIcon, PublicIcon, PartitionIcon } from '../common/Svg'
 import { formatMtime } from '../common/datetime'
 
 const hasThumb = (metadata) => {
@@ -80,21 +80,22 @@ class Row extends React.Component {
                     style={{ height: 80, width: 108, margin: borderColor ? '15px auto 0 auto' : '16px auto 0 auto', overflow: 'hidden' }}
                   >
                     {
-                      entry.type === 'public' ? <PublicIcon style={{ width: 50, height: 50, color: '#ffa93e' }} />
-                        : entry.type === 'directory'
-                          ? <AllFileIcon style={{ width: 50, height: 50, color: '#ffa93e' }} />
-                          : ((rowSum < 500 || !isScrolling) && entry.hash && hasThumb(entry.metadata)
-                            ? (
-                              <Thumb
-                                full
-                                bgColor="#FFFFFF"
-                                digest={entry.hash}
-                                ipcRenderer={this.props.ipcRenderer}
-                                height={80}
-                                width={108}
-                              />
-                            ) : renderFileIcon(entry.name, entry.metadata, 50)
-                          )
+                      entry.isUSB ? <PartitionIcon style={{ width: 50, height: 50 }} />
+                        : entry.type === 'public' ? <PublicIcon style={{ width: 50, height: 50, color: '#ffa93e' }} />
+                          : entry.type === 'directory'
+                            ? <AllFileIcon style={{ width: 50, height: 50, color: '#ffa93e' }} />
+                            : ((rowSum < 500 || !isScrolling) && entry.hash && hasThumb(entry.metadata)
+                              ? (
+                                <Thumb
+                                  full
+                                  bgColor="#FFFFFF"
+                                  digest={entry.hash}
+                                  ipcRenderer={this.props.ipcRenderer}
+                                  height={80}
+                                  width={108}
+                                />
+                              ) : renderFileIcon(entry.name, entry.metadata, 50)
+                            )
                     }
                   </div>
 

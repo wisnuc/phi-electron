@@ -277,9 +277,9 @@ class NavViews extends React.Component {
               }}
               onClick={fn}
             >
-              <Icon style={{ width: 32, height: 32 }} color="#FFF" />
+              <Icon style={{ width: 40, height: 40, color: '#FFF', opacity: selected ? 1 : 0.7 }} />
               <div style={{ height: 8 }} />
-              <div style={{ transform: 'scale(1,.9)' }}>
+              <div style={{ transform: 'scale(1,.9)', opacity: selected ? 1 : 0.7 }}>
                 { text }
               </div>
             </div>

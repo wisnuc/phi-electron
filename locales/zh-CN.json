@@ -638,6 +638,7 @@
 
   "==== view/USB.jsx ====": "",
   "USB Menu Name": "USB存储",
+  "Disk Parition %s": "分区%s",
 
   "==== view/Downloading.jsx ====": "",
   "Downloading Menu Name": "正在下载",

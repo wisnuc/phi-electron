@@ -68,29 +68,13 @@ export const BTDownloadIcon = props => (
 )
 
 /* Header Manu */
-export const FileManage = props => (
-  <SvgIcon viewBox="0 0 26 32" {...props} >
-    <path fill="#FFF" fillRule="evenodd" d="M0 32V0h15l11 11v21H0zm24-20.172L14.171 2H2v28h22V11.828zM26 0v8l-8-8h8z" />
-  </SvgIcon>
-)
+export const FileManage = f('icon_filemanager')
 
-export const TransIcon = props => (
-  <SvgIcon viewBox="0 0 30 32" {...props} >
-    <path fill="#FFF" opacity=".702" fillRule="evenodd" d="M27.671 11.388l-5.714-5.823v25.72h-1.973V.712l9.082 9.255-1.395 1.421zM2.267 20.96l5.714 5.823V1.647h1.973v29.99L.872 22.381l1.395-1.421z" />
-  </SvgIcon>
-)
+export const TransIcon = f('icon_translist')
 
-export const DeviceChangeIcon = props => (
-  <SvgIcon viewBox="0 0 33 30" {...props}>
-    <path fill="#FFF" fillRule="evenodd" d="M20.134 1.542L21.531.115l5.928 6.057-1.397 1.427-5.928-6.057zm1.397 18.172l-1.397-1.428 7.206-7.362H10.953V8.905H32.11L21.531 19.714zM2.062 4.866v20.191c0 1.114.886 2.019 1.976 2.019h21.735c1.089 0 1.976-.905 1.976-2.019V20.01h1.976v5.047c0 2.227-1.772 4.039-3.952 4.039H4.038c-2.18 0-3.952-1.812-3.952-4.039V4.866C.086 2.64 1.858.828 4.038.828h6.915v2.02H4.038c-1.09 0-1.976.905-1.976 2.018z" opacity=".702" />
-  </SvgIcon>
-)
+export const DeviceChangeIcon = f('icon_changedev')
 
-export const FuncIcon = props => (
-  <SvgIcon viewBox="0 0 30 30" {...props}>
-    <path fill="#FFF" fillRule="evenodd" d="M26 30h-6c-2.206 0-4-1.794-4-4V16h10a4.003 4.003 0 0 1 3.999 4v6c0 2.206-1.793 4-3.999 4zm2-10c0-1.103-.898-2-2-2h-8v8c0 1.103.897 2 2 2h6c1.102 0 2-.897 2-2v-6zm-2-6H16V4c0-2.206 1.794-4 4-4h6a4.003 4.003 0 0 1 3.999 4v6c0 2.206-1.793 4-3.999 4zm2-10c0-1.103-.898-2-2-2h-6c-1.103 0-2 .897-2 2v8h8c1.102 0 2-.897 2-2V4zM10 30H4c-2.206 0-4-1.794-4-4v-6c0-2.206 1.794-4 4-4h9.999v10c0 2.206-1.793 4-3.999 4zm2-12H4c-1.103 0-2 .897-2 2v6c0 1.103.897 2 2 2h6c1.102 0 2-.897 2-2v-8zM0 10V4c0-2.206 1.794-4 4-4h6a4.003 4.003 0 0 1 3.999 4v10H4c-2.206 0-4-1.794-4-4zm12-6c0-1.103-.898-2-2-2H4c-1.103 0-2 .897-2 2v6c0 1.103.897 2 2 2h8V4z" opacity=".702" />
-  </SvgIcon>
-)
+export const FuncIcon = f('icon_func')
 
 /* window action */
 export const MinIcon = f('icon_windows_mini')
@@ -157,6 +141,8 @@ export const TaskDeleteIcon = f('icon_del_list')
 export const OpenFolderIcon = f('icon_folder_list')
 
 export const PublicIcon = f('icon_commondisk')
+
+export const PartitionIcon = f('icon_udisk_partition')
 
 export const AddDriveIcon = f('icon_diskadd')
 
