@@ -74,7 +74,8 @@ class PhiLogin extends React.Component {
                   autoLogin: !!this.state.autoLogin,
                   token: this.state.saveToken ? res.access_token : null
                 }
-                this.props.onSuccess({ list: r.result.list, phonenumber: this.state.pn, phicommUserId: res.uid, phi })
+                const list = r.result.list.filter(l => l.type === 'owner' || (l.accountStatus === '1' && l.inviteStatus !== 'reject'))
+                this.props.onSuccess({ list, phonenumber: this.state.pn, phicommUserId: res.uid, phi })
               }
             })
           }
@@ -97,7 +98,8 @@ class PhiLogin extends React.Component {
             autoLogin: !!this.state.autoLogin,
             token: this.state.saveToken ? this.phi.token : null
           }
-          this.props.onSuccess({ list: r.result.list, phonenumber: this.state.pn, phicommUserId: this.phi.puid, phi })
+          const list = r.result.list.filter(l => l.type === 'owner' || (l.accountStatus === '1' && l.inviteStatus !== 'reject'))
+          this.props.onSuccess({ list, phonenumber: this.state.pn, phicommUserId: this.phi.puid, phi })
         }
       })
     }
