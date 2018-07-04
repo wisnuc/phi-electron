@@ -30,6 +30,7 @@ class AdminUsersApp extends React.Component {
       const deviceSN = device.mdev.deviceSN
       const cloudUsers = (await phi.reqAsync('cloudUsers', { deviceSN })).result.users
       const localUsers = await phi.reqAsync('localUsers', { deviceSN })
+      this.localUsers = localUsers
       const drives = await phi.reqAsync('drives', { deviceSN })
 
       /* public drives */
@@ -89,7 +90,7 @@ class AdminUsersApp extends React.Component {
       const deviceSN = device.mdev.deviceSN
       const args = { deviceSN, phoneNumber: this.state.pn, nickName: this.state.nickName }
       const phicommUserId = (await phi.reqAsync('registerPhiUser', args)).result.uid
-      const user = await phi.reqAsync('newUser', { deviceSN, username: this.state.pn, phoneNumber: this.state.pn, phicommUserId })
+      const user = await phi.reqAsync('newUser', { deviceSN, username: this.state.nickName, phoneNumber: this.state.pn, phicommUserId })
       if (!user || user.phicommUserId !== phicommUserId) throw Error('add local user error')
       const cloudUsers = (await phi.reqAsync('cloudUsers', { deviceSN })).result.users
       if (!cloudUsers.find(u => u.uid === phicommUserId)) throw Error('req cloud user error')
@@ -113,10 +114,14 @@ class AdminUsersApp extends React.Component {
       this.setState({ checkList })
     }
 
-    this.updateNickName = nickName => this.setState({ nickName, nickNameError: '' })
+    this.updateNickName = (nickName) => {
+      if (this.localUsers.find(u => u.username === nickName)) this.setState({ nickName, nickNameError: i18n.__('Name Exist Error') })
+      else this.setState({ nickName, nickNameError: '' })
+    }
 
     this.updatePn = (pn) => {
-      if (isPhoneNumber(pn)) this.setState({ pn, pnError: '' })
+      if (this.localUsers.find(u => u.phoneNumber === pn)) this.setState({ pn, pnError: i18n.__('User Exist Error') })
+      else if (isPhoneNumber(pn)) this.setState({ pn, pnError: '' })
       else this.setState({ pn, pnError: i18n.__('Invalid Phone Number') })
     }
 
@@ -247,7 +252,7 @@ class AdminUsersApp extends React.Component {
   }
 
   renderRow ({ style, key, user }) {
-    const { driveList, inviteStatus, nickname, username, uuid, inActive, createTime } = user
+    const { driveList, inviteStatus, username, uuid, inActive, createTime, phoneNumber } = user
     const isModify = this.state.status === 'modify'
     return (
       <div style={style} key={key}>
@@ -275,7 +280,7 @@ class AdminUsersApp extends React.Component {
               }}
               onClick={() => isModify && this.onCheck(uuid)}
             >
-              { `${nickname || i18n.__('Normal User')} (${username})` }
+              { `${username || i18n.__('Normal User')} (${phoneNumber})` }
             </div>
             <div style={{ height: 40, display: 'flex', alignItems: 'center' }}>
               {

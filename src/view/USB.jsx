@@ -13,7 +13,7 @@ class USB extends Home {
 
     this.enter = (pos, cb) => {
       console.log('enter', pos)
-      if (pos.type === 'phyRoot') {
+      if (pos.isPhyRoot) {
         this.setState({ loading: true, path: pos.path })
         this.ctx.props.apis.request('phyDrives', null, cb)
       } else if (pos.isUSB) {
@@ -83,8 +83,8 @@ class USB extends Home {
 
       console.log('this.listNavBySelect', entry, this.state.path)
       if (entry.type === 'directory') {
-        const path = [...this.state.path, Object.assign({ type: 'phy' }, entry)]
-        const pos = { id: this.phyDrive.id, path, name: this.phyDrive.name, type: 'phy' }
+        const path = [...this.state.path, Object.assign({ isPhy: true, id: this.phyDrive.id }, entry)]
+        const pos = { id: this.phyDrive.id, path, name: this.phyDrive.name, isPhy: true }
         this.enter(pos, err => err && console.error('listNavBySelect error', err))
         this.history.add(pos)
       } else if (entry.isUSB) {
@@ -167,7 +167,7 @@ class USB extends Home {
       this.force = false
 
       const path = [...this.state.path]
-      if (!path.length) path.push({ name: this.title(), id: this.phyDrive.id, data: '', type: 'phy' })
+      if (!path.length) path.push({ name: this.title(), id: this.phyDrive.id, data: '', isPhy: true })
 
       const pos = { id: this.phyDrive.id, path: path.filter(p => p.type === 'directory').map(p => p.name).join('/') }
 
@@ -185,11 +185,14 @@ class USB extends Home {
       console.log('this.state', this.state)
       const entries = this.state.phyDrives
         .filter(d => d.isUSB)
-        .map((a, i) => Object.assign({ name: i18n.__('Disk Parition %s', i + 1) }, a))
+        .map((a, i) => {
+          const devName = a.mountpoint && a.mountpoint.split('/').pop()
+          return Object.assign({ name: devName || i18n.__('Disk Parition %s', i + 1) }, a)
+        })
 
       const select = this.select.reset(entries.length)
-      const path = [{ name: this.title(), id: null, data: '', type: 'phyRoot' }]
-      const pos = { type: 'phyRoot', path }
+      const path = [{ name: this.title(), id: null, data: '', isPhyRoot: true }]
+      const pos = { isPhyRoot: true, path }
 
       if (this.history.get().curr === -1) this.history.add(pos)
 

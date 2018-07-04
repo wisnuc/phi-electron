@@ -25,7 +25,7 @@ class Row extends React.Component {
   }
 
   render () {
-    const { select, list, isScrolling, rowSum } = this.props
+    const { select, list, isScrolling, rowSum, inPublicRoot } = this.props
 
     return (
       <div style={{ height: '100%', width: '100%', marginLeft: 10 }} >
@@ -35,7 +35,7 @@ class Row extends React.Component {
             list.entries.map((item) => {
               const { index, entry } = item
               const selected = select.selected.findIndex(s => s === index) > -1
-              const isOnModify = select.modify === index
+              const isOnModify = select.modify === index && !inPublicRoot
               const hover = select.hover === index && !selected
               const focus = select.specified === index
               const backgroundColor = selected ? '#f4fafe' : hover ? '#f9fcfe' : '#FFF'

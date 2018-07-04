@@ -89,7 +89,7 @@ class SetLANPwd extends React.Component {
         <div style={{ height: 20 }} />
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <RRButton
-            label={i18n.__('Save') + (this.state.loading ? '中...' : '')}
+            label={i18n.__('Save') + (this.state.loading ? '中' : '')}
             onClick={this.fire}
             disabled={!this.state.pwd || this.state.loading}
             loading={this.state.loading}

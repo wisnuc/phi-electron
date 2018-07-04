@@ -43,9 +43,9 @@ class NewDriveDialog extends PureComponent {
       const apis = this.props.apis
       const args = {
         uuid: this.props.drive.uuid,
-        label: this.state.label,
         writelist: this.isBuiltIn ? undefined : this.state.writelist
       }
+      if (this.state.label !== (this.props.drive && this.props.drive.label)) Object.assign(args, { label: this.state.label })
       apis.request('adminUpdateDrive', args, (err) => {
         if (!err) {
           this.props.refreshDrives()
@@ -134,11 +134,11 @@ class NewDriveDialog extends PureComponent {
 
         <div style={{ maxHeight: 40 * 5, overflow: 'auto' }}>
           {
-            users.map(user => (
+            users.filter(u => u.status === 'ACTIVE').map(user => (
               <div style={{ width: '100%', height: 40, display: 'flex', alignItems: 'center' }} key={user.username} >
                 <Checkbox
                   alt
-                  label={user.phoneNumber}
+                  label={user.isFirstUser ? i18n.__('Myself') : user.username}
                   checked={this.state.writelist === '*' ||
                       (this.state.writelist && this.state.writelist.includes(user.uuid)) || user.isFirstUser}
                   onCheck={() => this.handleCheck(user.uuid)}
@@ -159,7 +159,7 @@ class NewDriveDialog extends PureComponent {
           />
           <div style={{ width: 10 }} />
           <RSButton
-            label={type === 'new' ? i18n.__('Create') : i18n.__('Modify')}
+            label={i18n.__('Confirm')}
             disabled={this.state.label.length === 0 || !!this.state.errorText || this.state.loading}
             onClick={this.fire}
           />

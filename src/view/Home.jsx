@@ -551,6 +551,9 @@ class Home extends Base {
       if (event.nativeEvent.button !== 0) return
       /* not public */
       if (this.state.entries[index].type === 'public') return
+      /* not usb drive */
+      if (this.state.entries[index].isUSB) return
+
       this.RDSI = index // rowDragStartIndex
       const selected = this.state.select.selected
       this.state.select.toggleDrag(selected.includes(this.RDSI) ? selected : [this.RDSI])
@@ -763,12 +766,12 @@ class Home extends Base {
           this.enter(pos, err => err && console.error('listNavBySelect error', err))
           this.history.add(pos)
           this.ctx.props.apis.request('listPhyDir', { id: node.id, path: '' })
-        } else if (node.type === 'phy') { // phyDrives
+        } else if (node.isPhy) { // phyDrives
           const newPath = [...path.slice(0, index + 1)]
           const pos = { id: node.id, path: newPath, name: node.name }
           this.enter(pos, err => err && console.error('listNavBySelect error', err))
           this.history.add(pos)
-        } else if (node.type === 'phyRoot') { // phyRoot
+        } else if (node.isPhyRoot) { // phyRoot
           this.phyDrive = null
           this.ctx.props.apis.request('phyDrives')
         } else { // home drives

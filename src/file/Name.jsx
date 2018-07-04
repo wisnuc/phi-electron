@@ -48,7 +48,7 @@ class Name extends React.PureComponent {
         }
       }
 
-      const isPhy = this.props.path[0].type === 'phy'
+      const isPhy = this.props.path[0].isPhy
       console.log('this.props', this.props, args, isPhy)
       if (isPhy) {
         let np = path.map(p => p.data).filter(p => !!p).join('/')
