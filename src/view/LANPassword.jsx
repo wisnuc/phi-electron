@@ -13,7 +13,8 @@ class LAN extends Base {
   }
 
   menuDes () {
-    return i18n.__('LANPassword Description')
+    const isLAN = !!this.ctx.props.account.lan
+    return isLAN ? i18n.__('LANPassword Modify Description') : i18n.__('LANPassword Reset Description')
   }
 
   menuIcon () {

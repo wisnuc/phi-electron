@@ -155,12 +155,19 @@ class Base extends EventEmitter {
   }
 
   renderDefaultError () {
+    const res = this.state.error.response
+    const isDirNotFound = res && res.body && res.body.message === 'dir not found'
     return (
       <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
         <div>
-          <img src="./assets/images/pic_network_failed.png" alt="" width={320} height={180} />
+          <img
+            alt=""
+            width={320}
+            height={180}
+            src={`./assets/images/${isDirNotFound ? 'pic_nofile.png' : 'pic_network_failed.png'}`}
+          />
           <div style={{ marginTop: 30, height: 30, fontSize: 14, color: '#31a0f5' }} className="flexCenter" >
-            { i18n.__('Error in Base Text') }
+            { isDirNotFound ? i18n.__('Folder Not Found') : i18n.__('Error in Base Text') }
           </div>
           <div style={{ height: 70 }} />
         </div>

@@ -62,7 +62,7 @@ class TrsContainer extends React.Component {
     }
 
     this.open = (task) => {
-      ipcRenderer.send('OPEN_TRANSMISSION', [task.downloadPath])
+      ipcRenderer.send('OPEN_TRANSMISSION', task.downloadPath)
     }
 
     this.openInDrive = (task) => {
