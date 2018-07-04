@@ -18,7 +18,7 @@ import FlatButton from '../common/FlatButton'
 import MenuItem from '../common/MenuItem'
 import sortByType from '../common/sort'
 import { BreadCrumbItem, BreadCrumbSeparator } from '../common/BreadCrumb'
-import { BackwardIcon, ForwardIcon, RefreshAltIcon, DownloadIcon, DeleteIcon, NewFolderIcon, ListIcon, GridIcon, HelpIcon, AllFileIcon, ArrowIcon } from '../common/Svg'
+import { BackwardIcon, ForwardIcon, RefreshAltIcon, DownloadIcon, DeleteFileIcon, NewFolderIcon, ListIcon, GridIcon, HelpIcon, AllFileIcon, ArrowIcon } from '../common/Svg'
 import renderFileIcon from '../common/renderFileIcon'
 import { xcopyMsg } from '../common/msg'
 import Search from '../common/Search'
@@ -875,7 +875,7 @@ class Home extends Base {
           label={i18n.__('Delete')}
           labelStyle={{ fontSize: 14, marginLeft: 4 }}
           disabled={!itemSelected || inRoot}
-          icon={<DeleteIcon style={iconStyle(!itemSelected || inRoot)} />}
+          icon={<DeleteFileIcon style={iconStyle(!itemSelected || inRoot)} />}
         />
 
         <FlatButton

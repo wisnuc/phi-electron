@@ -404,8 +404,8 @@ class AdminUsersApp extends React.Component {
                 }
                 <div style={{ width: 10 }} />
                 <RSButton
-                  label={isAddUser ? i18n.__('Send Invite') : isConfirm ? i18n.__('Confirm')
-                    : isModify ? i18n.__('Delete') : i18n.__('Add User')}
+                  label={isAddUser ? this.state.loading ? i18n.__('Sending Invite') : i18n.__('Send Invite')
+                    : isConfirm ? i18n.__('Confirm') : isModify ? i18n.__('Delete') : i18n.__('Add User')}
                   disabled={(isModify && !this.state.checkList.length) || (isAddUser && !this.shouldAddUser()) || this.state.invited}
                   onClick={() => (isAddUser ? this.invite() : isConfirm ? this.deleteUser()
                     : isModify ? this.confirmDelete() : this.addUser())}

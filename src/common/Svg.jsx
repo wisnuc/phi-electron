@@ -100,6 +100,8 @@ export const UploadIcon = f('icon_upload')
 
 export const DeleteIcon = f('icon_del_list')
 
+export const DeleteFileIcon = f('icon_delete_file')
+
 export const NewFolderIcon = f('icon_folder_add')
 
 export const ListIcon = f('icon_thumbnail_list')
@@ -140,7 +142,9 @@ export const TaskDeleteIcon = f('icon_del_list')
 
 export const OpenFolderIcon = f('icon_folder_list')
 
-export const PublicIcon = f('icon_commondisk')
+export const PublicIcon = f('icon_commdiskthumb')
+
+export const PublicDiskIcon = f('icon_commondisk')
 
 export const PartitionIcon = f('icon_udisk_partition')
 

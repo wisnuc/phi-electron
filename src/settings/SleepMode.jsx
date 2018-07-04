@@ -42,11 +42,12 @@ class SleepMode extends React.Component {
   componentWillReceiveProps (nextProps) {
     if (nextProps.sleep && !this.singleton) {
       this.singleton = true
+      const swc = !(nextProps.sleep.start === '00:00' && nextProps.sleep.end === '23:59') && !!nextProps.sleep.start
       this.setState({
         sleep: !!nextProps.sleep.start,
-        switch: !(nextProps.sleep.start === '00:00' && nextProps.sleep.end === '23:59'),
-        start: nextProps.sleep.start || '00:00',
-        end: nextProps.sleep.end || '23:59'
+        switch: swc,
+        start: swc ? nextProps.sleep.start : '23:00',
+        end: swc ? nextProps.sleep.end : '07:00'
       })
     }
   }
@@ -58,6 +59,8 @@ class SleepMode extends React.Component {
   shouldFire () {
     if (!this.state.sleep || !this.state.switch) return true
     if ([this.state.start, this.state.end].some(v => !v || typeof v !== 'string' || v.length !== 5)) return false
+    if (this.state.start === this.state.end) return false
+    if (this.state.start === '00:00' && this.state.end === '23:59') return false
     if ([this.state.start, this.state.end].every(v => v.slice(2, 3) === ':' && this.isNumberAndBetween(v.slice(0, 2), 0, 23) &&
       this.isNumberAndBetween(v.slice(3, 5), 0, 60))) return true
     return false

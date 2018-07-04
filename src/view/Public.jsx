@@ -7,7 +7,7 @@ import FileContent from '../file/FileContent'
 import NewDriveDialog from '../control/NewDriveDialog'
 import sortByType from '../common/sort'
 import DialogOverlay from '../common/DialogOverlay'
-import { PublicIcon } from '../common/Svg'
+import { PublicDiskIcon } from '../common/Svg'
 
 class Public extends Home {
   constructor (ctx) {
@@ -132,7 +132,7 @@ class Public extends Home {
   }
 
   menuIcon () {
-    return PublicIcon
+    return PublicDiskIcon
   }
 
   renderContent ({ toggleDetail, openSnackBar, getDetailStatus }) {
