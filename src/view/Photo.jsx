@@ -64,6 +64,10 @@ class Photo extends Home {
       const selected = this.state.select.selected
       const entries = selected.map(index => this.state.entries[index])
       const path = this.state.path
+      this.setState({ onDownload: { selected, entries, path } })
+    }
+
+    this.downloadFire = ({ selected, entries, path, downloadPath }) => {
       const apis = this.ctx.props.apis
       const places = apis && apis.drives && apis.drives.data && apis.drives.data.map(d => d.uuid)
       const entriesByDir = entries.sort((a, b) => a.pdir.localeCompare(b.pdir)).reduce((acc, cur) => {
@@ -78,6 +82,7 @@ class Photo extends Home {
         const dirUUID = arr[0].pdir
         ipcRenderer.send('DOWNLOAD', { entries: arr, dirUUID, driveUUID })
       })
+      this.setState({ onDownload: null })
     }
   }
 

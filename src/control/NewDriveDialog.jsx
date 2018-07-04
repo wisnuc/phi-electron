@@ -132,18 +132,6 @@ class NewDriveDialog extends PureComponent {
           { i18n.__('Permissions') }
         </div>
 
-        {/*
-        <div style={{ width: '100%', height: 40, display: 'flex', alignItems: 'center' }} key="all" >
-          <Checkbox
-            label={i18n.__('All Users')}
-            labelStyle={{ fontSize: 14 }}
-            iconStyle={{ fill: this.state.writelist === '*' ? this.props.primaryColor : 'rgba(0, 0, 0, 0.54)' }}
-            checked={this.state.writelist === '*'}
-            onCheck={() => this.togglecheckAll()}
-          />
-        </div>
-        <Divider style={{ color: 'rgba(0, 0, 0, 0.54)' }} />
-        */}
         <div style={{ maxHeight: 40 * 5, overflow: 'auto' }}>
           {
             users.map(user => (

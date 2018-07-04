@@ -24,6 +24,10 @@ class FileContent extends React.Component {
 
     this.data = {}
 
+    this.download = () => {
+      this.setState({ preview: false }, () => this.props.download())
+    }
+
     /* cathc key action */
     this.keyDown = (e) => {
       const { createNewFolder, loading, newDrive, select, showUsers } = this.props
@@ -360,6 +364,10 @@ class FileContent extends React.Component {
     /* lost connection to wisnuc */
     if (!window.navigator.onLine) return this.renderOffLine()
 
+    const isPhoto = this.state.seqIndex > -1 && this.props.entries && this.props.entries[this.state.seqIndex] &&
+      this.props.entries[this.state.seqIndex].metadata &&
+      ['JPEG', 'PNG', 'JPG', 'GIF', 'BMP', 'RAW'].includes(this.props.entries[this.state.seqIndex].metadata.type)
+
     /* got list */
     return (
       <div style={{ width: '100%', height: '100%', position: 'relatvie' }} >
@@ -398,7 +406,7 @@ class FileContent extends React.Component {
 
         {/* preview picture */}
         {
-          this.state.seqIndex > -1 && this.props.entries[this.state.seqIndex] && this.props.entries[this.state.seqIndex].metadata &&
+          this.state.seqIndex > -1 && isPhoto &&
             <ContainerOverlay
               onRequestClose={() => this.setState({ preview: false })}
               isMedia={this.props.isMedia || this.props.showSearch}
@@ -408,8 +416,7 @@ class FileContent extends React.Component {
               ipcRenderer={this.props.ipcRenderer}
               setAnimation={this.props.setAnimation}
               memoize={this.props.memoize}
-              download={this.props.download}
-              primaryColor={this.props.primaryColor}
+              download={this.download}
               path={this.props.path}
               select={this.props.select.touchTap}
               apis={this.props.apis}
@@ -418,7 +425,7 @@ class FileContent extends React.Component {
 
         {/* preview other files */}
         {
-          this.state.seqIndex > -1 && this.props.entries[this.state.seqIndex] && !this.props.entries[this.state.seqIndex].metadata &&
+          this.state.seqIndex > -1 && !isPhoto &&
             <SingleView
               onRequestClose={() => this.setState({ preview: false })}
               isMedia={this.props.isMedia || this.props.showSearch}
@@ -428,8 +435,7 @@ class FileContent extends React.Component {
               ipcRenderer={this.props.ipcRenderer}
               setAnimation={this.props.setAnimation}
               memoize={this.props.memoize}
-              download={this.props.download}
-              primaryColor={this.props.primaryColor}
+              download={this.download}
               path={this.props.path}
               select={this.props.select.touchTap}
               apis={this.props.apis}

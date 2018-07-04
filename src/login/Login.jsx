@@ -134,7 +134,7 @@ class Login extends React.Component {
 
   /* make sure log out phi account success */
   componentWillReceiveProps (nextProps) {
-    if (!nextProps.account && this.state.status !== 'phiLogin') this.setState({ status: 'phiLogin' })
+    if (!nextProps.account && this.state.status !== 'phiLogin') this.setState({ status: 'phiLogin', selectedDevice: null })
   }
 
   renderDeviceSelect (props) {
