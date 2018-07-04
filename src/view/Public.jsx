@@ -19,6 +19,8 @@ class Public extends Home {
 
     this.rootDrive = null
 
+    this.isPublic = true
+
     this.back = () => {
       const pos = this.history.back()
       if (pos.type === 'publicRoot') {

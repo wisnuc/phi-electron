@@ -326,6 +326,7 @@ class Home extends Base {
 
     this.back = () => {
       const pos = this.history.back()
+      this.setState({ showSearch: false })
       this.enter(pos, err => err && console.error('back error', err))
     }
 
@@ -340,7 +341,7 @@ class Home extends Base {
       const rUUID = this.state.path[0] && this.state.path[0].uuid
       const dUUID = this.state.path[0] && this.state.path[this.state.path.length - 1].uuid
       if (!rUUID || !dUUID) {
-        this.setState({ loading: true })
+        this.setState({ loading: true, showSearch: false })
         this.ctx.props.apis.request('drives') // drive root
         this.ctx.props.apis.request('users') // drive root
       } else {
@@ -349,7 +350,7 @@ class Home extends Base {
       this.resetScrollTo()
 
       if (op) this.setState({ scrollTo: op.fileName || op.uuid, loading: !op.noloading }) // fileName for files, uuid for drives
-      else this.setState({ loading: true })
+      else this.setState({ loading: true, showSearch: false })
     }
 
     this.resetScrollTo = () => Object.assign(this.state, { scrollTo: null })
@@ -570,8 +571,14 @@ class Home extends Base {
       this.setState({ showSearch: name, loading: true, select })
       const types = this.types // photo, docs, video, audio
       const apis = this.ctx.props.apis
-      const places = types ? apis && apis.drives && apis.drives.data && apis.drives.data.map(d => d.uuid).join('.')
-        : this.state.path[0].uuid
+      const drives = apis && apis.drives && apis.drives.data
+      if (!Array.isArray) {
+        this.ctx.props.openSnackBar(i18n.__('Search Failed'))
+        return
+      }
+      const places = types ? drives.map(d => d.uuid).join('.') // media
+        : this.isPublic ? drives.filter(d => d.type === 'public').map(d => d.uuid).join('.') // public
+          : drives.find(d => d.type === 'private').uuid // home
       const order = types ? 'newest' : 'find'
 
       this.ctx.props.apis.pureRequest('search', { name, places, types, order }, (err, res) => {
