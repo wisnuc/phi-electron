@@ -256,6 +256,8 @@
   "Active User Error": "激活用户失败",
   "InActive User": "旧用户",
   "Active": "激活",
+  "Exceed Max Users Text": "每个NAS设备可连9个用户加1个管理员。",
+  "Exceed Max Users": "超过用户上限",
 
   "==== control/AdminDriversApp.jsx ====": "",
   "Name": "名称",

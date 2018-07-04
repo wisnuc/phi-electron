@@ -170,6 +170,10 @@ class AdminUsersApp extends React.Component {
     return i18n.__('Failed To Load User Data')
   }
 
+  renderMaxUser () {
+    return i18n.__('Exceed Max Users Text')
+  }
+
   renderAddUser () {
     return (
       <div style={{ width: 280 }}>
@@ -348,6 +352,10 @@ class AdminUsersApp extends React.Component {
     const isModify = this.state.status === 'modify'
     const isAddUser = this.state.status === 'addUser'
     const isConfirm = this.state.status === 'confirm'
+    const isMaxUser = Array.isArray(this.state.users) && this.state.users.length >= 9
+    const width = (isAddUser || isConfirm) ? 320 : 420
+    const hasBack = (isAddUser && !isMaxUser) || isConfirm
+
     const height = isConfirm ? 60
       : !isAddUser && this.state.users && this.state.users.length > 0 ? Math.min(this.state.users.length * 60, 180)
         : undefined
@@ -356,14 +364,15 @@ class AdminUsersApp extends React.Component {
       <Dialog open={open} onRequestClose={onCancel} modal >
         {
           open && (
-            <div style={{ width: (isAddUser || isConfirm) ? 320 : 420, transition: 'all 175ms' }} >
+            <div style={{ width, transition: 'all 175ms' }} >
               <div
                 className="title"
-                style={{ height: 60, display: 'flex', alignItems: 'center', paddingLeft: isAddUser || isConfirm ? 0 : 20 }}
+                style={{ height: 60, display: 'flex', alignItems: 'center', paddingLeft: hasBack ? 0 : 20 }}
               >
-                { (isAddUser || isConfirm) && <LIButton onClick={this.backToView}> <BackIcon /> </LIButton>}
-                { isAddUser ? i18n.__('Add User') : isConfirm ? i18n.__('Confirm Delete User Title')
-                  : isModify ? i18n.__('Modify Users') : i18n.__('User Management') }
+                { hasBack && <LIButton onClick={this.backToView}> <BackIcon /> </LIButton>}
+                { isAddUser ? isMaxUser ? i18n.__('Exceed Max Users') : i18n.__('Add User')
+                  : isConfirm ? i18n.__('Confirm Delete User Title')
+                    : isModify ? i18n.__('Modify Users') : i18n.__('User Management') }
                 <div style={{ flexGrow: 1 }} />
                 { (!isAddUser && !isConfirm) && <LIButton onClick={onCancel}> <CloseIcon /> </LIButton> }
                 <div style={{ width: 10 }} />
@@ -384,7 +393,7 @@ class AdminUsersApp extends React.Component {
                 {
                   this.state.loading ? this.renderLoading()
                     : this.state.error ? this.renderError()
-                      : isAddUser ? this.renderAddUser()
+                      : isAddUser ? isMaxUser ? this.renderMaxUser() : this.renderAddUser()
                         : isConfirm ? i18n.__('Confirm Delete User Text')
                           : this.state.users.length ? this.renderUsers(this.state.users) : this.renderNoUser()
                 }
@@ -404,10 +413,11 @@ class AdminUsersApp extends React.Component {
                 }
                 <div style={{ width: 10 }} />
                 <RSButton
-                  label={isAddUser ? this.state.loading ? i18n.__('Sending Invite') : i18n.__('Send Invite')
+                  label={isAddUser ? isMaxUser ? i18n.__('Got It') : this.state.invited ? i18n.__('Sending Invite') : i18n.__('Send Invite')
                     : isConfirm ? i18n.__('Confirm') : isModify ? i18n.__('Delete') : i18n.__('Add User')}
-                  disabled={(isModify && !this.state.checkList.length) || (isAddUser && !this.shouldAddUser()) || this.state.invited}
-                  onClick={() => (isAddUser ? this.invite() : isConfirm ? this.deleteUser()
+                  disabled={(isModify && !this.state.checkList.length) ||
+                    (isAddUser && !isMaxUser && !this.shouldAddUser()) || this.state.invited}
+                  onClick={() => (isAddUser ? isMaxUser ? this.backToView() : this.invite() : isConfirm ? this.deleteUser()
                     : isModify ? this.confirmDelete() : this.addUser())}
                 />
               </div>
