@@ -1106,29 +1106,29 @@ class Home extends Base {
                   />
                   {
                     !this.isMedia &&
-                    <div>
-                      <Divider style={{ marginLeft: 10, marginTop: 2, marginBottom: 2, width: 'calc(100% - 20px)' }} />
-                      <MenuItem
-                        primaryText={i18n.__('Copy')}
-                        onClick={this.onCopy}
-                      />
-                      <MenuItem
-                        primaryText={i18n.__('Cut')}
-                        onClick={this.onCut}
-                      />
-                      {
-                        !multiSelected &&
+                      <div>
+                        <Divider style={{ marginLeft: 10, marginTop: 2, marginBottom: 2, width: 'calc(100% - 20px)' }} />
                         <MenuItem
-                          primaryText={i18n.__('Rename')}
-                          onClick={this.rename}
+                          primaryText={i18n.__('Copy')}
+                          onClick={this.onCopy}
                         />
-                      }
-                      <MenuItem
-                        primaryText={i18n.__('Delete')}
-                        onClick={() => this.toggleDialog('delete')}
-                      />
-                    </div>
+                        <MenuItem
+                          primaryText={i18n.__('Cut')}
+                          onClick={this.onCut}
+                        />
+                        {
+                          !multiSelected &&
+                            <MenuItem
+                              primaryText={i18n.__('Rename')}
+                              onClick={this.rename}
+                            />
+                        }
+                      </div>
                   }
+                  <MenuItem
+                    primaryText={i18n.__('Delete')}
+                    onClick={() => this.toggleDialog('delete')}
+                  />
                   <Divider style={{ marginLeft: 10, marginTop: 2, marginBottom: 2, width: 'calc(100% - 20px)' }} />
                   <MenuItem
                     primaryText={i18n.__('Properties')}
