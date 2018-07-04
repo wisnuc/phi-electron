@@ -356,6 +356,12 @@ class Home extends Base {
     this.resetScrollTo = () => Object.assign(this.state, { scrollTo: null })
 
     this.showContextMenu = (clientX, clientY) => {
+      const selected = this.state.select && this.state.select.selected
+      /* in public root */
+      if (this.state.inRoot && selected && selected.length !== 1) return
+      /* in phyDrive root */
+      if (this.hasRoot && !this.phyDrive && selected && selected.length !== 1) return
+
       if (this.select.state.ctrl || this.select.state.shift) return
       const containerDom = document.getElementById('content-container')
       const maxLeft = containerDom.offsetLeft + containerDom.clientWidth + 80

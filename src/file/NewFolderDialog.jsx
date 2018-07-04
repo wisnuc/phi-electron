@@ -49,8 +49,8 @@ class NewFolderDialog extends React.PureComponent {
       const { apis, path } = this.props
 
       const args = {
-        id: path[0].id,
-        path: path.map(p => p.data).filter(p => !!p).join('/'),
+        id: [...path].pop().id,
+        path: path.filter(p => p.type === 'directory').map(p => p.name).join('/'),
         dirname: this.state.value
       }
       apis.request('mkPhyDir', args, (err) => {

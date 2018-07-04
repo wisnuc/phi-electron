@@ -32,15 +32,22 @@ class Preview extends React.Component {
     this.openByLocal = () => {
       if (this.props.item.size > 50 * 1024 * 1024) this.setState({ alert: true })
       else {
-        const driveUUID = this.props.path[0].uuid
-        const dirUUID = this.props.path[this.props.path.length - 1].uuid
-        const entryUUID = this.props.item.uuid
+        const isPhy = this.props.path && (this.props.path[0].isPhyRoot || this.props.path[0].isUSB)
+        let path = this.props.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
+        if (path) path = `${path}/`
+
+        this.session = UUID.v4()
+        const driveUUID = isPhy ? [...this.props.path].pop().id : this.props.path[0].uuid
+        const dirUUID = isPhy ? path : [...this.props.path].pop().uuid
+        const entryUUID = isPhy ? this.session : this.props.item.uuid
         const fileName = this.props.item.name
+
         this.props.ipcRenderer.send('OPEN_FILE', {
           driveUUID,
           dirUUID,
           entryUUID,
-          fileName
+          fileName,
+          domain: isPhy ? 'phy' : 'drive'
         })
         this.props.close()
       }
@@ -61,18 +68,24 @@ class Preview extends React.Component {
     }
 
     this.startDownload = () => {
+      console.log('this.startDownload', this.state, this.props)
       const isMedia = this.props.isMedia
+      const isPhy = this.props.path && (this.props.path[0].isPhyRoot || this.props.path[0].isUSB)
+      let path = this.props.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
+      if (path) path = `${path}/`
+
       this.session = UUID.v4()
-      const driveUUID = isMedia ? 'media' : this.props.path[0].uuid
-      const dirUUID = isMedia ? 'media' : this.props.path[this.props.path.length - 1].uuid
-      const entryUUID = isMedia ? this.props.item.hash : this.props.item.uuid
+      const driveUUID = isMedia ? 'media' : isPhy ? [...this.props.path].pop().id : this.props.path[0].uuid
+      const dirUUID = isMedia ? 'media' : isPhy ? path : this.props.path[this.props.path.length - 1].uuid
+      const entryUUID = isMedia ? this.props.item.hash : isPhy ? this.session : this.props.item.uuid
       const fileName = this.props.item.name
       this.props.ipcRenderer.send('TEMP_DOWNLOADING', {
         session: this.session,
         driveUUID,
         dirUUID,
         entryUUID,
-        fileName
+        fileName,
+        domain: isMedia ? 'media' : isPhy ? 'phy' : 'drive'
       })
       this.props.ipcRenderer.on('TEMP_DOWNLOAD_SUCCESS', this.downloadSuccess)
     }
@@ -353,6 +366,7 @@ class Preview extends React.Component {
   render () {
     if (!this.props.item || !this.props.item.name) return (<div />)
     const isCloud = this.props && this.props.apis && this.props.apis.isCloud
+    const isPhy = this.props.path && (this.props.path[0].isPhyRoot || this.props.path[0].isUSB)
 
     const { metadata, hash } = this.props.item
     const photoMagic = ['JPEG', 'GIF', 'PNG', 'BMP']
@@ -365,7 +379,8 @@ class Preview extends React.Component {
 
     const extension = this.props.item.name.replace(/^.*\./, '').toUpperCase()
     const textExtension = ['TXT', 'MD', 'JS', 'JSX', 'TS', 'JSON', 'HTML', 'CSS', 'LESS', 'CSV', 'XML']
-    const isText = textExtension.findIndex(t => t === extension) > -1 && (this.props.item.size < 1024 * 128) && !this.props.isMedia
+    const isText = textExtension.findIndex(t => t === extension) > -1 && !isPhy &&
+      (this.props.item.size < 1024 * 128) && !this.props.isMedia
 
     return (
       <div
