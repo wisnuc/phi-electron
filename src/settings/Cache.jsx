@@ -53,7 +53,7 @@ class ResetDevice extends React.Component {
             />
           </div>
           <div style={{ height: 40 }} />
-          <div style={{ color: '#888a8c', marginBottom: 40, height: 80, display: 'flex', alignItems: 'center' }}>
+          <div style={{ color: '#888a8c', marginBottom: 40, height: 40, display: 'flex', alignItems: 'center' }}>
             { i18n.__('Clean Cache Text %s', this.state.cacheSize) }
           </div>
           <div style={{ width: 240, height: 40, margin: '0 auto' }}>

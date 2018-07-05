@@ -163,8 +163,8 @@ class Disk extends React.PureComponent {
     const iconStyle = { width: 20, height: 20, color: '#31a0f5' }
     const buttonStyle = { width: 24, height: 24, padding: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }
     return (
-      <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-        <div style={{ height: 20 }} />
+      <div style={{ position: 'relative', width: '100%', height: '100%' }} >
+        <div style={{ height: 'calc((100% - 500px) / 2)' }} />
         <div style={{ width: 1000, height: 360, margin: '0 auto', display: 'flex', alignItems: 'center' }}>
           { this.renderCircularProgress(progressTitle, storageUsage, data) }
           <div style={{ width: 10 }} />
@@ -272,6 +272,8 @@ class Disk extends React.PureComponent {
             />
           </div>
         </div>
+        <div style={{ height: 'calc((100% - 500px) / 2)' }} />
+
         <Dialog open={!!this.state.showGuide} onRequestClose={() => this.setState({ showGuide: false })}>
           {
             !!this.state.showGuide &&

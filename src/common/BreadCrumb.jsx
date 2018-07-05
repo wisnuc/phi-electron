@@ -26,8 +26,8 @@ export class BreadCrumbItem extends React.PureComponent {
           cursor: 'pointer',
           borderRadius: 2, // mimic a flat button
           height: 24,
-          paddingLeft: 6,
-          paddingRight: 6,
+          paddingLeft: 2,
+          paddingRight: 2,
           fontSize: 12,
           color: this.state.hover ? '#31a0f5' : last ? '#505259' : '#85868c',
           display: 'flex',

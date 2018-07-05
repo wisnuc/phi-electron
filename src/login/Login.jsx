@@ -364,23 +364,18 @@ class Login extends React.Component {
             alignItems: 'center',
             color: '#85868c',
             width: '100%',
-            height: 40,
-            backgroundColor: '#f3f8ff',
-            borderTop: '1px solid rgba(0,0,0,.05)'
+            height: 40
           }}
         >
-          <div style={{ margin: '0px 24px' }}>
+          <div style={{ flexGrow: 1 }} />
+          <div>
             { `©${new Date().getFullYear()} ${i18n.__('Copyright Info')}` }
           </div>
-          <div style={{ margin: '0px 16px' }}>
-            { `${i18n.__('Version:')} ${global.config && global.config.appVersion}` }
+          <div style={{ margin: '0px 20px' }}>
+            { i18n.__('Client Version %s', global.config && global.config.appVersion) }
           </div>
-          <div style={{ flexGrow: 1 }} />
-          <div style={{ margin: '0px 16px' }}>
-            { i18n.__('Phone Number: ') }
-          </div>
-          <div style={{ fontSize: 18, marginRight: 20 }}>
-            { '4007-567-567' }
+          <div style={{ marginRight: 20 }}>
+            { i18n.__('Phone Number %s', '4007-567-567') }
           </div>
         </div>
         { view }

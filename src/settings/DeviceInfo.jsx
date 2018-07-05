@@ -241,26 +241,28 @@ class DeviceInfo extends React.PureComponent {
 
     return (
       <div
-        style={{ position: 'relative', width: '100%', height: '100%' }}
+        className="flexCenter"
+        style={{ width: '100%', height: 'calc(100% - 60px)' }}
         onClick={() => !this.state.progress && this.setState({ modify: false, label: '' })}
       >
-        <div style={{ height: 20 }} />
-        <div style={{ width: 1000, height: 140, margin: '20px auto', display: 'flex', alignItems: 'center' }}>
-          { graphData.map((data, index) => this.renderCard(data, index)) }
-        </div>
-        <div style={{ height: 20 }} />
-        <div
-          style={{
-            width: 1000,
-            height: 240,
-            margin: '0 auto',
-            display: 'grid',
-            gridGap: 20,
-            gridTemplateColumns: '1fr 1fr 1fr'
-          }}
-        >
-          { this.renderDeviceName() }
-          { listData.map((data, index) => this.renderList(data, index))}
+        <div style={{ position: 'relative', width: '100%', height: 420 }} >
+          <div style={{ width: 1000, height: 140, margin: '20px auto', display: 'flex', alignItems: 'center' }}>
+            { graphData.map((data, index) => this.renderCard(data, index)) }
+          </div>
+          <div style={{ height: 20 }} />
+          <div
+            style={{
+              width: 1000,
+              height: 240,
+              margin: '0 auto',
+              display: 'grid',
+              gridGap: 20,
+              gridTemplateColumns: '1fr 1fr 1fr'
+            }}
+          >
+            { this.renderDeviceName() }
+            { listData.map((data, index) => this.renderList(data, index))}
+          </div>
         </div>
       </div>
     )

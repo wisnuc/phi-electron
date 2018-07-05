@@ -233,7 +233,7 @@ class PhiLogin extends React.Component {
             onCheck={() => this.handleAutologin()}
           />
         </div>
-        <div style={{ height: 30 }} />
+        <div style={{ height: 20 }} />
         <div style={{ width: 240, height: 40, margin: '0 auto' }}>
           <RRButton
             label={this.state.loading ? i18n.__('Logging') : i18n.__('Login')}

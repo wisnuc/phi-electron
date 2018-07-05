@@ -223,7 +223,7 @@ class DeviceSelect extends React.Component {
       : this.props.type === 'LANTOLOGIN' ? i18n.__('Select LAN Device To Login') : i18n.__('Select Device To Login')
 
     return (
-      <div style={{ width: '100%', height: '100%', backgroundColor: '#f3f8ff' }}>
+      <div style={{ width: '100%', height: '100%', backgroundColor: '#fcfcfc' }}>
         <div style={{ height: 49, width: '100%', display: 'flex', alignItems: 'center' }}>
           <div style={{ marginLeft: 30, display: 'flex', alignItems: 'center' }} className="title">
             {
@@ -243,7 +243,7 @@ class DeviceSelect extends React.Component {
           <LIButton onClick={() => this.setState({ showHelp: true })} tooltip={i18n.__('Help')}> <HelpIcon /> </LIButton>
           <div style={{ width: 32 }} />
         </div>
-        <Divider style={{ marginLeft: 30, width: 'calc(100% - 60px)' }} />
+        <Divider style={{ marginLeft: 30, width: 'calc(100% - 60px)', backgroundColor: '#f5f5f5' }} />
 
         <div style={{ width: '100%', height: 'calc(100% - 50px)' }} >
           { this.props.loading ? this.renderLoading()

@@ -63,6 +63,8 @@ class NavDrawer extends React.Component {
           { name }
         </div>
 
+        <Divider style={{ marginLeft: 15, width: 180 }} className="divider" />
+
         {
           ['home', 'photo', 'music', 'docs', 'video'].map(v => (
             <MenuButton

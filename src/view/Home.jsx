@@ -794,7 +794,7 @@ class Home extends Base {
     */
 
     return (
-      <div style={Object.assign({}, style, { marginLeft: 20 })}>
+      <div style={Object.assign({}, style, { marginLeft: 24 })}>
         {
           path.reduce((acc, node, index) => {
             const last = index === path.length - 1
