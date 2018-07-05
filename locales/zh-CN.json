@@ -738,6 +738,12 @@
   "Dlna": "DLNA",
   "Dlna Description": "可以将共享盘内的媒体文件在同一局域网内的智能电视或其他媒体设备上播放。",
 
+  "==== view/DLNA.jsx ====": "",
+  "PT": "斐讯白金计划",
+  "PT Menu Name": "斐讯白金计划",
+  "PT Summary": "参与计划获取收益",
+  "PT Description": "参与斐讯白金计划可获得更多收益，详细信息请参考随机附送的白金计划说明",
+
   "==== view/ResetDevice.jsx ====": "",
   "ResetDevice Menu Name": "解绑及恢复出厂",
   "ResetDevice Description": "可选保存数据",

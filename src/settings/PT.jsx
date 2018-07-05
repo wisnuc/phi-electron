@@ -10,7 +10,7 @@ class PT extends React.Component {
 
     this.state = {
       loading: false,
-      open: this.props.dlna && !!this.props.dlna.isActive
+      open: this.props.pt && !!this.props.pt.isActive
     }
 
     this.singleton = false
@@ -21,6 +21,7 @@ class PT extends React.Component {
     }
 
     this.save = () => {
+      return
       this.setState({ loading: true })
       this.saveAsync(this.state.open).asCallback((err) => {
         if (err) {
@@ -35,9 +36,9 @@ class PT extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.dlna && !this.singleton) {
+    if (nextProps.pt && !this.singleton) {
       this.singleton = true
-      this.setState({ open: nextProps.dlna.isActive })
+      this.setState({ open: nextProps.pt.isActive })
     }
   }
 

@@ -33,7 +33,7 @@ class PTApp extends Base {
   }
 
   menuDes () {
-    return i18n.__('PT Description')
+    return i18n.__('PT Summary')
   }
 
   menuIcon () {
