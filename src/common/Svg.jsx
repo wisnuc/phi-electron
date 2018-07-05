@@ -160,6 +160,8 @@ export const DownloadFileIcon = f('icon_windows_downloa')
 
 export const ArrowIcon = f('icon_arrow_down')
 
+export const HelpFoldIcon = f('icon_help_fold')
+
 export const SearchIcon = f('icon_search')
 
 export const DelPwdIcon = f('icon_del_password')

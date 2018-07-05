@@ -30,7 +30,7 @@ import ConfirmDialog from '../common/ConfirmDialog'
 ipcRenderer.setMaxListeners(1000)
 
 /* Drag Item's Coordinate */
-const DRAGTOP = 344
+const DRAGTOP = 270
 
 class Home extends Base {
   constructor (ctx) {
@@ -449,7 +449,7 @@ class Home extends Base {
         s.width = '108px'
         s.opacity = 1
 
-        const RDTop = `${this.RDSI * 48 + DRAGTOP - (this.scrollTop || 0)}px`
+        const RDTop = `${this.RDSI * 40 + DRAGTOP - (this.scrollTop || 0)}px`
         if (!s.top || s.top === RDTop) s.top = `${e.clientY + 2}px`
         else s.marginTop = `${e.clientY + 2 - parseInt(s.top, 10)}px`
 
@@ -497,7 +497,7 @@ class Home extends Base {
         s.left = `${left}px`
         s.width = '108px'
       } else {
-        s.top = `${this.RDSI * 48 + DRAGTOP - (this.scrollTop || 0)}px`
+        s.top = `${this.RDSI * 40 + DRAGTOP - (this.scrollTop || 0)}px`
         s.width = '108px'
       }
       s.marginTop = '0px'
@@ -524,7 +524,7 @@ class Home extends Base {
       this.state.select.toggleDrag(selected.includes(this.RDSI) ? selected : [this.RDSI])
 
       /* show drag item */
-      this.refDragedItems.style.top = `${this.RDSI * 48 + DRAGTOP - (this.scrollTop || 0)}px`
+      this.refDragedItems.style.top = `${this.RDSI * 40 + DRAGTOP - (this.scrollTop || 0)}px`
       this.refDragedItems.style.left = `${event.clientX}px`
 
       document.addEventListener('mousemove', this.dragRow)

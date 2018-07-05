@@ -1,7 +1,7 @@
 import i18n from 'i18n'
 import React from 'react'
 import { Divider } from 'material-ui'
-import { ArrowIcon, SmallErrorIcon } from '../common/Svg'
+import { ArrowIcon, SmallErrorIcon, HelpFoldIcon } from '../common/Svg'
 
 class Help extends React.PureComponent {
   renderHeader (text) {
@@ -242,8 +242,11 @@ class Help extends React.PureComponent {
         break
     }
     return (
-      <div style={{ width: 280 }}>
+      <div style={{ width: 280, height: '100%', position: 'relative' }}>
         { content }
+        <div style={{ width: 30, height: '100%', position: 'absolute', left: -10, top: 0 }} className="flexCenter">
+          <HelpFoldIcon style={{ color: '#85868c', cursor: 'pointer' }} onClick={this.props.onClose} />
+        </div>
       </div>
     )
   }

@@ -345,7 +345,7 @@ class FileContent extends React.Component {
 
   renderLoading () {
     return (
-      <div style={{ width: '100%', height: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
+      <div style={{ width: '100%', height: 'calc(100% - 70px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
         <CircularLoading />
       </div>
     )
