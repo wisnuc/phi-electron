@@ -1,8 +1,11 @@
 import i18n from 'i18n'
 import React from 'react'
+import { shell } from 'electron'
 
 import { RRButton, Toggle } from '../common/Buttons'
 import CircularLoading from '../common/CircularLoading'
+
+const ptUrl = 'http://www.phicomm.com/cn/index.php/Products/newbai.html'
 
 class PT extends React.Component {
   constructor (props) {
@@ -10,22 +13,20 @@ class PT extends React.Component {
 
     this.state = {
       loading: false,
-      open: this.props.pt && !!this.props.pt.isActive
+      open: this.props.pt && !!this.props.pt.status
     }
 
     this.singleton = false
 
     this.saveAsync = async (open) => {
-      await this.props.apis.pureRequestAsync('updateDlna', { op: open ? 'start' : 'close' })
-      await this.props.apis.requestAsync('dlna')
+      await this.props.apis.pureRequestAsync('updatePT', { status: this.state.open })
     }
 
     this.save = () => {
-      return
       this.setState({ loading: true })
       this.saveAsync(this.state.open).asCallback((err) => {
         if (err) {
-          console.error('dlna error', err)
+          console.error('pt error', err)
           this.props.openSnackBar(i18n.__('Operation Failed'))
         } else {
           this.props.openSnackBar(i18n.__('Operation Success'))
@@ -38,7 +39,7 @@ class PT extends React.Component {
   componentWillReceiveProps (nextProps) {
     if (nextProps.pt && !this.singleton) {
       this.singleton = true
-      this.setState({ open: nextProps.pt.isActive })
+      this.setState({ open: !!nextProps.pt.status })
     }
   }
 
@@ -66,7 +67,7 @@ class PT extends React.Component {
   }
 
   render () {
-    // if (!this.props.dlna) return this.renderLoading()
+    if (!this.props.pt) return this.renderLoading()
     const isAdmin = this.props.apis.account && this.props.apis.account.data && this.props.apis.account.data.isFirstUser
     const settings = [
       {
@@ -88,8 +89,14 @@ class PT extends React.Component {
 
           { this.renderRow(settings[0]) }
 
-          <div style={{ width: 320, color: '#888a8c', paddingLeft: 160, height: 60, display: 'flex', alignItems: 'center' }} >
+          <div style={{ width: 320, color: '#888a8c', paddingLeft: 160, height: 46, paddingTop: 14 }} >
             { i18n.__('PT Description') }
+            <a
+              style={{ color: '#31a0f5', cursor: 'pointer', marginLeft: 5, textDecoration: 'underline' }}
+              onClick={() => shell.openExternal(ptUrl)}
+            >
+              { i18n.__('PT Agreement of Usage') }
+            </a>
           </div>
 
           <div style={{ height: 40 }} />

@@ -743,6 +743,9 @@
   "PT Menu Name": "斐讯白金计划",
   "PT Summary": "参与计划获取收益",
   "PT Description": "参与斐讯白金计划可获得更多收益，详细信息请参考随机附送的白金计划说明",
+  "PT Agreement of Usage": "《白金计划使用协议》",
+  "PT Plan": "白金计划",
+  "Join PT": "参与斐迅白金计划",
 
   "==== view/ResetDevice.jsx ====": "",
   "ResetDevice Menu Name": "解绑及恢复出厂",

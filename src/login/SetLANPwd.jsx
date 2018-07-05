@@ -42,7 +42,7 @@ class SetLANPwd extends React.Component {
           Object.assign(dev, { token: { isFulfilled: () => true, ctx: user, data: { token } } })
           this.setState({ loading: false })
           const { selectedDevice } = this.props
-          this.props.deviceLogin({ dev, user, selectedDevice, isCloud: false })
+          this.props.onSuccess({ dev, user, selectedDevice, isCloud: false })
         })
         .catch((error) => {
           console.error('this.getLANToken', error)
@@ -89,7 +89,7 @@ class SetLANPwd extends React.Component {
         <div style={{ height: 20 }} />
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <RRButton
-            label={i18n.__('Save') + (this.state.loading ? '中' : '')}
+            label={this.state.loading ? i18n.__('Saving') : i18n.__('Save')}
             onClick={this.fire}
             disabled={!this.state.pwd || this.state.loading}
             loading={this.state.loading}

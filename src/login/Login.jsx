@@ -5,6 +5,7 @@ import { Divider } from 'material-ui'
 import PhiLogin from './PhiLogin'
 import LANLogin from './LANLogin'
 import SetLANPwd from './SetLANPwd'
+import ConfirmPT from './ConfirmPT'
 import ManageDisk from './ManageDisk'
 import SelectDevice from './SelectDevice'
 
@@ -114,8 +115,8 @@ class Login extends React.Component {
       this.setState({ status: 'LANPwd', selectedDevice: dev })
     }
 
-    this.onSetLANPwdSuccess = () => {
-      console.log('this.onSetLANPwdSuccess')
+    this.onSetLANPwdSuccess = (loginData) => {
+      this.setState({ status: 'PT', loginData })
     }
 
     this.phiLoginSuccess = ({ list, phonenumber, token, phicommUserId, phi }) => {
@@ -181,6 +182,17 @@ class Login extends React.Component {
         {...this.state}
         onSuccess={this.onSetLANPwdSuccess}
         dev={this.state.selectedDevice.state}
+        selectedDevice={this.state.selectedDevice}
+      />
+    )
+  }
+
+  renderPT () {
+    return (
+      <ConfirmPT
+        {...this.props}
+        {...this.state}
+        loginData={this.state.loginData}
         selectedDevice={this.state.selectedDevice}
       />
     )
@@ -288,6 +300,10 @@ class Login extends React.Component {
 
       case 'LANLogin':
         view = this.renderLANLogin()
+        break
+
+      case 'PT':
+        view = this.renderPT()
         break
 
       default:

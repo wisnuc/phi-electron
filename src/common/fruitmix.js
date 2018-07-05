@@ -353,7 +353,7 @@ class Fruitmix extends EventEmitter {
         break
 
       case 'pt':
-        r = this.aget('users')
+        r = request.get(`http://${this.address}:3001/v1/platinum`)
         break
 
       default:
@@ -427,6 +427,10 @@ class Fruitmix extends EventEmitter {
 
       case 'updateDlna':
         r = this.apatch('dlna', { op: args.op })
+        break
+
+      case 'updatePT':
+        r = request.post(`http://${this.address}:3001/v1/platinum`, { status: args.status })
         break
 
       case 'sambaStatus':
