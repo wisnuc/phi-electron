@@ -352,6 +352,10 @@ class Fruitmix extends EventEmitter {
         r = this.aget('dlna')
         break
 
+      case 'pt':
+        r = this.aget('users')
+        break
+
       default:
         break
     }

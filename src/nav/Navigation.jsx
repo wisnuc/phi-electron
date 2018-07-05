@@ -27,6 +27,7 @@ import Settings from '../view/Settings'
 import CacheClean from '../view/CacheClean'
 import Device from '../view/Device'
 import DiskInfo from '../view/DiskInfo'
+import PT from '../view/PT'
 import Sleep from '../view/Sleep'
 import ClientUpdate from '../view/ClientUpdate'
 import FirmwareUpdate from '../view/FirmwareUpdate'
@@ -39,7 +40,7 @@ import ResetDevice from '../view/ResetDevice'
 import Fruitmix from '../common/fruitmix'
 import WindowAction from '../common/WindowAction'
 import DialogOverlay from '../common/PureDialog'
-import { FileManage, TransIcon, DeviceChangeIcon, FuncIcon, BackIcon } from '../common/Svg'
+import { TopLogo, FileManage, TransIcon, DeviceChangeIcon, FuncIcon, BackIcon } from '../common/Svg'
 
 const HEADER_HEIGHT = 110
 
@@ -70,13 +71,14 @@ class NavViews extends React.Component {
       { name: 'settings', View: Settings },
       { name: 'device', View: Device },
       { name: 'diskInfo', View: DiskInfo },
+      { name: 'pt', View: PT },
       { name: 'sleep', View: Sleep },
-      { name: 'cacheClean', View: CacheClean },
       { name: 'clientUpdate', View: ClientUpdate },
       { name: 'firmwareUpdate', View: FirmwareUpdate },
+      { name: 'cacheClean', View: CacheClean },
+      { name: 'lanPassword', View: LANPassword },
       { name: 'sambe', View: Samba },
       { name: 'dlna', View: DLNA },
-      { name: 'lanPassword', View: LANPassword },
       { name: 'power', View: Power },
       { name: 'resetDevice', View: ResetDevice }
     ])
@@ -252,10 +254,8 @@ class NavViews extends React.Component {
           background: 'linear-gradient(to right, #4a95f2, #6363ff)'
         }}
       >
-        <div style={{ width: 220, height: '100%' }}>
-          <div style={{ color: '#FFF', fontSize: 24, margin: '18px 27px', fontWeight: 900 }}>
-            { 'PHINAS' }
-          </div>
+        <div style={{ width: 220, height: 110, overflow: 'hidden' }}>
+          <TopLogo style={{ height: 160, width: 427, margin: '-25px 0 0 -105px' }} />
         </div>
         {
           navs.map(({ Icon, text, fn, selected }) => (

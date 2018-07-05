@@ -165,7 +165,17 @@ export class RRButton extends Button {
         ? `0px 10px 15px 0 ${alt ? 'rgba(47, 162, 79, 0.2)' : 'rgba(33, 110, 209, 0.2)'}`
         : `0px 5px 10px 0 ${alt ? 'rgba(47, 162, 79, 0.25)' : 'rgba(33, 110, 209, 0.25)'}`
 
-    const buttonStyle = Object.assign({ width, height, cursor, borderRadius, backgroundColor, boxShadow, position: 'relative' }, style)
+    const buttonStyle = Object.assign({
+      width,
+      height,
+      cursor,
+      borderRadius,
+      backgroundColor,
+      boxShadow,
+      position: 'relative',
+      overflow: 'hidden'
+    }, style)
+
     const textStyle = Object.assign({ color: '#FFF', fontSize: 14 }, labelStyle)
 
     const overlayBgColor = loading ? 'rgba(0,0,0,.1)'
