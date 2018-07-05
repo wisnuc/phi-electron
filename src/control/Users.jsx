@@ -66,14 +66,15 @@ class AdminUsersApp extends React.Component {
       const deviceSN = device.mdev.deviceSN
       for (let i = 0; i < this.state.checkList.length; i++) {
         const uuid = this.state.checkList[i]
-        await phi.req('deleteUser', { deviceSN, uuid })
+        await phi.reqAsync('deleteUser', { deviceSN, uuid })
       }
     }
 
     this.deleteUser = () => {
+      this.setState({ loading: true, users: null, status: 'view', invited: false })
       this.deleteUserAsync().then(() => this.reqUsers()).catch((e) => {
-        console.error('this.delete error', e)
         this.props.openSnackBar(i18n.__('Delete User Failed'))
+        this.reqUsers()
       })
     }
 
@@ -410,7 +411,8 @@ class AdminUsersApp extends React.Component {
                   (!isAddUser && !isConfirm) && (
                     <RSButton
                       alt
-                      disabled={(!isModify && (!this.state.users || !this.state.users.length)) || this.state.invited}
+                      disabled={(!isModify && (!this.state.users || !this.state.users.length)) ||
+                        this.state.invited || this.state.loading}
                       label={isModify ? i18n.__('Cancel') : i18n.__('Modify Users')}
                       onClick={() => this.setState({ status: isModify ? 'view' : 'modify', checkList: [] })}
                     />
@@ -421,7 +423,7 @@ class AdminUsersApp extends React.Component {
                   label={isAddUser ? isMaxUser ? i18n.__('Got It') : this.state.invited ? i18n.__('Sending Invite') : i18n.__('Send Invite')
                     : isConfirm ? i18n.__('Confirm') : isModify ? i18n.__('Delete') : i18n.__('Add User')}
                   disabled={(isModify && !this.state.checkList.length) ||
-                    (isAddUser && !isMaxUser && !this.shouldAddUser()) || this.state.invited}
+                    (isAddUser && !isMaxUser && !this.shouldAddUser()) || this.state.invited || this.state.loading}
                   onClick={() => (isAddUser ? isMaxUser ? this.backToView() : this.invite() : isConfirm ? this.deleteUser()
                     : isModify ? this.confirmDelete() : this.addUser())}
                 />
