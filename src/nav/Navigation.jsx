@@ -36,6 +36,7 @@ import Power from '../view/Power'
 import Samba from '../view/Samba'
 import DLNA from '../view/DLNA'
 import ResetDevice from '../view/ResetDevice'
+import UpdateFirmDialog from '../settings/UpdateFirmDialog'
 
 import Fruitmix from '../common/fruitmix'
 import WindowAction from '../common/WindowAction'
@@ -122,6 +123,17 @@ class NavViews extends React.Component {
       }
     }
 
+    this.showFirmUpdate = true
+
+    this.checkFirmWareAsync = async () => {
+      await Promise.delay(1000)
+      const res = await this.props.apis.pureRequestAsync('firmwareReady')
+      if (res && res.error === '0' && res.result && res.result.tag_name) {
+        console.log('newRel', res.result, this.props)
+        this.setState({ newRel: res.result })
+      }
+    }
+
     this.init = () => {
       this.navTo('home')
       this.timer = setInterval(() => process.env.NODE_ENV !== 'dev' && (this.views[this.state.nav].navGroup() === 'file') &&
@@ -185,6 +197,10 @@ class NavViews extends React.Component {
   }
 
   componentDidUpdate () {
+    if (this.showFirmUpdate && this.props.apis && this.props.apis.device && this.props.apis.device.data) {
+      this.showFirmUpdate = false
+      this.checkFirmWareAsync().catch(e => console.error('checkFirmWareAsync error', e))
+    }
     this.views[this.state.nav].willReceiveProps(this.props)
   }
 
@@ -426,6 +442,18 @@ class NavViews extends React.Component {
                 ipcRenderer={ipcRenderer}
                 handleTask={this.handleTask}
                 onRequestClose={() => this.setState({ conflicts: null })}
+              />
+          }
+        </DialogOverlay>
+
+        <DialogOverlay open={!!this.state.newRel} onRequestClose={() => this.setState({ newRel: null })} modal transparent >
+          {
+            this.state.newRel &&
+              <UpdateFirmDialog
+                {...this.props}
+                rel={this.state.newRel}
+                device={this.props.apis.device.data}
+                onRequestClose={() => this.setState({ newRel: null })}
               />
           }
         </DialogOverlay>

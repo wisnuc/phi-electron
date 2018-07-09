@@ -494,6 +494,7 @@ class Fruitmix extends EventEmitter {
     this.request('account')
     this.request('users')
     this.request('phyDrives')
+    this.request('device')
     this.requestAsync('drives').asCallback((err, drives) => {
       if (err || !drives) console.error('requestAsync drives error', err)
       else {

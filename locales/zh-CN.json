@@ -477,6 +477,8 @@
   "Checking Firmware": "校验固件中",
   "Upgrading Firmware": "升级固件中",
   "Upgrade Firmware Success Text": "固件升级成功",
+  "Firmware Update Title": "固件升级",
+  "Update Now": "立刻升级",
 
   "==== device/NetworkInfo.jsx ====": "",
   "NIC Name": "网卡名称",
@@ -712,7 +714,7 @@
   "Already Latest Version": "已是最新版本",
   "Check New Version Failed": "版本检查失败",
   "Checking": "检测中...",
-  "New Version Release Time %s %s %s": "新版本更新时间：%s年%s月%s日",
+  "New Version Release Time %s %s %s": "新版本更新时间：%s-%s-%s",
 
   "==== view/LANPassword ====": "",
   "LANPassword Menu Name": "本地密码",

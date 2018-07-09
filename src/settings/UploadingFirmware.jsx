@@ -54,6 +54,7 @@ class UploadingFirmware extends React.PureComponent {
     }
 
     this.upgrade = () => {
+      this.setState({ progress: '100%' })
       this.props.apis.pureRequest('firmwareUpgrade', null, (err, res) => {
         if (!err && res && res.error === '0') {
           this.setState({ status: 'upgrading' })
@@ -90,9 +91,13 @@ class UploadingFirmware extends React.PureComponent {
   }
 
   componentDidMount () {
-    ipcRenderer.on('UPLOAD_FIRM_RESULT', this.onFirmRes)
-    ipcRenderer.on('FIRM_PROCESS', this.onProcess)
-    this.fire()
+    if (this.props.jumpToUpgrade) {
+      this.upgrade()
+    } else {
+      ipcRenderer.on('UPLOAD_FIRM_RESULT', this.onFirmRes)
+      ipcRenderer.on('FIRM_PROCESS', this.onProcess)
+      this.fire()
+    }
   }
 
   componentWillUnmount () {
