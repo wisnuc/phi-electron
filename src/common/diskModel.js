@@ -4,6 +4,7 @@ const startWord = [
   ['SM', '金士顿'],
   ['KINGSTON', '金士顿'],
   ['MZ', '三星'],
+  ['Samsung', '三星'],
   ['SSD', '英特尔'],
   ['HT', 'HGST'],
   ['AS', '威刚'],

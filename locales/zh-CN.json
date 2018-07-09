@@ -755,8 +755,8 @@
   "Confirm Unbind Text": "如需后续导入磁盘数据，请勿勾选格式化磁盘选项。",
   "Confirm Unbind Title": "解绑及恢复出厂",
   "Reset Device Busy Text": "解绑及恢复出厂中...",
-  "Reset Device Success Text": "解邦及恢复出厂成功",
-  "Reset Device Error Text": "解邦及恢复出厂失败",
+  "Reset Device Success Text": "解绑及恢复出厂成功",
+  "Reset Device Error Text": "解绑及恢复出厂失败",
 
   "==== view/CacheClean.jsx ====": "",
   "CacheClean Description": "清除缓存",
@@ -900,7 +900,7 @@
   "Clear Running Task Title": "删除所有任务",
   "Clear Running Task Text": "如果是下载或上传的是文件夹，文件夹内已完成的文件将保留，确定要删除所有任务吗？",
   "Clear Finished Task Title": "删除所有上传及下载记录",
-  "Clear Finished Task Text": "该操作无法撤销，所有记录将被彻底清除，确定继删除吗？",
+  "Clear Finished Task Text": "该操作无法撤销，所有记录将被彻底清除，确定继续删除吗？",
 
   "==== photo/AssistantApp.jsx ====": "",
   "Hide Photo Title": "隐藏的照片",

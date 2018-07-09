@@ -117,7 +117,7 @@ class Disk extends React.PureComponent {
     const { storage, boundVolume } = boot
     const b1 = storage.blocks.find(b => (b.isDisk && !b.unformattable && b.slotNumber === 1))
     const b2 = storage.blocks.find(b => (b.isDisk && !b.unformattable && b.slotNumber === 2))
-    const mode = boundVolume && boundVolume.usage && boundVolume.usage.data && boundVolume.usage.data.mode
+    const mode = boundVolume.usage.data.mode === 'single' ? 'Single' : 'RAID 1'
 
     const disks = [
       {
