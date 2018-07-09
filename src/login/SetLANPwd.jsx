@@ -42,7 +42,11 @@ class SetLANPwd extends React.Component {
           Object.assign(dev, { token: { isFulfilled: () => true, ctx: user, data: { token } } })
           this.setState({ loading: false })
           const { selectedDevice } = this.props
-          this.props.onSuccess({ dev, user, selectedDevice, isCloud: false })
+          if (user.isFirstUser) {
+            this.props.onSuccess({ dev, user, selectedDevice, isCloud: false })
+          } else {
+            this.props.deviceLogin({ dev, user, selectedDevice, isCloud: false })
+          }
         })
         .catch((error) => {
           console.error('this.getLANToken', error)
