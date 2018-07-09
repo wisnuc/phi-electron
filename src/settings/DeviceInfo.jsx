@@ -1,6 +1,7 @@
-import React from 'react'
 import i18n from 'i18n'
+import React from 'react'
 import prettysize from 'prettysize'
+import { ipcRenderer } from 'electron'
 import { TextField, Divider, IconButton } from 'material-ui'
 import DoneIcon from 'material-ui/svg-icons/action/done'
 import ModeEdit from 'material-ui/svg-icons/editor/mode-edit'
@@ -36,7 +37,8 @@ class DeviceInfo extends React.PureComponent {
           } else {
             this.newName = this.state.label
 
-            Object.assign(this.props.selectedDevice.mdev, { bindingName: this.newName })
+            Object.assign(this.props.selectedDevice.mdev, { bindingName: this.newName, stationName: this.newName })
+            ipcRenderer.send('UPDATE_DEVICE', this.props.selectedDevice)
             this.props.openSnackBar(i18n.__('Modify Device Name Success'))
             this.setState({ modify: false, progress: false, label: '' })
           }
