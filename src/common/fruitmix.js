@@ -461,6 +461,16 @@ class Fruitmix extends EventEmitter {
         r = this.apatch('device/sleep', args)
         break
 
+      case 'firmwareFetch':
+        r = request.get(`http://${this.address}:3001/v1/firmwareFetch`)
+          .set('Authorization', `JWT ${this.token}`)
+        break
+
+      case 'firmwareReady':
+        r = request.get(`http://${this.address}:3001/v1/firmwareReady`)
+          .set('Authorization', `JWT ${this.token}`)
+        break
+
       case 'firmwareUpgrade':
         r = request.post(`http://${this.address}:3001/v1/firmwareUpgrade`)
           .set('Authorization', `JWT ${this.token}`)

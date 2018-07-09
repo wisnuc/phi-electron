@@ -8,29 +8,21 @@ class FirmwareUpdate extends Base {
     super(ctx)
 
     this.state = {
-      firm: null,
-      error: null
+      error: null,
+      device: null
     }
 
     this.refresh = () => {
-      this.ctx.props.selectedDevice.request('firm')
-    }
-
-    this.checkUpdates = () => {
-      this.ctx.props.selectedDevice.pureRequest('checkUpdates')
-      this.ctx.props.selectedDevice.request('firm')
+      this.ctx.props.selectedDevice.request('device')
     }
   }
 
   willReceiveProps (nextProps) {
-    // this.handleProps(nextProps.selectedDevice, ['firm'])
+    this.handleProps(nextProps.selectedDevice, ['device'])
   }
 
-  navEnter (t) {
-    /*
-    this.ctx.props.selectedDevice.request('firm')
-    if (!t || !t.noMoreCheck) this.ctx.props.selectedDevice.pureRequest('checkUpdates')
-    */
+  navEnter () {
+    this.refresh()
   }
 
   navGroup () {
