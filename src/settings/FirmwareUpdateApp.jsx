@@ -28,7 +28,6 @@ class Update extends React.Component {
     this.reqLatest = () => {
       this.setState({ status: 'request', latest: null })
       this.props.apis.pureRequest('firmwareFetch', null, (err, res) => {
-        console.log('this.reqLatest', err, res)
         if (err || !res || res.error !== '0') this.setState({ status: 'error' })
         else if (res.desc === 'New firmware version exist!') this.setState({ status: 'ready', latest: res.result })
         else this.setState({ status: 'latest' }) // res.desc === 'no new version ready'
@@ -53,7 +52,6 @@ class Update extends React.Component {
   }
 
   renderRel (rel) {
-    console.log('renderRel', rel)
     const time = rel.releaseTime.slice(0, 10).split('-')
     const text = rel.software_info.split('\r\n')
     return (
@@ -80,7 +78,6 @@ class Update extends React.Component {
   }
 
   render () {
-    console.log('FirmwareUpdateApp', this.props)
     const { device } = this.props
     if (!device) return this.renderLoading()
     const currentVersion = device.swVersion

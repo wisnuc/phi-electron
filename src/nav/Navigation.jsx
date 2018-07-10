@@ -72,14 +72,14 @@ class NavViews extends React.Component {
       { name: 'settings', View: Settings },
       { name: 'device', View: Device },
       { name: 'diskInfo', View: DiskInfo },
-      { name: 'pt', View: PT },
       { name: 'sleep', View: Sleep },
-      { name: 'clientUpdate', View: ClientUpdate },
-      { name: 'firmwareUpdate', View: FirmwareUpdate },
       { name: 'cacheClean', View: CacheClean },
-      { name: 'lanPassword', View: LANPassword },
       { name: 'sambe', View: Samba },
       { name: 'dlna', View: DLNA },
+      { name: 'clientUpdate', View: ClientUpdate },
+      { name: 'firmwareUpdate', View: FirmwareUpdate },
+      { name: 'lanPassword', View: LANPassword },
+      { name: 'pt', View: PT },
       { name: 'power', View: Power },
       { name: 'resetDevice', View: ResetDevice }
     ])

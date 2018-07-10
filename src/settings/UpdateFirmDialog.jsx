@@ -33,7 +33,7 @@ class Update extends React.Component {
 
   renderConfirm () {
     const { rel, device, onRequestClose } = this.props
-    console.log('renderConfirm', this.props)
+    const text = (rel.software_info && rel.software_info.split('\r\n')) || []
     const time = rel.releaseTime.slice(0, 10).split('-')
     const currentVersion = device.swVersion
     const ltsVersion = rel.tag_name
@@ -63,24 +63,16 @@ class Update extends React.Component {
           <Divider style={{ width: 280 }} />
           <SimpleScrollBar height={108} width={268} style={{ marginLeft: 10 }}>
             <div style={{ height: 20, marginTop: 10, color: '#505259' }}>
-              { '更新内容' }
+              { i18n.__('Update Content') }
             </div>
             <div style={{ height: 5 }} />
-            <div style={{ height: 20, color: '#85868c' }}>
-              { '1. 修复bug，优化用户体验' }
-            </div>
-            <div style={{ height: 20, color: '#85868c' }}>
-              { '2. XXXXXXXXX' }
-            </div>
-            <div style={{ height: 20, color: '#85868c' }}>
-              { '3. XXXXXXXXX' }
-            </div>
-            <div style={{ height: 20, color: '#85868c' }}>
-              { '4. XXXXXXXXX' }
-            </div>
-            <div style={{ height: 20, color: '#85868c' }}>
-              { '5. XXXXXXXXX' }
-            </div>
+            {
+              text.map((v, i) => (
+                <div style={{ height: 20, color: '#85868c' }} key={i.toString()}>
+                  { v }
+                </div>
+              ))
+            }
           </SimpleScrollBar>
         </div>
 
