@@ -18,8 +18,6 @@ class Update extends React.Component {
     this.fire = () => {
       if (this.state.fired) return
       this.setState({ confirmed: true })
-      console.log('this.fire', this.props)
-      // this.setState({ fired: true, upgrading: true })
     }
   }
 

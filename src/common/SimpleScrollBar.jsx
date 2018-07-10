@@ -7,18 +7,6 @@ class ScrollBar extends React.PureComponent {
       scrollHeight: 0
     }
 
-    this.onScroll = (e) => {
-      if (e.target.scrollHeight) {
-        const { scrollTop, scrollHeight } = e.target
-        const { height } = this.props
-        const barH = Math.max(height * height / scrollHeight, 48) || 48
-        const top = (height - barH) * scrollTop / (scrollHeight - height)
-        this.refBar.style.top = `${top}px`
-      }
-
-      if (e.target.scrollHeight !== this.state.scrollHeight) this.setState({ scrollHeight: e.target.scrollHeight })
-    }
-
     this.updateScrollHeight = () => {
       this.setState({ scrollHeight: this.refRoot.scrollHeight })
     }
@@ -55,6 +43,19 @@ class ScrollBar extends React.PureComponent {
       this.timer = setTimeout(() => {
         this.setState({ hover: false })
       }, 1000)
+    }
+
+    this.onScroll = (e) => {
+      if (e.target.scrollHeight) {
+        const { scrollTop, scrollHeight } = e.target
+        this.scrollTop = scrollTop
+        const { height } = this.props
+        const barH = Math.max(height * height / scrollHeight, 48) || 48
+        const top = (height - barH) * scrollTop / (scrollHeight - height)
+        this.refBar.style.top = `${top}px`
+      }
+
+      if (e.target.scrollHeight !== this.state.scrollHeight) this.setState({ scrollHeight: e.target.scrollHeight })
     }
   }
 

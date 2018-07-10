@@ -5,6 +5,7 @@ import { shell, remote } from 'electron'
 
 import Dialog from '../common/PureDialog'
 import UploadingFirmware from './UploadingFirmware'
+import SimpleScrollBar from '../common/SimpleScrollBar'
 import CircularLoading from '../common/CircularLoading'
 import { RRButton, RSButton } from '../common/Buttons'
 
@@ -63,7 +64,7 @@ class Update extends React.Component {
           { i18n.__('New Version Release Time %s %s %s', time[0], time[1], time[2]) }
         </div>
         <Divider style={{ width: 320 }} />
-        <div style={{ height: 138, width: 310, overflowX: 'hidden', overflowY: 'auto', marginLeft: 10 }}>
+        <SimpleScrollBar height={138} width={310} style={{ marginLeft: 10 }}>
           <div style={{ height: 20, marginTop: 10, color: '#505259' }}>
             { '更新内容' }
           </div>
@@ -80,8 +81,16 @@ class Update extends React.Component {
           <div style={{ height: 20, color: '#85868c' }}>
             { '4. XXXXXXXXX' }
           </div>
-        </div>
-
+          <div style={{ height: 20, color: '#85868c' }}>
+            { '5. XXXXXXXXX' }
+          </div>
+          <div style={{ height: 20, color: '#85868c' }}>
+            { '5. XXXXXXXXX' }
+          </div>
+          <div style={{ height: 20, color: '#85868c' }}>
+            { '5. XXXXXXXXX' }
+          </div>
+        </SimpleScrollBar>
       </div>
     )
   }

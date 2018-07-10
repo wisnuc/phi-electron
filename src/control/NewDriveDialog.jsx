@@ -1,7 +1,8 @@
-import React, { PureComponent } from 'react'
 import i18n from 'i18n'
 import { Divider } from 'material-ui'
 import sanitize from 'sanitize-filename'
+import React, { PureComponent } from 'react'
+import SimpleScrollBar from '../common/SimpleScrollBar'
 import { Checkbox, RSButton, TextField } from '../common/Buttons'
 
 class NewDriveDialog extends PureComponent {
@@ -92,6 +93,8 @@ class NewDriveDialog extends PureComponent {
 
   render () {
     const { type, users } = this.props
+    const activeUsers = users.filter(u => u.status === 'ACTIVE')
+
     return (
       <div style={{ width: 280, padding: '0 20px 20px 20px', zIndex: 2000 }}>
         <div style={{ height: 59, display: 'flex', alignItems: 'center' }} className="title">
@@ -120,21 +123,13 @@ class NewDriveDialog extends PureComponent {
           />
         </div>
 
-        <div
-          style={{
-            height: 20,
-            marginTop: 10,
-            color: '#525a60',
-            display: 'flex',
-            alignItems: 'center'
-          }}
-        >
+        <div style={{ height: 20, marginTop: 10, color: '#525a60', display: 'flex', alignItems: 'center' }}>
           { i18n.__('Permissions') }
         </div>
 
-        <div style={{ maxHeight: 40 * 5, overflow: 'auto' }}>
+        <SimpleScrollBar height={Math.min(activeUsers.length * 40, 200)} width={280} >
           {
-            users.filter(u => u.status === 'ACTIVE').map(user => (
+            activeUsers.map(user => (
               <div style={{ width: '100%', height: 40, display: 'flex', alignItems: 'center' }} key={user.username} >
                 <Checkbox
                   alt
@@ -147,7 +142,7 @@ class NewDriveDialog extends PureComponent {
               </div>
             ))
           }
-        </div>
+        </SimpleScrollBar>
 
         {/* button */}
         <div style={{ height: 40 }} />
