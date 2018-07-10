@@ -30,6 +30,7 @@ class Fruitmix extends React.Component {
       account: null,
       showUsers: false,
       phi: new PhiAPI(),
+      forceUpdate: false,
       clipboard: new Clipboard(),
       phiLogin: this.phiLogin.bind(this),
       deviceLogin: this.deviceLogin.bind(this),
@@ -37,8 +38,17 @@ class Fruitmix extends React.Component {
       openSnackBar: this.openSnackBar.bind(this),
       jumpToLANLogin: this.jumpToLANLogin.bind(this),
       jumpToSetLANPwd: this.jumpToSetLANPwd.bind(this),
-      jumpToBindDevice: this.jumpToBindDevice.bind(this)
+      jumpToBindDevice: this.jumpToBindDevice.bind(this),
+      clearForceUpdate: this.clearForceUpdate.bind(this)
     }
+
+    this.onCloseUsers = () => {
+      this.setState({ showUsers: false, forceUpdate: true })
+    }
+  }
+
+  clearForceUpdate () {
+    this.setState({ forceUpdate: false })
   }
 
   phiLogin (user) {
@@ -150,7 +160,7 @@ class Fruitmix extends React.Component {
               phi={this.state.phi}
               open={this.state.showUsers}
               device={this.state.selectedDevice}
-              onCancel={() => this.setState({ showUsers: false })}
+              onCancel={this.onCloseUsers}
               openSnackBar={msg => this.openSnackBar(msg)}
             />
           }

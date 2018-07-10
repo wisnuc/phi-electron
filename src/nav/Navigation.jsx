@@ -208,6 +208,11 @@ class NavViews extends React.Component {
     if (nextProps.apis && nextProps.apis.phyDrives && Array.isArray(nextProps.apis.phyDrives.data)) {
       this.hasUSB = nextProps.apis.phyDrives.data.filter(d => d.isUSB).length > 0
     }
+
+    if (this.state.nav && nextProps.forceUpdate && this.isPublic && !this.rootDrive) { // in Public Root should refresh users
+      this.props.clearForceUpdate()
+      this.views[this.state.nav].navEnter()
+    }
   }
 
   componentWillUnmount () {
