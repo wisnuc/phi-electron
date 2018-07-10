@@ -1,6 +1,5 @@
-import React from 'react'
 import i18n from 'i18n'
-import { ipcRenderer } from 'electron'
+import React from 'react'
 import Base from './Base'
 import UpdateApp from '../settings/ClientUpdateApp'
 
@@ -29,9 +28,8 @@ class Update extends Base {
   renderContent ({ openSnackBar }) {
     return (
       <UpdateApp
-        ipcRenderer={ipcRenderer}
+        {...this.ctx.props}
         openSnackBar={openSnackBar}
-        primaryColor={this.groupPrimaryColor()}
       />
     )
   }

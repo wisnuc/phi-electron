@@ -44,9 +44,6 @@ class Update extends React.Component {
     this.reqLatest()
   }
 
-  componentWillUnmount () {
-  }
-
   renderLoading () {
     return (
       <div style={{ width: '100%', height: 'calc(100% - 60px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
@@ -102,7 +99,7 @@ class Update extends React.Component {
     const currentVersion = device.swVersion
 
     let ltsValue = '--'
-    let text = '目前仅支持手动上传固件'
+    let text = ''
     let showRel = false
     let color = '#525a60'
 
@@ -208,7 +205,7 @@ class Update extends React.Component {
           <div style={{ height: 1, width: 320, marginLeft: 160, marginTop: -1, backgroundColor: '#bfbfbf', opacity: 0.5 }} />
           <div style={{ height: 40 }} />
 
-          <div style={{ width: 320, height: 40, margin: '0 auto', paddingLeft: 160, display: 'flex', alignItems: 'center' }}>
+          <div style={{ width: 320, height: 40, margin: '0 auto', paddingLeft: 200, display: 'flex', alignItems: 'center' }}>
             <RRButton
               label={i18n.__('Update Immediately')}
               onClick={() => this.setState({ uploading: true })}

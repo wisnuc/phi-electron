@@ -89,6 +89,12 @@ class PhiAPI extends RequestManager {
           })
         break
 
+      case 'client':
+        r = request
+          .get(`http://${phiCloudAddress}/nasUpdate/client/getVersionInfo`)
+          .set({ license: '2f12ac5dda730dd34c180825919a123bec8309c8807d494b9a8d92f80fd665ee' })
+        break
+
       case 'stationList':
         r = this.aget('StationManager/station')
           .timeout({

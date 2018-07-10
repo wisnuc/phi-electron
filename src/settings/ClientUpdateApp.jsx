@@ -1,14 +1,9 @@
-import React from 'react'
 import i18n from 'i18n'
+import React from 'react'
 import { shell } from 'electron'
-import { orange500 } from 'material-ui/styles/colors'
-import NewReleases from 'material-ui/svg-icons/av/new-releases'
-import CheckIcon from 'material-ui/svg-icons/navigation/check'
-import CloseIcon from 'material-ui/svg-icons/navigation/close'
-import InfoIcon from 'material-ui/svg-icons/action/info'
-import FlatButton from '../common/FlatButton'
-import ErrorBox from '../common/ErrorBox'
-import { RRButton } from '../common/Buttons'
+import { Divider } from 'material-ui'
+import { RRButton, RSButton } from '../common/Buttons'
+import SimpleScrollBar from '../common/SimpleScrollBar'
 import CircularLoading from '../common/CircularLoading'
 
 const compareVerison = (a, b) => {
@@ -30,26 +25,8 @@ class Update extends React.Component {
     super(props)
 
     this.state = {
-      status: 'checking',
-      confirm: false,
-      error: null,
-      rel: null
-    }
-
-    this.toggleDialog = op => this.setState({ [op]: !this.state[op] })
-
-    this.moreVersion = () => {
-      const platform = global.config.platform
-      const type = platform === 'win32'
-        ? 'wisnuc-desktop-windows/releases'
-        : platform === 'darwin'
-          ? 'wisnuc-desktop-mac/releases'
-          : 'fruitmix-desktop'
-      shell.openExternal(`https://github.com/wisnuc/${type}`)
-    }
-
-    this.openOfficial = () => {
-      shell.openExternal('http://www.wisnuc.com/download')
+      latest: null,
+      status: 'request' // request, latest, ready, error
     }
 
     this.newRelease = (event, result) => {
@@ -60,142 +37,155 @@ class Update extends React.Component {
       return this.setState({ rel, filePath, status, error: null })
     }
 
-    this.sendCheck = () => {
-      this.setState({ status: 'checking' }, () => this.props.ipcRenderer.send('CHECK_UPDATE'))
+    this.reqLatest = () => {
+      this.setState({ status: 'request', latest: null })
+      this.props.phi.req('client', null, (err, res) => {
+        if (err || !res || res.error !== '0' || !Array.isArray(res.result)) return this.setState({ status: 'error' })
+        const platform = process.platform === 'darwin' ? 'mac' : 'windows'
+        const rel = res.result.find(r => r.client_type === platform && r.newest_tag_name.startsWith('V'))
+        if (!rel) return this.setState({ status: 'error' })
+        const isNew = compareVerison(global.config.appVersion, rel.newest_tag_name.slice(1)) < 0
+        if (isNew) return this.setState({ status: 'ready', latest: rel })
+        return this.setState({ status: 'latest' })
+      })
+    }
+
+    this.openWeb = () => {
+      let url = 'https://sohon2test.phicomm.com/v1/ui/index'
+      if (this.state.rel && this.state.rel.skip_url) url = this.state.rel.skip_url
+      shell.openExternal(url)
     }
   }
 
   componentDidMount () {
-    // this.sendCheck()
-    // this.props.ipcRenderer.on('NEW_RELEASE', this.newRelease)
+    this.reqLatest()
   }
 
-  componentWillUnmount () {
-    // this.props.ipcRenderer.removeListener('NEW_RELEASE', this.newRelease)
-  }
-
-  renderCheckUpdate () {
-    const rel = this.state.rel
-    const date = rel.published_at.split('T')[0]
+  renderLoading () {
     return (
-      <div style={{ marginTop: -4 }}>
-        <div>
-          { i18n.__('New Version Detected %s', rel.name) }
-          <FlatButton style={{ marginLeft: 16 }} primary label={i18n.__('Official Download')} onClick={this.openOfficial} />
-          <FlatButton primary label={i18n.__('Github Download')} onClick={this.moreVersion} />
-        </div>
-        <div style={{ height: 16 }} />
-        <div> { i18n.__('Publish Date %s', date) } </div>
-        <div style={{ height: 16 }} />
-        <div> { i18n.__('Updates') } </div>
-        <div style={{ height: 8 }} />
-        {
-          rel.body ? rel.body.split(/[1-9]\./).map(list => list && (
-            <div style={{ marginLeft: 24, height: 40, display: 'flex', alignItems: 'center' }} key={list}>
-              { '*' }
-              <div style={{ width: 16 }} />
-              { list }
-            </div>
-          ))
-            : (
-              <div style={{ marginLeft: 24, height: 40, display: 'flex', alignItems: 'center' }}>
-                { '*' }
-                <div style={{ width: 16 }} />
-                { i18n.__('Bug Fixes') }
-              </div>
-            )
-        }
+      <div style={{ width: '100%', height: 'calc(100% - 60px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
+        <CircularLoading />
       </div>
     )
   }
 
-  renderReleases () {
-    const platform = global.config.platform
-    // const platform = 'darwin'
-    const unSupport = platform !== 'darwin' && platform !== 'win32'
+  renderRel (rel) {
+    const time = rel.releaseTime.slice(0, 10).split('-')
+    const text = rel.client_info.split('\r\n')
     return (
-      <div style={{ display: 'flex', width: '100%', marginTop: 12 }}>
-        <div style={{ flex: '0 0 24px' }} />
-        <div style={{ flex: '0 0 56px' }} >
-          {
-            unSupport ? <InfoIcon color={this.props.primaryColor} />
-              : this.state.status === 'checking' ? <CircularLoading />
-                : this.state.status === 'needUpdate' ? <NewReleases color={this.props.primaryColor} />
-                  : this.state.status === 'latest' ? <CheckIcon color={this.props.primaryColor} />
-                    : <CloseIcon color={this.props.primaryColor} />
-          }
+      <div style={{ width: 320, height: 180, border: 'solid 1px #eaeaea', boxSizing: 'border-box' }}>
+        <div style={{ height: 40, display: 'flex', alignItems: 'center', color: '#505259', marginLeft: 10 }}>
+          { i18n.__('New Version Release Time %s %s %s', time[0], time[1], time[2]) }
         </div>
-        {
-          unSupport ? i18n.__('Unsupported to Update')
-            : this.state.status === 'checking' ? i18n.__('Checking Update')
-              : this.state.status === 'needUpdate' ? this.renderCheckUpdate()
-                : (
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', height: 48, marginTop: -12 }}>
-                      { this.state.status === 'latest' && i18n.__('Already LTS Text') }
-                      { this.state.status === 'error' && i18n.__('Check Update Failed Text') }
-                      { !!this.state.error && <ErrorBox error={this.state.error} iconStyle={{ color: orange500 }} /> }
-                    </div>
-                    <div style={{ margin: '8px 0 0 -8px' }}>
-                      <FlatButton primary label={i18n.__('Check Update')} onClick={this.sendCheck} disabled={this.state.loading} />
-                    </div>
-                  </div>
-                )
-        }
+        <Divider style={{ width: 320 }} />
+        <SimpleScrollBar height={138} width={308} style={{ marginLeft: 10 }}>
+          <div style={{ height: 20, marginTop: 10, color: '#505259' }}>
+            { '更新内容' }
+          </div>
+          <div style={{ height: 5 }} />
+          {
+            text.map((v, i) => (
+              <div style={{ height: 20, color: '#85868c' }} key={i.toString()}>
+                { v }
+              </div>
+            ))
+          }
+        </SimpleScrollBar>
       </div>
     )
   }
 
   render () {
     const currentVersion = global.config.appVersion.toUpperCase()
-    const status = '版本检查中...'
-    const ltsValue = '检测中...'
+    let ltsValue = '--'
+    let text = ''
+    let showRel = false
+    let color = '#525a60'
+
+    switch (this.state.status) {
+      case 'request':
+        ltsValue = i18n.__('Checking')
+        text = i18n.__('Checking New Version')
+        break
+      case 'ready':
+        ltsValue = this.state.latest.newest_tag_name && this.state.latest.newest_tag_name.slice(1)
+        text = i18n.__('Latest Version Ready')
+        showRel = true
+        color = '#ff0000'
+        break
+      case 'latest':
+        ltsValue = currentVersion
+        text = i18n.__('Already Latest Version')
+        color = '#ff0000'
+        break
+      case 'error':
+        text = i18n.__('Check New Version Failed')
+        color = '#ff0000'
+        break
+      default:
+        break
+    }
+
     return (
       <div style={{ width: '100%', height: '100%' }} className="flexCenter" >
         <div style={{ width: 480, paddingRight: 160, paddingBottom: 60 }}>
-
           <div style={{ width: 320, height: 180, marginLeft: 160 }}>
-            <img
-              style={{ width: 320, height: 180 }}
-              src="./assets/images/pic_versioncheck.png"
-              alt=""
-            />
+            {
+              showRel ? this.renderRel(this.state.latest)
+                : (
+                  <img
+                    style={{ width: 320, height: 180 }}
+                    src="./assets/images/pic_versioncheck.png"
+                    alt=""
+                  />
+                )
+            }
           </div>
 
-          <div style={{ width: 240, height: 40, margin: '0 auto', paddingLeft: 160, color: '#525a60' }} className="flexCenter">
-            { status }
+          <div style={{ width: 240, height: 40, margin: '0 auto', paddingLeft: 160, color }} className="flexCenter">
+            { text }
           </div>
 
           <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center' }}>
-            <div style={{ width: 150, textAlign: 'right', color: '#525a60' }}>
+            <div style={{ width: 130, textAlign: 'right', color: '#525a60' }}>
               { i18n.__('Current Version') }
             </div>
-            <div style={{ width: 10 }} />
-            <div style={{ width: 150, color: '#888a8c', fontSize: 16 }}>
+            <div style={{ width: 30 }} />
+            <div style={{ width: 150, color: '#888a8c' }}>
               { currentVersion }
             </div>
           </div>
 
           <div style={{ height: 1, width: 320, marginLeft: 160, marginTop: -1, backgroundColor: '#bfbfbf', opacity: 0.5 }} />
-          <div style={{ height: 40 }} />
+          <div style={{ height: 20 }} />
 
-          <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center' }}>
-            <div style={{ width: 150, textAlign: 'right', color: '#525a60' }}>
+          <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center', position: 'relative' }}>
+            <div style={{ width: 130, textAlign: 'right', color: '#525a60' }}>
               { i18n.__('Latest Version') }
             </div>
-            <div style={{ width: 10 }} />
-            <div style={{ width: 150, color: '#525a60', opacity: 0.5 }}>
+            <div style={{ width: 30 }} />
+            <div style={{ width: 150, color: '#888a8c' }}>
               { ltsValue }
+            </div>
+            <div style={{ position: 'absolute', right: 0 }}>
+              <RSButton
+                alt
+                onClick={this.openWeb}
+                style={{ padding: '0 17px' }}
+                labelStyle={{ height: 28 }}
+                label={i18n.__('Open Web to Download Firmware')}
+              />
             </div>
           </div>
 
           <div style={{ height: 1, width: 320, marginLeft: 160, marginTop: -1, backgroundColor: '#bfbfbf', opacity: 0.5 }} />
           <div style={{ height: 40 }} />
 
-          <div style={{ width: 240, height: 40, margin: '0 auto', paddingLeft: 160 }}>
+          <div style={{ width: 320, height: 40, margin: '0 auto', paddingLeft: 200, display: 'flex', alignItems: 'center' }}>
             <RRButton
-              label={i18n.__('Checking...')}
-              onClick={this.save}
+              label={this.state.status === 'request' ? i18n.__('Requesting Updates') : i18n.__('Retry Request Updates')}
+              onClick={this.reqLatest}
+              loading={this.state.status === 'request'}
             />
           </div>
         </div>

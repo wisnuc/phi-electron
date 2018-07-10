@@ -701,6 +701,8 @@
   "==== view/ClientUpdate.jsx ====": "",
   "ClientUpdate Menu Name": "客户端升级",
   "ClientUpdate Description": "客户端软件版本升级",
+  "Requesting Updates": "检查中",
+  "Retry Request Updates": "重新检查",
 
   "==== view/FirmwareUpdate.jsx ====": "",
   "FirmwareUpdate Menu Name": "固件升级",
