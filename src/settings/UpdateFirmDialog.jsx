@@ -5,6 +5,7 @@ import { Divider } from 'material-ui'
 import { CloseIcon } from '../common/Svg'
 import UploadingFirmware from './UploadingFirmware'
 import { RSButton, LIButton } from '../common/Buttons'
+import SimpleScrollBar from '../common/SimpleScrollBar'
 
 class Update extends React.Component {
   constructor (props) {
@@ -62,7 +63,7 @@ class Update extends React.Component {
             { i18n.__('New Version Release Time %s %s %s', time[0], time[1], time[2]) }
           </div>
           <Divider style={{ width: 280 }} />
-          <div style={{ height: 108, width: 310, overflowX: 'hidden', overflowY: 'auto', marginLeft: 10 }}>
+          <SimpleScrollBar height={108} width={268} style={{ marginLeft: 10 }}>
             <div style={{ height: 20, marginTop: 10, color: '#505259' }}>
               { '更新内容' }
             </div>
@@ -76,7 +77,13 @@ class Update extends React.Component {
             <div style={{ height: 20, color: '#85868c' }}>
               { '3. XXXXXXXXX' }
             </div>
-          </div>
+            <div style={{ height: 20, color: '#85868c' }}>
+              { '4. XXXXXXXXX' }
+            </div>
+            <div style={{ height: 20, color: '#85868c' }}>
+              { '5. XXXXXXXXX' }
+            </div>
+          </SimpleScrollBar>
         </div>
 
         <div style={{ height: 20, width: '100%', display: 'flex', alignItems: 'center', marginTop: 10 }}>

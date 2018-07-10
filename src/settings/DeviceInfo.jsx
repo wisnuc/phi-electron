@@ -146,7 +146,7 @@ class DeviceInfo extends React.PureComponent {
                     name="deviceName"
                     inputStyle={{ marginLeft: 10, color: '#525a60' }}
                     onChange={e => this.updateLabel(e.target.value)}
-                    maxLength={12}
+                    maxLength={20}
                     value={this.state.modify ? this.state.label : name}
                     errorText={this.state.errorText}
                     ref={(input) => { if (input && this.state.modify) { input.focus() } }}
