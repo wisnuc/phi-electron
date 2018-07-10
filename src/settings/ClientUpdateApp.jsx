@@ -52,7 +52,7 @@ class Update extends React.Component {
 
     this.openWeb = () => {
       let url = 'https://sohon2test.phicomm.com/v1/ui/index'
-      if (this.state.rel && this.state.rel.skip_url) url = this.state.rel.skip_url
+      if (this.state.latest && this.state.latest.skip_url) url = this.state.latest.skip_url
       shell.openExternal(url)
     }
   }
@@ -80,7 +80,7 @@ class Update extends React.Component {
         <Divider style={{ width: 320 }} />
         <SimpleScrollBar height={138} width={308} style={{ marginLeft: 10 }}>
           <div style={{ height: 20, marginTop: 10, color: '#505259' }}>
-            { '更新内容' }
+            { i18n.__('Update Content') }
           </div>
           <div style={{ height: 5 }} />
           {

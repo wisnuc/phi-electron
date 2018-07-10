@@ -55,6 +55,7 @@ class Update extends React.Component {
   renderRel (rel) {
     console.log('renderRel', rel)
     const time = rel.releaseTime.slice(0, 10).split('-')
+    const text = rel.software_info.split('\r\n')
     return (
       <div style={{ width: 320, height: 180, border: 'solid 1px #eaeaea', boxSizing: 'border-box' }}>
         <div style={{ height: 40, display: 'flex', alignItems: 'center', color: '#505259', marginLeft: 10 }}>
@@ -63,30 +64,16 @@ class Update extends React.Component {
         <Divider style={{ width: 320 }} />
         <SimpleScrollBar height={138} width={310} style={{ marginLeft: 10 }}>
           <div style={{ height: 20, marginTop: 10, color: '#505259' }}>
-            { '更新内容' }
+            { i18n.__('Update Content') }
           </div>
           <div style={{ height: 5 }} />
-          <div style={{ height: 20, color: '#85868c' }}>
-            { '1. 修复bug，优化用户体验' }
-          </div>
-          <div style={{ height: 20, color: '#85868c' }}>
-            { '2. XXXXXXXXX' }
-          </div>
-          <div style={{ height: 20, color: '#85868c' }}>
-            { '3. XXXXXXXXX' }
-          </div>
-          <div style={{ height: 20, color: '#85868c' }}>
-            { '4. XXXXXXXXX' }
-          </div>
-          <div style={{ height: 20, color: '#85868c' }}>
-            { '5. XXXXXXXXX' }
-          </div>
-          <div style={{ height: 20, color: '#85868c' }}>
-            { '5. XXXXXXXXX' }
-          </div>
-          <div style={{ height: 20, color: '#85868c' }}>
-            { '5. XXXXXXXXX' }
-          </div>
+          {
+            text.map((v, i) => (
+              <div style={{ height: 20, color: '#85868c' }} key={i.toString()}>
+                { v }
+              </div>
+            ))
+          }
         </SimpleScrollBar>
       </div>
     )
