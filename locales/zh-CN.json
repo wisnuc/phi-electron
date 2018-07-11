@@ -259,6 +259,7 @@
   "Exceed Max Users Text": "每个NAS设备可连9个用户加1个管理员。",
   "Exceed Max Users": "超过用户上限",
   "User Exist Error": "用户已经存在",
+  "Refresh User List": "刷新列表",
 
   "==== control/AdminDriversApp.jsx ====": "",
   "Name": "名称",

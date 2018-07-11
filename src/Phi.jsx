@@ -156,13 +156,14 @@ class Fruitmix extends React.Component {
           }
 
           {
-            <Users
-              phi={this.state.phi}
-              open={this.state.showUsers}
-              device={this.state.selectedDevice}
-              onCancel={this.onCloseUsers}
-              openSnackBar={msg => this.openSnackBar(msg)}
-            />
+            !!this.state.showUsers &&
+              <Users
+                phi={this.state.phi}
+                open={this.state.showUsers}
+                device={this.state.selectedDevice}
+                onCancel={this.onCloseUsers}
+                openSnackBar={msg => this.openSnackBar(msg)}
+              />
           }
 
           {/* snackBar */}

@@ -16,12 +16,14 @@ class AdminUsersApp extends React.Component {
     super(props)
 
     this.state = {
-      users: null,
       checkList: [],
       pn: '',
       pnError: '',
       nickName: '',
       nickNameError: '',
+      users: null,
+      loading: true,
+      invited: false,
       status: 'view' // view, modify, add, confirm
     }
 
@@ -54,10 +56,10 @@ class AdminUsersApp extends React.Component {
     }
 
     this.reqUsers = () => {
-      this.setState({ loading: true, users: null, status: 'view', invited: false })
+      this.setState({ loading: true, users: null, status: 'view', invited: false, error: null })
       this.reqUsersAsync().then(users => this.setState({ users, loading: false })).catch((e) => {
         console.error('this.reqUsers error', e)
-        this.setState({ error: true, loading: false })
+        this.setState({ error: true, loading: false, users: null })
       })
     }
 
@@ -153,8 +155,8 @@ class AdminUsersApp extends React.Component {
     }
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (!this.props.open && nextProps.open) this.reqUsers()
+  componentDidMount () {
+    this.reqUsers()
   }
 
   shouldAddUser () {
@@ -408,7 +410,7 @@ class AdminUsersApp extends React.Component {
               <div style={{ height: 34, width: 'calc(100% - 40px)', display: 'flex', alignItems: 'center', padding: 20 }}>
                 <div style={{ flexGrow: 1 }} />
                 {
-                  (!isAddUser && !isConfirm) && (
+                  (!isAddUser && !isConfirm && !this.state.error) && (
                     <RSButton
                       alt
                       disabled={(!isModify && (!this.state.users || !this.state.users.length)) ||
@@ -420,11 +422,13 @@ class AdminUsersApp extends React.Component {
                 }
                 <div style={{ width: 10 }} />
                 <RSButton
-                  label={isAddUser ? isMaxUser ? i18n.__('Got It') : this.state.invited ? i18n.__('Sending Invite') : i18n.__('Send Invite')
+                  label={this.state.error ? i18n.__('Refresh User List') : isAddUser ? isMaxUser ? i18n.__('Got It')
+                    : this.state.invited ? i18n.__('Sending Invite') : i18n.__('Send Invite')
                     : isConfirm ? i18n.__('Confirm') : isModify ? i18n.__('Delete') : i18n.__('Add User')}
                   disabled={(isModify && !this.state.checkList.length) ||
                     (isAddUser && !isMaxUser && !this.shouldAddUser()) || this.state.invited || this.state.loading}
-                  onClick={() => (isAddUser ? isMaxUser ? this.backToView() : this.invite() : isConfirm ? this.deleteUser()
+                  onClick={() => (this.state.error ? this.reqUsers() : isAddUser ? isMaxUser ? this.backToView()
+                    : this.invite() : isConfirm ? this.deleteUser()
                     : isModify ? this.confirmDelete() : this.addUser())}
                 />
               </div>
