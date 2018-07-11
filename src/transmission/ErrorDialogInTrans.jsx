@@ -42,6 +42,8 @@ const convert = (code) => {
       return i18n.__('EIGNORE')
     case 'EMKDIR':
       return i18n.__('EMKDIR')
+    case 'ENOTSTREAM':
+      return i18n.__('ENOTSTREAM')
     default:
       return code || i18n.__('Unknown Error')
   }
