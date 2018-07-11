@@ -42,12 +42,13 @@ class Device extends RequestManager {
   request (name, args, next) {
     let r
 
+    const resTime = process.env.CONN_MODE === 'remote' ? 5 : 5000
     switch (name) {
       case 'info':
         r = request
           .get(`http://${this.mdev.address}:3001/v1/info`)
           .timeout({
-            response: 5000, // Wait 5 seconds for the server to start sending,
+            response: resTime, // Wait 5 seconds for the server to start sending,
             deadline: 60000 // but allow 1 minute for the file to finish loading.
           })
         break
@@ -56,7 +57,7 @@ class Device extends RequestManager {
         r = request
           .get(`http://${this.mdev.address}:3000/boot`)
           .timeout({
-            response: 5000, // Wait 5 seconds for the server to start sending,
+            response: resTime, // Wait 5 seconds for the server to start sending,
             deadline: 60000 // but allow 1 minute for the file to finish loading.
           })
         break
@@ -90,7 +91,7 @@ class Device extends RequestManager {
         r = request
           .get(`http://${this.mdev.address}:3000/users`)
           .timeout({
-            response: 5000, // Wait 5 seconds for the server to start sending,
+            response: resTime, // Wait 5 seconds for the server to start sending,
             deadline: 60000 // but allow 1 minute for the file to finish loading.
           })
         break
