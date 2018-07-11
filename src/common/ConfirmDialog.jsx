@@ -20,6 +20,7 @@ class ConfirmDialog extends React.PureComponent {
 
   render () {
     const { open, onCancel, title, text, checkText } = this.props
+    const content = !open ? '' : (typeof text === 'function' && open) ? text() : text
     return (
       <Dialog open={open} onRequestClose={onCancel} modal >
         {
@@ -40,7 +41,7 @@ class ConfirmDialog extends React.PureComponent {
                   color: 'var(--grey-text)'
                 }}
               >
-                { text }
+                { content }
               </div>
               {
                 !!checkText && (

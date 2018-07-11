@@ -924,6 +924,34 @@ class Home extends Base {
     )
   }
 
+  deleteText () {
+    let text = ''
+    const entries = this.state.entries
+    const selected = this.state.select.selected
+    const isMultiple = selected.length > 1
+    console.log('this.state.entries', entries, selected)
+    const isFile = entries[selected[0]].type === 'file'
+    switch (this.type) {
+      case 'photos':
+        text = i18n.__('Delete Photos Text')
+        break
+      case 'music':
+        text = i18n.__('Delete Music Text')
+        break
+      case 'docs':
+        text = i18n.__('Delete Docs Text')
+        break
+      case 'videos':
+        text = i18n.__('Delete Videos Text')
+        break
+      default:
+        text = isMultiple ? i18n.__('Delete Items Text %s', selected.length)
+          : isFile ? i18n.__('Delete File Text') : i18n.__('Delete Folder Text')
+        break
+    }
+    return text
+  }
+
   renderDialogs (openSnackBar, navTo) {
     return (
       <div style={{ width: '100%', height: '100%' }}>
@@ -951,7 +979,7 @@ class Home extends Base {
           onCancel={() => this.setState({ delete: false })}
           onConfirm={() => this.delete()}
           title={i18n.__('Confirm Delete Items Title')}
-          text={i18n.__('Confirm Delete Items Text')}
+          text={() => this.deleteText()}
         />
 
         <DialogOverlay open={!!this.state.detail} onRequestClose={() => this.toggleDialog('detail')}>
