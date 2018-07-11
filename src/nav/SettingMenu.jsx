@@ -3,8 +3,8 @@ import { Button } from '../common/Buttons'
 
 class MenuCard extends Button {
   render () {
-    const { Icon, name, des, onClick, isLAN, view } = this.props
-    const disabled = isLAN && view === 'resetDevice'
+    const { Icon, name, des, onClick, isLAN, view, isCloud } = this.props
+    const disabled = (isLAN && ['resetDevice', 'pt'].includes(view)) || (isCloud && view === 'firmwareUpdate')
     const backgroundColor = this.state.hover ? '#f3f8ff' : '#fff'
     return (
       <div
@@ -42,10 +42,10 @@ class MenuCard extends Button {
 
 class Menu extends React.Component {
   render () {
-    const { views, navTo } = this.props
+    const { views, navTo, isLAN, isCloud, isAdmin } = this.props
     const group = 'settings'
     let list = Object.keys(views).filter(key => views[key].navGroup() === group && key !== 'settings')
-    if (!this.props.isAdmin) list = [...list].slice(0, -2)
+    if (!isAdmin) list = [...list].filter(key => key !== 'firmwareUpdate').slice(0, -3)
     return (
       <div style={{ width: '100%', height: '100%', boxSizing: 'border-box', paddingBottom: 130 }} className="flexCenter" >
         <div
@@ -65,7 +65,8 @@ class Menu extends React.Component {
                 name={views[key].menuName()}
                 des={views[key].menuDes()}
                 onClick={() => navTo(key)}
-                isLAN={this.props.isLAN}
+                isLAN={isLAN}
+                isCloud={isCloud}
                 view={key}
               />
             ))
