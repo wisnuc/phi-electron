@@ -247,7 +247,7 @@ class ManageDisk extends React.Component {
     console.log('renderRecover', isExtend, isImport, isImportAndExtend)
 
     let fire = () => {}
-    if (isExtend) fire = () => this.add({ devices: target.filter(t => t.name !== oldVolume.devices[0].name) })
+    if (isExtend) fire = () => this.add({ devices: target.filter(t => t.name !== oldVolume.devices[0].name), mode: this.state.mode })
     else if (isImport) fire = () => this.recover(this.availableVolumes()[0])
     else if (isImportAndExtend) fire = blk => this.confirmRecover(blk, target)
 
