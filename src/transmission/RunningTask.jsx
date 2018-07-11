@@ -20,7 +20,7 @@ class RunningTask extends React.Component {
 
     this.toggleTask = () => {
       const task = this.props.task
-      if (task.paused) this.props.resume(task.uuid)
+      if (task.paused && !task.waiting) this.props.resume(task.uuid)
       else this.props.pause(task.uuid)
     }
 
@@ -97,6 +97,8 @@ class RunningTask extends React.Component {
     const finishedSize = task.count === 1
       ? `${this.formatSize(task.completeSize)}/${this.formatSize(task.size)}` : `${finishCount}/${task.count}`
 
+    const isRunning = task.paused && !task.waiting
+
     return (
       <div style={{ display: 'flex', alignItems: 'center', height: 60, backgroundColor }} >
         {/* task item type */}
@@ -158,8 +160,8 @@ class RunningTask extends React.Component {
                 </LIButton>
               )
               : (
-                <LIButton onClick={this.toggleTask} tooltip={task.paused ? i18n.__('Resume') : i18n.__('Pause')} >
-                  { task.paused ? <TaskStartIcon /> : <TaskPauseIcon /> }
+                <LIButton onClick={this.toggleTask} tooltip={isRunning ? i18n.__('Resume') : i18n.__('Pause')} >
+                  { isRunning ? <TaskStartIcon /> : <TaskPauseIcon /> }
                 </LIButton>
               )
           }
