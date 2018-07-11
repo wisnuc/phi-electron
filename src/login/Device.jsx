@@ -159,7 +159,8 @@ class Device extends React.Component {
     let devStorage = '--'
 
     try {
-      const { boundVolume, storage } = this.state.dev.boot.data
+      const boot = this.isCurrent() ? this.props.selectedDevice.boot.data : this.state.dev.boot.data
+      const { boundVolume, storage } = boot
       const usage = storage.volumes.find(v => v.uuid === boundVolume.uuid).usage
       const { free, used } = usage.overall
       devStorage = i18n.__('Storage Usage %s %s', prettysize(used), prettysize(free + used))

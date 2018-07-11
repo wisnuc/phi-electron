@@ -928,6 +928,7 @@ class Home extends Base {
     let text = ''
     const entries = this.state.entries
     const selected = this.state.select.selected
+    if (!entries || !Array.isArray(selected) || !selected.length) return ''
     const isMultiple = selected.length > 1
     console.log('this.state.entries', entries, selected)
     const isFile = entries[selected[0]].type === 'file'
