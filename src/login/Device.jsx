@@ -92,7 +92,11 @@ class Device extends React.Component {
     const { mdev } = this.state.dev
     if (mdev && mdev.stationName) return mdev.stationName
     const mac = mdev && mdev.mac
-    if (mac) return `N2-${mac.slice(-2)}`
+    if (mac) {
+      const name = `N2-${mac.slice(-2)}`
+      Object.assign(this.device.mdev, { stationName: name })
+      return name
+    }
     return 'N2'
   }
 
