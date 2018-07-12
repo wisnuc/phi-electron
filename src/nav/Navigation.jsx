@@ -41,7 +41,8 @@ import UpdateFirmDialog from '../settings/UpdateFirmDialog'
 import Fruitmix from '../common/fruitmix'
 import WindowAction from '../common/WindowAction'
 import DialogOverlay from '../common/PureDialog'
-import { TopLogo, FileManage, TransIcon, DeviceChangeIcon, FuncIcon, BackIcon } from '../common/Svg'
+import { LIButton } from '../common/Buttons'
+import { TopLogo, FileManage, TransIcon, DeviceChangeIcon, FuncIcon, BackIcon, HelpIcon } from '../common/Svg'
 
 const HEADER_HEIGHT = 110
 
@@ -74,7 +75,7 @@ class NavViews extends React.Component {
       { name: 'diskInfo', View: DiskInfo },
       { name: 'sleep', View: Sleep },
       { name: 'cacheClean', View: CacheClean },
-      { name: 'sambe', View: Samba },
+      { name: 'samba', View: Samba },
       { name: 'dlna', View: DLNA },
       { name: 'clientUpdate', View: ClientUpdate },
       { name: 'firmwareUpdate', View: FirmwareUpdate },
@@ -320,10 +321,58 @@ class NavViews extends React.Component {
     })
   }
 
+  renderHelp () {
+    const isAdmin = this.props.apis.account && this.props.apis.account.data && this.props.apis.account.data.isFirstUser
+    return (
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: this.state.onHelp ? 0 : '100%',
+          width: '100%',
+          height: '100%',
+          zIndex: 100,
+          transition: 'left 175ms'
+        }}
+        onMouseDown={() => this.setState({ onHelp: false })}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: 280,
+            width: 30,
+            height: '100%',
+            backgroundImage: 'linear-gradient(to left, rgba(23,99,207,.03), transparent)'
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            zIndex: 100,
+            top: 0,
+            right: 0,
+            width: 280,
+            height: '100%',
+            backgroundColor: '#FFF',
+            overflowY: 'auto',
+            overflowX: 'hidden'
+          }}
+          onMouseDown={(e) => { e.preventDefault(); e.stopPropagation() }}
+        >
+          {
+            this.state.onHelp && this.views[this.state.nav].renderHelp({
+              nav: this.state.nav, isAdmin, onClose: () => this.setState({ onHelp: false })
+            })
+          }
+        </div>
+      </div>
+    )
+  }
+
   renderFileGroup () {
     const toolBarStyle = { height: 50, width: '100%', display: 'flex', alignItems: 'center', backgroundColor: '#f8f8f8' }
     const titleStyle = { height: 70, width: '100%', display: 'flex', alignItems: 'center' }
-    const isAdmin = this.props.apis.account && this.props.apis.account.data && this.props.apis.account.data.isFirstUser
 
     return (
       <div
@@ -384,49 +433,7 @@ class NavViews extends React.Component {
         />
 
         {/* help frame */}
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: this.state.onHelp ? 0 : '100%',
-            width: '100%',
-            height: '100%',
-            zIndex: 100,
-            transition: 'left 175ms'
-          }}
-          onMouseDown={() => this.setState({ onHelp: false })}
-        >
-          <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              right: 280,
-              width: 30,
-              height: '100%',
-              backgroundImage: 'linear-gradient(to left, rgba(23,99,207,.03), transparent)'
-            }}
-          />
-          <div
-            style={{
-              position: 'absolute',
-              zIndex: 100,
-              top: 0,
-              right: 0,
-              width: 280,
-              height: '100%',
-              backgroundColor: '#FFF',
-              overflowY: 'auto',
-              overflowX: 'hidden'
-            }}
-            onMouseDown={(e) => { e.preventDefault(); e.stopPropagation() }}
-          >
-            {
-              this.state.onHelp && this.views[this.state.nav].renderHelp({
-                nav: this.state.nav, isAdmin, onClose: () => this.setState({ onHelp: false })
-              })
-            }
-          </div>
-        </div>
+        { this.renderHelp() }
 
         {/* drag item */}
         { this.views[this.state.nav].renderDragItems() }
@@ -478,12 +485,16 @@ class NavViews extends React.Component {
             views={this.views}
             nav={this.state.nav}
             navTo={this.navTo}
+            openHelp={this.openHelp}
           />
         </div>
 
         <div style={{ height: 'calc(100% - 50px)', width: '100%' }} id="content-container">
           { this.renderView() }
         </div>
+
+        {/* help frame */}
+        { this.renderHelp() }
       </div>
     )
   }
@@ -509,7 +520,7 @@ class NavViews extends React.Component {
     return (
       <div style={{ height: '100%', width: '100%' }}>
         <div
-          style={{ height: 60, minWidth: 210 }}
+          style={{ height: 60, minWidth: 210, display: 'flex', alignItems: 'center' }}
         >
           <FlatButton
             label={title}
@@ -528,10 +539,15 @@ class NavViews extends React.Component {
             onClick={() => this.navTo('settings')}
             style={{ height: 60, minWidth: 210, borderRadius: '0 30px 30px 0' }}
           />
+          <div style={{ flexGrow: 1 }} />
+          <div style={{ marginRight: 20 }}>
+            <LIButton onClick={this.openHelp} tooltip={i18n.__('Help')}> <HelpIcon /> </LIButton>
+          </div>
         </div>
         <div style={{ height: 'calc(100% - 50px)', width: '100%' }}>
           { this.renderView() }
         </div>
+        { this.renderHelp() }
       </div>
     )
   }

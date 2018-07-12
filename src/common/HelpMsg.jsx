@@ -213,6 +213,191 @@ class Help extends React.PureComponent {
     )
   }
 
+  renderDownloading () {
+    return (
+      <div>
+        { this.renderHeader(i18n.__('Downloading Help Header')) }
+        { this.renderText(i18n.__('Downloading Help Summary Text')) }
+        <div style={{ height: 20 }} />
+        { this.renderTitle(i18n.__('Edit Downloading Tasks')) }
+        { this.renderText(i18n.__('Edit Downloading Tasks Text 1')) }
+        { this.renderText(i18n.__('Edit Downloading Tasks Text 2')) }
+        <div style={{ height: 20 }} />
+        { this.renderTitle(i18n.__('Downloading Failed')) }
+        { this.renderText(i18n.__('Downloading Failed Text')) }
+        <div style={{ height: 20 }} />
+        { this.renderWarning(i18n.__('Downloading Help Warning Text')) }
+      </div>
+    )
+  }
+
+  renderUploading () {
+    return (
+      <div>
+        { this.renderHeader(i18n.__('Uploading Help Header')) }
+        { this.renderText(i18n.__('Uploading Help Summary Text')) }
+        <div style={{ height: 20 }} />
+        { this.renderTitle(i18n.__('Edit Uploading Tasks')) }
+        { this.renderText(i18n.__('Edit Uploading Tasks Text 1')) }
+        { this.renderText(i18n.__('Edit Downloading Tasks Text 2')) }
+        <div style={{ height: 20 }} />
+        { this.renderTitle(i18n.__('Uploading Failed')) }
+        { this.renderText(i18n.__('Uploading Failed Text')) }
+      </div>
+    )
+  }
+
+  renderFinished () {
+    return (
+      <div>
+        { this.renderHeader(i18n.__('Finished Help Header')) }
+        { this.renderText(i18n.__('Finished Help Summary Text')) }
+        <div style={{ height: 20 }} />
+        { this.renderTitle(i18n.__('Edit Finished Tasks')) }
+        { this.renderText(i18n.__('Edit Finished Tasks Text')) }
+        <div style={{ height: 20 }} />
+        { this.renderWarning(i18n.__('Finished Help Warning Text')) }
+      </div>
+    )
+  }
+
+  renderDevice () {
+    return (
+      <div>
+        { this.renderHeader(i18n.__('Device Help Header')) }
+        { this.renderText(i18n.__('Help Summary Text')) }
+        <div style={{ height: 20 }} />
+        { this.renderWarning(i18n.__('Help Warning Text')) }
+      </div>
+    )
+  }
+
+  renderDiskInfo () {
+    return (
+      <div>
+        { this.renderHeader(i18n.__('DiskInfo Help Header')) }
+        { this.renderText(i18n.__('DiskInfo Help Summary Text')) }
+        <div style={{ height: 20 }} />
+        { this.renderTitle(i18n.__('Remove Data')) }
+        { this.renderText(i18n.__('Remove Data Help Text')) }
+        <div style={{ height: 20 }} />
+        { this.renderWarning(i18n.__('DiskInfo Help Warning Text')) }
+      </div>
+    )
+  }
+
+  renderSleep () {
+    return (
+      <div>
+        { this.renderHeader(i18n.__('Sleep Help Header')) }
+        { this.renderText(i18n.__('Sleep Help Summary Text')) }
+        <div style={{ height: 20 }} />
+        { this.renderWarning(i18n.__('Sleep Help Warning Text')) }
+      </div>
+    )
+  }
+
+  renderCacheClean () {
+    return (
+      <div>
+        { this.renderHeader(i18n.__('CacheClean Help Header')) }
+        { this.renderText(i18n.__('CacheClean Help Summary Text')) }
+        <div style={{ height: 20 }} />
+        { this.renderWarning(i18n.__('CacheClean Help Warning Text')) }
+      </div>
+    )
+  }
+
+  renderSamba () {
+    return (
+      <div>
+        { this.renderHeader(i18n.__('Samba Help Header')) }
+        { this.renderText(i18n.__('Samba Help Summary Text 1')) }
+        { this.renderText(i18n.__('Samba Help Summary Text 2')) }
+        <div style={{ height: 20 }} />
+        { this.renderWarning(i18n.__('Samba Help Warning Text')) }
+      </div>
+    )
+  }
+
+  renderDLNA () {
+    return (
+      <div>
+        { this.renderHeader(i18n.__('DLNA Help Header')) }
+        { this.renderText(i18n.__('DLNA Help Summary Text')) }
+        <div style={{ height: 20 }} />
+        { this.renderWarning(i18n.__('DLNA Help Warning Text')) }
+      </div>
+    )
+  }
+
+  renderClientUpdate () {
+    return (
+      <div>
+        { this.renderHeader(i18n.__('ClientUpdate Help Header')) }
+        { this.renderText(i18n.__('ClientUpdate Help Summary Text 1')) }
+        { this.renderText(i18n.__('ClientUpdate Help Summary Text 2')) }
+      </div>
+    )
+  }
+
+  renderFirmwareUpdate () {
+    return (
+      <div>
+        { this.renderHeader(i18n.__('FirmwareUpdate Help Header')) }
+        { this.renderText(i18n.__('FirmwareUpdate Help Summary Text')) }
+        <div style={{ height: 20 }} />
+        { this.renderTitle(i18n.__('Update FirmwareUpdate Manually')) }
+        { this.renderText(i18n.__('Update FirmwareUpdate Manually Text')) }
+        <div style={{ height: 20 }} />
+        { this.renderWarning(i18n.__('FirmwareUpdate Help Warning Text')) }
+      </div>
+    )
+  }
+
+  renderLANPassword () {
+    return (
+      <div>
+        { this.renderHeader(i18n.__('LANPassword Help Header')) }
+        { this.renderText(i18n.__('LANPassword Help Summary Text 1')) }
+        { this.renderText(i18n.__('LANPassword Help Summary Text 2')) }
+      </div>
+    )
+  }
+
+  renderPT () {
+    return (
+      <div>
+        { this.renderHeader(i18n.__('PT Help Header')) }
+        { this.renderText(i18n.__('PT Help Summary Text')) }
+        <div style={{ height: 20 }} />
+        { this.renderWarning(i18n.__('PT Help Warning Text')) }
+      </div>
+    )
+  }
+
+  renderPower () {
+    return (
+      <div>
+        { this.renderHeader(i18n.__('Power Help Header')) }
+        { this.renderText(i18n.__('Power Help Summary Text')) }
+        <div style={{ height: 20 }} />
+        { this.renderWarning(i18n.__('Power Help Warning Text')) }
+      </div>
+    )
+  }
+
+  renderResetDevice () {
+    return (
+      <div>
+        { this.renderHeader(i18n.__('ResetDevice Help Header')) }
+        { this.renderText(i18n.__('ResetDevice Help Summary Text')) }
+        <div style={{ height: 20 }} />
+        { this.renderWarning(i18n.__('ResetDevice Help Warning Text')) }
+      </div>
+    )
+  }
+
   render () {
     let content = null
     switch (this.props.nav) {
@@ -238,6 +423,51 @@ class Help extends React.PureComponent {
         break
       case 'usb':
         content = this.renderUSB()
+        break
+      case 'downloading':
+        content = this.renderDownloading()
+        break
+      case 'uploading':
+        content = this.renderUploading()
+        break
+      case 'finished':
+        content = this.renderFinished()
+        break
+      case 'device':
+        content = this.renderDevice()
+        break
+      case 'diskInfo':
+        content = this.renderDiskInfo()
+        break
+      case 'sleep':
+        content = this.renderSleep()
+        break
+      case 'cacheClean':
+        content = this.renderCacheClean()
+        break
+      case 'samba':
+        content = this.renderSamba()
+        break
+      case 'dlna':
+        content = this.renderDLNA()
+        break
+      case 'clientUpdate':
+        content = this.renderClientUpdate()
+        break
+      case 'firmwareUpdate':
+        content = this.renderFirmwareUpdate()
+        break
+      case 'lanPassword':
+        content = this.renderLANPassword()
+        break
+      case 'pt':
+        content = this.renderPT()
+        break
+      case 'power':
+        content = this.renderPower()
+        break
+      case 'resetDevice':
+        content = this.renderResetDevice()
         break
       default:
         break

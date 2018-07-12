@@ -1,10 +1,12 @@
+import i18n from 'i18n'
 import React from 'react'
 import TransCount from './TransCount'
-import { Button } from '../common/Buttons'
+import { Button, LIButton } from '../common/Buttons'
+import { HelpIcon } from '../common/Svg'
 
 class MenuItem extends Button {
   render () {
-    const { text, selected, type, index } = this.props
+    const { text, selected, type } = this.props
 
     const Icon = this.props.icon
 
@@ -39,7 +41,7 @@ class MenuItem extends Button {
 
 class NavDrawer extends React.Component {
   render () {
-    const { views, nav, navTo } = this.props
+    const { views, nav, navTo, openHelp } = this.props
     const group = 'transmission'
     const primaryColor = views[nav].primaryColor()
 
@@ -61,6 +63,10 @@ class NavDrawer extends React.Component {
               />
             ))
         }
+        <div style={{ flexGrow: 1 }} />
+        <div style={{ marginRight: 20 }}>
+          <LIButton onClick={openHelp} tooltip={i18n.__('Help')}> <HelpIcon /> </LIButton>
+        </div>
       </div>
     )
   }
