@@ -250,7 +250,7 @@ class PhiLogin extends React.Component {
               onClick={() => shell.openExternal(phicommUrl)}
             />
           </div>
-          <div style={{ width: 1, height: 16, backgroundColor: 'rgba(0,0,0,.38)' }} />
+          <div style={{ width: 1, height: 10, backgroundColor: 'rgba(0,0,0,.38)' }} />
           <div style={{ width: '50%', textAlign: 'left' }}>
             <FLButton
               label={i18n.__('Forget Password')}

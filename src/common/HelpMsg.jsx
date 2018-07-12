@@ -10,7 +10,7 @@ class Help extends React.PureComponent {
         <div style={{ height: 60, display: 'flex', alignItems: 'center', paddingLeft: 20 }} className="title">
           { text }
         </div>
-        <Divider style={{ marginLeft: 20, width: 280 }} className="divider" />
+        <Divider style={{ marginLeft: 20, width: 240 }} className="divider" />
         <div style={{ height: 20 }} />
       </div>
     )
@@ -244,7 +244,7 @@ class Help extends React.PureComponent {
     return (
       <div style={{ width: 280, height: '100%', position: 'relative' }}>
         { content }
-        <div style={{ width: 30, height: '100%', position: 'absolute', left: -10, top: 0 }} className="flexCenter">
+        <div style={{ width: 30, height: '100%', position: 'absolute', left: -5, top: 0 }} className="flexCenter">
           <HelpFoldIcon style={{ color: '#85868c', cursor: 'pointer' }} onClick={this.props.onClose} />
         </div>
       </div>

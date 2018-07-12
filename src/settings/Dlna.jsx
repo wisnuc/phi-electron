@@ -44,7 +44,7 @@ class Dlna extends React.Component {
   renderRow ({ type, enabled, func }) {
     return (
       <div style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center' }} key={type}>
-        <div style={{ width: 150, textAlign: 'right', color: '#525a60' }}>
+        <div style={{ width: 130, textAlign: 'right', color: '#525a60' }}>
           { type }
         </div>
         <div style={{ flexGrow: 1 }} />

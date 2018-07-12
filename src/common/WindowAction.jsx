@@ -14,6 +14,7 @@ const styles = {
     width: 30,
     height: 30,
     padding: 0,
+    opacity: 0.7,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
@@ -35,15 +36,15 @@ class WindowAction extends React.PureComponent {
     return (
       <div style={{ position: 'fixed', top: 11, right: 17, display: 'flex', alignItems: 'center', WebkitAppRegion: 'no-drag' }}>
         <EventListener target="window" onResize={this.handleResize} />
-        <IconButton style={styles.small} iconStyle={styles.smallIcon} onClick={this.minimize} >
+        <IconButton style={styles.small} iconStyle={styles.smallIcon} onClick={this.minimize} hoveredStyle={{ opacity: 1 }}>
           <WinMiniIcon />
         </IconButton>
         <div style={{ width: 12 }} />
-        <IconButton style={styles.small} iconStyle={styles.smallIcon} onClick={this.toggleMax} >
+        <IconButton style={styles.small} iconStyle={styles.smallIcon} onClick={this.toggleMax} hoveredStyle={{ opacity: 1 }}>
           { !isMaximized ? <WinFullIcon /> : <WinNormalIcon /> }
         </IconButton>
         <div style={{ width: 12 }} />
-        <IconButton style={styles.small} iconStyle={styles.smallIcon} onClick={this.hide} >
+        <IconButton style={styles.small} iconStyle={styles.smallIcon} onClick={this.hide} hoveredStyle={{ opacity: 1 }}>
           <CloseIcon />
         </IconButton>
       </div>

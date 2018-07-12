@@ -13,7 +13,7 @@ class DiskModeGuide extends React.PureComponent {
             { i18n.__('Show Disk Mode') }
           </div>
         </div>
-        <Divider style={{ marginLeft: 20, width: 'calc(100% - 40px)' }} />
+        <Divider style={{ marginLeft: 20, width: 'calc(100% - 40px)', backgroundColor: '#f2f2f2' }} />
         <div style={{ height: 350, width: '100%' }} className="flexCenter" >
           <img src="./assets/images/pic-raidmode.png" alt="" width={270} height={320} />
           <div style={{ width: 10 }} />

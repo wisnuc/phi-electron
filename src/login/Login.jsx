@@ -364,8 +364,25 @@ class Login extends React.Component {
         />
 
         {/* QR Code */}
-        <div style={{ position: 'absolute', bottom: 72, right: 48, textAlign: 'center' }}>
-          <div style={{ border: '1px solid #BDBDBD', height: 94, width: 94, margin: '8px auto' }} />
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 72,
+            right: 48,
+            textAlign: 'center',
+            width: 120,
+            height: 135,
+            backgroundColor: '#FFF'
+          }}
+        >
+          <div
+            style={{
+              border: '1px solid #BDBDBD',
+              height: 106,
+              width: 106,
+              margin: '7px auto 0px auto'
+            }}
+          />
           <div style={{ fontSize: 11, color: '#85868c' }}> { i18n.__('Download Phi App Text') } </div>
         </div>
 
