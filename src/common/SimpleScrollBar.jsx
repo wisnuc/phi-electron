@@ -8,7 +8,7 @@ class ScrollBar extends React.PureComponent {
     }
 
     this.updateScrollHeight = () => {
-      this.setState({ scrollHeight: this.refRoot.scrollHeight })
+      this.setState({ scrollHeight: this.refRoot.scrollHeight, clientHeight: this.refRoot.clientHeight })
     }
 
     this.scrollTop = 0
@@ -27,12 +27,11 @@ class ScrollBar extends React.PureComponent {
 
     this.onMouseMove = (event) => {
       if (!this.refBar || !this.mouseDown || !this.state.scrollHeight) return
-      const { height } = this.props
-      const { scrollHeight } = this.state
-      const barH = Math.max(height * height / scrollHeight, 48)
+      const { scrollHeight, clientHeight } = this.state
+      const barH = Math.max(clientHeight * clientHeight / scrollHeight, 48)
       const diff = event.clientY - this.startY
-      const percent = diff / (height - barH)
-      const scrollTop = Math.min(scrollHeight - height, Math.max(0, percent * (scrollHeight - height) + this.startScrollTop))
+      const percent = diff / (clientHeight - barH)
+      const scrollTop = Math.min(scrollHeight - clientHeight, Math.max(0, percent * (scrollHeight - clientHeight) + this.startScrollTop))
       this.scrollToPosition(scrollTop)
       this.onHover()
     }
@@ -47,11 +46,10 @@ class ScrollBar extends React.PureComponent {
 
     this.onScroll = (e) => {
       if (e.target.scrollHeight) {
-        const { scrollTop, scrollHeight } = e.target
+        const { scrollTop, scrollHeight, clientHeight } = e.target
         this.scrollTop = scrollTop
-        const { height } = this.props
-        const barH = Math.max(height * height / scrollHeight, 48) || 48
-        const top = (height - barH) * scrollTop / (scrollHeight - height)
+        const barH = Math.max(clientHeight * clientHeight / scrollHeight, 48) || 48
+        const top = (clientHeight - barH) * scrollTop / (scrollHeight - clientHeight)
         this.refBar.style.top = `${top}px`
       }
 
@@ -79,9 +77,9 @@ class ScrollBar extends React.PureComponent {
     const { width, height, style } = this.props
     const rootStyle = Object.assign({ position: 'relative', width, height, overflow: 'hidden' }, style)
 
-    const { scrollHeight } = this.state
+    const { scrollHeight, clientHeight } = this.state
 
-    const barH = Math.max(height * height / scrollHeight, 48) || 48
+    const barH = Math.max(clientHeight * clientHeight / scrollHeight, 48) || 48
     const barStyle = {
       position: 'absolute',
       top: 0,
@@ -89,7 +87,7 @@ class ScrollBar extends React.PureComponent {
       width: this.state.hover ? 10 : 3,
       borderRadius: 4,
       transition: 'opacity 225ms',
-      display: scrollHeight && (barH < height) ? '' : 'none'
+      display: scrollHeight && (barH < clientHeight) ? '' : 'none'
     }
 
     return (

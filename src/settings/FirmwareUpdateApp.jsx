@@ -67,7 +67,7 @@ class Update extends React.Component {
           <div style={{ height: 5 }} />
           {
             text.map((v, i) => (
-              <div style={{ lineHeight: '20px', color: '#85868c' }} key={i.toString()}>
+              <div style={{ lineHeight: '20px', color: '#85868c', width: 300 }} key={i.toString()}>
                 { v }
               </div>
             ))

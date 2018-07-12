@@ -2,6 +2,7 @@ import i18n from 'i18n'
 import React from 'react'
 import { Divider } from 'material-ui'
 import { ArrowIcon, SmallErrorIcon, HelpFoldIcon } from '../common/Svg'
+import SimpleScrollBar from '../common/SimpleScrollBar'
 
 class Help extends React.PureComponent {
   renderHeader (text) {
@@ -243,7 +244,9 @@ class Help extends React.PureComponent {
     }
     return (
       <div style={{ width: 280, height: '100%', position: 'relative' }}>
-        { content }
+        <SimpleScrollBar height={'100%'} width={280} >
+          { content }
+        </SimpleScrollBar>
         <div style={{ width: 30, height: '100%', position: 'absolute', left: -5, top: 0 }} className="flexCenter">
           <HelpFoldIcon style={{ color: '#85868c', cursor: 'pointer' }} onClick={this.props.onClose} />
         </div>

@@ -420,7 +420,11 @@ class NavViews extends React.Component {
             }}
             onMouseDown={(e) => { e.preventDefault(); e.stopPropagation() }}
           >
-            { this.views[this.state.nav].renderHelp({ nav: this.state.nav, isAdmin, onClose: () => this.setState({ onHelp: false }) }) }
+            {
+              this.state.onHelp && this.views[this.state.nav].renderHelp({
+                nav: this.state.nav, isAdmin, onClose: () => this.setState({ onHelp: false })
+              })
+            }
           </div>
         </div>
 
