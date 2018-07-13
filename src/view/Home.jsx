@@ -996,6 +996,7 @@ class Home extends Base {
               {...this.ctx.props}
               path={this.state.path}
               entries={this.state.entries}
+              isSearch={!!this.state.showSearch}
               onRequestClose={() => this.toggleDialog('detail')}
               selected={this.select.state && this.select.state.selected}
             />

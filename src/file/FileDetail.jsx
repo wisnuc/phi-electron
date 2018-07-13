@@ -29,12 +29,21 @@ const getPath = (path) => {
   const newPath = []
   path.map((item, index) => {
     if (!index) {
-      newPath.push(item.type === 'publicRoot' ? i18n.__('Public Drive') : i18n.__('Home Title'))
+      newPath.push(item.type === 'publicRoot' ? i18n.__('Public Drive') : item.type === 'home' ? i18n.__('Home Title') : item.name)
     } else {
       newPath.push(item.name)
     }
     return null
   })
+  return newPath.join('/')
+}
+
+const getSearchPath = (path, entry) => {
+  if (!Array.isArray(path) || !path[0] || !entry || !Array.isArray(entry.namepath)) return '--'
+  const r = path[0]
+  const rootName = r.type === 'publicRoot' ? i18n.__('Public Drive') : r.type === 'home' ? i18n.__('Home Title') : r.name
+  const newPath = [rootName, ...entry.namepath]
+  newPath.length = entry.namepath.length
   return newPath.join('/')
 }
 
@@ -53,10 +62,12 @@ class FileDetail extends React.PureComponent {
       const { selected, entries, path } = this.props
       let [dirCount, fileCount, fileTotalSize] = [0, 0, 0]
       for (let i = 0; i < selected.length; i++) {
-        const entry = entries[i]
-        if (entry.type === 'directory') {
-          dirCount += 1
-          const res = await this.props.apis.pureRequestAsync('content', { driveUUID: path[0].uuid, dirUUID: entry.uuid })
+        const entry = entries[selected[i]]
+        if (['directory', 'public'].includes(entry.type)) {
+          if (selected.length > 1) dirCount += 1
+          const driveUUID = entry.type === 'public' ? entry.uuid : path[0].uuid
+          const dirUUID = entry.uuid
+          const res = await this.props.apis.pureRequestAsync('content', { driveUUID, dirUUID })
           dirCount += res.dirCount
           fileCount += res.fileCount
           fileTotalSize += res.fileTotalSize
@@ -129,7 +140,7 @@ class FileDetail extends React.PureComponent {
 
   render () {
     console.log('detail', this.props)
-    const { selected, entries, path } = this.props
+    const { selected, entries, path, isSearch } = this.props
     const entry = entries[selected[0]]
     if (!entry) return <div />
 
@@ -154,7 +165,7 @@ class FileDetail extends React.PureComponent {
 
     const Values = [
       isMultiple ? i18n.__('Multiple Items') : getType(entry),
-      getPath(path),
+      !isSearch ? getPath(path) : !isMultiple ? getSearchPath(path, entry) : '',
       isFile ? prettysize(entry.size, false, true, 2) : this.getSize(),
       !isFile ? this.getContent() : '',
       !isMultiple ? phaseDate(entry.mtime) : ''
