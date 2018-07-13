@@ -211,9 +211,10 @@ class Home extends Base {
       const entries = pos.entries.map(e => e.name)
       const args = {
         entries,
-        type: pos.loc === 'phy' ? `i${pos.action}` : pos.loc === 'drive' ? pos.action : '',
+        policies: { dir: ['keep', null] },
+        dst: { drive: driveUUID, dir: dirUUID },
         src: { drive: pos.drive, dir: pos.dir },
-        dst: { drive: driveUUID, dir: dirUUID }
+        type: pos.loc === 'phy' ? `i${pos.action}` : pos.loc === 'drive' ? pos.action : ''
       }
       this.xcopyData = {
         type: pos.action,
@@ -594,7 +595,10 @@ class Home extends Base {
         if (err || !res || !Array.isArray(res)) this.setState({ error: true, loading: false })
         else {
           const entries = !types ? res : res.filter(e => e.hash).map(e => Object.assign({ type: 'file' }, e))
-          this.setState({ entries, loading: false })
+          this.setState({
+            loading: false,
+            entries: entries.sort((a, b) => sortByType(a, b, this.state.sortType))
+          })
         }
       })
     }

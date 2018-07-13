@@ -151,9 +151,10 @@ class USB extends Home {
       this.setState({ showSearch: name, loading: true, select })
       const id = this.phyDrive.id
       this.ctx.props.apis.pureRequest('phySearch', { name, id }, (err, res) => {
-        if (err) this.setState({ error: true, loading: false })
+        if (err || !res || !Array.isArray(res)) this.setState({ error: true, loading: false })
         else {
-          this.setState({ entries: res, loading: false })
+          const entries = [...res].sort((a, b) => sortByType(a, b, this.state.sortType))
+          this.setState({ entries, loading: false })
         }
       })
     }
@@ -167,7 +168,11 @@ class USB extends Home {
   }
 
   willReceiveProps (nextProps) {
-    if (this.phyDrive) {
+    if (this.state.showSearch && this.force) { // for change sort type of search results
+      this.force = false
+      const entries = [...this.state.entries].sort((a, b) => sortByType(a, b, this.state.sortType))
+      this.setState({ entries })
+    } else if (this.phyDrive) {
       this.preValue = this.state.listPhyDir
       this.handleProps(nextProps.apis, ['listPhyDir'])
 
