@@ -849,6 +849,9 @@
   "Media Count": "媒体文件数量",
   "Fold Content": "内容",
   "Multiple Items": "多个文件或文件夹",
+  "Loading": "加载中...",
+  "File Count %s": "%s个文件",
+  "Content %s %s": "%s个文件夹，%s个文件",
 
   "==== file/FinishedTask.jsx ====": "",
   "And Other %s Items": " 等%s个项目",

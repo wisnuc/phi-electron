@@ -42,25 +42,53 @@ class FileDetail extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
-      data: null,
-      loading: true
+      loading: true,
+      dirCount: 0,
+      fileCount: 0,
+      fileTotalSize: 0
     }
 
-    this.getData = () => {
+    this.reqAsync = async () => {
+      this.setState({ loading: true })
       const { selected, entries, path } = this.props
-      const entry = entries[selected[0]]
-      if (!entry) return
-      /* directory */
-      if (selected.length === 1 && entry.type === 'directory') {
-        this.props.apis.pureRequest('listNavDir', { driveUUID: path[0].uuid, dirUUID: entry.uuid }, (err, res) => {
-          console.log('this.getData', err, res)
-        })
+      let [dirCount, fileCount, fileTotalSize] = [0, 0, 0]
+      for (let i = 0; i < selected.length; i++) {
+        const entry = entries[i]
+        if (entry.type === 'directory') {
+          dirCount += 1
+          const res = await this.props.apis.pureRequestAsync('content', { driveUUID: path[0].uuid, dirUUID: entry.uuid })
+          dirCount += res.dirCount
+          fileCount += res.fileCount
+          fileTotalSize += res.fileTotalSize
+        } else {
+          fileCount += 1
+          fileTotalSize += entry.size
+        }
       }
+
+      return ({ dirCount, fileCount, fileTotalSize })
     }
   }
 
   componentDidMount () {
-    this.getData()
+    this.reqAsync()
+      .then((content) => {
+        const { dirCount, fileCount, fileTotalSize } = content
+        console.log('get content', content)
+        this.setState({ dirCount, fileCount, fileTotalSize, loading: false })
+      })
+      .catch(e => console.error('req dir content error', e))
+  }
+
+  getSize () {
+    return this.state.loading ? i18n.__('Loading') : prettysize(this.state.fileTotalSize, false, true, 2)
+  }
+
+  getContent () {
+    const { loading, dirCount, fileCount } = this.state
+    if (loading) return i18n.__('Loading')
+    if (!dirCount) return i18n.__('File Count %s', fileCount)
+    return i18n.__('Content %s %s', dirCount, fileCount)
   }
 
   renderList (icons, titles, values) {
@@ -77,12 +105,12 @@ class FileDetail extends React.PureComponent {
                 style={{ height: 40, color: '#525a60', display: 'flex', alignItems: 'center', width: '100%' }}
               >
                 <div style={{ margin: '2px 2px 0px -5px' }}> <Icon style={{ color: '#85868c' }} /> </div>
-                <div style={{ width: 100 }}> { title } </div>
+                <div style={{ width: 70 }}> { title } </div>
                 <input
                   onChange={() => {}}
                   value={value}
                   style={{
-                    width: 200,
+                    width: 170,
                     border: 0,
                     padding: 3,
                     fontSize: 14,
@@ -106,7 +134,6 @@ class FileDetail extends React.PureComponent {
     if (!entry) return <div />
 
     const isFile = selected.length === 1 && entry.type === 'file'
-    // const isFolder = selected.length === 1 && entry.type === 'directory'
     const isMultiple = selected.length > 1
 
     const Icons = [
@@ -128,8 +155,8 @@ class FileDetail extends React.PureComponent {
     const Values = [
       isMultiple ? i18n.__('Multiple Items') : getType(entry),
       getPath(path),
-      isFile ? prettysize(entry.size, false, true, 2) : '',
-      !isFile ? 'TODO' : '',
+      isFile ? prettysize(entry.size, false, true, 2) : this.getSize(),
+      !isFile ? this.getContent() : '',
       !isMultiple ? phaseDate(entry.mtime) : ''
     ]
 

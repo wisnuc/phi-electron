@@ -95,7 +95,8 @@ class RunningTask extends React.Component {
 
     const finishCount = task.finishCount > 0 ? task.finishCount : 0
     const finishedSize = task.count === 1
-      ? `${this.formatSize(task.completeSize)}/${this.formatSize(task.size)}` : `${finishCount}/${task.count}`
+      ? `${this.formatSize(task.completeSize)}/${this.formatSize(task.size)}`
+      : `${this.formatSize(task.completeSize)}/${this.formatSize(task.size)}（${finishCount}/${task.count}）`
 
     const isRunning = task.paused && !task.waiting
 
