@@ -253,7 +253,13 @@ class DeviceSelect extends React.Component {
 
         {/* Connection Hint */}
         <Dialog open={!!this.state.showHelp} onRequestClose={() => this.setState({ showHelp: false })}>
-          { !!this.state.showHelp && <ConnectionHint onRequestClose={() => this.setState({ showHelp: false })} /> }
+          {
+            !!this.state.showHelp &&
+            <ConnectionHint
+              isLAN={this.props.account && this.props.account.lan}
+              onRequestClose={() => this.setState({ showHelp: false })}
+            />
+          }
         </Dialog>
 
         {/* Confirm Device Bind */}
