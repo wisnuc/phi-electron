@@ -1,9 +1,11 @@
 import React from 'react'
+import EventListener from 'react-event-listener'
+
 import { Button } from '../common/Buttons'
 
 class MenuCard extends Button {
   render () {
-    const { Icon, name, des, onClick, isLAN, view, isCloud } = this.props
+    const { Icon, name, des, onClick, isLAN, view, isCloud, pHeight, pWidth } = this.props
     const disabled = (isLAN && ['resetDevice', 'pt'].includes(view)) || (isCloud && view === 'firmwareUpdate')
     const backgroundColor = this.state.hover ? '#f3f8ff' : '#fff'
     return (
@@ -18,7 +20,15 @@ class MenuCard extends Button {
       >
         <div
           {...this.funcs}
-          style={{ width: 250, height: 120, display: 'flex', alignItems: 'center', backgroundColor }}
+          style={{
+            width: 250,
+            height: 120,
+            display: 'flex',
+            alignItems: 'center',
+            backgroundColor,
+            transition: 'all 175ms',
+            margin: `${pHeight}px ${pWidth}px`
+          }}
           onClick={() => !disabled && onClick()}
           disabled={disabled}
         >
@@ -41,17 +51,43 @@ class MenuCard extends Button {
 }
 
 class Menu extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      pWidth: 0,
+      pHeight: 0
+    }
+
+    this.calcSize = () => {
+      const { clientHeight, clientWidth } = this.refRoot
+      console.log('this.refRoot', clientHeight - 590, clientWidth - 1100)
+      this.setState({ pWidth: (clientWidth - 1100) / 12, pHeight: (clientHeight - 590) / 8 })
+    }
+  }
+
+  componentDidMount () {
+    this.calcSize()
+  }
+
   render () {
     const { views, navTo, isLAN, isCloud, isAdmin } = this.props
     const group = 'settings'
     let list = Object.keys(views).filter(key => views[key].navGroup() === group && key !== 'settings')
     if (!isAdmin) list = [...list].filter(key => key !== 'firmwareUpdate').slice(0, -3)
     return (
-      <div style={{ width: '100%', height: '100%', boxSizing: 'border-box', paddingBottom: 130 }} className="flexCenter" >
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          boxSizing: 'border-box',
+          paddingBottom: 130
+        }}
+        className="flexCenter"
+        ref={ref => (this.refRoot = ref)}
+      >
+        <EventListener target="window" onResize={this.calcSize} />
         <div
           style={{
-            width: 1000,
-            height: 360,
             display: 'grid',
             gridGap: 0,
             gridTemplateColumns: '1fr 1fr 1fr 1fr'
@@ -60,6 +96,7 @@ class Menu extends React.Component {
           {
             [...list].map((key, i) => (
               <MenuCard
+                {...this.state}
                 key={key + i.toString()}
                 Icon={views[key].menuIcon()}
                 name={views[key].menuName()}
