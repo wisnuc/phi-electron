@@ -200,7 +200,6 @@ class USB extends Home {
       this.handleProps(nextProps.apis, ['phyDrives'])
       if (this.prePhyDrives === this.state.phyDrives && !this.force) return
       this.force = false
-      console.log('this.state', this.state)
       const entries = this.state.phyDrives
         .filter(d => d.isUSB)
         .map((a, i) => {
@@ -234,9 +233,15 @@ class USB extends Home {
       } else if (usbDrive.length > 1) {
         this.hasRoot = true
         apis.request('phyDrives')
-        console.log('usbDrive', usbDrive)
       }
     } else this.refresh()
+  }
+
+  navRoot () {
+    this.firstEnter = true
+    this.phyDrive = null
+    this.navEnter()
+    this.setState({ path: [] })
   }
 
   menuName () {

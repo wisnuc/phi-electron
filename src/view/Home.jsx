@@ -674,6 +674,14 @@ class Home extends Base {
     })
   }
 
+  navRoot () {
+    const path = this.state.path
+    if (!Array.isArray(path) || !path[0] || !path[0].uuid) return
+    const pos = { driveUUID: path[0].uuid, dirUUID: path[0].uuid }
+    this.enter(pos, err => err && console.error('Jump via breadCrumb error', err))
+    this.history.add(pos)
+  }
+
   navGroup () {
     return 'file'
   }

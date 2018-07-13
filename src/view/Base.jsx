@@ -48,6 +48,9 @@ class Base extends EventEmitter {
   navLeave () {
   }
 
+  navRoot () {
+  }
+
   navGroup () {
     return 'unfiled'
   }

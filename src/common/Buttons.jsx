@@ -314,6 +314,7 @@ export class MenuButton extends Button {
           width: 220,
           paddingTop: 10,
           height: 40,
+          cursor: 'pointer',
           position: 'relative',
           display: 'flex',
           alignItems: 'center',

@@ -90,6 +90,8 @@ class NavViews extends React.Component {
         this.setState({ nav })
         if (this.state.nav) this.views[this.state.nav].navLeave()
         this.views[nav].navEnter(target)
+      } else if (nav === this.state.nav) {
+        this.views[nav].navRoot()
       }
     }
 

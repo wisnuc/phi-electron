@@ -137,6 +137,12 @@ class Public extends Home {
     } else this.refresh()
   }
 
+  navRoot () {
+    this.rootDrive = null
+    this.ctx.props.apis.request('drives')
+    this.ctx.props.apis.request('users')
+  }
+
   menuName () {
     return i18n.__('Public Menu Name')
   }
