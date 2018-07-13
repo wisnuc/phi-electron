@@ -10,6 +10,7 @@ class USB extends Home {
     super(ctx)
     this.title = () => i18n.__('USB Menu Name')
     this.firstEnter = true
+    this.isUSB = true
 
     this.enter = (pos, cb) => {
       console.log('enter', pos)
@@ -143,6 +144,19 @@ class USB extends Home {
         await this.ctx.props.apis.requestAsync('deletePhyDirOrFile', { id: this.phyDrive.id, qs: { path: p } })
       }
       await this.ctx.props.apis.requestAsync('listPhyDir', { id: this.phyDrive.id, path })
+    }
+
+    this.search = (name) => {
+      if (!name || !this.phyDrive) return
+      const select = this.select.reset(this.state.entries.length)
+      this.setState({ showSearch: name, loading: true, select })
+      const id = this.phyDrive.id
+      this.ctx.props.apis.pureRequest('phySearch', { name, id }, (err, res) => {
+        if (err) this.setState({ error: true, loading: false })
+        else {
+          this.setState({ entries: res, loading: false })
+        }
+      })
     }
 
     ipcRenderer.on('driveListUpdate', (e, dir) => {

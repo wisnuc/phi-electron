@@ -581,7 +581,7 @@ class Home extends Base {
       const types = this.types // photo, docs, video, audio
       const apis = this.ctx.props.apis
       const drives = apis && apis.drives && apis.drives.data
-      if (!Array.isArray) {
+      if (!Array.isArray(drives)) {
         this.ctx.props.openSnackBar(i18n.__('Search Failed'))
         return
       }
@@ -591,9 +591,10 @@ class Home extends Base {
       const order = types ? 'newest' : 'find'
 
       this.ctx.props.apis.pureRequest('search', { name, places, types, order }, (err, res) => {
-        if (err) this.setState({ error: true, loading: false })
+        if (err || !res || !Array.isArray(res)) this.setState({ error: true, loading: false })
         else {
-          this.setState({ entries: res, loading: false })
+          const entries = !types ? res : res.filter(e => e.hash).map(e => Object.assign({ type: 'file' }, e))
+          this.setState({ entries, loading: false })
         }
       })
     }
@@ -618,12 +619,11 @@ class Home extends Base {
     /* set force === true  to update sortType forcely */
     if (this.preValue === this.state.listNavDir && !this.force) return
 
-    const { path, entries, counter } = this.state.listNavDir
+    const { path, counter } = this.state.listNavDir
+    const entries = (this.state.showSearch && this.force) ? this.state.entries : this.state.listNavDir.entries
     const select = this.select.reset(entries.length)
 
     if (Array.isArray(path) && path[0]) path[0].type = this.type
-
-    this.force = false
 
     const pos = { driveUUID: path[0].uuid, dirUUID: path[0].uuid }
     if (this.history.get().curr === -1) this.history.add(pos)
@@ -635,8 +635,10 @@ class Home extends Base {
       loading: false,
       entries: [...entries].sort((a, b) => sortByType(a, b, this.state.sortType)),
       counter,
-      showSearch: false
+      showSearch: this.force && this.state.showSearch
     })
+
+    this.force = false
   }
 
   navEnter (target) {

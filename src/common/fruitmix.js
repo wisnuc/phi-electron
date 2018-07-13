@@ -389,6 +389,10 @@ class Fruitmix extends EventEmitter {
         r = this.aget('files', qs)
         break
 
+      case 'phySearch':
+        r = this.aget(`phy-drives/${args.id}`, { name: args.name })
+        break
+
       case 'randomSrc':
         r = this.aget(`media/${args.hash}`, { alt: 'random' })
         break

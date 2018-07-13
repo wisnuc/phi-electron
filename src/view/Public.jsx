@@ -73,7 +73,11 @@ class Public extends Home {
   }
 
   willReceiveProps (nextProps) {
-    if (!this.rootDrive) {
+    if (this.state.showSearch && this.force) { // for change sort type of search results
+      this.force = false
+      const entries = [...this.state.entries].sort((a, b) => sortByType(a, b, this.state.sortType))
+      this.setState({ entries })
+    } else if (!this.rootDrive) {
       this.preDriveValue = this.state.drives
       this.handleProps(nextProps.apis, ['drives', 'users'])
       if (this.preDriveValue === this.state.drives && !this.force) return
@@ -108,9 +112,17 @@ class Public extends Home {
       const select = this.select.reset(entries.length)
       const { counter } = this.state.listNavDir
 
-      this.force = false
+      this.setState({
+        path,
+        entries,
+        select,
+        counter,
+        inRoot: false,
+        loading: false,
+        showSearch: false
+      })
 
-      this.setState({ path, entries, select, counter, inRoot: false, loading: false })
+      this.force = false
     }
   }
 
@@ -164,7 +176,7 @@ class Public extends Home {
           onPaste={this.onPaste}
           onCopy={this.onCopy}
           onCut={this.onCut}
-          inPublicRoot={this.state.inRoot}
+          inPublicRoot={this.state.inRoot && !this.state.showSearch}
           openNewDrive={() => this.setState({ newDrive: 'new' })}
         />
 

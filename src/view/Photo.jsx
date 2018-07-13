@@ -36,19 +36,14 @@ class Photo extends Home {
       /* set force === true  to update sortType forcely */
       if (this.preValue === this.state[type] && !this.force) return
 
-      const entries = this.state[type].map((entry) => {
-        if (!entry || !entry.hash) return null
-        // const { metadata } = entry
-        // if (!metadata) return entry
-        const newEntry = {
-          type: 'file',
-          size: 0,
-          mtime: 1182376418760
-          // size: metadata.size,
-          // mtime: toTimeSecond(metadata.date || '')
-        }
-        return Object.assign({}, newEntry, entry)
-      }).filter(e => !!e)
+      if (this.state.showSearch && this.force) { // sort search result
+        this.force = false
+        this.setState({ entries: [...this.state.entries].sort((a, b) => sortByType(a, b, this.state.sortType)) })
+        return
+      }
+
+      const entries = this.state[type].filter(e => e.hash).map(e => Object.assign({ type: 'file' }, e))
+
       const path = [{ name: this.title(), uuid: null, type: 'mediaRoot' }]
       const select = this.select.reset(entries.length)
 
