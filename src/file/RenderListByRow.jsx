@@ -134,7 +134,7 @@ class Row extends React.PureComponent {
             style={{ width: 140, color: '#888a8c' }}
             onMouseDown={e => onContentMouseDown(e, index)}
           >
-            { entry.type === 'file' && prettysize(entry.size, false, true, 2).toUpperCase() }
+            { entry.type === 'file' && entry.size && prettysize(entry.size, false, true, 2).toUpperCase() }
           </div>
 
           <div
