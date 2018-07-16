@@ -35,7 +35,7 @@ class USB extends Home {
       const drive = this.state.path[0].id
       const srcPath = this.state.path.slice(-1)[0]
       let dir = this.state.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
-      if (dir) dir = `${dir}/`
+      // if (dir) dir = `${dir}/`
       this.ctx.props.clipboard.set({ action: 'copy', loc: 'phy', drive, dir, entries, srcPath })
     }
 
@@ -47,7 +47,7 @@ class USB extends Home {
       const drive = this.state.path[0].id
       const srcPath = this.state.path.slice(-1)[0]
       let dir = this.state.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
-      if (dir) dir = `${dir}/`
+      // if (dir) dir = `${dir}/`
       this.ctx.props.clipboard.set({ action: 'move', loc: 'phy', drive, dir, entries, srcPath })
     }
 
@@ -56,7 +56,7 @@ class USB extends Home {
       const pos = this.ctx.props.clipboard.get()
       const drive = this.state.path[0].id
       let dir = this.state.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
-      if (dir) dir = `${dir}/`
+      // if (dir) dir = `${dir}/`
       const entries = pos.entries.map(e => e.name)
       const args = {
         entries,
