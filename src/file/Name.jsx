@@ -50,7 +50,6 @@ class Name extends React.PureComponent {
 
       const isPhy = this.props.path[0].isPhy
       const isPhyRoot = this.props.path[0].isPhyRoot
-      console.log('this.props', this.props, args, isPhy)
       if (isPhy || isPhyRoot) {
         let np = path.filter(p => p.type === 'directory').map(p => p.name).join('/')
         if (np) np = `${np}/`

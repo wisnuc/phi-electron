@@ -85,7 +85,6 @@ class FileDetail extends React.PureComponent {
     this.reqAsync()
       .then((content) => {
         const { dirCount, fileCount, fileTotalSize } = content
-        console.log('get content', content)
         this.setState({ dirCount, fileCount, fileTotalSize, loading: false })
       })
       .catch(e => console.error('req dir content error', e))
@@ -139,7 +138,6 @@ class FileDetail extends React.PureComponent {
   }
 
   render () {
-    console.log('detail', this.props)
     const { selected, entries, path, isSearch } = this.props
     const entry = entries[selected[0]]
     if (!entry) return <div />

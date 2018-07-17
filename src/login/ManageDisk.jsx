@@ -27,9 +27,7 @@ class ManageDisk extends React.Component {
     this.format = (target) => {
       this.setState({ format: 'busy' })
       const args = { target, mode: this.state.mode }
-      console.log('this.format args', args)
       this.props.selectedDevice.request('boundVolume', args, (err, res) => {
-        console.log('boundVolume', err, res)
         if (err) this.setState({ format: 'error', error: err })
         else this.setState({ format: 'success' })
       })
@@ -38,17 +36,14 @@ class ManageDisk extends React.Component {
     this.repair = ({ mode, devices }) => {
       this.setState({ format: 'busy' })
       this.props.selectedDevice.request('repairVolume', { devices, mode }, (err, res) => {
-        console.log('boundVolume', err, res)
         if (err) this.setState({ format: 'error', error: err })
         else this.setState({ format: 'success' })
       })
     }
 
     this.recover = (volume) => {
-      console.log('recover volume', volume)
       this.setState({ format: 'busy' })
       this.props.selectedDevice.request('importVolume', { volumeUUID: volume.uuid }, (err, res) => {
-        console.log('recover volume res', err, res)
         if (err) this.setState({ format: 'error', error: err })
         else this.setState({ format: 'success' })
       })
@@ -119,7 +114,6 @@ class ManageDisk extends React.Component {
 
   volumeStatus () {
     const { storage, boundVolume, boundUser } = this.props.selectedDevice.boot.data
-    console.log('volumeStatus', storage, boundVolume, boundUser)
     if (!storage || !Array.isArray(storage.volumes) || !boundUser) return 'init'
 
     /* notMissing && isMounted && adminUser is boundUser => recover(import) */
@@ -244,8 +238,6 @@ class ManageDisk extends React.Component {
 
     const hasModeSelect = target.length === 2 && this.availableVolumes()[0].total === 1
 
-    console.log('renderRecover', isExtend, isImport, isImportAndExtend)
-
     let fire = () => {}
     if (isExtend) fire = () => this.add({ devices: target.filter(t => t.name !== oldVolume.devices[0].name), mode: this.state.mode })
     else if (isImport) fire = () => this.recover(this.availableVolumes()[0])
@@ -357,7 +349,6 @@ class ManageDisk extends React.Component {
 
     const volume = this.brokenVolume()
     const preMode = volume.usage && volume.usage.data && volume.usage.data.mode && volume.usage.data.mode.toLowerCase()
-    console.log('renderRepair', b1, b2, volume)
 
     const mode = target.length === 1 ? 'single' : preMode
 
@@ -450,7 +441,6 @@ class ManageDisk extends React.Component {
 
   render () {
     const { backToList, onFormatSuccess } = this.props
-    console.log('ManageDisk props', this.props)
     let [title, imgSrc, content] = ['', '', null]
     switch (this.state.status) {
       case 'init':

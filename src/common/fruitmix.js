@@ -76,8 +76,6 @@ class Fruitmix extends EventEmitter {
     this[name].on('updated', (prev, curr) => {
       this.setState(name, curr)
 
-      // console.log(`${name} updated`, prev, curr, this[name].isFinished(), typeof next === 'function')
-
       if (this[name].isFinished() && next) {
         if (this[name].isRejected()) next(this[name].reason())
         else next(null, this[name].value())

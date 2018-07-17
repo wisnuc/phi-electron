@@ -15,7 +15,6 @@ class SetLANPwd extends React.Component {
     }
 
     this.fire = () => {
-      console.log('this.props', this.props)
       this.setState({ loading: true })
       this.props.selectedDevice.request('updatePT', { status: !!this.state.checked }, (err) => {
         if (err) this.props.openSnackBar('设置失败')

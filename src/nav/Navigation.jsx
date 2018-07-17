@@ -132,7 +132,6 @@ class NavViews extends React.Component {
       await Promise.delay(1000)
       const res = await this.props.apis.pureRequestAsync('firmwareReady')
       if (res && res.error === '0' && res.result && res.result.tag_name) {
-        console.log('newRel', res.result, this.props)
         this.setState({ newRel: res.result })
       }
     }

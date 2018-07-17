@@ -63,7 +63,6 @@ class Samba extends React.Component {
     if (Array.isArray(nextProps.drives) && nextProps.samba && !this.singleton) {
       this.singleton = true
       const drive = nextProps.drives.find(d => d.type === 'private')
-      console.log('componentWillReceiveProps', drive)
       this.drive = drive
       const encrypted = drive && drive.smb
       this.setState({ encrypted })

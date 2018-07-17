@@ -13,7 +13,6 @@ class USB extends Home {
     this.isUSB = true
 
     this.enter = (pos, cb) => {
-      console.log('enter', pos)
       if (pos.isPhyRoot) {
         this.setState({ loading: true, path: pos.path })
         this.ctx.props.apis.request('phyDrives', null, cb)
@@ -82,7 +81,6 @@ class USB extends Home {
 
       const entry = this.state.entries[selected[0]]
 
-      console.log('this.listNavBySelect', entry, this.state.path)
       if (entry.type === 'directory') {
         const path = [...this.state.path, Object.assign({ isPhy: true, id: this.phyDrive.id }, entry)]
         const pos = { id: this.phyDrive.id, path, name: this.phyDrive.name, isPhy: true }
@@ -120,7 +118,6 @@ class USB extends Home {
     }
 
     this.download = () => {
-      console.log('this.download', this.state)
       let path = this.state.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
       if (path) path = `${path}/`
       const selected = this.state.select.selected

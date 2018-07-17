@@ -51,7 +51,6 @@ class AdminUsersApp extends React.Component {
         return Object.assign({ driveList, inActive }, cloudUser, u)
       })
 
-      console.log('this.reqUsersAsync', cloudUsers, localUsers)
       return users
     }
 
@@ -133,7 +132,6 @@ class AdminUsersApp extends React.Component {
     }
 
     this.reActiveAsync = async (localUser) => {
-      console.log('this.props', this.props)
       const { phi, device } = this.props
       const { uuid, phoneNumber } = localUser
       const deviceSN = device.mdev.deviceSN

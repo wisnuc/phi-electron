@@ -60,7 +60,6 @@ class Menu extends React.Component {
 
     this.calcSize = () => {
       const { clientHeight, clientWidth } = this.refRoot
-      console.log('this.refRoot', clientHeight - 590, clientWidth - 1100)
       this.setState({ pWidth: (clientWidth - 1100) / 12, pHeight: (clientHeight - 590) / 8 })
     }
   }

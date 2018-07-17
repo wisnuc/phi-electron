@@ -190,7 +190,7 @@ class Device extends RequestManager {
   }
 
   start () {
-    this.refreshSystemState(() => console.log(this.mdev.address, 'started', this))
+    this.refreshSystemState(() => process.env.NODE_ENV === 'dev' && console.log(this.mdev.address, 'started', this))
   }
 
   refreshSystemState (next) {

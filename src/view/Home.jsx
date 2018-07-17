@@ -771,7 +771,6 @@ class Home extends Base {
     const path = this.state.path
 
     const touchTap = (node, index) => {
-      console.log('touchTap', node, index)
       if (index === path.length - 1) { // current dir
         this.refresh()
       } else {
@@ -944,7 +943,6 @@ class Home extends Base {
     const selected = this.state.select.selected
     if (!entries || !Array.isArray(selected) || !selected.length) return ''
     const isMultiple = selected.length > 1
-    console.log('this.state.entries', entries, selected)
     const isFile = entries[selected[0]].type === 'file'
     switch (this.type) {
       case 'photos':
