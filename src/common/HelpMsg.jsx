@@ -41,12 +41,13 @@ class Help extends React.PureComponent {
     return (
       <div
         style={{
-          width: 240,
-          padding: '0 20px',
+          width: 234,
+          padding: '0 23px',
           display: 'flex',
           alignItems: 'center',
           letterSpacing: '0.4px',
-          color: '#85868c'
+          color: '#85868c',
+          wordBreak: 'break-all'
         }}
       >
         { text }
@@ -221,12 +222,11 @@ class Help extends React.PureComponent {
         <div style={{ height: 20 }} />
         { this.renderTitle(i18n.__('Edit Downloading Tasks')) }
         { this.renderText(i18n.__('Edit Downloading Tasks Text 1')) }
+        <div style={{ height: 20 }} />
         { this.renderText(i18n.__('Edit Downloading Tasks Text 2')) }
         <div style={{ height: 20 }} />
         { this.renderTitle(i18n.__('Downloading Failed')) }
         { this.renderText(i18n.__('Downloading Failed Text')) }
-        <div style={{ height: 20 }} />
-        { this.renderWarning(i18n.__('Downloading Help Warning Text')) }
       </div>
     )
   }
@@ -239,6 +239,7 @@ class Help extends React.PureComponent {
         <div style={{ height: 20 }} />
         { this.renderTitle(i18n.__('Edit Uploading Tasks')) }
         { this.renderText(i18n.__('Edit Uploading Tasks Text 1')) }
+        <div style={{ height: 20 }} />
         { this.renderText(i18n.__('Edit Downloading Tasks Text 2')) }
         <div style={{ height: 20 }} />
         { this.renderTitle(i18n.__('Uploading Failed')) }
@@ -255,8 +256,6 @@ class Help extends React.PureComponent {
         <div style={{ height: 20 }} />
         { this.renderTitle(i18n.__('Edit Finished Tasks')) }
         { this.renderText(i18n.__('Edit Finished Tasks Text')) }
-        <div style={{ height: 20 }} />
-        { this.renderWarning(i18n.__('Finished Help Warning Text')) }
       </div>
     )
   }
@@ -265,9 +264,7 @@ class Help extends React.PureComponent {
     return (
       <div>
         { this.renderHeader(i18n.__('Device Help Header')) }
-        { this.renderText(i18n.__('Help Summary Text')) }
-        <div style={{ height: 20 }} />
-        { this.renderWarning(i18n.__('Help Warning Text')) }
+        { this.renderText(i18n.__('Device Help Summary Text')) }
       </div>
     )
   }
@@ -302,8 +299,6 @@ class Help extends React.PureComponent {
       <div>
         { this.renderHeader(i18n.__('CacheClean Help Header')) }
         { this.renderText(i18n.__('CacheClean Help Summary Text')) }
-        <div style={{ height: 20 }} />
-        { this.renderWarning(i18n.__('CacheClean Help Warning Text')) }
       </div>
     )
   }
@@ -313,6 +308,7 @@ class Help extends React.PureComponent {
       <div>
         { this.renderHeader(i18n.__('Samba Help Header')) }
         { this.renderText(i18n.__('Samba Help Summary Text 1')) }
+        <div style={{ height: 20 }} />
         { this.renderText(i18n.__('Samba Help Summary Text 2')) }
         <div style={{ height: 20 }} />
         { this.renderWarning(i18n.__('Samba Help Warning Text')) }
@@ -336,7 +332,10 @@ class Help extends React.PureComponent {
       <div>
         { this.renderHeader(i18n.__('ClientUpdate Help Header')) }
         { this.renderText(i18n.__('ClientUpdate Help Summary Text 1')) }
+        <div style={{ height: 20 }} />
         { this.renderText(i18n.__('ClientUpdate Help Summary Text 2')) }
+        <div style={{ height: 20 }} />
+        { this.renderText(i18n.__('ClientUpdate Help Summary Text 3')) }
       </div>
     )
   }
@@ -347,10 +346,17 @@ class Help extends React.PureComponent {
         { this.renderHeader(i18n.__('FirmwareUpdate Help Header')) }
         { this.renderText(i18n.__('FirmwareUpdate Help Summary Text')) }
         <div style={{ height: 20 }} />
+        { this.renderTitle(i18n.__('Update FirmwareUpdate Auto')) }
+        { this.renderText(i18n.__('Update FirmwareUpdate Auto Text')) }
+        <div style={{ height: 20 }} />
         { this.renderTitle(i18n.__('Update FirmwareUpdate Manually')) }
         { this.renderText(i18n.__('Update FirmwareUpdate Manually Text')) }
         <div style={{ height: 20 }} />
         { this.renderWarning(i18n.__('FirmwareUpdate Help Warning Text')) }
+        <div style={{ height: 10 }} />
+        { this.renderText(i18n.__('FirmwareUpdate Help Warning Tip 1')) }
+        { this.renderText(i18n.__('FirmwareUpdate Help Warning Tip 2')) }
+        { this.renderText(i18n.__('FirmwareUpdate Help Warning Tip 3')) }
       </div>
     )
   }
@@ -360,6 +366,7 @@ class Help extends React.PureComponent {
       <div>
         { this.renderHeader(i18n.__('LANPassword Help Header')) }
         { this.renderText(i18n.__('LANPassword Help Summary Text 1')) }
+        <div style={{ height: 20 }} />
         { this.renderText(i18n.__('LANPassword Help Summary Text 2')) }
       </div>
     )
@@ -369,7 +376,11 @@ class Help extends React.PureComponent {
     return (
       <div>
         { this.renderHeader(i18n.__('PT Help Header')) }
-        { this.renderText(i18n.__('PT Help Summary Text')) }
+        { this.renderText(i18n.__('PT Help Summary Text 1')) }
+        <div style={{ height: 20 }} />
+        { this.renderText(i18n.__('PT Help Summary Text 2')) }
+        <div style={{ height: 20 }} />
+        { this.renderText(i18n.__('PT Help Summary Text 3')) }
         <div style={{ height: 20 }} />
         { this.renderWarning(i18n.__('PT Help Warning Text')) }
       </div>
@@ -383,6 +394,9 @@ class Help extends React.PureComponent {
         { this.renderText(i18n.__('Power Help Summary Text')) }
         <div style={{ height: 20 }} />
         { this.renderWarning(i18n.__('Power Help Warning Text')) }
+        <div style={{ height: 10 }} />
+        { this.renderText(i18n.__('Power Help Warning Tip 1')) }
+        { this.renderText(i18n.__('Power Help Warning Tip 2')) }
       </div>
     )
   }
@@ -391,7 +405,11 @@ class Help extends React.PureComponent {
     return (
       <div>
         { this.renderHeader(i18n.__('ResetDevice Help Header')) }
-        { this.renderText(i18n.__('ResetDevice Help Summary Text')) }
+        { this.renderText(i18n.__('ResetDevice Help Summary Text 1')) }
+        <div style={{ height: 20 }} />
+        { this.renderText(i18n.__('ResetDevice Help Summary Text 2')) }
+        <div style={{ height: 20 }} />
+        { this.renderText(i18n.__('ResetDevice Help Summary Text 3')) }
         <div style={{ height: 20 }} />
         { this.renderWarning(i18n.__('ResetDevice Help Warning Text')) }
       </div>

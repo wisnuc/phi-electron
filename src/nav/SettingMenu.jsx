@@ -6,6 +6,7 @@ import { Button } from '../common/Buttons'
 class MenuCard extends Button {
   render () {
     const { Icon, name, des, onClick, isLAN, view, isCloud, pHeight, pWidth } = this.props
+    if (!pHeight) return <div />
     const disabled = (isLAN && ['resetDevice', 'pt'].includes(view)) || (isCloud && view === 'firmwareUpdate')
     const backgroundColor = this.state.hover ? '#f3f8ff' : '#fff'
     return (
@@ -26,7 +27,6 @@ class MenuCard extends Button {
             display: 'flex',
             alignItems: 'center',
             backgroundColor,
-            transition: 'all 175ms',
             margin: `${pHeight}px ${pWidth}px`
           }}
           onClick={() => !disabled && onClick()}
@@ -60,7 +60,7 @@ class Menu extends React.Component {
 
     this.calcSize = () => {
       const { clientHeight, clientWidth } = this.refRoot
-      this.setState({ pWidth: (clientWidth - 1100) / 12, pHeight: (clientHeight - 590) / 8 })
+      this.setState({ pWidth: Math.round((clientWidth - 1100) / 16.4), pHeight: Math.round((clientHeight - 470) / 14.28) })
     }
   }
 
@@ -78,8 +78,7 @@ class Menu extends React.Component {
         style={{
           width: '100%',
           height: '100%',
-          boxSizing: 'border-box',
-          paddingBottom: 130
+          boxSizing: 'border-box'
         }}
         className="flexCenter"
         ref={ref => (this.refRoot = ref)}

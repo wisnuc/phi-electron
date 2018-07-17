@@ -285,25 +285,30 @@ class NavViews extends React.Component {
             <div
               key={text}
               style={{
-                WebkitAppRegion: 'no-drag',
                 width: 130,
-                paddingTop: 8,
-                height: 102,
+                height: 110,
                 color: '#FFF',
                 cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'column',
                 letterSpacing: '1.4px',
                 backgroundColor: selected ? 'rgba(83, 104, 183, 0.17)' : ''
               }}
               onClick={fn}
             >
-              <Icon style={{ width: 40, height: 40, color: '#FFF', opacity: selected ? 1 : 0.7 }} />
-              <div style={{ height: 8 }} />
-              <div style={{ transform: 'scale(1,.9)', opacity: selected ? 1 : 0.7 }}>
-                { text }
+              <div
+                style={{
+                  marginTop: 20,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexDirection: 'column',
+                  WebkitAppRegion: 'no-drag'
+                }}
+              >
+                <Icon style={{ width: 40, height: 40, color: '#FFF', opacity: selected ? 1 : 0.7 }} />
+                <div style={{ height: 8 }} />
+                <div style={{ transform: 'scale(1,.9)', opacity: selected ? 1 : 0.7 }}>
+                  { text }
+                </div>
               </div>
             </div>
           ))
@@ -398,9 +403,9 @@ class NavViews extends React.Component {
           }}
         />
 
-        <div style={{ height: '100%', width: 220 }}>
-          <FileMenu
-            views={this.views}
+      <div style={{ height: '100%', width: 220 }}>
+        <FileMenu
+          views={this.views}
             nav={this.state.nav}
             navTo={this.navTo}
             hasUSB={!!this.hasUSB}

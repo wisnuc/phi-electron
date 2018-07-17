@@ -28,7 +28,7 @@ entries.forEach(filePath => {
   const not_src = [...unique_loc].filter(k => !unique_src.has(k))
   const dup_loc = [...keys_loc].filter((l, index) => keys_loc.findIndex(k => k === l) < index).filter(k => !['one', 'other'].includes(k))
 
-  console.log('keys in src but not in locale:\n', not_loc, '\n')
+  console.log('keys in src but not in locale:\n', not_loc.map(l => '"'.concat(l).concat('"')).join(': "",\n'), ': "",\n')
   // console.log('keys in locale but not in src:\n', not_src, '\n')
   console.log('lines dupped in locale:\n', dup_loc, '\n')
 })
