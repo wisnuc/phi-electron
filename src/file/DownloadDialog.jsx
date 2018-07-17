@@ -1,5 +1,6 @@
 import i18n from 'i18n'
 import React from 'react'
+import prettysize from 'prettysize'
 import { Divider } from 'material-ui'
 import { remote, ipcRenderer } from 'electron'
 import renderFileIcon from '../common/renderFileIcon'
@@ -56,33 +57,35 @@ class DownloadDialog extends React.PureComponent {
                         : renderFileIcon(entry.name, null, 60)
                   }
                 </div>
-                <div
-                  style={{
-                    width: 'calc(100% - 60px)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    height: 60
-                  }}
-                >
-                  <div
-                    style={{
-                      position: 'relative',
-                      width: '100%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      height: 20,
-                      color: '#525a60'
-                    }}
-                  >
+                <div style={{ display: 'flex', alignItems: 'center', width: 'calc(100% - 60px)' }}>
+                  <div>
                     <div
-                      style={{ maxWidth: isTask ? 'calc(100% - 100px)' : '100%' }}
-                      className="text"
+                      style={{
+                        position: 'relative',
+                        width: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        height: 20,
+                        color: '#525a60'
+                      }}
                     >
-                      { entry.name }
+                      <div
+                        style={{ maxWidth: isTask ? 'calc(100% - 100px)' : '100%' }}
+                        className="text"
+                      >
+                        { entry.name }
+                      </div>
+                      <div>
+                        { isTask && i18n.__('And Other %s Items', entryNum)}
+                      </div>
                     </div>
-                    <div>
-                      { isTask && i18n.__('And Other %s Items', entryNum)}
-                    </div>
+                    {
+                      !isTask && entry.type === 'file' && (
+                        <div style={{ color: '#85868c' }}>
+                          { i18n.__('File Size %s', prettysize(entry.size)) }
+                        </div>
+                      )
+                    }
                   </div>
                 </div>
               </div>

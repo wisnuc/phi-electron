@@ -36,10 +36,13 @@ class FileContent extends React.Component {
       if (e.ctrlKey && e.key === 'a') {
         select.addByArray(Array.from({ length: this.props.entries.length }, (v, i) => i)) // [0, 1, ..., N]
       }
-      if (e.key === 'Delete') this.props.toggleDialog('delete')
-      if (e.ctrlKey && e.key === 'c') this.props.onCopy()
-      if (e.ctrlKey && e.key === 'x') this.props.onCut()
       if (e.ctrlKey && e.key === 'v') this.props.onPaste()
+      const isSelected = select && Array.isArray(select.selected) && select.selected.length > 0
+      if (isSelected) {
+        if (e.key === 'Delete') this.props.toggleDialog('delete')
+        if (e.ctrlKey && e.key === 'c') this.props.onCopy()
+        if (e.ctrlKey && e.key === 'x') this.props.onCut()
+      }
       select.keyEvent(e.ctrlKey, e.shiftKey)
     }
 
