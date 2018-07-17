@@ -1,7 +1,7 @@
 {
-  "name": "PhiNAS2",
+  "name": "PhiNAS",
   "version": "0.11.2",
-  "description": "PhiNAS2",
+  "description": "PhiNAS",
   "author": "Phicomm <support@winsuntech.cn>",
   "repository": "https://github.com/wisnuc/phi-electron.git",
   "private": true,

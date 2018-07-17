@@ -1,6 +1,6 @@
 appId: com.phicomm.app
-copyright: "Shanghai Phicomm Technology Co., Ltd."
-productName: PhiNAS2
+copyright: "Phicomm (SiChuan) Co., Ltd."
+productName: PhiNAS
 
 asar: true
 compression: normal
