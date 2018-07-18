@@ -31,9 +31,9 @@ class USB extends Home {
       const selected = this.state.select.selected
       if (!selected && !selected.length) return
       const entries = selected.map(index => this.state.entries[index])
-      const drive = this.state.path[0].id
+      const drive = this.state.path[0].id || this.phyDrive.id
       const srcPath = this.state.path.slice(-1)[0]
-      let dir = this.state.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
+      const dir = this.state.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
       // if (dir) dir = `${dir}/`
       this.ctx.props.clipboard.set({ action: 'copy', loc: 'phy', drive, dir, entries, srcPath })
     }
@@ -43,9 +43,9 @@ class USB extends Home {
       const selected = this.state.select.selected
       if (!selected && !selected.length) return
       const entries = selected.map(index => this.state.entries[index])
-      const drive = this.state.path[0].id
+      const drive = this.state.path[0].id || this.phyDrive.id
       const srcPath = this.state.path.slice(-1)[0]
-      let dir = this.state.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
+      const dir = this.state.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
       // if (dir) dir = `${dir}/`
       this.ctx.props.clipboard.set({ action: 'move', loc: 'phy', drive, dir, entries, srcPath })
     }
@@ -53,8 +53,8 @@ class USB extends Home {
     this.onPaste = () => {
       if (this.isMedia || this.state.inRoot) return
       const pos = this.ctx.props.clipboard.get()
-      const drive = this.state.path[0].id
-      let dir = this.state.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
+      const drive = this.state.path[0].id || this.phyDrive.id
+      const dir = this.state.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
       // if (dir) dir = `${dir}/`
       const entries = pos.entries.map(e => e.name)
       const args = {
