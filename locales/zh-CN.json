@@ -531,6 +531,7 @@
   "Maintenance Text": "重启设备并进入维护模式，可以在维护模式下执行磁盘操作或系统维护任务。",
   "Get StationList Error": "获取设备列表失败",
   "Station Not Found": "设备未找到",
+  "Reconnect Timeout": "连接超时",
 
   "==== device/TimeDateInfo.jsx ====": "",
   "Local Time": "本地时间",
@@ -601,6 +602,7 @@
   "Delete Items Text %s": "是否删除选中的%s个项目？",
   "Delete File Text": "是否删除选中的文件？",
   "Delete Folder Text": "是否删除选中的文件夹？",
+  "File Size %s": "文件大小：%s",
 
   "==== view/Public.jsx ====": "",
   "Public Drive": "共享盘",
@@ -617,6 +619,7 @@
   "Permissions": "分配权限",
   "Public Drive Name": "共享盘名称",
   "Public Drive Name Hint": "请输入新的共享盘名称",
+  "Built-in Drive" : "默认共享盘",
 
   "==== view/Photo.jsx ====": "",
   "Photo Menu Name": "我的图片",
@@ -675,7 +678,7 @@
   "Eject USB": "安全弹出",
   "Storage Space": "磁盘存储空间",
   "Storage Usage %s %s": "%s / %s",
-  "USB Storage Title": "USB存储空间",
+  "USB Storage Title %s": "USB存储空间%s",
   "Current Mode %s": "当前组盘模式：%s 模式",
   "Disk Not Found": "未发现",
   "Disk Found": "已接入",

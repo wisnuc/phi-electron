@@ -826,9 +826,9 @@ class Home extends Base {
 
             if (index !== 0) acc.push(<BreadCrumbSeparator key={`Separator${index}`} />)
 
-            /* the first one is always special */
+            /* the first one is always special; fix Built-in Drive without name */
             if (index === 0) acc.push(<BreadCrumbItem text={this.title()} key="root" {...funcs} last={last} />)
-            else acc.push(<BreadCrumbItem text={node.name} key={`Item${index}`} {...funcs} last={last} />)
+            else acc.push(<BreadCrumbItem text={node.name || i18n.__('Built-in Drive')} key={`Item${index}`} {...funcs} last={last} />)
 
             return acc
           }, [])

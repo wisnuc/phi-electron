@@ -85,7 +85,7 @@ class Public extends Home {
       /* process path and entries, in root */
       const path = [{ name: i18n.__('Public Drive'), uuid: null, type: 'publicRoot' }]
       const entries = this.state.drives.filter(drive => drive.type === 'public')
-      entries.forEach(item => Object.assign(item, { name: item.label || i18n.__('Public Drive') }))
+      entries.forEach(item => Object.assign(item, { name: item.label || i18n.__('Built-in Drive') }))
       const isAdmin = nextProps.apis && nextProps.apis.account &&
         nextProps.apis.account.data && nextProps.apis.account.data.isFirstUser
       if (isAdmin && entries.length < 3) entries.push({ name: i18n.__('Add Public Drive'), type: 'addDrive', uuid: 'addDrive' })

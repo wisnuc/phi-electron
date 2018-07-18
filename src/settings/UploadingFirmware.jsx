@@ -43,30 +43,40 @@ class UploadingFirmware extends React.PureComponent {
     this.polling = async (lan) => {
       let finished = false
       const startTime = new Date().getTime()
+      const maxTime = 180 * 1000
       await Promise.delay(5000)
-      while (!finished && (new Date().getTime() - startTime < 180 * 1000)) {
+      while (!finished && (new Date().getTime() - startTime < maxTime)) {
         const status = await this.getStatus(lan)
         const { error, isOnline } = status
         if (error) throw error
         else finished = !!isOnline
       }
+      if (new Date().getTime() - startTime > maxTime) throw i18n.__('Reconnect Timeout')
       return true
     }
 
     this.upgrade = () => {
-      this.setState({ progress: '100%' })
+      this.setState({ progress: '100%', isRebooting: false })
       this.props.apis.pureRequest('firmwareUpgrade', null, (err, res) => {
         if (!err && res && res.error === '0') {
           this.setState({ status: 'upgrading' })
           this.polling(this.props.account.lan)
             .then(() => this.setState({ status: 'success' }))
-            .catch(error => this.setState({ status: 'error', error }))
+            .catch(error => this.setState({ status: 'error', error, isRebooting: true }))
         } else this.setState({ status: 'error', error: '' })
       })
     }
 
     this.onSuccess = () => {
+      this.componentWillUnmount()
       this.props.deviceLogout()
+    }
+
+    this.onFailed = () => {
+      if (this.state.isRebooting) {
+        this.componentWillUnmount()
+        this.props.deviceLogout()
+      } else this.props.onRequestClose()
     }
 
     this.onFirmRes = (event, data) => {
@@ -102,7 +112,7 @@ class UploadingFirmware extends React.PureComponent {
 
   componentWillUnmount () {
     ipcRenderer.removeListener('UPLOAD_FIRM_RESULT', this.onFirmRes)
-    ipcRenderer.on('FIRM_PROCESS', this.onProcess)
+    ipcRenderer.removeListener('FIRM_PROCESS', this.onProcess)
   }
 
   deviceSN () {
@@ -111,7 +121,6 @@ class UploadingFirmware extends React.PureComponent {
 
   render () {
     const { status } = this.state
-    const { onRequestClose } = this.props
 
     let [text, img, label, color, func] = ['', '', '', '#31a0f5', null]
     switch (status) {
@@ -138,7 +147,7 @@ class UploadingFirmware extends React.PureComponent {
         text = this.state.error || i18n.__('Upload Firmware Error Text')
         color = '#fa5353'
         label = i18n.__('OK')
-        func = () => onRequestClose()
+        func = () => this.onFailed()
         break
       default:
         break

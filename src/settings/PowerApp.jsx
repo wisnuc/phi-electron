@@ -39,13 +39,15 @@ class Power extends React.Component {
     this.polling = async (lan) => {
       let finished = false
       const startTime = new Date().getTime()
+      const maxTime = 150 * 1000
       await Promise.delay(5000)
-      while (!finished && (new Date().getTime() - startTime < 150 * 1000)) {
+      while (!finished && (new Date().getTime() - startTime < maxTime)) {
         const status = await this.getStatus(lan)
         const { error, isOnline } = status
         if (error) throw error
         else finished = !!isOnline
       }
+      if (new Date().getTime() - startTime > maxTime) throw i18n.__('Reconnect Timeout')
       return true
     }
 
