@@ -148,33 +148,30 @@ class Home extends Base {
       })
     }
 
-    this.onCopy = () => {
-      if (this.isMedia || this.state.inRoot) return
+    this.xcopy = (action) => {
+      if (this.state.inRoot && !this.state.showSearch) return
       const selected = this.state.select.selected
       if (!selected && !selected.length) return
       const entries = selected.map(index => this.state.entries[index])
       const drive = this.state.path[0].uuid
       const srcPath = this.state.path.slice(-1)[0]
       const dir = srcPath.uuid
-      this.ctx.props.clipboard.set({ action: 'copy', loc: 'drive', drive, dir, entries, srcPath })
+      this.ctx.props.clipboard.set({ action, loc: 'drive', drive, dir, entries, srcPath })
+    }
+
+    this.onCopy = () => {
+      this.xcopy('copy')
     }
 
     this.onCut = () => {
-      if (this.isMedia || this.state.inRoot) return
-      const selected = this.state.select.selected
-      if (!selected && !selected.length) return
-      const entries = selected.map(index => this.state.entries[index])
-      const drive = this.state.path[0].uuid
-      const srcPath = this.state.path.slice(-1)[0]
-      const dir = srcPath.uuid
-      this.ctx.props.clipboard.set({ action: 'move', loc: 'drive', drive, dir, entries, srcPath })
+      this.xcopy('move')
     }
 
     /* request task state */
     this.getTaskState = async (uuid) => {
       await Promise.delay(500)
       const data = await this.ctx.props.apis.pureRequestAsync('task', { uuid })
-      if (data && data.finished) return 'Finished'
+      if (data && (data.finished || data.allfinished)) return 'Finished'
       if (data && data.nodes && data.nodes.findIndex(n => n.state === 'Conflict') > -1) return 'Conflict'
       return 'Working'
     }
@@ -208,8 +205,10 @@ class Home extends Base {
       const pos = this.ctx.props.clipboard.get()
       const driveUUID = this.state.path[0].uuid
       const dirUUID = this.state.path.slice(-1)[0].uuid
-      const entries = pos.entries.map(e => e.name)
+      const isBatch = !!pos.entries[0].pdrv
+      const entries = isBatch ? pos.entries.map(e => ({ name: e.name, drive: e.pdrv, dir: e.pdir })) : pos.entries.map(e => e.name)
       const args = {
+        batch: isBatch,
         entries,
         policies: { dir: ['keep', null] },
         dst: { drive: driveUUID, dir: dirUUID },
@@ -1039,7 +1038,7 @@ class Home extends Base {
         onRequestClose={this.hideContextMenu}
       >
         {
-          this.hasRoot && !this.phyDrive
+          this.hasRoot && !this.phyDrive && !this.state.showSearch
             ? (
               <div>
                 <MenuItem
@@ -1052,7 +1051,7 @@ class Home extends Base {
                 />
               </div>
             )
-            : this.state.inRoot
+            : this.state.inRoot && !this.state.showSearch
               ? (
                 <div>
                   <MenuItem
@@ -1089,11 +1088,14 @@ class Home extends Base {
                       onClick={() => this.toggleDialog('createNewFolder')}
                       disabled={this.isMedia}
                     />
-                    <MenuItem
-                      primaryText={i18n.__('Paste')}
-                      disabled={!pastable}
-                      onClick={this.onPaste}
-                    />
+                    {
+                      !this.state.showSearch &&
+                        <MenuItem
+                          primaryText={i18n.__('Paste')}
+                          disabled={!pastable}
+                          onClick={this.onPaste}
+                        />
+                    }
                     <Divider style={{ marginLeft: 10, marginTop: 2, marginBottom: 2, width: 'calc(100% - 20px)' }} />
                   </div>
                   }
@@ -1157,10 +1159,10 @@ class Home extends Base {
                     primaryText={i18n.__('Download')}
                     onClick={this.download}
                   />
+                  <Divider style={{ marginLeft: 10, marginTop: 2, marginBottom: 2, width: 'calc(100% - 20px)' }} />
                   {
-                    !this.isMedia &&
+                    this.state.showSearch && !this.isUSB && (
                       <div>
-                        <Divider style={{ marginLeft: 10, marginTop: 2, marginBottom: 2, width: 'calc(100% - 20px)' }} />
                         <MenuItem
                           primaryText={i18n.__('Copy')}
                           onClick={this.onCopy}
@@ -1169,14 +1171,15 @@ class Home extends Base {
                           primaryText={i18n.__('Cut')}
                           onClick={this.onCut}
                         />
-                        {
-                          !multiSelected &&
-                            <MenuItem
-                              primaryText={i18n.__('Rename')}
-                              onClick={this.rename}
-                            />
-                        }
                       </div>
+                    )
+                  }
+                  {
+                    !multiSelected &&
+                      <MenuItem
+                        primaryText={i18n.__('Rename')}
+                        onClick={this.rename}
+                      />
                   }
                   <MenuItem
                     primaryText={i18n.__('Delete')}

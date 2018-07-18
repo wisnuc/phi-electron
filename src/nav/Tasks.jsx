@@ -73,16 +73,16 @@ class Tasks extends React.Component {
 
   componentDidMount () {
     this.refresh()
-    this.timer = setInterval(() => this.state.tasks.some(t => !t.finished) && this.refresh(), 2000)
+    this.timer = setInterval(() => this.state.tasks.some(t => !t.finished) && this.refresh(), 1000)
   }
   componentDidUpdate () {
-    if (this.state.tasks && this.state.tasks.length && ![...this.state.tasks].filter(t => !t.finished).length) {
+    if (this.state.tasks && this.state.tasks.length && ![...this.state.tasks].filter(t => !(t.finished || t.allFinished)).length) {
       this.props.onRequestClose()
     }
   }
 
   componentWillUnmount () {
-    this.state.tasks.filter(t => t.nodes.findIndex(n => n.parent === null && n.state === 'Finished') > -1).forEach((t) => {
+    this.state.tasks.filter(t => t.finished || t.allFinished).forEach((t) => {
       this.props.apis.pureRequest('deleteTask', { uuid: t.uuid })
     })
     clearInterval(this.timer)
@@ -105,11 +105,11 @@ class Tasks extends React.Component {
   }
 
   renderTask ({ style, key, task }) {
-    const { uuid, type, entries, nodes } = task
+    const { uuid, type, entries, nodes, batch } = task
     const action = type === 'copy' ? i18n.__('Copying') : i18n.__('Moving')
-    const conflict = nodes.filter(n => n.state === 'Conflict')
-    const error = nodes.filter(n => n.state === 'Failed')
-    const finished = !!task.finished
+    const conflict = batch ? [] : nodes.filter(n => n.state === 'Conflict')
+    const error = batch ? [] : nodes.filter(n => n.state === 'Failed')
+    const finished = batch ? task.allFinished : task.finished
 
     return (
       <div style={style} key={key}>
@@ -128,7 +128,7 @@ class Tasks extends React.Component {
                   maxWidth: entries.length > 1 ? 60 : 120
                 }}
               >
-                { entries[0] }
+                { batch ? entries[0] && entries[0].name : entries[0] }
               </div>
               <div style={{ width: 4 }} />
               { entries.length > 1 && i18n.__('And Other %s Items', entries.length) }

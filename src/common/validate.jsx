@@ -1,5 +1,5 @@
 const firstword = /^[-.]/
-const isPassword = /[a-zA-Z0-9]+|[!()\-.?[\]_`~@#"']+/g
+const isPassword = /[a-zA-Z0-9]+|[!()\-.?[\]_`~@#"'$*+/:;=^|]+/g
 const isUsername = /[a-zA-Z0-9]+|[!()\-.?[\]_`~@#"']+|[\u4E00-\u9FFF\u3400-\u4dbf\uf900-\ufaff\u3040-\u309f\uac00-\ud7af]+/g
 
 export const validateUsername = () => true
@@ -16,4 +16,4 @@ export const validatePassword = (value) => {
   return !value.replace(isPassword, '').length
 }
 
-export const isPhoneNumber = pn => pn && pn.length <= 11 && Number.isInteger(Number(pn))
+export const isPhoneNumber = pn => pn && pn.length <= 11 && Number.isInteger(Number(pn)) && pn.startsWith('1')
