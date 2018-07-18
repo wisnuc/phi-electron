@@ -28,7 +28,7 @@ class Loading extends React.PureComponent {
         label = i18n.__('OK')
         func = () => onFailed()
         img = <img src="./assets/images/pic-loadingfailed.png" width={52} height={52} />
-        text = error || (type === 'reboot' ? i18n.__('Reboot Error Text') : i18n.__('Shutdown Error Text'))
+        text = typeof error === 'string' ? error : (type === 'reboot' ? i18n.__('Reboot Error Text') : i18n.__('Shutdown Error Text'))
         break
       default:
         break
