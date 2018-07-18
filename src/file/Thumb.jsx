@@ -1,6 +1,7 @@
-import React from 'react'
 import UUID from 'uuid'
-import { PhotoIcon } from '../common/Svg'
+import React from 'react'
+
+import renderFileIcon from '../common/renderFileIcon'
 
 class Thumb extends React.PureComponent {
   constructor (props) {
@@ -64,7 +65,9 @@ class Thumb extends React.PureComponent {
         }
         {
           this.thumb &&
-            <PhotoIcon style={{ height: this.props.height, width: this.props.width }} />
+            <div style={{ width: '100%', height: '100%' }} className="flexCenter">
+              { renderFileIcon(this.props.name, this.props.metadata, 50) }
+            </div>
         }
       </div>
     )
