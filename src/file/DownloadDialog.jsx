@@ -26,10 +26,55 @@ class DownloadDialog extends React.PureComponent {
         ipcRenderer.send('SETCONFIG', { downloadPath: path })
       })
     }
+
+    this.reqAsync = async (nextProps) => {
+      this.setState({ loading: true })
+      if (!nextProps || !nextProps.data) return ({})
+      const { entries, path } = nextProps.data
+      let [dirCount, fileCount, fileTotalSize] = [0, 0, 0]
+      for (let i = 0; i < entries.length; i++) {
+        const entry = entries[i]
+        if (['directory', 'public'].includes(entry.type)) {
+          if (entries.length > 1) dirCount += 1
+          const driveUUID = entry.type === 'public' ? entry.uuid : path[0].uuid
+          const dirUUID = entry.uuid
+          const res = await this.props.apis.pureRequestAsync('content', { driveUUID, dirUUID })
+          dirCount += res.dirCount
+          fileCount += res.fileCount
+          fileTotalSize += res.fileTotalSize
+        } else {
+          fileCount += 1
+          fileTotalSize += entry.size
+        }
+      }
+
+      return ({ dirCount, fileCount, fileTotalSize })
+    }
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.open && !this.props.open) this.setState({ fired: false })
+    if (nextProps.open && !this.props.open) {
+      this.reqAsync(nextProps)
+        .then((content) => {
+          const { dirCount, fileCount, fileTotalSize } = content
+          this.setState({ dirCount, fileCount, fileTotalSize, loading: false })
+        })
+        .catch(e => console.error('req dir content error', e))
+
+      this.setState({ fired: false })
+    }
+  }
+
+  contentOrSize (data) {
+    if (!data || !data.entries || !Array.isArray(data.entries) || !data.entries.length) return ''
+    const isTask = data.entries.length > 1
+    const entry = (data && data.entries && data.entries[0]) || {}
+    if (!isTask && entry.type === 'file') return i18n.__('File Size %s', prettysize(entry.size))
+
+    const { loading, dirCount, fileCount, fileTotalSize } = this.state
+    if (loading) return i18n.__('Loading')
+    if (!dirCount) return i18n.__('File Count %s, Size: %s', fileCount, prettysize(fileTotalSize, false, true, 2))
+    return i18n.__('Content %s %s, Size: %s', dirCount, fileCount, prettysize(fileTotalSize, false, true, 2))
   }
 
   render () {
@@ -58,7 +103,7 @@ class DownloadDialog extends React.PureComponent {
                   }
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', width: 'calc(100% - 60px)' }}>
-                  <div>
+                  <div style={{ width: '100%' }}>
                     <div
                       style={{
                         position: 'relative',
@@ -79,13 +124,9 @@ class DownloadDialog extends React.PureComponent {
                         { isTask && i18n.__('And Other %s Items', entryNum)}
                       </div>
                     </div>
-                    {
-                      !isTask && entry.type === 'file' && (
-                        <div style={{ color: '#85868c' }}>
-                          { i18n.__('File Size %s', prettysize(entry.size)) }
-                        </div>
-                      )
-                    }
+                    <div style={{ color: '#85868c', width: '100%' }}>
+                      { this.contentOrSize(data) }
+                    </div>
                   </div>
                 </div>
               </div>

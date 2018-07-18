@@ -603,6 +603,8 @@
   "Delete File Text": "是否删除选中的文件？",
   "Delete Folder Text": "是否删除选中的文件夹？",
   "File Size %s": "文件大小：%s",
+  "File Count %s, Size: %s": "共%s个文件，%s",
+  "Content %s %s, Size: %s" : "共%s个文件夹，%s个文件，%s",
 
   "==== view/Public.jsx ====": "",
   "Public Drive": "共享盘",

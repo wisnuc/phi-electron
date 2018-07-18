@@ -186,10 +186,7 @@ class Public extends Home {
           openNewDrive={() => this.setState({ newDrive: 'new' })}
         />
 
-        {
-          this.renderMenu(!!this.state.contextMenuOpen &&
-            (!this.state.inRoot || (this.state.inRoot && selected && selected.length === 1)))
-        }
+        { this.renderMenu(!!this.state.contextMenuOpen) }
 
         { this.renderDialogs(openSnackBar) }
 

@@ -93,7 +93,6 @@ class Home extends Base {
 
     this.downloadFire = ({ selected, entries, path, downloadPath }) => {
       if (this.state.showSearch) { // search result
-        const places = [path[0].uuid]
         const entriesByDir = entries.sort((a, b) => a.pdir.localeCompare(b.pdir)).reduce((acc, cur) => {
           if (!acc[0]) acc.push([cur])
           else if (acc.slice(-1)[0][0].pdir === cur.pdir) acc.slice(-1)[0].push(cur)
@@ -101,8 +100,7 @@ class Home extends Base {
           return acc
         }, [])
         entriesByDir.forEach((arr) => {
-          const place = arr[0].place
-          const driveUUID = places[place]
+          const driveUUID = arr[0].pdrv
           const dirUUID = arr[0].pdir
           ipcRenderer.send('DOWNLOAD', { entries: arr, dirUUID, driveUUID })
         })
@@ -970,6 +968,7 @@ class Home extends Base {
     return (
       <div style={{ width: '100%', height: '100%' }}>
         <DownloadDialog
+          apis={this.ctx.props.apis}
           open={!!this.state.onDownload}
           data={this.state.onDownload}
           onCancel={() => this.setState({ onDownload: null })}
@@ -1161,7 +1160,7 @@ class Home extends Base {
                   />
                   <Divider style={{ marginLeft: 10, marginTop: 2, marginBottom: 2, width: 'calc(100% - 20px)' }} />
                   {
-                    this.state.showSearch && !this.isUSB && (
+                    !(this.state.showSearch && this.isUSB) && (
                       <div>
                         <MenuItem
                           primaryText={i18n.__('Copy')}
