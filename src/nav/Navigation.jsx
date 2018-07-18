@@ -96,7 +96,7 @@ class NavViews extends React.Component {
     }
 
     this.navToDrive = (driveUUID, dirUUID) => {
-      const drives = this.props.apis.drives.data // no drives ?
+      const drives = this.props.apis.drives && this.props.apis.drives.data
       const drive = drives && drives.find(d => d.uuid === driveUUID)
       if (!drive) return
       if (drive.tag === 'home') this.navTo('home', { driveUUID, dirUUID })
@@ -403,9 +403,9 @@ class NavViews extends React.Component {
           }}
         />
 
-      <div style={{ height: '100%', width: 220 }}>
-        <FileMenu
-          views={this.views}
+        <div style={{ height: '100%', width: 220 }}>
+          <FileMenu
+            views={this.views}
             nav={this.state.nav}
             navTo={this.navTo}
             hasUSB={!!this.hasUSB}

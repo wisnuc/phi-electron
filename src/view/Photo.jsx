@@ -23,8 +23,8 @@ class Photo extends Home {
 
     this.refresh = (op) => {
       const apis = this.ctx.props.apis
-      const places = apis && apis.drives && apis.drives.data && apis.drives.data.filter(d => d.type === 'private').map(d => d.uuid).join('.')
-      this.ctx.props.apis.request(this.type, { places })
+      this.places = apis && apis.drives && apis.drives.data && apis.drives.data.filter(d => d.type === 'private').map(d => d.uuid).join('.')
+      this.ctx.props.apis.request(this.type, { places: this.places })
       if (op) this.setState({ scrollTo: op.fileName || op.uuid, loading: !op.noloading }) // fileName for files, uuid for drives
       else this.setState({ loading: true })
     }
@@ -42,7 +42,8 @@ class Photo extends Home {
         return
       }
 
-      const entries = this.state[type].filter(e => e.hash).map(e => Object.assign({ type: 'file' }, e))
+      const pdrives = (this.places && this.places.split('.')) || []
+      const entries = this.state[type].filter(e => e.hash).map(e => Object.assign({ type: 'file', pdrv: pdrives[e.place] }, e))
 
       const path = [{ name: this.title(), uuid: null, type: 'mediaRoot' }]
       const select = this.select.reset(entries.length)

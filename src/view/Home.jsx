@@ -273,7 +273,7 @@ class Home extends Base {
       if (!selected || selected.length !== 1) return
 
       const entry = selected.map(index => this.state.entries[index])[0]
-      const driveUUID = this.state.path[0] && this.state.path[0].uuid
+      const driveUUID = entry.pdrv
       const dirUUID = entry.pdir
       if (!driveUUID || !dirUUID) return
       this.ctx.navToDrive(driveUUID, dirUUID)
@@ -594,7 +594,9 @@ class Home extends Base {
       this.ctx.props.apis.pureRequest('search', { name, places, types, order }, (err, res) => {
         if (err || !res || !Array.isArray(res)) this.setState({ error: true, loading: false })
         else {
-          const entries = !types ? res : res.filter(e => e.hash).map(e => Object.assign({ type: 'file' }, e))
+          const pdrives = places.split('.')
+          let entries = res.map(l => Object.assign({ pdrv: pdrives[l.place] }, l))
+          if (types) entries = entries.filter(e => e.hash).map(e => Object.assign({ type: 'file' }, e))
           this.setState({
             loading: false,
             entries: entries.sort((a, b) => sortByType(a, b, this.state.sortType))
@@ -1145,7 +1147,7 @@ class Home extends Base {
                     />
                   }
                   {
-                    !multiSelected && this.state.showSearch && !this.isMedia &&
+                    !multiSelected && (this.state.showSearch || this.isMedia) &&
                     <MenuItem
                       primaryText={i18n.__('Open In Folder')}
                       onClick={() => this.openInFolder()}

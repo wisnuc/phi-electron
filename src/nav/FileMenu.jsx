@@ -13,6 +13,10 @@ class NavDrawer extends React.Component {
     }
   }
 
+  componentWillReceiveProps (nextProps) {
+    if (this.state.nav !== nextProps.nav) this.setState({ nav: nextProps.nav })
+  }
+
   renderUSB () {
     const { views } = this.props
     const { nav } = this.state
