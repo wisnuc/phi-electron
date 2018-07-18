@@ -30,6 +30,10 @@ class SetLANPwd extends React.Component {
       const user = Array.isArray(users) && users.find(u => u.phicommUserId === account.phicommUserId)
       const userUUID = user.uuid
       const newUser = (await this.props.phi.reqAsync('setLANPassword', { deviceSN, password: this.state.pwd, userUUID }))
+
+      /* set samba pwd */
+      await this.props.phi.reqAsync('sambaPwd', { pwd: this.state.pwd, userUUID, deviceSN })
+
       const token = (await this.props.phi.reqAsync('LANToken', args)).token
       if (!newUser || !newUser.uuid || !token) throw Error('fireAsync Error')
       return ({ dev, user: newUser, token })

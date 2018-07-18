@@ -186,6 +186,12 @@ class PhiAPI extends RequestManager {
         })
         break
 
+      case 'sambaPwd':
+        r = this.command(args.deviceSN, {
+          verb: 'PATCH', urlPath: `/users/${args.userUUID}`, params: {}, body: { smbPassword: args.pwd }
+        })
+        break
+
       default:
         break
     }
