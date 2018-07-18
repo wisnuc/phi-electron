@@ -1,4 +1,5 @@
 import React from 'react'
+import EventListener from 'react-event-listener'
 
 class ScrollBar extends React.PureComponent {
   constructor (props) {
@@ -55,12 +56,18 @@ class ScrollBar extends React.PureComponent {
 
       if (e.target.scrollHeight !== this.state.scrollHeight) this.setState({ scrollHeight: e.target.scrollHeight })
     }
+
+    this.handleResize = () => setTimeout(() => this.updateScrollHeight(), 100)
   }
 
   componentDidMount () {
     document.addEventListener('mousemove', this.onMouseMove)
     document.addEventListener('mouseup', this.onMouseUp)
-    this.updateScrollHeight()
+    setTimeout(() => this.updateScrollHeight(), 100)
+  }
+
+  componentWillReceiveProps () {
+    setTimeout(() => this.updateScrollHeight(), 100)
   }
 
   componentWillUnmount () {
@@ -92,6 +99,7 @@ class ScrollBar extends React.PureComponent {
 
     return (
       <div style={rootStyle}>
+        <EventListener target="window" onResize={this.handleResize} />
         <div
           onScroll={this.onScroll}
           ref={ref => (this.refRoot = ref)}

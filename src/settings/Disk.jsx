@@ -1,12 +1,14 @@
 import React from 'react'
 import i18n from 'i18n'
 import prettysize from 'prettysize'
-import { IconButton } from 'material-ui'
+import { AutoSizer } from 'react-virtualized'
+
 import Dialog from '../common/PureDialog'
-import { RSButton } from '../common/Buttons'
 import interpretModel from '../common/diskModel'
 import DiskModeGuide from '../login/DiskModeGuide'
 import ConfirmDialog from '../common/ConfirmDialog'
+import { RSButton, LIButton } from '../common/Buttons'
+import SimpleScrollBar from '../common/SimpleScrollBar'
 import CircularLoading from '../common/CircularLoading'
 import { HelpIcon, DiskIcon, DiskAltIcon } from '../common/Svg'
 
@@ -29,10 +31,8 @@ class Disk extends React.PureComponent {
       })
     }
 
-    this.fireEject = () => {
-      // if (!this.shouldEject()) return
-      const id = this.props.apis.phyDrives.data.filter(d => d.isUSB)[0].id
-      this.props.apis.pureRequest('ejectUSB', { id }, (err, res) => {
+    this.fireEject = (usb) => {
+      this.props.apis.pureRequest('ejectUSB', { id: usb.id }, (err, res) => {
         if (!err) {
           this.props.openSnackBar(i18n.__('Operation Success'))
         } else {
@@ -42,12 +42,6 @@ class Disk extends React.PureComponent {
         this.props.refresh()
       })
     }
-  }
-
-  shouldEject () {
-    const phyDrives = this.props.apis.phyDrives && this.props.apis.phyDrives.data
-    if (!Array.isArray(phyDrives) || !phyDrives.filter(d => d.isUSB).length) return false
-    return true
   }
 
   /* data: [{ title, percent, color }]  */
@@ -103,6 +97,52 @@ class Disk extends React.PureComponent {
     )
   }
 
+  renderUSBDrives (u, i) {
+    const phyUsage = u.usage
+    const name = u.mountpoint.split('/').slice(-1)
+    const USBUsage = i18n.__('Storage Usage %s %s', prettysize(phyUsage.used * 1024), prettysize(phyUsage.total * 1024))
+    return (
+      <div style={{ width: 1000, height: 110, margin: '0 auto', opacity: phyUsage ? 1 : 0.5 }} key={i.toString()}>
+        <div style={{ width: '100%', height: 40, color: '#888a8c', display: 'flex', alignItems: 'center', marginTop: 10 }}>
+          <div style={{ height: 40 }}>
+            <div style={{ height: 20, display: 'flex', alignItems: 'center', color: '#505259' }} >
+              { name || i18n.__('USB Storage Title %s', i + 1) }
+            </div>
+            <div style={{ height: 20, display: 'flex', alignItems: 'center', color: '#85868c' }} >
+              { USBUsage }
+            </div>
+          </div>
+          <div style={{ flexGrow: 1 }} />
+          <div style={{ width: 150, height: 40 }}>
+            <RSButton
+              alt
+              style={{ width: 100 }}
+              label={i18n.__('Eject USB')}
+              onClick={() => this.setState({ ejectUSB: u })}
+            />
+          </div>
+        </div>
+        {/* USB usage */}
+        <div
+          style={{
+            width: '100%',
+            height: 20,
+            marginTop: 10,
+            backgroundColor: '#f5f7fa'
+          }}
+        >
+          <div
+            style={{
+              height: '100%',
+              backgroundColor: '#7597bf',
+              width: `${(phyUsage.used / phyUsage.total * 100)}%`
+            }}
+          />
+        </div>
+      </div>
+    )
+  }
+
   renderLoading () {
     return (
       <div style={{ width: '100%', height: 'calc(100% - 60px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
@@ -136,7 +176,6 @@ class Disk extends React.PureComponent {
 
     const { audio, document, image, video } = stats
     const usage = phyDrives.find(d => d.isFruitFS).usage
-    const phyUsage = phyDrives.find(d => d.isUSB) && phyDrives.find(d => d.isUSB).usage
     if (!audio || !document || !image || !video || !usage) return (<div />)
     const { available, used } = usage
     const total = available + used
@@ -158,121 +197,93 @@ class Disk extends React.PureComponent {
 
     const progressTitle = i18n.__('Storage Space')
     const storageUsage = i18n.__('Storage Usage %s %s', prettysize(used * 1024), prettysize(total * 1024))
-    const USBUsage = phyUsage ? i18n.__('Storage Usage %s %s', prettysize(phyUsage.used * 1024), prettysize(phyUsage.total * 1024))
-      : '--'
-    const iconStyle = { width: 20, height: 20, color: '#31a0f5' }
-    const buttonStyle = { width: 24, height: 24, padding: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }
+
+    const usbDrives = phyDrives.filter(d => d.isUSB && d.usage)
+
     return (
       <div style={{ position: 'relative', width: '100%', height: '100%' }} >
-        <div style={{ height: 'calc((100% - 500px) / 2)' }} />
-        <div style={{ width: 1000, height: 360, margin: '0 auto', display: 'flex', alignItems: 'center' }}>
-          { this.renderCircularProgress(progressTitle, storageUsage, data) }
-          <div style={{ width: 10 }} />
-          <div style={{ width: 100, height: 300, padding: '30px 0' }}>
-            {
-              data.map(({ color, title }) => (
-                <div style={{ width: 100, height: 60, display: 'flex', alignItems: 'center' }} key={title}>
-                  <div style={{ width: 8, height: 8, backgroundColor: color }} />
-                  <div style={{ fontSize: 12, color: '#505259', marginLeft: 8 }}>
-                    { title }
-                  </div>
-                </div>
-              ))
-            }
-          </div>
-          <div style={{ width: 30 }} />
-          <div style={{ width: 500, height: 300, padding: '30px 0', position: 'relative' }}>
-            <div style={{ width: '100%', height: 40, color: '#888a8c', display: 'flex', alignItems: 'center' }}>
-              { i18n.__('Current Mode %s', mode) }
-              <IconButton style={buttonStyle} iconStyle={iconStyle} onClick={() => this.setState({ showGuide: true })}>
-                <HelpIcon />
-              </IconButton>
-              <div style={{ flexGrow: 1 }} />
-              <div style={{ width: 150, height: 40 }}>
-                <RSButton
-                  alt
-                  style={{ width: 100 }}
-                  label={i18n.__('Remove Data')}
-                  onClick={() => this.setState({ confirmRemoveData: true })}
-                />
-              </div>
-            </div>
-            {
-              disks.map(({ pos, status, model, size }, index) => (
-                <div
-                  style={{
-                    width: 500,
-                    height: 110,
-                    marginTop: index ? 20 : 10,
-                    backgroundColor: '#f5f7fa',
-                    display: 'flex',
-                    alignItems: 'center'
-                  }}
-                  key={index.toString()}
-                >
-                  {
-                    status === i18n.__('Disk Found')
-                      ? <DiskIcon style={{ height: 54, width: 40, marginLeft: 15 }} />
-                      : <DiskAltIcon style={{ height: 54, width: 40, marginLeft: 15 }} />
-                  }
-                  <div style={{ height: 40, marginLeft: 12 }} >
-                    <div style={{ height: 20, display: 'flex', alignItems: 'center', color: '#505259' }} >
-                      { pos }
+        <AutoSizer>
+          {({ height, width }) => (
+            <SimpleScrollBar height={height} width={width}>
+              <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                <div style={{ flexGrow: 1 }} />
+                <div>
+                  <div style={{ width: 1000, height: 360, margin: '0 auto', display: 'flex', alignItems: 'center' }}>
+                    { this.renderCircularProgress(progressTitle, storageUsage, data) }
+                    <div style={{ width: 10 }} />
+                    <div style={{ width: 100, height: 300, padding: '30px 0' }}>
+                      {
+                        data.map(({ color, title }) => (
+                          <div style={{ width: 100, height: 60, display: 'flex', alignItems: 'center' }} key={title}>
+                            <div style={{ width: 8, height: 8, backgroundColor: color }} />
+                            <div style={{ fontSize: 12, color: '#505259', marginLeft: 8 }}>
+                              { title }
+                            </div>
+                          </div>
+                        ))
+                      }
                     </div>
-                    <div style={{ height: 20, display: 'flex', alignItems: 'center', color: '#85868c' }} >
-                      {status}
-                      <div style={{ height: 12, width: 1, backgroundColor: '#85868c', margin: '0 10px' }} />
-                      {model}
-                      <div style={{ height: 12, width: 1, backgroundColor: '#85868c', margin: '0 10px' }} />
-                      {size}
+                    <div style={{ width: 30 }} />
+                    <div style={{ width: 500, height: 300, padding: '30px 0', position: 'relative' }}>
+                      <div style={{ width: '100%', height: 40, color: '#888a8c', display: 'flex', alignItems: 'center' }}>
+                        { i18n.__('Current Mode %s', mode) }
+                        <LIButton onClick={() => this.setState({ showGuide: true })} iconStyle={{ color: '#37a7f4', width: 24, height: 24 }}>
+                          <HelpIcon />
+                        </LIButton>
+                        <div style={{ flexGrow: 1 }} />
+                        <div style={{ width: 150, height: 40 }}>
+                          <RSButton
+                            alt
+                            style={{ width: 100 }}
+                            label={i18n.__('Remove Data')}
+                            onClick={() => this.setState({ confirmRemoveData: true })}
+                          />
+                        </div>
+                      </div>
+                      {
+                        disks.map(({ pos, status, model, size }, index) => (
+                          <div
+                            style={{
+                              width: 500,
+                              height: 110,
+                              marginTop: index ? 20 : 10,
+                              backgroundColor: '#f5f7fa',
+                              display: 'flex',
+                              alignItems: 'center'
+                            }}
+                            key={index.toString()}
+                          >
+                            {
+                              status === i18n.__('Disk Found')
+                                ? <DiskIcon style={{ height: 54, width: 40, marginLeft: 15 }} />
+                                : <DiskAltIcon style={{ height: 54, width: 40, marginLeft: 15 }} />
+                            }
+                            <div style={{ height: 40, marginLeft: 12 }} >
+                              <div style={{ height: 20, display: 'flex', alignItems: 'center', color: '#505259' }} >
+                                { pos }
+                              </div>
+                              <div style={{ height: 20, display: 'flex', alignItems: 'center', color: '#85868c' }} >
+                                {status}
+                                <div style={{ height: 12, width: 1, backgroundColor: '#85868c', margin: '0 10px' }} />
+                                {model}
+                                <div style={{ height: 12, width: 1, backgroundColor: '#85868c', margin: '0 10px' }} />
+                                {size}
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      }
                     </div>
                   </div>
+                  <div style={{ height: 20 }} />
+                  {/* usb */}
+                  { usbDrives.map((u, i) => this.renderUSBDrives(u, i)) }
                 </div>
-              ))
-            }
-          </div>
-        </div>
-        <div style={{ height: 20 }} />
-        <div style={{ width: 1000, height: 110, margin: '0 auto', opacity: phyUsage ? 1 : 0.5 }}>
-          <div style={{ width: '100%', height: 40, color: '#888a8c', display: 'flex', alignItems: 'center', marginTop: 10 }}>
-            <div style={{ height: 40 }}>
-              <div style={{ height: 20, display: 'flex', alignItems: 'center', color: '#505259' }} >
-                { i18n.__('USB Storage Title') }
+                <div style={{ flexGrow: 1 }} />
               </div>
-              <div style={{ height: 20, display: 'flex', alignItems: 'center', color: '#85868c' }} >
-                { USBUsage }
-              </div>
-            </div>
-            <div style={{ flexGrow: 1 }} />
-            <div style={{ width: 150, height: 40 }}>
-              <RSButton
-                alt
-                style={{ width: 100 }}
-                label={i18n.__('Eject USB')}
-                disabled={!phyUsage}
-                onClick={() => this.setState({ ejectUSB: true })}
-              />
-            </div>
-          </div>
-          {/* USB usage */}
-          <div
-            style={{
-              width: '100%',
-              height: 20,
-              marginTop: 10,
-              backgroundColor: '#f5f7fa'
-            }}
-          >
-            <div
-              style={{
-                height: '100%',
-                backgroundColor: '#7597bf',
-                width: phyUsage ? `${(phyUsage.used / phyUsage.total * 100)}%` : 0
-              }}
-            />
-          </div>
-        </div>
-        <div style={{ height: 'calc((100% - 500px) / 2)' }} />
+            </SimpleScrollBar>
+          )}
+        </AutoSizer>
 
         <Dialog open={!!this.state.showGuide} onRequestClose={() => this.setState({ showGuide: false })}>
           {
@@ -293,9 +304,9 @@ class Disk extends React.PureComponent {
         />
 
         <ConfirmDialog
-          open={this.state.ejectUSB}
+          open={!!this.state.ejectUSB}
           onCancel={() => this.setState({ ejectUSB: false })}
-          onConfirm={() => this.fireEject()}
+          onConfirm={() => this.fireEject(this.state.ejectUSB)}
           title={i18n.__('Confirm Eject USB Title')}
           text={i18n.__('Confirm Eject USB Text')}
         />
