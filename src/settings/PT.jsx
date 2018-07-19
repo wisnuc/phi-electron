@@ -13,7 +13,7 @@ class PT extends React.Component {
 
     this.state = {
       loading: false,
-      open: this.props.pt && !!this.props.pt.status
+      open: this.props.pt && this.props.pt.status === 'on'
     }
 
     this.singleton = false
@@ -39,7 +39,7 @@ class PT extends React.Component {
   componentWillReceiveProps (nextProps) {
     if (nextProps.pt && !this.singleton) {
       this.singleton = true
-      this.setState({ open: !!nextProps.pt.status })
+      this.setState({ open: nextProps.pt.status === 'on' })
     }
   }
 
