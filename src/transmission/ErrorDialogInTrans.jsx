@@ -44,6 +44,14 @@ const convert = (code) => {
       return i18n.__('EMKDIR')
     case 'ENOTSTREAM':
       return i18n.__('ENOTSTREAM')
+    case 'EHOSTUNREACH':
+      return i18n.__('ECONNECT')
+    case 'ETIMEOUT':
+      return i18n.__('ETIMEOUT')
+    case 'ECANCELED':
+      return i18n.__('ECONNECT')
+    case 'Not Found':
+      return i18n.__('ENOTFOUND')
     default:
       return code || i18n.__('Unknown Error')
   }
@@ -162,17 +170,18 @@ class ErrorTree extends React.PureComponent {
         {/* confirm button */}
         <div style={{ height: 34, display: 'flex', alignItems: 'center', margin: '20px 0' }}>
           <div style={{ flexGrow: 1 }} />
-          <RSButton
-            alt
-            label={i18n.__('Ignore All')}
-            onClick={this.ignore}
-            disabled={this.props.finished}
-          />
+          {
+            !!this.props.finished &&
+              <RSButton
+                alt
+                label={i18n.__('Ignore All')}
+                onClick={this.ignore}
+              />
+          }
           <div style={{ width: 10 }} />
           <RSButton
-            label={i18n.__('Retry All')}
+            label={this.props.finished ? i18n.__('Retry All') : i18n.__('Retry')}
             onClick={this.retry}
-            disabled={this.props.finished}
           />
         </div>
       </div>

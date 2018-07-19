@@ -27,7 +27,7 @@ class RunningTask extends React.Component {
     this.checkError = () => {
       const errors = this.props.task.errors || []
       const warnings = this.props.task.warnings || []
-      this.props.openErrorDialog([...errors, ...warnings])
+      this.props.openErrorDialog([...errors, ...warnings], this.props.task.finishCount)
     }
   }
 
