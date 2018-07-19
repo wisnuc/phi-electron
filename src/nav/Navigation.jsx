@@ -199,7 +199,10 @@ class NavViews extends React.Component {
   }
 
   componentDidUpdate () {
-    if (this.showFirmUpdate && this.props.apis && this.props.apis.device && this.props.apis.device.data) {
+    const { apis, isCloud } = this.props
+    const isAdmin = apis && apis.account && apis.account.data && apis.account.data.isFirstUser
+    const hasDevice = apis && apis.device && apis.device.data
+    if (!isCloud && this.showFirmUpdate && isAdmin && hasDevice) {
       this.showFirmUpdate = false
       this.checkFirmWareAsync().catch(e => console.error('checkFirmWareAsync error', e))
     }
