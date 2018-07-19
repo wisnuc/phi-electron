@@ -87,8 +87,8 @@ class SleepMode extends React.Component {
     )
   }
 
-  renderTimeDur () {
-    const disabled = !this.state.sleep || !this.state.switch
+  renderTimeDur (isAdmin) {
+    const disabled = !this.state.sleep || !this.state.switch || !isAdmin
     return (
       <div
         style={{ height: 40, width: '100%', display: 'flex', alignItems: 'center', opacity: disabled ? 0.5 : 1 }}
@@ -110,7 +110,7 @@ class SleepMode extends React.Component {
             textAlign: 'center'
           }}
           value={this.state.start}
-          onChange={e => this.onStartVal(e.target.value)}
+          onChange={e => !disabled && this.onStartVal(e.target.value)}
         />
         <div style={{ flexGrow: 1 }} />
         <input
@@ -126,7 +126,7 @@ class SleepMode extends React.Component {
             textAlign: 'center'
           }}
           value={this.state.end}
-          onChange={e => this.onEndVal(e.target.value)}
+          onChange={e => !disabled && this.onEndVal(e.target.value)}
         />
       </div>
     )
@@ -144,16 +144,18 @@ class SleepMode extends React.Component {
     const { sleep } = this.props
     if (!sleep) return this.renderLoading()
 
+    const isAdmin = this.props.apis.account && this.props.apis.account.data && this.props.apis.account.data.isFirstUser
+
     const settings = [
       {
         type: i18n.__('Sleep Mode'),
         enabled: this.state.sleep,
-        func: () => this.setState({ sleep: !this.state.sleep })
+        func: () => isAdmin && this.setState({ sleep: !this.state.sleep })
       },
       {
         type: i18n.__('Time Switch'),
         enabled: this.state.switch,
-        func: () => this.state.sleep && this.setState({ switch: !this.state.switch })
+        func: () => isAdmin && this.state.sleep && this.setState({ switch: !this.state.switch })
       }
     ]
 
@@ -180,7 +182,7 @@ class SleepMode extends React.Component {
 
           <div style={{ height: 30 }} />
 
-          { this.renderTimeDur() }
+          { this.renderTimeDur(isAdmin) }
 
           <div style={{ height: 40 }} />
 
@@ -188,7 +190,7 @@ class SleepMode extends React.Component {
             <RRButton
               label={this.state.loading ? i18n.__('Saving') : i18n.__('Save')}
               onClick={this.save}
-              disabled={!this.shouldFire()}
+              disabled={!this.shouldFire() || !isAdmin}
             />
           </div>
         </div>

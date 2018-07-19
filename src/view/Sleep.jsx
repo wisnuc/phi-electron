@@ -50,7 +50,6 @@ class Sleep extends Base {
       <SleepMode
         {...this.state}
         {...this.ctx.props}
-        apis={this.ctx.props.apis}
         openSnackBar={openSnackBar}
       />
     )
