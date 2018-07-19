@@ -1065,6 +1065,7 @@
   "Bind Device WIP Text": "请短按电源键确认需要绑定的设备",
   "Need Bind Volume": "无可用磁盘卷",
   "User Not Exist": "用户不存在",
+  "Password Not Set": "密码未设置",
   "Wait To Bind": "待绑定",
   "MDNS Search Error": "搜索设备失败",
   "Offline Mode": "离线",

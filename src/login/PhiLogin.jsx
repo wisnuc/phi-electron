@@ -62,6 +62,8 @@ class PhiLogin extends React.Component {
             if (res && res.error === '7') this.setState({ pnError: i18n.__('User Not Exist'), loading: false })
             else if (res && res.error === '8') this.setState({ pwdError: i18n.__('Wrong Password'), loading: false })
             else if (res && res.error === '34') this.setState({ pnError: i18n.__('Invalid Phone Number'), loading: false })
+            else if (res && res.error === '15') this.setState({ pwdError: i18n.__('Password Not Set'), loading: false })
+            else if (res && res.error && res.message) this.setState({ pwdError: res.message, loading: false })
             else this.setState({ failed: true, loading: false })
           } else {
             this.props.phi.req('stationList', null, (e, r) => {
