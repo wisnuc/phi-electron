@@ -18,7 +18,9 @@ const startWord = [
   ['HGST', 'HGST'],
   ['ADATA', '威刚'],
   ['VMware', 'VMware'],
-  ['VBOX', 'VBOX']
+  ['VBOX', 'VBOX'],
+  ['HITACHI', '日立'],
+  ['FUJITSU', '富士通']
 ]
 
 const interpretModel = (serial) => {
