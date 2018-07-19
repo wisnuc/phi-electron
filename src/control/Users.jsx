@@ -104,7 +104,8 @@ class AdminUsersApp extends React.Component {
       this.inviteAsync().then(() => this.reqUsers()).catch((e) => {
         console.error('this.invite error', e)
         this.setState({ invited: false })
-        this.props.openSnackBar(i18n.__('Invite User Error'))
+        if (e && e.msg && e.error) this.props.openSnackBar(e.msg)
+        else this.props.openSnackBar(i18n.__('Invite User Error'))
       })
     }
 
