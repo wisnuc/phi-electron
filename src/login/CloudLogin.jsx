@@ -11,14 +11,7 @@ class CloudLogin extends React.PureComponent {
       status: 'busy'
     }
 
-    this.getLANTokenAsync = async () => {
-      const { dev, account } = this.props
-      const args = { deviceSN: dev.mdev.deviceSN }
-      const token = (await this.props.phi.reqAsync('LANToken', args)).token
-      const users = (await this.props.phi.reqAsync('localUsers', args))
-      const user = Array.isArray(users) && users.find(u => u.phicommUserId === account.phicommUserId)
-
-      /* checkPt status */
+    this.getPTAsync = async (args) => {
       let needSetPT = false
       try {
         const pt = (await this.props.phi.reqAsync('pt', args))
@@ -27,8 +20,22 @@ class CloudLogin extends React.PureComponent {
         needSetPT = false
         console.error('pt error', e)
       }
+      return needSetPT
+    }
+
+    this.getLANTokenAsync = async () => {
+      const { dev, account } = this.props
+      const args = { deviceSN: dev.mdev.deviceSN }
+      const [tokenRes, users, needSetPT] = await Promise.all([
+        this.props.phi.reqAsync('LANToken', args),
+        this.props.phi.reqAsync('localUsers', args),
+        this.getPTAsync(args)
+      ])
+      const token = tokenRes.token
+      const user = Array.isArray(users) && users.find(u => u.phicommUserId === account.phicommUserId)
 
       if (!token || !user) throw Error('get LANToken or user error')
+
       return ({ dev, user, token, needSetPT })
     }
 
@@ -54,19 +61,12 @@ class CloudLogin extends React.PureComponent {
       const { dev, account } = this.props
       const args = { deviceSN: dev.mdev.deviceSN }
       const token = this.props.phi.token
-      const boot = (await this.props.phi.reqAsync('boot', args))
-      const users = (await this.props.phi.reqAsync('localUsers', args))
+      const [boot, users, needSetPT] = await Promise.all([
+        this.props.phi.reqAsync('boot', args),
+        this.props.phi.reqAsync('localUsers', args),
+        this.getPTAsync(args)
+      ])
       const user = Array.isArray(users) && users.find(u => u.phicommUserId === account.phicommUserId)
-
-      /* checkPt status */
-      let needSetPT = false
-      try {
-        const pt = (await this.props.phi.reqAsync('pt', args))
-        needSetPT = pt && pt.status === 'unset'
-      } catch (e) {
-        needSetPT = false
-        console.error('pt error', e)
-      }
 
       if (!token || !user || !boot) throw Error('get LANToken or user error')
       if (boot.state !== 'STARTED') throw Error('station not started')
