@@ -116,7 +116,7 @@ class Login extends React.Component {
     }
 
     this.onSetLANPwdSuccess = (loginData) => {
-      this.setState({ status: 'PT', loginData })
+      this.setState({ status: 'PT', loginData, selectedDevice: loginData.selectedDevice })
     }
 
     this.phiLoginSuccess = ({ list, phonenumber, token, phicommUserId, phi }) => {
@@ -158,6 +158,7 @@ class Login extends React.Component {
           addBindDevice={this.addBindDevice}
           refreshStationList={this.refreshStationList}
           jumpToSetLANPwd={this.jumpToSetLANPwd}
+          jumpToSetPT={this.onSetLANPwdSuccess}
           openLANLogin={this.openLANLogin}
         />
       </div>

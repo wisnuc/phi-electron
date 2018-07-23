@@ -192,6 +192,18 @@ class PhiAPI extends RequestManager {
         })
         break
 
+      case 'pt':
+        r = this.command(args.deviceSN, {
+          verb: 'GET', urlPath: `/platinum`, params: {}, body: {}
+        })
+        break
+
+      case 'updatePT':
+        r = this.command(args.deviceSN, {
+          verb: 'POST', urlPath: `/platinum`, params: {}, body: { status: args.status }
+        })
+        break
+
       default:
         break
     }

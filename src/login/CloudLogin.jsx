@@ -17,20 +17,32 @@ class CloudLogin extends React.PureComponent {
       const token = (await this.props.phi.reqAsync('LANToken', args)).token
       const users = (await this.props.phi.reqAsync('localUsers', args))
       const user = Array.isArray(users) && users.find(u => u.phicommUserId === account.phicommUserId)
+
+      /* checkPt status */
+      let needSetPT = false
+      try {
+        const pt = (await this.props.phi.reqAsync('pt', args))
+        needSetPT = pt && pt.status === 'unset'
+      } catch (e) {
+        needSetPT = false
+        console.error('pt error', e)
+      }
+
       if (!token || !user) throw Error('get LANToken or user error')
-      return ({ dev, user, token })
+      return ({ dev, user, token, needSetPT })
     }
 
     this.getLANToken = () => {
       this.getLANTokenAsync()
-        .then(({ dev, user, token }) => {
-          if (user.password) {
-            /* onSuccess: auto login */
-            Object.assign(dev, { token: { isFulfilled: () => true, ctx: user, data: { token } } })
+        .then(({ dev, user, token, needSetPT }) => {
+          Object.assign(dev, { token: { isFulfilled: () => true, ctx: user, data: { token } } })
+          if (!user.password) this.props.jumpToSetLANPwd(this.props.selectedDevice)
+          else if (needSetPT) this.props.jumpToSetPT({ dev, user, selectedDevice: this.props.selectedDevice, isCloud: false })
+          else {
             this.props.onRequestClose()
             const { selectedDevice } = this.props
             this.props.deviceLogin({ dev, user, selectedDevice, isCloud: false })
-          } else this.props.jumpToSetLANPwd(this.props.selectedDevice)
+          }
         })
         .catch((error) => {
           console.error('this.getLANToken', error, this.props)
@@ -45,14 +57,25 @@ class CloudLogin extends React.PureComponent {
       const boot = (await this.props.phi.reqAsync('boot', args))
       const users = (await this.props.phi.reqAsync('localUsers', args))
       const user = Array.isArray(users) && users.find(u => u.phicommUserId === account.phicommUserId)
+
+      /* checkPt status */
+      let needSetPT = false
+      try {
+        const pt = (await this.props.phi.reqAsync('pt', args))
+        needSetPT = pt && pt.status === 'unset'
+      } catch (e) {
+        needSetPT = false
+        console.error('pt error', e)
+      }
+
       if (!token || !user || !boot) throw Error('get LANToken or user error')
       if (boot.state !== 'STARTED') throw Error('station not started')
-      return ({ dev, user, token, boot })
+      return ({ dev, user, token, boot, needSetPT })
     }
 
     this.remoteLogin = () => {
       this.remoteLoginAsync()
-        .then(({ dev, user, token, boot }) => {
+        .then(({ dev, user, token, boot, needSetPT }) => {
           /* onSuccess: auto login */
           Object.assign(dev, {
             token: {
@@ -62,11 +85,13 @@ class CloudLogin extends React.PureComponent {
               isFulfilled: () => true, ctx: user, data: boot
             }
           })
-          if (user.password) {
+          if (!user.password) this.props.jumpToSetLANPwd(this.props.selectedDevice)
+          else if (needSetPT) this.props.jumpToSetPT({ dev, user, selectedDevice: this.props.selectedDevice, isCloud: true })
+          else {
             this.props.onRequestClose()
             const { selectedDevice } = this.props
             this.props.deviceLogin({ dev, user, selectedDevice, isCloud: true })
-          } else this.props.jumpToSetLANPwd(this.props.selectedDevice)
+          }
         })
         .catch((error) => {
           console.error('this.getLANToken', error)

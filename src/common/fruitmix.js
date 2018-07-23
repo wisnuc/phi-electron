@@ -351,7 +351,8 @@ class Fruitmix extends EventEmitter {
         break
 
       case 'pt':
-        r = request.get(`http://${this.address}:3001/v1/platinum`)
+        if (this.isCloud) r = this.reqCloud('platinum', null, 'GET')
+        else r = request.get(`http://${this.address}:3001/v1/platinum`)
         break
 
       default:
@@ -436,7 +437,8 @@ class Fruitmix extends EventEmitter {
         break
 
       case 'updatePT':
-        r = request.post(`http://${this.address}:3001/v1/platinum`, { status: args.status })
+        if (this.isCloud) r = this.reqCloud('platinum', { status: args.status }, 'POST')
+        else r = request.post(`http://${this.address}:3001/v1/platinum`, { status: args.status })
         break
 
       case 'sambaStatus':

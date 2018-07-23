@@ -6,7 +6,7 @@ import { RRButton, Checkbox } from '../common/Buttons'
 
 const ptUrl = 'http://www.phicomm.com/cn/index.php/Products/newbai.html'
 
-class SetLANPwd extends React.Component {
+class ConfirmPT extends React.Component {
   constructor (props) {
     super(props)
 
@@ -16,9 +16,11 @@ class SetLANPwd extends React.Component {
 
     this.fire = () => {
       this.setState({ loading: true })
-      this.props.selectedDevice.request('updatePT', { status: !!this.state.checked }, (err) => {
-        if (err) this.props.openSnackBar('设置失败')
-        else this.props.deviceLogin(this.props.loginData)
+      const deviceSN = this.props.loginData.dev.mdev.deviceSN
+      this.props.phi.req('updatePT', { status: !!this.state.checked, deviceSN }, (err) => {
+        // if (err) this.props.openSnackBar('设置失败')
+        if (err) console.error('updatePT error', err)
+        this.props.deviceLogin(this.props.loginData)
         this.setState({ loading: false })
       })
     }
@@ -81,4 +83,4 @@ class SetLANPwd extends React.Component {
   }
 }
 
-export default SetLANPwd
+export default ConfirmPT

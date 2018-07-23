@@ -26,7 +26,6 @@ class MDNS {
 
       /* discard existing result */
       if (this.store.find(dev => dev.host === device.host)) return
-      console.log('mdns', device)
       this.store.push(device)
     }
 
