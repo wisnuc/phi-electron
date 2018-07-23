@@ -169,7 +169,7 @@ class Home extends Base {
     this.getTaskState = async (uuid) => {
       await Promise.delay(500)
       const data = await this.ctx.props.apis.pureRequestAsync('task', { uuid })
-      if (data && (data.finished || data.allfinished)) return 'Finished'
+      if (data && (data.finished || data.allFinished)) return 'Finished'
       if (data && data.nodes && data.nodes.findIndex(n => n.state === 'Conflict') > -1) return 'Conflict'
       return 'Working'
     }

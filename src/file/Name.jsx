@@ -39,6 +39,8 @@ class Name extends React.PureComponent {
         newName: this.state.value,
         oldName: entry.name
       }
+      /* rename search results */
+      if (entry.pdrv) Object.assign(args, { driveUUID: entry.pdrv, dirUUID: entry.pdir })
       const cb = (err) => {
         if (err) {
           this.setState({ errorText: i18n.__('Rename Failed') })
