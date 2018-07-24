@@ -604,7 +604,7 @@
   "Delete Folder Text": "是否删除选中的文件夹？",
   "File Size %s": "文件大小：%s",
   "File Count %s, Size: %s": "共%s个文件，%s",
-  "Content %s %s, Size: %s" : "共%s个文件夹，%s个文件，%s",
+  "Content %s %s, Size: %s": "共%s个文件夹，%s个文件，%s",
 
   "==== view/Public.jsx ====": "",
   "Public Drive": "共享盘",
@@ -621,7 +621,7 @@
   "Permissions": "分配权限",
   "Public Drive Name": "共享盘名称",
   "Public Drive Name Hint": "请输入新的共享盘名称",
-  "Built-in Drive" : "默认共享盘",
+  "Built-in Drive": "默认共享盘",
 
   "==== view/Photo.jsx ====": "",
   "Photo Menu Name": "我的图片",
@@ -810,7 +810,7 @@
   "ENOTFOUND": "文件未找到",
   "ENOTSTREAM": "远程传输错误",
   "ECONNECT": "网络连接错误",
-  "ETIMEOUT" : "连接超时",
+  "ETIMEOUT": "连接超时",
   "Internal Server Error": "服务器内部错误",
   "Request Failed %s": "请求失败：%s",
   "Retry All": "全部重试",
@@ -1039,6 +1039,10 @@
   "Try Rebind Hint Part 2": "”按钮尝试重新绑定。",
   "Device Connection Text 1": "请保证电源开启",
   "Device Connection Text 2": "您的电脑与N2连接至同一网络",
+  "Add Device Connection Text 1": "磁盘已安装，电缆已插好，按下开关，指示灯亮",
+  "Add Device Connection Text 2": "网线插好连接至路由器",
+  "Add Device Connection Text 3": "电脑与N2连接至同一网络",
+
   "Got It": "知道了",
   "Power Off": "关机",
   "Discover Disk": "发现磁盘",
@@ -1245,5 +1249,5 @@
   "ResetDevice Help Summary Text 1": "设备管理员可以解除当前登录账号与该设备的绑定关系，设备将还原出厂设置。解绑之后，该设备的管理员与用户都将不能再访问该设备，请谨慎操作。",
   "ResetDevice Help Summary Text 2": "若您希望保留磁盘上的数据，请勿勾选“格式化磁盘，清除所有数据”选项，磁盘上您的数据和用户信息将被保留，以便在您下一次配置设备时重新导入。",
   "ResetDevice Help Summary Text 3": "若您希望完全清理设备及硬盘，请勾选“格式化磁盘，清除所有数据”，您的所有用户数据（包括硬盘数据）都将被清除。",
-  "ResetDevice Help Warning Text" : "请注意：格式化磁盘前请提前备份您的用户数据！"
+  "ResetDevice Help Warning Text": "请注意：格式化磁盘前请提前备份您的用户数据！"
 }
