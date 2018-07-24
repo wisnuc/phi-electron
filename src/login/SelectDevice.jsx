@@ -143,7 +143,10 @@ class DeviceSelect extends React.Component {
             src="./assets/images/pic_nodevice.png"
             alt=""
           />
-          <div style={{ width: '100%', textAlign: 'center', color: '#31a0f5', marginTop: 20 }}>
+          <div
+            style={{ width: '100%', textAlign: 'center', color: '#31a0f5', marginTop: 20, cursor: 'pointer' }}
+            onClick={() => this.setState({ showHelp: true })}
+          >
             { i18n.__('Not Found Any Device ?') }
           </div>
         </div>
@@ -256,6 +259,7 @@ class DeviceSelect extends React.Component {
           {
             !!this.state.showHelp &&
             <ConnectionHint
+              isAdd={this.props.type === 'LANTOBIND'}
               isLAN={this.props.account && this.props.account.lan}
               onRequestClose={() => this.setState({ showHelp: false })}
             />

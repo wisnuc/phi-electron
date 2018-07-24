@@ -50,14 +50,35 @@ class ConnectionHint extends React.PureComponent {
       </div>
     )
   }
+
+  renderAddText () {
+    const texts = [
+      i18n.__('Add Device Connection Text 1'),
+      i18n.__('Add Device Connection Text 2'),
+      i18n.__('Add Device Connection Text 3')
+    ]
+    return (
+      <div style={{ width: 300 }}>
+        {
+          texts.map(text => (
+            <div style={{ display: 'flex', alignItems: 'center', height: 40, marginLeft: 20 }} key={text}>
+              <div style={{ height: 6, width: 6, borderRadius: 3, backgroundColor: 'var(--grey-text)', marginRight: 6 }} />
+              <div style={{ color: 'var(--grey-text)' }}> { text }</div>
+            </div>
+          ))
+        }
+      </div>
+    )
+  }
+
   render () {
-    const { onRequestClose, isLAN } = this.props
-    const imgName = isLAN ? 'pic-help-connect-offline.png' : 'pic-help-connect-online.png'
+    const { onRequestClose, isLAN, isAdd } = this.props
+    const imgName = (isLAN || isAdd) ? 'pic-help-connect-offline.png' : 'pic-help-connect-online.png'
     return (
       <div style={{ width: 320, backgroundColor: '#FFF' }} >
         <div style={{ height: 59, width: '100%', display: 'flex', alignItems: 'center' }}>
           <div style={{ marginLeft: 20 }} className="title">
-            { isLAN ? i18n.__('Offline Device Connection Title') : i18n.__('Online Device Connection Title') }
+            { (isLAN || isAdd) ? i18n.__('Offline Device Connection Title') : i18n.__('Online Device Connection Title') }
           </div>
         </div>
         <Divider style={{ marginLeft: 20, width: 'calc(100% - 40px)' }} />
@@ -65,7 +86,7 @@ class ConnectionHint extends React.PureComponent {
           <img src={`./assets/images/${imgName}`} alt={imgName} width={280} height={150} />
         </div>
         <div style={{ height: 20 }} />
-        { isLAN ? this.renderLANText() : this.renderOnlineText() }
+        { isAdd ? this.renderAddText() : isLAN ? this.renderLANText() : this.renderOnlineText() }
         <div style={{ height: 70, width: 'calc(100% - 40px)', display: 'flex', alignItems: 'center', padding: '0 20px' }}>
           <div style={{ flexGrow: 1 }} />
           <RSButton label={i18n.__('Got It')} onClick={onRequestClose} />
