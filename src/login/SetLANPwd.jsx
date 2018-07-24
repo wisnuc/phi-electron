@@ -26,9 +26,7 @@ class SetLANPwd extends React.Component {
       const { dev, account } = this.props
       const deviceSN = dev.mdev.deviceSN || (dev.info && dev.info.data && dev.info.data.deviceSN)
       const args = { deviceSN }
-      const users = (await this.props.phi.reqAsync('localUsers', args))
-      const user = Array.isArray(users) && users.find(u => u.phicommUserId === account.phicommUserId)
-      const userUUID = user.uuid
+      const userUUID = account.phicommUserId
       const newUser = (await this.props.phi.reqAsync('setLANPassword', { deviceSN, password: this.state.pwd, userUUID }))
 
       /* set samba pwd */
