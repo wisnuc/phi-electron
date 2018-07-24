@@ -61,7 +61,8 @@ class Login extends React.Component {
         if (e || !r.result || !Array.isArray(r.result.list) || r.error !== '0') {
           this.setState({ loading: false, list: [], status: 'listError', type: 'BOUNDLIST' })
         } else {
-          const list = r.result.list.filter(l => l.type === 'owner' || (l.accountStatus === '1' && l.inviteStatus !== 'reject'))
+          const list = r.result.list.filter(l => l.type === 'owner' ||
+            (l.accountStatus === '1' && ['pending', 'accept'].includes(l.inviteStatus)))
           const status = !list.length ? 'phiNoBound' : 'deviceSelect'
           this.setState({ list, loading: false, type: 'BOUNDLIST', status })
         }

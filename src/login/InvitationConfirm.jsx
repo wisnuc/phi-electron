@@ -21,6 +21,7 @@ class ConfirmDialog extends React.PureComponent {
         } else {
           console.error('confirm invitation error', err, res)
           msg = accept === 'yes' ? i18n.__('Accept Invitation Failed') : i18n.__('Reject Invitation Failed')
+          if (err && err.error && err.msg) msg = msg.concat('：').concat(err.msg)
         }
         this.props.openSnackBar(msg)
         this.props.onClose()

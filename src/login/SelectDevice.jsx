@@ -208,7 +208,8 @@ class DeviceSelect extends React.Component {
     let arr = [...this.props.list]
     /* hide reject or inactive invitation */
     if (['BOUNDLIST', 'CHANGEDEVICE'].includes(this.props.type)) {
-      arr = arr.filter(l => l.type === 'owner' || (l.accountStatus === '1' && l.inviteStatus !== 'reject'))
+      arr = arr.filter(l => l.type === 'owner' ||
+        (l.accountStatus === '1' && ['pending', 'accept'].includes(l.inviteStatus)))
     }
 
     const currentSN = this.props.selectedDevice && this.props.selectedDevice.mdev && this.props.selectedDevice.mdev.deviceSN
