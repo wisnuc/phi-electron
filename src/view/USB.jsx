@@ -55,10 +55,12 @@ class USB extends Home {
       const pos = this.ctx.props.clipboard.get()
       const drive = this.state.path[0].id || this.phyDrive.id
       const dir = this.state.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
-      // if (dir) dir = `${dir}/`
-      const entries = pos.entries.map(e => e.name)
+      const isBatch = !!pos.entries[0].pdrv
+      const entries = isBatch ? pos.entries.map(e => ({ name: e.name, drive: e.pdrv, dir: e.pdir })) : pos.entries.map(e => e.name)
       const args = {
+        batch: isBatch,
         entries,
+        policies: { dir: ['keep', null] },
         type: pos.loc === 'phy' ? `n${pos.action}` : pos.loc === 'drive' ? `e${pos.action}` : '',
         src: { drive: pos.drive, dir: pos.dir },
         dst: { drive, dir }
