@@ -113,7 +113,7 @@ class ManageDisk extends React.Component {
   }
 
   volumeStatus () {
-    const { storage, boundVolume, boundUser } = this.props.selectedDevice.boot.data
+    const { storage, boundUser } = this.props.selectedDevice.boot.data
     if (!storage || !Array.isArray(storage.volumes) || !boundUser) return 'init'
 
     /* notMissing && isMounted && adminUser is boundUser => recover(import) */
@@ -412,12 +412,9 @@ class ManageDisk extends React.Component {
   renderSelect (status) {
     return (
       <div>
-        {
-          ['repair', 'add'].includes(status) &&
-            <div style={{ width: '100%', height: 40, marginTop: -30, color: '#fa5353' }} className="flexCenter">
-              { i18n.__('Disk Change Text') }
-            </div>
-        }
+        <div style={{ width: '100%', height: 40, marginTop: -30, color: '#fa5353' }} className="flexCenter">
+          { i18n.__('Disk Change Text') }
+        </div>
         <div style={{ width: 240, height: 40, margin: '0 auto' }}>
           <RRButton
             label={i18n.__('Create Volume')}
