@@ -30,10 +30,13 @@ class AdminUsersApp extends React.Component {
     this.reqUsersAsync = async () => {
       const { phi, device } = this.props
       const deviceSN = device.mdev.deviceSN
-      const cloudUsers = (await phi.reqAsync('cloudUsers', { deviceSN })).result.users
-      const localUsers = await phi.reqAsync('localUsers', { deviceSN })
+      const [cloudUsersRes, localUsers, drives] = await Promise.all([
+        phi.reqAsync('cloudUsers', { deviceSN }),
+        phi.reqAsync('localUsers', { deviceSN }),
+        phi.reqAsync('drives', { deviceSN })
+      ])
+      const cloudUsers = cloudUsersRes.result.users
       this.localUsers = localUsers
-      const drives = await phi.reqAsync('drives', { deviceSN })
 
       /* public drives */
       const builtIn = drives.find(d => d.tag === 'built-in')
@@ -41,12 +44,12 @@ class AdminUsersApp extends React.Component {
 
       /* service users */
       const users = localUsers.filter(u => !u.isFirstUser).map((u) => {
-        const { uuid, status } = u
+        const { uuid, status, reason } = u
         const driveList = []
         const cloudUser = cloudUsers.find(user => user.uid === u.phicommUserId) || {}
         driveList.push(builtIn.label || i18n.__('Public Drive'))
         publicDrives.filter(p => p.writelist === '*' || p.writelist.includes(uuid)).forEach(d => driveList.push(d.label))
-        const inActive = status === 'INACTIVE'
+        const inActive = status === 'INACTIVE' && reason
 
         return Object.assign({ driveList, inActive }, cloudUser, u)
       })
@@ -288,15 +291,16 @@ class AdminUsersApp extends React.Component {
               {
                 inActive
                   ? (
-                    <div style={{ color: '#31a0f5', display: 'flex', alignItems: 'center' }}>
-                      { i18n.__('InActive User') }
+                    <div style={{ color: inActive !== 'import' ? '#f53131' : '#31a0f5', display: 'flex', alignItems: 'center' }}>
+                      { inActive === 'timeout' ? i18n.__('Timeout User')
+                        : inActive === 'reject' ? i18n.__('Invite Rejected') : i18n.__('InActive User') }
                       <div style={{ width: 10 }} />
                       <RSButton
                         alt
                         disabled={this.state.invited}
                         style={{ height: 20 }}
                         labelStyle={{ height: 20, fontSize: 12 }}
-                        label={i18n.__('Active')}
+                        label={inActive !== 'import' ? i18n.__('Reinvite') : i18n.__('Active')}
                         onClick={() => this.reActive(user)}
                       />
                     </div>

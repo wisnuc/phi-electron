@@ -255,6 +255,7 @@
   "Confirm Delete User Title": "删除用户",
   "Active User Error": "激活用户失败",
   "InActive User": "旧用户",
+  "Timeout User": "已失效",
   "Active": "激活",
   "Exceed Max Users Text": "每台设备最多可设置10个用户（1个管理员加9个普通用户）",
   "Exceed Max Users": "超过用户上限",
