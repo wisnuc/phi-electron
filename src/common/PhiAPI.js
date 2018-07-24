@@ -3,7 +3,7 @@ import request from 'superagent'
 import parseRes from './parseRes'
 import RequestManager from './reqman'
 
-const phiCloudAddress = process.env.CLOUD_TEST === 'dev' ? 'sohon2dev.phicomm.com' : 'sohon2test.phicomm.com'
+const phiCloudAddress = process.env.CLOUD_TEST === 'dev' ? 'https://sohon2dev.phicomm.com' : 'https://sohon2test.phicomm.com'
 
 class PhiAPI extends RequestManager {
   constructor () {
@@ -26,14 +26,14 @@ class PhiAPI extends RequestManager {
 
   aget (ep) {
     return request
-      .get(`http://${phiCloudAddress}/${ep}`)
+      .get(`${phiCloudAddress}/${ep}`)
       .set('Content-Type', 'application/json')
       .set('Authorization', this.token)
   }
 
   apost (ep, data) {
     const r = request
-      .post(`http://${phiCloudAddress}/${ep}`)
+      .post(`${phiCloudAddress}/${ep}`)
       .set('Content-Type', 'application/json')
       .set('Authorization', this.token)
 
@@ -42,7 +42,7 @@ class PhiAPI extends RequestManager {
 
   apatch (ep, data) {
     const r = request
-      .patch(`http://${phiCloudAddress}/${ep}`)
+      .patch(`${phiCloudAddress}/${ep}`)
       .set('Content-Type', 'application/json')
       .set('Authorization', this.token)
 
@@ -51,7 +51,7 @@ class PhiAPI extends RequestManager {
 
   adel (ep, data) {
     const r = request
-      .del(`http://${phiCloudAddress}/${ep}`)
+      .del(`${phiCloudAddress}/${ep}`)
       .set('Content-Type', 'application/json')
       .set('Authorization', this.token)
 
@@ -60,7 +60,7 @@ class PhiAPI extends RequestManager {
 
   command (deviceSN, data) {
     return request
-      .post(`http://${phiCloudAddress}/ResourceManager/app/pipe/command`)
+      .post(`${phiCloudAddress}/ResourceManager/app/pipe/command`)
       .set('Content-Type', 'application/json')
       .set('Authorization', this.token)
       .send({ deviceSN, data })
@@ -71,13 +71,13 @@ class PhiAPI extends RequestManager {
     switch (name) {
       case 'authorizationcode':
         r = request
-          .get(`http://${phiCloudAddress}/v1/authorization`)
+          .get(`${phiCloudAddress}/v1/authorization`)
           .query({ client_id: '2149773', client_secret: 'FA35C1A18F830497AF75BD2636E54CBD', response_type: 'code', scope: 'read' })
         break
 
       case 'token':
         r = request
-          .post(`http://${phiCloudAddress}/v1/login`)
+          .post(`${phiCloudAddress}/v1/login`)
           .timeout({
             response: 30000, // Wait 30 seconds for the server to start sending,
             deadline: 60000 // but allow 1 minute for the file to finish loading.
@@ -91,7 +91,7 @@ class PhiAPI extends RequestManager {
 
       case 'client':
         r = request
-          .get(`http://${phiCloudAddress}/nasUpdate/client/getVersionInfo`)
+          .get(`${phiCloudAddress}/nasUpdate/client/getVersionInfo`)
           .set({ license: '2f12ac5dda730dd34c180825919a123bec8309c8807d494b9a8d92f80fd665ee' })
         break
 
