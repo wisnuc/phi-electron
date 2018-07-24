@@ -1,5 +1,6 @@
 import i18n from 'i18n'
 import React from 'react'
+import { shell } from 'electron'
 import { Divider } from 'material-ui'
 import { ArrowIcon, SmallErrorIcon, HelpFoldIcon } from '../common/Svg'
 import SimpleScrollBar from '../common/SimpleScrollBar'
@@ -49,6 +50,27 @@ class Help extends React.PureComponent {
           color: '#85868c',
           wordBreak: 'break-all'
         }}
+      >
+        { text }
+      </div>
+    )
+  }
+
+  renderURLText (text) {
+    return (
+      <div
+        style={{
+          width: 234,
+          padding: '0 23px',
+          display: 'flex',
+          alignItems: 'center',
+          letterSpacing: '0.4px',
+          color: '#31a0f5',
+          cursor: 'pointer',
+          textDecoration: 'underline',
+          wordBreak: 'break-all'
+        }}
+        onClick={() => shell.openExternal(text)}
       >
         { text }
       </div>
@@ -336,6 +358,8 @@ class Help extends React.PureComponent {
         { this.renderText(i18n.__('ClientUpdate Help Summary Text 2')) }
         <div style={{ height: 20 }} />
         { this.renderText(i18n.__('ClientUpdate Help Summary Text 3')) }
+        <div style={{ height: 20 }} />
+        { this.renderURLText(i18n.__('ClientUpdate Help Summary Text 4')) }
       </div>
     )
   }
@@ -380,7 +404,7 @@ class Help extends React.PureComponent {
         <div style={{ height: 20 }} />
         { this.renderText(i18n.__('PT Help Summary Text 2')) }
         <div style={{ height: 20 }} />
-        { this.renderText(i18n.__('PT Help Summary Text 3')) }
+        { this.renderURLText(i18n.__('PT Help Summary Text 3')) }
         <div style={{ height: 20 }} />
         { this.renderWarning(i18n.__('PT Help Warning Text')) }
       </div>
