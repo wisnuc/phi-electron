@@ -16,7 +16,7 @@ class Samba extends React.Component {
       error: '',
       loading: false,
       showPwd: false,
-      open: this.props.samba && !!this.props.samba.isActive
+      open: this.props.samba && !!this.props.samba.state === 'Started'
     }
 
     this.singleton = false
@@ -35,7 +35,7 @@ class Samba extends React.Component {
 
     this.saveAsync = async (open, encrypted, pwd) => {
       const isAdmin = this.props.apis.account && this.props.apis.account.data && this.props.apis.account.data.isFirstUser
-      if (isAdmin) await this.props.apis.pureRequestAsync('sambaStatus', { op: open ? 'start' : 'close' })
+      if (isAdmin) await this.props.apis.pureRequestAsync('sambaStatus', { op: open ? 'start' : 'stop' })
       await this.props.apis.requestAsync('samba')
       const driveUUID = this.drive && this.drive.uuid
       if (open) await this.props.apis.pureRequestAsync('sambaEncrypted', { encrypted, driveUUID })
@@ -66,7 +66,7 @@ class Samba extends React.Component {
       this.drive = drive
       const encrypted = drive && drive.smb
       this.setState({ encrypted })
-      this.setState({ open: nextProps.samba.isActive })
+      this.setState({ open: nextProps.samba.state === 'Started' })
     }
   }
 
