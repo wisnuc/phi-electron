@@ -163,11 +163,9 @@ class Device extends React.Component {
     let devStorage = '--'
 
     try {
-      const boot = this.isCurrent() ? this.props.selectedDevice.boot.data : this.state.dev.boot.data
-      const { boundVolume, storage } = boot
-      const usage = storage.volumes.find(v => v.uuid === boundVolume.uuid).usage
-      const { free, used } = usage.overall
-      devStorage = i18n.__('Storage Usage %s %s', prettysize(used), prettysize(free + used))
+      const space = this.isCurrent() ? this.props.selectedDevice.space.data : this.state.dev.space.data
+      const { used, available } = space
+      devStorage = i18n.__('Storage Usage %s %s', prettysize(used * 1024), prettysize((available + used) * 1024))
     } catch (e) {
       devStorage = '--'
     }

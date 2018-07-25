@@ -62,6 +62,15 @@ class Device extends RequestManager {
           })
         break
 
+      case 'space':
+        r = request
+          .get(`http://${this.mdev.address}:3000/boot/boundVolume/space`)
+          .timeout({
+            response: resTime, // Wait 5 seconds for the server to start sending,
+            deadline: 60000 // but allow 1 minute for the file to finish loading.
+          })
+        break
+
       case 'device':
         r = request
           .get(`http://${this.mdev.address}:3000/device`)
@@ -194,11 +203,12 @@ class Device extends RequestManager {
   }
 
   refreshSystemState (next) {
-    let count = 3
+    let count = 4
     const done = next ? () => !(count -= 1) && next() : undefined
     this.request('info', null, done)
     this.request('boot', null, done)
     this.request('users', null, done)
+    this.request('space', null, done)
   }
 
   async refreshSystemStateAsync () {
