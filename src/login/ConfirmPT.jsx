@@ -18,7 +18,6 @@ class ConfirmPT extends React.Component {
       this.setState({ loading: true })
       const deviceSN = this.props.loginData.dev.mdev.deviceSN
       this.props.phi.req('updatePT', { status: !!this.state.checked, deviceSN }, (err) => {
-        // if (err) this.props.openSnackBar('设置失败')
         if (err) console.error('updatePT error', err)
         this.props.deviceLogin(this.props.loginData)
         this.setState({ loading: false })
@@ -51,7 +50,7 @@ class ConfirmPT extends React.Component {
         <div style={{ width: 280, color: '#888a8c', paddingLeft: 20, height: 46, paddingTop: 5 }} >
           { i18n.__('PT Description') }
         </div>
-        <div style={{ width: 280, paddingLeft: 20, height: 40, display: 'flex', alignItems: 'center' }} >
+        <div style={{ width: '100%', height: 30 }} className="flexCenter">
           <div style={{ marginTop: -4 }}>
             <Checkbox
               onCheck={this.handleCheck}
@@ -61,6 +60,9 @@ class ConfirmPT extends React.Component {
           <div style={{ color: '#505259', fontSize: 13, marginLeft: -10 }} >
             { i18n.__('Join PT') }
           </div>
+        </div>
+
+        <div className="flexCenter" style={{ height: 30, width: '100%' }}>
           <a
             style={{ color: '#31a0f5', cursor: 'pointer', marginLeft: 5, textDecoration: 'underline', fontSize: 13 }}
             onClick={() => shell.openExternal(ptUrl)}
