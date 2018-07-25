@@ -19,6 +19,7 @@ const phaseDate = (time) => {
 
 const getType = (item) => {
   const type = item && item.type
+  if (item && item.isUSB) return i18n.__('USB Menu Name')
   if (type === 'public') return i18n.__('Public Drive')
   if (type === 'directory') return i18n.__('Directory')
   if (type === 'file') return i18n.__('File')
@@ -63,7 +64,7 @@ class FileDetail extends React.PureComponent {
       let [dirCount, fileCount, fileTotalSize] = [0, 0, 0]
       for (let i = 0; i < selected.length; i++) {
         const entry = entries[selected[i]]
-        if (['directory', 'public'].includes(entry.type)) {
+        if (['directory', 'public'].includes(entry.type) || entry.isUSB) {
           if (selected.length > 1) dirCount += 1
           const driveUUID = entry.type === 'public' ? entry.uuid : path[0].uuid
           const dirUUID = entry.uuid

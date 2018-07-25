@@ -197,6 +197,16 @@ class USB extends Home {
     } else {
       this.prePhyDrives = this.state.phyDrives
       this.handleProps(nextProps.apis, ['phyDrives'])
+      /* deep diff value of phydirves */
+      let isDiff = false
+      try {
+        const pre = JSON.stringify(this.prePhyDrives)
+        const cur = JSON.stringify(this.state.phyDrives)
+        isDiff = pre !== cur
+      } catch (e) {
+        console.error('JSON stringify error in handleDiffProps', e)
+        isDiff = false
+      }
       if (this.prePhyDrives === this.state.phyDrives && !this.force) return
       this.force = false
       const entries = this.state.phyDrives
@@ -206,7 +216,7 @@ class USB extends Home {
           return Object.assign({ name: devName || i18n.__('Disk Parition %s', i + 1) }, a)
         })
 
-      const select = this.select.reset(entries.length)
+      const select = isDiff ? this.select.reset(entries.length) : this.state.select
       const path = [{ name: this.title(), id: null, data: '', isPhyRoot: true }]
       const pos = { isPhyRoot: true, path }
 

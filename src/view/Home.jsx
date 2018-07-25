@@ -854,7 +854,7 @@ class Home extends Base {
           )
         }
         <div style={{ flexGrow: 1 }} />
-        <div style={{ marginRight: 15, height: 51, paddingTop: 19 }}>
+        <div style={{ marginRight: 15, height: 51, paddingTop: 19, display: (this.hasRoot && !this.phyDrive) ? 'none' : '' }}>
           <Search fire={this.search} hint={i18n.__('Search') + this.title()} key={this.menuName()} clear={this.clearSearch} />
         </div>
       </div>
@@ -965,6 +965,9 @@ class Home extends Base {
   }
 
   renderDialogs (openSnackBar, navTo) {
+    const showDetail = this.state.detail && this.select.state && this.select.state.selected &&
+      this.state.entries && this.state.entries[this.select.state.selected[0]]
+
     return (
       <div style={{ width: '100%', height: '100%' }}>
         <DownloadDialog
@@ -995,16 +998,16 @@ class Home extends Base {
           text={() => this.deleteText()}
         />
 
-        <DialogOverlay open={!!this.state.detail} onRequestClose={() => this.toggleDialog('detail')}>
+        <DialogOverlay open={!!showDetail} onRequestClose={() => this.toggleDialog('detail')}>
           {
-            this.state.detail &&
+            showDetail &&
             <FileDetail
               {...this.ctx.props}
               path={this.state.path}
               entries={this.state.entries}
               isSearch={!!this.state.showSearch}
               onRequestClose={() => this.toggleDialog('detail')}
-              selected={this.select.state && this.select.state.selected}
+              selected={this.select.state.selected}
             />
           }
         </DialogOverlay>

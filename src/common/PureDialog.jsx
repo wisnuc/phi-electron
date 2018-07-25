@@ -42,7 +42,7 @@ class TransitionItem extends React.Component {
     this.animation = (status) => {
       const transformItem = document.getElementById('transformItem')
       const overlay = document.getElementById('overlay')
-      const time = 0.45
+      const time = 0.375
       const ease = Power4.easeOut
 
       if (status === 'In') {
@@ -68,12 +68,12 @@ class TransitionItem extends React.Component {
 
   componentWillAppear (callback) {
     this.animation('In')
-    this.enterTimeout = setTimeout(callback, 450) // matches transition duration
+    this.enterTimeout = setTimeout(callback, 375) // matches transition duration
   }
 
   componentWillLeave (callback) {
     this.animation('Out')
-    this.leaveTimeout = setTimeout(callback, 450) // matches transition duration
+    this.leaveTimeout = setTimeout(callback, 375) // matches transition duration
   }
 
   render () {
