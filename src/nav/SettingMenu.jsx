@@ -7,7 +7,7 @@ class MenuCard extends Button {
   render () {
     const { Icon, name, des, onClick, isLAN, view, isCloud, pHeight, pWidth } = this.props
     if (!pHeight) return <div />
-    const disabled = (isLAN && ['resetDevice', 'pt'].includes(view)) || (isCloud && view === 'firmwareUpdate')
+    const disabled = (isLAN && ['resetDevice', 'pt'].includes(view)) || (isCloud && ['resetDevice', 'firmwareUpdate'].includes(view))
     const backgroundColor = this.state.hover ? '#f3f8ff' : '#fff'
     return (
       <div

@@ -6,7 +6,7 @@ import CircularLoading from '../common/CircularLoading'
 
 class Loading extends React.PureComponent {
   render () {
-    const { status, onRequestClose, onSuccess } = this.props
+    const { status, onRequestClose, onSuccess, onFailed, error } = this.props
 
     let [text, img, label, color, func] = ['', '', '', '#31a0f5', () => {}]
     switch (status) {
@@ -25,9 +25,9 @@ class Loading extends React.PureComponent {
       case 'error':
         color = '#fa5353'
         label = i18n.__('OK')
-        func = () => onRequestClose()
+        func = () => onFailed()
         img = <img src="./assets/images/pic-loadingfailed.png" width={52} height={52} />
-        text = i18n.__('Reset Device Error Text')
+        text = typeof error === 'string' ? error : i18n.__('Reset Device Error Text')
         break
       default:
         break
