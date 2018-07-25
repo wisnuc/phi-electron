@@ -64,11 +64,10 @@ class Device extends Base {
   renderContent ({ openSnackBar }) {
     return (
       <DeviceInfo
+        {...this.ctx.props}
         {...this.state}
         clearRefresh={this.clearRefresh}
-        phi={this.ctx.props.phi}
         address={this.address}
-        selectedDevice={this.ctx.props.selectedDevice}
         openSnackBar={openSnackBar}
       />
     )

@@ -124,10 +124,10 @@ class DeviceInfo extends React.PureComponent {
   }
 
   renderDeviceName () {
-    const editable = this.props.selectedDevice.mdev.bindingName
+    const editable = !this.props.account.lan
     const mac = this.props.selectedDevice.mdev.mac || ''
-    let name = mac ? `N2-${mac.slice(-2)}` : 'N2'
-    if (editable) name = this.newName || this.props.selectedDevice.mdev.bindingName
+    const defaultName = mac ? `N2-${mac.slice(-2)}` : 'N2'
+    const name = this.newName || this.props.selectedDevice.mdev.bindingName || defaultName
     return (
       <div>
         <div style={{ height: 24, fontSize: 14, color: '#85868c', display: 'flex', alignItems: 'center', paddingLeft: 10 }}>
@@ -216,6 +216,7 @@ class DeviceInfo extends React.PureComponent {
   }
 
   render () {
+    console.log('device props', this.props)
     const { device, network, cpus, memory, address } = this.props
 
     if (!device || !network || !cpus || !memory || !address) return this.renderLoading()

@@ -16,31 +16,22 @@ class ResetDevice extends React.Component {
       confirm: false
     }
 
-    this.getStatus = async (lan) => {
+    this.getStatus = async () => {
       /* LAN mode */
       await Promise.delay(3000)
-      if (lan) {
-        const mdns = await reqMdns()
-        if (!Array.isArray(mdns)) return ({ error: i18n.__('Get StationList Error') })
-        const dev = mdns.find(d => d.host === this.props.selectedDevice.mdev.host)
-        return ({ isOnline: !!dev })
-      }
-
-      /* Online mode */
-      const res = await this.props.phi.reqAsync('stationList', null)
-      if (!res || res.error !== '0' || !Array.isArray(res.result.list)) return ({ error: i18n.__('Get StationList Error') })
-      const dev = res.result.list.find(d => d.deviceSN === this.deviceSN())
-      if (!dev) return ({ error: i18n.__('Station Not Found') })
-      return ({ isOnline: dev.onlineStatus === 'online' })
+      const mdns = await reqMdns()
+      if (!Array.isArray(mdns)) return ({ error: i18n.__('Get StationList Error') })
+      const dev = mdns.find(d => d.serial === this.props.selectedDevice.mdev.deviceSN)
+      return ({ isOnline: !!dev })
     }
 
-    this.polling = async (lan) => {
+    this.polling = async () => {
       let finished = false
       const startTime = new Date().getTime()
       const maxTime = 150 * 1000
       await Promise.delay(5000)
       while (!finished && (new Date().getTime() - startTime < maxTime)) {
-        const status = await this.getStatus(lan)
+        const status = await this.getStatus()
         const { error, isOnline } = status
         if (error) throw error
         else finished = !!isOnline
@@ -55,7 +46,7 @@ class ResetDevice extends React.Component {
       await this.props.apis.pureRequest('unBindVolume', { format: !!check, reset: true })
       await Promise.delay(1200) // for Station to reboot
       await phi.reqAsync('unbindStation', { deviceSN })
-      await this.polling(true)
+      await this.polling()
     }
 
     this.reset = (check) => {
