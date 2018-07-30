@@ -28,7 +28,7 @@ class ResetDevice extends React.Component {
     this.polling = async () => {
       let finished = false
       const startTime = new Date().getTime()
-      const maxTime = 150 * 1000
+      const maxTime = 180 * 1000
       await Promise.delay(5000)
       while (!finished && (new Date().getTime() - startTime < maxTime)) {
         const status = await this.getStatus()
