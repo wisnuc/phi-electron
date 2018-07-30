@@ -153,17 +153,6 @@ class USB extends Home {
       this.setState({ onDownload: null })
     }
 
-    this.deleteAsync = async () => {
-      const path = this.state.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
-      const entries = this.state.select.selected.map(index => this.state.entries[index])
-      const queryStrings = entries.map(e => (path ? `${path}/${e.name}` : e.name))
-      for (let i = 0; i < queryStrings.length; i++) {
-        const p = queryStrings[i]
-        await this.ctx.props.apis.requestAsync('deletePhyDirOrFile', { id: this.phyDrive.id, qs: { path: p } })
-      }
-      await this.ctx.props.apis.requestAsync('listPhyDir', { id: this.phyDrive.id, path })
-    }
-
     this.transferEntry = (entry) => {
       const { namepath } = entry
       let fullpath = namepath.slice(0, namepath.length - 1).join('/')

@@ -226,6 +226,49 @@ class Home extends Base {
       this.state.select.setModify(this.state.select.selected[0])
     }
 
+    this.deleteMediaOrSearchAsync = async () => {
+      const selected = this.state.select.selected
+      const entries = selected.map(index => this.state.entries[index])
+      const entriesByDir = entries.sort((a, b) => a.pdir.localeCompare(b.pdir)).reduce((acc, cur) => {
+        if (!acc[0]) acc.push([cur])
+        else if (acc.slice(-1)[0][0].pdir === cur.pdir) acc.slice(-1)[0].push(cur)
+        else acc.push([cur])
+        return acc
+      }, [])
+
+      for (let n = 0; n < entriesByDir.length; n++) {
+        const arr = entriesByDir[n]
+        const driveUUID = arr[0].pdrv
+        const dirUUID = arr[0].pdir
+
+        const op = []
+        for (let i = 0; i < arr.length; i++) {
+          const entryName = arr[i].name
+          const entryUUID = arr[i].uuid
+          op.push({ driveUUID, dirUUID, entryName, entryUUID })
+        }
+        for (let j = 0; j <= (op.length - 1) / 512; j++) { // delete no more than 512 files per post
+          await this.ctx.props.apis.requestAsync('deleteDirOrFile', op.filter((a, i) => (i >= j * 512) && (i < (j + 1) * 512)))
+        }
+      }
+
+      /* refresh */
+      this.refresh()
+    }
+
+    this.deletePhyAsync = async () => {
+      const path = this.state.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
+      const entries = this.state.select.selected.map(index => this.state.entries[index])
+      const queryStrings = this.state.showSearch
+        ? entries.map(e => e.namepath.join('/'))
+        : entries.map(e => (path ? `${path}/${e.name}` : e.name))
+      for (let i = 0; i < queryStrings.length; i++) {
+        const p = queryStrings[i]
+        await this.ctx.props.apis.requestAsync('deletePhyDirOrFile', { id: this.phyDrive.id, qs: { path: p } })
+      }
+      await this.ctx.props.apis.requestAsync('listPhyDir', { id: this.phyDrive.id, path })
+    }
+
     this.deleteAsync = async () => {
       const entries = this.state.entries
       const selected = this.state.select.selected
@@ -250,7 +293,11 @@ class Home extends Base {
 
     this.delete = () => {
       this.setState({ deleteLoading: true })
-      this.deleteAsync().then(() => {
+      const fire = this.isUSB ? this.deletePhyAsync
+        : (this.isMedia || this.state.showSearch) ? this.deleteMediaOrSearchAsync
+          : this.deleteAsync
+
+      fire().then(() => {
         this.setState({ deleteLoading: false, delete: false })
         this.ctx.props.openSnackBar(i18n.__('Delete Success'))
       }).catch((e) => {
