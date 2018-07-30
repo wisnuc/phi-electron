@@ -83,7 +83,14 @@ class USB extends Home {
 
       const entry = this.state.entries[selected[0]]
 
-      if (entry.type === 'directory') {
+      if (Array.isArray(entry.namepath)) { // handle open dir in search result
+        const path = entry.namepath.map(p => ({ name: p, isPhy: true, id: this.phyDrive.id, type: 'directory' }))
+        if (this.hasRoot) path.unshift(...this.state.path.slice(0, 2))
+        else path.unshift(...this.state.path.slice(0, 1))
+        const pos = { id: this.phyDrive.id, path, name: this.phyDrive.name, isPhy: true }
+        this.enter(pos, err => err && console.error('listNavBySelect error', err))
+        this.history.add(pos)
+      } else if (entry.type === 'directory') {
         const path = [...this.state.path, Object.assign({ isPhy: true, id: this.phyDrive.id }, entry)]
         const pos = { id: this.phyDrive.id, path, name: this.phyDrive.name, isPhy: true }
         this.enter(pos, err => err && console.error('listNavBySelect error', err))
@@ -158,6 +165,22 @@ class USB extends Home {
       })
     }
 
+    this.openInFolder = () => {
+      const selected = this.state.select && this.state.select.selected
+      if (!selected || selected.length !== 1) return
+
+      const entry = selected.map(index => this.state.entries[index])[0]
+      if (!entry || !Array.isArray(entry.namepath)) return
+
+      const path = entry.namepath.map(p => ({ name: p, isPhy: true, id: this.phyDrive.id, type: 'directory' }))
+      if (this.hasRoot) path.unshift(...this.state.path.slice(0, 2))
+      else path.unshift(...this.state.path.slice(0, 1))
+      path.pop() // remove last path (current entry)
+      const pos = { id: this.phyDrive.id, path, name: this.phyDrive.name, isPhy: true }
+      this.enter(pos, err => err && console.error('listNavBySelect error', err))
+      this.history.add(pos)
+    }
+
     ipcRenderer.on('driveListUpdate', (e, dir) => {
       if (this.state.contextMenuOpen) return
       if (this.state.select && this.state.select.selected && this.state.select.selected.length > 1) return
@@ -186,13 +209,17 @@ class USB extends Home {
       const path = [...this.state.path]
       if (!path.length) path.push({ name: this.title(), id: this.phyDrive.id, data: '', isPhy: true })
 
-      const pos = { id: this.phyDrive.id, path: path.filter(p => p.type === 'directory').map(p => p.name).join('/') }
+      const pos = { id: this.phyDrive.id, path }
 
       if (this.history.get().curr === -1) this.history.add(pos)
 
       /* sort entries, reset select, stop loading */
       this.setState({
-        path, select, loading: false, entries: [...entries].sort((a, b) => sortByType(a, b, this.state.sortType))
+        path,
+        select,
+        loading: false,
+        showSearch: this.force && this.state.showSearch,
+        entries: [...entries].sort((a, b) => sortByType(a, b, this.state.sortType))
       })
     } else {
       this.prePhyDrives = this.state.phyDrives
@@ -224,7 +251,11 @@ class USB extends Home {
 
       /* sort entries, reset select, stop loading */
       this.setState({
-        path, select, loading: false, entries: [...entries].sort((a, b) => sortByType(a, b, this.state.sortType))
+        path,
+        select,
+        loading: false,
+        showSearch: this.force && this.state.showSearch,
+        entries: [...entries].sort((a, b) => sortByType(a, b, this.state.sortType))
       })
     }
   }
