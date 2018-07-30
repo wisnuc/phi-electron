@@ -124,6 +124,7 @@ class NavViews extends React.Component {
       if (group === 'settings' && this.state.nav !== 'settings' && this.views[this.state.nav].navGroup() === 'settings') {
         this.navTo('settings')
       }
+      if (group === 'transmission') ipcRenderer.send('GET_TRANSMISSION')
     }
 
     this.showFirmUpdate = true
