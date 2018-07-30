@@ -326,7 +326,7 @@ class ManageDisk extends React.Component {
               <div style={{ width: 240, height: 40, margin: '0 auto' }}>
                 <RRButton
                   disabled={!isImport && (!this.state.mode || !target.length)}
-                  label={i18n.__('Import')}
+                  label={i18n.__('Import Disk')}
                   onClick={() => fire(0)}
                   tooltip={!isImport && i18n.__('Recovery Disk May Need Long Time')}
                 />
@@ -401,7 +401,7 @@ class ManageDisk extends React.Component {
           <RRButton
             label={i18n.__('Repair Volume')}
             onClick={() => this.repair({ mode, devices: target })}
-            tooltip={isDegrade ? i18n.__('Degrade From Raid1 Text') : i18n.__('Recovery Disk May Need Long Time')}
+            tooltip={isDegrade ? i18n.__('Degrade From Raid1 Text') : i18n.__('Repair Disk May Need Long Time')}
           />
         </div>
         <div style={{ height: 30 }} />
@@ -428,7 +428,7 @@ class ManageDisk extends React.Component {
             alt
             label={status === 'repair' ? i18n.__('Repair Volume') : i18n.__('Recover Volume')}
             onClick={() => (status === 'repair' ? this.enterRepair() : this.enterRecover())}
-            tooltip={i18n.__('Recover Volume Text')}
+            tooltip={status === 'repair' ? i18n.__('Repair Volume Text') : i18n.__('Recover Volume Text')}
           />
         </div>
         <div style={{ height: 30 }} />
