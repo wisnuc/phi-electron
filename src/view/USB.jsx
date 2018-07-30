@@ -136,7 +136,20 @@ class USB extends Home {
 
     this.downloadFire = ({ selected, entries, path }) => {
       const id = this.phyDrive.id
-      ipcRenderer.send('DOWNLOAD', { entries, dirUUID: path, driveUUID: id, domain: 'phy' })
+      if (this.state.showSearch) { // search result
+        const entriesByDir = entries.sort((a, b) => a.fullpath.localeCompare(b.fullpath)).reduce((acc, cur) => {
+          if (!acc[0]) acc.push([cur])
+          else if (acc.slice(-1)[0][0].fullpath === cur.fullpath) acc.slice(-1)[0].push(cur)
+          else acc.push([cur])
+          return acc
+        }, [])
+        entriesByDir.forEach((arr) => {
+          const dirUUID = arr[0].fullpath
+          ipcRenderer.send('DOWNLOAD', { entries: arr, dirUUID, driveUUID: id, domain: 'phy' })
+        })
+      } else {
+        ipcRenderer.send('DOWNLOAD', { entries, dirUUID: path, driveUUID: id, domain: 'phy' })
+      }
       this.setState({ onDownload: null })
     }
 
@@ -151,6 +164,13 @@ class USB extends Home {
       await this.ctx.props.apis.requestAsync('listPhyDir', { id: this.phyDrive.id, path })
     }
 
+    this.transferEntry = (entry) => {
+      const { namepath } = entry
+      let fullpath = namepath.slice(0, namepath.length - 1).join('/')
+      if (fullpath) fullpath = `${fullpath}/`
+      return Object.assign({ fullpath }, entry)
+    }
+
     this.search = (name) => {
       if (!name || !this.phyDrive) return
       const select = this.select.reset(this.state.entries.length)
@@ -159,7 +179,7 @@ class USB extends Home {
       this.ctx.props.apis.pureRequest('phySearch', { name, id }, (err, res) => {
         if (err || !res || !Array.isArray(res)) this.setState({ error: true, loading: false })
         else {
-          const entries = [...res].sort((a, b) => sortByType(a, b, this.state.sortType))
+          const entries = res.map(entry => this.transferEntry(entry)).sort((a, b) => sortByType(a, b, this.state.sortType))
           this.setState({ entries, loading: false })
         }
       })
