@@ -1,5 +1,6 @@
 import i18n from 'i18n'
 import React from 'react'
+import { shell } from 'electron'
 import { Divider } from 'material-ui'
 import { AutoSizer } from 'react-virtualized'
 
@@ -10,6 +11,8 @@ import { isPhoneNumber } from '../common/validate'
 import { CloseIcon, BackIcon } from '../common/Svg'
 import CircularLoading from '../common/CircularLoading'
 import { RSButton, LIButton, Checkbox, TextField } from '../common/Buttons'
+
+const clientUrl = 'http://www.phicomm.com'
 
 class AdminUsersApp extends React.Component {
   constructor (props) {
@@ -186,7 +189,7 @@ class AdminUsersApp extends React.Component {
 
   renderAddUser () {
     return (
-      <div style={{ width: 280 }}>
+      <div style={{ width: 280, marginBottom: -20 }}>
         <div
           style={{
             height: 20,
@@ -227,6 +230,32 @@ class AdminUsersApp extends React.Component {
             hintText={i18n.__('Add User Phone Number Hint')}
             disabled={this.state.invited}
           />
+        </div>
+        <div
+          style={{
+            marginTop: 20,
+            height: 60,
+            fontSize: 14,
+            color: '#85868c',
+            display: 'flex',
+            alignItems: 'center'
+          }}
+        >
+          { i18n.__('Add User Text') }
+        </div>
+        <div
+          style={{
+            height: 40,
+            fontSize: 14,
+            color: '#31a0f5',
+            display: 'flex',
+            alignItems: 'center',
+            cursor: 'pointer',
+            textDecoration: 'underline'
+          }}
+          onClick={() => shell.openExternal(clientUrl)}
+        >
+          { i18n.__('Client Download Address') }
         </div>
       </div>
     )
