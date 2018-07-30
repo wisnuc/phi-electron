@@ -676,7 +676,7 @@
 
   "==== view/DiskInfo.jsx ====": "",
   "Disk Menu Name": "磁盘信息",
-  "Disk Description": "磁盘信息及格式化",
+  "Disk Description": "存储信息及USB管理",
   "Format Disk": "格式化磁盘",
   "Eject USB": "安全弹出",
   "Storage Space": "磁盘存储空间",
@@ -1206,7 +1206,7 @@
   "DiskInfo Help Header": "磁盘信息",
   "DiskInfo Help Summary Text": "在磁盘信息中，您可以查看当前已挂载硬盘及USB设备的存储状态。",
   "Remove Data Help Title": "清除用户数据",
-  "Remove Data Help Text": "清除您的所有数据，请点击“清除用户数据”按钮。等待操作完成后，请据提示完成相关操作。",
+  "Remove Data Help Text": "如需清除您磁盘上的所有数据，请点击 “清除用户数据” 按钮。此功能仅清除所有用户数据，您的设置和用户关系将不受影响。",
   "DiskInfo Help Warning Text": "请注意：清除用户数据后将无法恢复，请提前备份好数据并谨慎操作！",
   "Sleep Help Header": "睡眠模式",
   "Sleep Help Summary Text": "睡眠模式将会关闭设备上的LED指示灯，并尽量降低设备产生的噪音。您可以根据需要手动开启此模式，也可以设置此模式的每日自动生效时段。",
