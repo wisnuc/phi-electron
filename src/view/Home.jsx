@@ -367,9 +367,10 @@ class Home extends Base {
       /* calc positon of menu using height of menu which is related to number of selected items */
       const length = (this.select.state && this.select.state.selected && this.select.state.selected.length) || 0
       let itemNum = 7
-      if (this.isMedia) {
-        if (!length || length === 1) itemNum = 3
-        else itemNum = 2
+      if (this.isMedia || this.state.showSearch) {
+        if (!length) itemNum = 3
+        else if (length === 1) itemNum = 8
+        else itemNum = 5
       } else if (length > 1) itemNum = 5
       else itemNum = 7
 
