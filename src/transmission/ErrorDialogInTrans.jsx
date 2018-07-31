@@ -48,6 +48,10 @@ const convert = (code) => {
       return i18n.__('ECONNECT')
     case 'ETIMEOUT':
       return i18n.__('ETIMEOUT')
+    case 'ETIMEDOUT':
+      return i18n.__('ETIMEDOUT')
+    case 'ECONNABORTED':
+      return i18n.__('ECONNABORTED')
     case 'ECANCELED':
       return i18n.__('ECONNECT')
     case 'Not Found':
