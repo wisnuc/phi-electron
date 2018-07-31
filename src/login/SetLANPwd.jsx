@@ -1,6 +1,7 @@
 import i18n from 'i18n'
 import React from 'react'
 import { Divider } from 'material-ui'
+import { validatePassword } from '../common/validate'
 import { EyeOpenIcon, EyeOffIcon } from '../common/Svg'
 import { RRButton, TFButton, TextField } from '../common/Buttons'
 
@@ -17,7 +18,17 @@ class SetLANPwd extends React.Component {
     }
 
     this.onPassword = (pwd) => {
-      this.setState({ pwd, pwdError: '' })
+      this.setState({ pwd }, () => {
+        if (this.state.pwd.length === 0) {
+          this.setState({ pwdError: i18n.__('Empty Password Error') })
+        } else if (!validatePassword(pwd)) {
+          this.setState({ pwdError: i18n.__('Invalid Password Error') })
+        } else if (this.state.pwd.length > 64) {
+          this.setState({ pwdError: i18n.__('Password Too Long Error') })
+        } else {
+          this.setState({ pwdError: '' })
+        }
+      })
     }
 
     this.togglePwd = () => this.setState({ showPwd: !this.state.showPwd })
@@ -38,26 +49,30 @@ class SetLANPwd extends React.Component {
     }
 
     this.fire = () => {
-      this.setState({ loading: true })
-      this.fireAsync()
-        .then(({ dev, user, token }) => {
-          Object.assign(dev, { token: { isFulfilled: () => true, ctx: user, data: { token } } })
-          this.setState({ loading: false })
-          const { selectedDevice } = this.props
-          if (user.isFirstUser) {
-            this.props.onSuccess({ dev, user, selectedDevice, isCloud: false })
-          } else {
-            this.props.deviceLogin({ dev, user, selectedDevice, isCloud: false })
-          }
-        })
-        .catch((error) => {
-          console.error('this.getLANToken', error)
-          this.setState({ status: 'error', error, loading: false, pwdError: '设置失败' }) // TODO
-        })
+      if (this.state.pwd.length < 8) {
+        this.setState({ pwdError: i18n.__('Password Too Short Error') })
+      } else {
+        this.setState({ loading: true })
+        this.fireAsync()
+          .then(({ dev, user, token }) => {
+            Object.assign(dev, { token: { isFulfilled: () => true, ctx: user, data: { token } } })
+            this.setState({ loading: false })
+            const { selectedDevice } = this.props
+            if (user.isFirstUser) {
+              this.props.onSuccess({ dev, user, selectedDevice, isCloud: false })
+            } else {
+              this.props.deviceLogin({ dev, user, selectedDevice, isCloud: false })
+            }
+          })
+          .catch((error) => {
+            console.error('this.getLANToken', error)
+            this.setState({ status: 'error', error, loading: false, pwdError: '设置失败' }) // TODO
+          })
+      }
     }
 
     this.onKeyDown = (e) => {
-      if (e.which === 13 && this.state.pwd && !this.state.loading) this.fire()
+      if (e.which === 13 && this.state.pwd && !this.state.loading && !this.state.pwdError) this.fire()
     }
   }
 

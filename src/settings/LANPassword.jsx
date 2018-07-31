@@ -1,5 +1,6 @@
 import i18n from 'i18n'
 import React from 'react'
+import { validatePassword } from '../common/validate'
 import { EyeOpenIcon, EyeOffIcon } from '../common/Svg'
 import { RRButton, TFButton, TextField } from '../common/Buttons'
 
@@ -24,30 +25,48 @@ class LANPassword extends React.Component {
     }
 
     this.onNewPwd = (pwd) => {
-      this.setState({ newPwd: pwd, newPwdError: '' })
+      this.setState({ newPwd: pwd }, () => {
+        if (this.state.newPwd.length === 0) {
+          this.setState({ newPwdError: i18n.__('Empty Password Error') })
+        } else if (!validatePassword(pwd)) {
+          this.setState({ newPwdError: i18n.__('Invalid Password Error') })
+        } else if (this.state.newPwd.length > 64) {
+          this.setState({ newPwdError: i18n.__('Password Too Long Error') })
+        } else {
+          this.setState({ newPwdError: '' })
+        }
+      })
     }
 
     this.save = () => {
-      this.setState({ loading: true })
+      if (this.state.newPwd.length < 8) {
+        this.setState({ newPwdError: i18n.__('Password Too Short Error') })
+      } else {
+        this.setState({ loading: true })
 
-      const cb = (err, res) => {
-        if (err) {
-          console.error('Set LAN Password Error', err)
-          if (err && err.message === 'Unauthorized') this.setState({ pwdError: i18n.__('Previous Password Wrong') })
-          this.props.openSnackBar(i18n.__('Set LAN Password Error'))
-        } else this.props.openSnackBar(i18n.__('Set LAN Password Success'))
-        this.setState({ loading: false })
-      }
+        const cb = (err, res) => {
+          if (err) {
+            console.error('Set LAN Password Error', err)
+            if (err && err.message === 'Unauthorized') this.setState({ pwdError: i18n.__('Previous Password Wrong') })
+            this.props.openSnackBar(i18n.__('Set LAN Password Error'))
+          } else this.props.openSnackBar(i18n.__('Set LAN Password Success'))
+          this.setState({ loading: false })
+        }
 
-      if (this.props.isLAN) this.props.apis.pureRequest('setLANPassword', { prePwd: this.state.pwd, newPwd: this.state.newPwd }, cb)
-      else {
-        const userUUID = this.props.apis.account && this.props.apis.account.data && this.props.apis.account.data.uuid
-        const deviceSN = this.props.selectedDevice && this.props.selectedDevice.mdev.deviceSN
-        this.props.phi.req('setLANPassword', { userUUID, password: this.state.newPwd, deviceSN }, cb)
+        if (this.props.isLAN) this.props.apis.pureRequest('setLANPassword', { prePwd: this.state.pwd, newPwd: this.state.newPwd }, cb)
+        else {
+          const userUUID = this.props.apis.account && this.props.apis.account.data && this.props.apis.account.data.uuid
+          const deviceSN = this.props.selectedDevice && this.props.selectedDevice.mdev.deviceSN
+          this.props.phi.req('setLANPassword', { userUUID, password: this.state.newPwd, deviceSN }, cb)
+        }
       }
     }
 
     this.togglePwd = () => this.setState({ showPwd: !this.state.showPwd })
+
+    this.onKeyDown = (e) => {
+      if (e.which === 13 && this.shouldFire()) this.save()
+    }
   }
 
   shouldFire () {
@@ -113,6 +132,7 @@ class LANPassword extends React.Component {
                 value={this.state.newPwd}
                 onChange={e => this.onNewPwd(e.target.value)}
                 disabled={this.state.loading}
+                onKeyDown={this.onKeyDown}
               />
               {/* clear password */}
               <div style={{ position: 'absolute', right: 0, top: 35 }}>

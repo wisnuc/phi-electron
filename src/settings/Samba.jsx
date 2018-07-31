@@ -2,6 +2,7 @@ import i18n from 'i18n'
 import React from 'react'
 import { Divider } from 'material-ui'
 
+import { validatePassword } from '../common/validate'
 import { EyeOpenIcon, EyeOffIcon } from '../common/Svg'
 import CircularLoading from '../common/CircularLoading'
 import { RRButton, Toggle, TFButton, TextField } from '../common/Buttons'
@@ -22,7 +23,17 @@ class Samba extends React.Component {
     this.singleton = false
 
     this.onPassword = (pwd) => {
-      this.setState({ pwd, pwdError: '' })
+      this.setState({ pwd }, () => {
+        if (this.state.pwd.length === 0) {
+          this.setState({ pwdError: i18n.__('Empty Password Error') })
+        } else if (!validatePassword(pwd)) {
+          this.setState({ pwdError: i18n.__('Invalid Password Error') })
+        } else if (this.state.pwd.length > 64) {
+          this.setState({ pwdError: i18n.__('Password Too Long Error') })
+        } else {
+          this.setState({ pwdError: '' })
+        }
+      })
     }
 
     this.hanldeStatus = () => {
@@ -44,16 +55,20 @@ class Samba extends React.Component {
     }
 
     this.save = () => {
-      this.setState({ loading: true })
-      this.saveAsync(this.state.open, this.state.encrypted, this.state.pwd).asCallback((err) => {
-        if (err) {
-          console.error('samba error', err, this.props)
-          this.props.openSnackBar(i18n.__('Operation Failed'))
-        } else {
-          this.props.openSnackBar(i18n.__('Operation Success'))
-        }
-        this.setState({ loading: false })
-      })
+      if (this.state.open && this.state.encrypted && this.state.pwd.length < 8) {
+        this.setState({ pwdError: i18n.__('Password Too Short Error') })
+      } else {
+        this.setState({ loading: true })
+        this.saveAsync(this.state.open, this.state.encrypted, this.state.pwd).asCallback((err) => {
+          if (err) {
+            console.error('samba error', err, this.props)
+            this.props.openSnackBar(i18n.__('Operation Failed'))
+          } else {
+            this.props.openSnackBar(i18n.__('Operation Success'))
+          }
+          this.setState({ loading: false })
+        })
+      }
     }
 
     this.toggle = op => this.setState({ [op]: !this.state[op] })
