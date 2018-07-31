@@ -51,7 +51,13 @@ class Public extends Home {
       this.resetScrollTo()
 
       const entry = this.state.entries[selected[0]]
-      if (entry.type === 'directory') {
+      if (entry.pdrv) { // search result
+        const driveUUID = entry.pdrv
+        const dirUUID = entry.pdir
+        this.rootDrive = this.ctx.props.apis.drives.data.find(d => d.uuid === entry.pdrv)
+        if (!driveUUID || !dirUUID) return
+        this.ctx.navToDrive(driveUUID, dirUUID)
+      } else if (entry.type === 'directory') {
         const pos = { driveUUID: this.state.path[0].uuid, dirUUID: entry.uuid }
         this.enter(pos, err => err && console.error('listNavBySelect error', err))
         this.history.add(pos)
