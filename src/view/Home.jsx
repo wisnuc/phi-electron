@@ -517,25 +517,31 @@ class Home extends Base {
       const shouldFire = this.shouldFire()
       const dropHeader = this.dropHeader()
       if (shouldFire || dropHeader) {
-        const type = 'move'
+        const type = this.isUSB ? 'nmove' : 'move'
 
         const path = this.state.path
-        const dir = path[path.length - 1].uuid
-        const drive = path[0].uuid
-        const src = { drive, dir }
-        const dst = { drive, dir: shouldFire ? this.state.entries[hover].uuid : dropHeader.uuid }
+        const dir = this.isUSB ? path.filter(p => p.type === 'directory').map(p => p.name).join('/') : path[path.length - 1].uuid
+        const drive = this.isUSB ? this.phyDrive.id : path[0].uuid
 
-        const entries = this.state.select.selected.map(i => this.state.entries[i].name)
-        // const policies = { dir: ['keep', null] }
+        const dstEntry = this.state.entries[hover]
+        const dstDir = this.isUSB ? (dir ? [dir, dstEntry.name].join('/') : dstEntry.name) : dstEntry.uuid
+
+        const args = {
+          type,
+          policies: { dir: ['keep', null] },
+          entries: this.state.select.selected.map(i => this.state.entries[i].name),
+          src: { drive, dir },
+          dst: { drive, dir: dstDir }
+        }
 
         this.xcopyData = {
-          type,
+          type: 'move',
           srcDir: path[path.length - 1],
           dstDir: shouldFire ? this.state.entries[hover] : dropHeader,
           entries: this.state.select.selected.map(i => this.state.entries[i])
         }
 
-        this.ctx.props.apis.pureRequest('copy', { type, src, dst, entries }, this.finish)
+        this.ctx.props.apis.pureRequest('copy', args, this.finish)
       }
       const s = this.refDragedItems.style
       s.transition = 'all 225ms cubic-bezier(.4,0,1,1)'
