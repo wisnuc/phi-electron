@@ -262,8 +262,10 @@ class Fruitmix extends EventEmitter {
         break
 
       case 'mkPhyDir':
-        r = this.apost(`phy-drives/${args.id}?${querystring.stringify({ path: args.path })}`)
-          .field('directory', args.dirname)
+        r = this.isCloud ? this.apost(`phy-drives/${args.id}`, { path: args.path }, true)
+          : this.apost(`phy-drives/${args.id}?${querystring.stringify({ path: args.path })}`)
+
+        r.field('directory', args.dirname)
         break
 
       case 'renameDirOrFile':
@@ -283,7 +285,8 @@ class Fruitmix extends EventEmitter {
         break
 
       case 'deletePhyDirOrFile':
-        r = this.adel(`phy-drives/${args.id}?${querystring.stringify(args.qs)}`)
+        r = this.isCloud ? this.adel(`phy-drives/${args.id}`, args.qs, true)
+          : this.adel(`phy-drives/${args.id}?${querystring.stringify(args.qs)}`)
         break
 
       case 'dupFile':
