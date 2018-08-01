@@ -6,9 +6,8 @@ import { Divider } from 'material-ui'
 
 import PDFView from './PDF'
 import PhotoDetail from './PhotoDetail'
-import FlatButton from '../common/FlatButton'
 import DialogOverlay from '../common/DialogOverlay'
-import { OLButton, LIButton } from '../common/Buttons'
+import { OLButton, LIButton, RSButton } from '../common/Buttons'
 import CircularLoading from '../common/CircularLoading'
 import { DownloadFileIcon, WinFullIcon, WinNormalIcon, CloseIcon, OpenViaLocalIcon } from '../common/Svg'
 
@@ -369,7 +368,7 @@ class Preview extends React.Component {
 
     const { metadata, hash } = this.props.item
     const photoMagic = ['JPEG', 'GIF', 'PNG', 'BMP']
-    const videoMagic = ['3GP', 'MP4', 'MOV', 'MKV', 'AVI']
+    const videoMagic = ['MP4', 'MOV', 'MKV'] // ['3GP', 'MP4', 'MOV', 'MKV', 'AVI']
     const audioMagic = ['MP3', 'FLAC']
     const isPhoto = metadata && photoMagic.includes(metadata.type) && hash
     const isVideo = metadata && videoMagic.includes(metadata.type) && !isCloud && hash
@@ -400,26 +399,25 @@ class Preview extends React.Component {
           {
             this.state.alert &&
               <div
-                style={{ width: 560, padding: '24px 24px 0px 24px' }}
+                style={{ width: 380, padding: '20px 20px 0px 20px' }}
                 onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
               >
-                <div style={{ fontSize: 21, fontWeight: 500 }}>
+                <div style={{ height: 60 }} className="title">
                   { i18n.__('Tips') }
                 </div>
-                <div style={{ height: 20 }} />
-                <div style={{ color: 'rgba(0,0,0,0.54)', fontSize: 14 }}>
+                <div style={{ fontSize: 14, lineHeight: '30px', color: 'var(--grey-text)' }}>
                   { i18n.__('File Oversize Text') }
                 </div>
-                <div style={{ height: 24 }} />
-                <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: -24 }}>
-                  <FlatButton
+                <div style={{ height: 20 }} />
+                <div style={{ height: 76, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                  <RSButton
+                    alt
                     label={i18n.__('Cancel')}
-                    primary
                     onClick={() => this.setState({ alert: false })}
                   />
-                  <FlatButton
+                  <div style={{ width: 10 }} />
+                  <RSButton
                     label={i18n.__('Download')}
-                    primary
                     onClick={() => { this.props.download(); this.setState({ alert: false }); this.props.close() }}
                   />
                 </div>
