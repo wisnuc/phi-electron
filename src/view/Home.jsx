@@ -213,6 +213,9 @@ class Home extends Base {
         src: { drive: pos.drive, dir: pos.dir },
         type: pos.loc === 'phy' ? `i${pos.action}` : pos.loc === 'drive' ? pos.action : ''
       }
+      if (!isBatch && dirUUID === pos.dir && driveUUID === pos.drive) {
+        Object.assign(args, { policies: { dir: ['rename', 'rename'], file: ['rename', 'rename'] } })
+      }
       this.xcopyData = {
         type: pos.action,
         entries: pos.entries,

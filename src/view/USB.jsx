@@ -65,6 +65,9 @@ class USB extends Home {
         src: { drive: pos.drive, dir: pos.dir },
         dst: { drive, dir }
       }
+      if (!isBatch && drive === pos.drive && pos.dir === dir) {
+        Object.assign(args, { policies: { dir: ['rename', 'rename'], file: ['rename', 'rename'] } })
+      }
       this.xcopyData = {
         type: pos.action,
         entries: pos.entries,
