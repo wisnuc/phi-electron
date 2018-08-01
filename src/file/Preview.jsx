@@ -37,8 +37,8 @@ class Preview extends React.Component {
         if (path) path = `${path}/`
 
         this.session = UUID.v4()
-        const driveUUID = isPhy ? this.props.path.slice(-1)[0].id : (this.props.path[0].uuid || this.props.item.pdrv)
-        const dirUUID = isPhy ? path : (this.props.path.slice(-1)[0].uuid || this.props.item.pdir)
+        const driveUUID = isPhy ? this.props.path.slice(-1)[0].id : (this.props.item.pdrv || this.props.path[0].uuid)
+        const dirUUID = isPhy ? path : (this.props.item.pdir || this.props.path.slice(-1)[0].uuid)
         const entryUUID = isPhy ? this.session : this.props.item.uuid
         const fileName = this.props.item.name
 
