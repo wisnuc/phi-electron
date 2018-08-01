@@ -664,13 +664,13 @@
   "Disk Parition %s": "分区%s",
 
   "==== view/Downloading.jsx ====": "",
-  "Downloading Menu Name": "正在下载",
+  "Downloading Menu Name": "下载列表",
 
   "==== view/Uploading.jsx ====": "",
-  "Uploading Menu Name": "正在上传",
+  "Uploading Menu Name": "上传列表",
 
   "==== view/Finished.jsx ====": "",
-  "Finished Menu Name": "传输完成",
+  "Finished Menu Name": "完成列表",
 
   "==== view/Device.jsx ====": "",
   "Device Menu Name": "设备信息",
@@ -1201,8 +1201,8 @@
   "Edit Uploading Tasks Text 2": "您也可以选择全部开始、全部暂停、或全部删除对任务进行批量操作。",
   "Uploading Failed": "传输失败",
   "Uploading Failed Text": "当由于某些情况传输失败时，请点击对应任务旁的红色“！”按钮查看错误信息。",
-  "Finished Help Header": "传输完成列表",
-  "Finished Help Summary Text": "传输完成列表中展示了已完成的历史任务。",
+  "Finished Help Header": "完成列表",
+  "Finished Help Summary Text": "完成列表中展示了已完成的历史任务。",
   "Edit Finished Tasks": "编辑任务",
   "Edit Finished Tasks Text": "您可以通过设备列表内的按钮打开对应文件夹或删除任务。",
   "Finished Help Warning Text": "请注意：当您在删除任务时勾选“同时删除文件”，对应的文件将会被删除，请谨慎操作。",
