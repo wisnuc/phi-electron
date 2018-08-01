@@ -6,7 +6,6 @@ import { AutoSizer } from 'react-virtualized'
 
 import Dialog from '../common/PureDialog'
 import ScrollBar from '../common/ScrollBar'
-import { formatTime } from '../common/datetime'
 import { isPhoneNumber } from '../common/validate'
 import { CloseIcon, BackIcon } from '../common/Svg'
 import CircularLoading from '../common/CircularLoading'
@@ -50,11 +49,11 @@ class AdminUsersApp extends React.Component {
         const { uuid, status, reason } = u
         const driveList = []
         const cloudUser = cloudUsers.find(user => user.uid === u.phicommUserId) || {}
-        driveList.push(builtIn.label || i18n.__('Public Drive'))
+        driveList.push(builtIn.label || i18n.__('Built-in Drive'))
         publicDrives.filter(p => p.writelist === '*' || p.writelist.includes(uuid)).forEach(d => driveList.push(d.label))
         const inActive = status === 'INACTIVE' && reason
 
-        return Object.assign({ driveList, inActive }, cloudUser, u)
+        return Object.assign({ driveList, inActive }, cloudUser, u, { createTime: cloudUser.createTime })
       })
 
       return users
@@ -341,7 +340,7 @@ class AdminUsersApp extends React.Component {
                           { inviteStatus === 'reject' ? i18n.__('Invite Rejected') : i18n.__('Invite Pending') }
                         </div>
                         <div style={{ backgroundColor: '#c4c5cc', height: 10, width: 1, margin: '0 8px' }} />
-                        { formatTime(createTime) }
+                        { createTime.slice(0, 19) }
                         <div style={{ width: 10 }} />
                         {
                           inviteStatus === 'reject' &&
