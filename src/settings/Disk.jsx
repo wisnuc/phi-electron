@@ -175,17 +175,19 @@ class Disk extends React.PureComponent {
     ]
 
     const { audio, document, image, video } = stats
+    const other = { totalSize: 0 }
     const usage = phyDrives.find(d => d.isFruitFS).usage
     if (!audio || !document || !image || !video || !usage) return (<div />)
+    console.log('size', stats, usage)
     const { available, used } = usage
-    const total = available + used
+    const usedPercent = used / (available + used) * 100
+    const countTotal = (video.totalSize + image.totalSize + audio.totalSize + document.totalSize + 0) / usedPercent
 
-    const k = 100
-    const videoSize = video.totalSize / 1024 / total * k
-    const imageSize = image.totalSize / 1024 / total * k + videoSize
-    const audioSize = audio.totalSize / 1024 / total * k + imageSize
-    const documentSize = document.totalSize / 1024 / total * k + audioSize
-    const otherSize = used / total * k
+    const videoSize = video.totalSize / countTotal
+    const imageSize = image.totalSize / countTotal + videoSize
+    const audioSize = audio.totalSize / countTotal + imageSize
+    const documentSize = document.totalSize / countTotal + audioSize
+    const otherSize = other.totalSize / countTotal + documentSize
 
     const data = [
       { color: '#8a69ed', progress: videoSize, title: i18n.__('Video') },
@@ -196,7 +198,7 @@ class Disk extends React.PureComponent {
     ]
 
     const progressTitle = i18n.__('Storage Space')
-    const storageUsage = i18n.__('Storage Usage %s %s', prettysize(used * 1024), prettysize(total * 1024))
+    const storageUsage = i18n.__('Storage Usage %s %s', prettysize(used * 1024), prettysize((used + available) * 1024))
 
     const usbDrives = phyDrives.filter(d => d.isUSB && d.usage)
 
