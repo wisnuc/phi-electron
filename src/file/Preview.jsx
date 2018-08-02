@@ -31,7 +31,7 @@ class Preview extends React.Component {
     this.openByLocal = () => {
       if (this.props.item.size > 50 * 1024 * 1024) this.setState({ alert: true })
       else {
-        const isPhy = this.props.path && (this.props.path[0].isPhyRoot || this.props.path[0].isUSB)
+        const isPhy = this.props.path && (this.props.path[0].isPhyRoot || this.props.path[0].isUSB || this.props.path[0].isPhy)
         let path = this.props.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
         if (path) path = `${path}/`
 
@@ -68,12 +68,12 @@ class Preview extends React.Component {
 
     this.startDownload = () => {
       const isMedia = this.props.isMedia
-      const isPhy = this.props.path && (this.props.path[0].isPhyRoot || this.props.path[0].isUSB)
+      const isPhy = this.props.path && (this.props.path[0].isPhyRoot || this.props.path[0].isUSB || this.props.path[0].isPhy)
       let path = this.props.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
       if (path) path = `${path}/`
 
       this.session = UUID.v4()
-      const driveUUID = isMedia ? 'media' : isPhy ? [...this.props.path].pop().id : this.props.path[0].uuid
+      const driveUUID = isMedia ? 'media' : isPhy ? this.props.path[this.props.path.length - 1].id : this.props.path[0].uuid
       const dirUUID = isMedia ? 'media' : isPhy ? path : this.props.path[this.props.path.length - 1].uuid
       const entryUUID = isMedia ? this.props.item.hash : isPhy ? this.session : this.props.item.uuid
       const fileName = this.props.item.name
@@ -364,7 +364,7 @@ class Preview extends React.Component {
   render () {
     if (!this.props.item || !this.props.item.name) return (<div />)
     const isCloud = this.props && this.props.apis && this.props.apis.isCloud
-    const isPhy = this.props.path && (this.props.path[0].isPhyRoot || this.props.path[0].isUSB)
+    const isPhy = this.props.path && (this.props.path[0].isPhyRoot || this.props.path[0].isUSB || this.props.path[0].isPhy)
 
     const { metadata, hash } = this.props.item
     const photoMagic = ['JPEG', 'GIF', 'PNG', 'BMP']
