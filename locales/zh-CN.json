@@ -484,6 +484,7 @@
   "Upgrade Firmware Success Text": "固件升级成功",
   "Firmware Update Title": "固件升级",
   "Update Now": "立即升级",
+  "Firmware File Too Large": "固件文件过大",
 
   "==== device/NetworkInfo.jsx ====": "",
   "NIC Name": "网卡名称",

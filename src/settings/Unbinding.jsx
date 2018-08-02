@@ -6,7 +6,7 @@ import CircularLoading from '../common/CircularLoading'
 
 class Loading extends React.PureComponent {
   render () {
-    const { status, onRequestClose, onSuccess, onFailed, error } = this.props
+    const { status, onSuccess, onFailed, error } = this.props
 
     let [text, img, label, color, func] = ['', '', '', '#31a0f5', () => {}]
     switch (status) {

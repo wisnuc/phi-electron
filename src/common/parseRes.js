@@ -3,7 +3,7 @@ const parseRes = (err, res) => {
   let error = err
   let body
   if (!error) {
-    body = res && res.body || {}
+    body = (res && res.body) || {}
 
     /* handle response in res.text */
     if (!Object.keys(body).length && res.text) {
