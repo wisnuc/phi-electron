@@ -13,7 +13,7 @@ const parseRes = (err, res) => {
         error = new Error('JSON parse error')
       }
     } else {
-      body = res && res.body
+      body = (res && res.body) || {}
     }
 
     /* handle cloud error */
