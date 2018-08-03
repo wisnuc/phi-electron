@@ -203,8 +203,14 @@ class Home extends Base {
       const pos = this.ctx.props.clipboard.get()
       const driveUUID = this.state.path[0].uuid
       const dirUUID = this.state.path.slice(-1)[0].uuid
-      const isBatch = !!pos.entries[0].pdrv
-      const entries = isBatch ? pos.entries.map(e => ({ name: e.name, drive: e.pdrv, dir: e.pdir })) : pos.entries.map(e => e.name)
+      const isBatch = !!pos.entries[0].pdrv || !!pos.entries[0].namepath // drive search or usb search result
+
+      const entries = pos.entries[0].pdrv ? pos.entries.map(e => ({ name: e.name, drive: e.pdrv, dir: e.pdir }))
+        : pos.entries[0].namepath ? pos.entries.map(e => ({
+          name: e.name, drive: pos.drive, dir: e.namepath.slice(0, e.namepath.length - 1).join('/')
+        }))
+          : pos.entries.map(e => e.name)
+
       const args = {
         batch: isBatch,
         entries,
@@ -1219,20 +1225,14 @@ class Home extends Base {
                     onClick={this.download}
                   />
                   <Divider style={{ marginLeft: 10, marginTop: 2, marginBottom: 2, width: 'calc(100% - 20px)' }} />
-                  {
-                    !(this.state.showSearch && this.isUSB) && (
-                      <div>
-                        <MenuItem
-                          primaryText={i18n.__('Copy')}
-                          onClick={this.onCopy}
-                        />
-                        <MenuItem
-                          primaryText={i18n.__('Cut')}
-                          onClick={this.onCut}
-                        />
-                      </div>
-                    )
-                  }
+                  <MenuItem
+                    primaryText={i18n.__('Copy')}
+                    onClick={this.onCopy}
+                  />
+                  <MenuItem
+                    primaryText={i18n.__('Cut')}
+                    onClick={this.onCut}
+                  />
                   {
                     !multiSelected &&
                       <MenuItem

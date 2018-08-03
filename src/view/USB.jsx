@@ -26,28 +26,15 @@ class USB extends Home {
       }
     }
 
-    this.onCopy = () => {
-      if (this.isMedia || this.state.inRoot) return
+    this.xcopy = (action) => {
+      if (this.state.inRoot && !this.state.showSearch) return
       const selected = this.state.select.selected
       if (!selected && !selected.length) return
       const entries = selected.map(index => this.state.entries[index])
       const drive = this.state.path[0].id || this.phyDrive.id
       const srcPath = this.state.path.slice(-1)[0]
       const dir = this.state.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
-      // if (dir) dir = `${dir}/`
-      this.ctx.props.clipboard.set({ action: 'copy', loc: 'phy', drive, dir, entries, srcPath })
-    }
-
-    this.onCut = () => {
-      if (this.isMedia || this.state.inRoot) return
-      const selected = this.state.select.selected
-      if (!selected && !selected.length) return
-      const entries = selected.map(index => this.state.entries[index])
-      const drive = this.state.path[0].id || this.phyDrive.id
-      const srcPath = this.state.path.slice(-1)[0]
-      const dir = this.state.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
-      // if (dir) dir = `${dir}/`
-      this.ctx.props.clipboard.set({ action: 'move', loc: 'phy', drive, dir, entries, srcPath })
+      this.ctx.props.clipboard.set({ action, loc: 'phy', drive, dir, entries, srcPath })
     }
 
     this.onPaste = () => {
@@ -55,8 +42,14 @@ class USB extends Home {
       const pos = this.ctx.props.clipboard.get()
       const drive = this.state.path[0].id || this.phyDrive.id
       const dir = this.state.path.filter(p => p.type === 'directory').map(p => p.name).join('/')
-      const isBatch = !!pos.entries[0].pdrv
-      const entries = isBatch ? pos.entries.map(e => ({ name: e.name, drive: e.pdrv, dir: e.pdir })) : pos.entries.map(e => e.name)
+      const isBatch = !!pos.entries[0].pdrv || !!pos.entries[0].namepath
+
+      const entries = pos.entries[0].pdrv ? pos.entries.map(e => ({ name: e.name, drive: e.pdrv, dir: e.pdir }))
+        : pos.entries[0].namepath ? pos.entries.map(e => ({
+          name: e.name, drive: pos.drive, dir: e.namepath.slice(0, e.namepath.length - 1).join('/')
+        }))
+          : pos.entries.map(e => e.name)
+
       const args = {
         batch: isBatch,
         entries,
