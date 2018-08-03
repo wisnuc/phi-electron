@@ -86,7 +86,7 @@ class USB extends Home {
 
       const entry = this.state.entries[selected[0]]
 
-      if (Array.isArray(entry.namepath)) { // handle open dir in search result
+      if (Array.isArray(entry.namepath) && entry.type === 'directory') { // handle open dir in search result
         const path = entry.namepath.map(p => ({ name: p, isPhy: true, id: this.phyDrive.id, type: 'directory' }))
         if (this.hasRoot) path.unshift(...this.state.path.slice(0, 2))
         else path.unshift(...this.state.path.slice(0, 1))

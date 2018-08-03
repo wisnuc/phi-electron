@@ -37,8 +37,8 @@ class Preview extends React.Component {
 
         this.session = UUID.v4()
         const driveUUID = isPhy ? this.props.path.slice(-1)[0].id : (this.props.item.pdrv || this.props.path[0].uuid)
-        const dirUUID = isPhy ? path : (this.props.item.pdir || this.props.path.slice(-1)[0].uuid)
-        const entryUUID = isPhy ? this.session : this.props.item.uuid
+        const dirUUID = isPhy ? (this.props.item.fullpath || path) : (this.props.item.pdir || this.props.path.slice(-1)[0].uuid)
+        const entryUUID = this.props.item.uuid || this.session
         const fileName = this.props.item.name
 
         this.props.ipcRenderer.send('OPEN_FILE', {
