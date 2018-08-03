@@ -9,7 +9,7 @@ class ScrollBar extends React.PureComponent {
     }
 
     this.updateScrollHeight = () => {
-      this.setState({ scrollHeight: this.refRoot.scrollHeight, clientHeight: this.refRoot.clientHeight })
+      if (this.refRoot) this.setState({ scrollHeight: this.refRoot.scrollHeight, clientHeight: this.refRoot.clientHeight })
     }
 
     this.scrollTop = 0
