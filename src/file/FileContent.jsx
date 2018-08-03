@@ -102,14 +102,16 @@ class FileContent extends React.Component {
 
     /* handle files */
     this.drop = (e) => {
+      if (this.props.isMedia || this.props.showSearch) return
       const files = [...e.dataTransfer.files].map(f => f.path)
+      const isPhy = this.props.path[0].isPhy || this.props.path[0].isPhyRoot
       const dir = this.props.path
-      const dirUUID = dir[dir.length - 1].uuid
-      const driveUUID = this.props.path[0].uuid
-      if (!dirUUID || !driveUUID) {
+      const dirUUID = isPhy ? dir.filter(v => v.type === 'directory').map(p => p.name).join('/') : dir[dir.length - 1].uuid
+      const driveUUID = isPhy ? dir.slice(-1)[0].id : dir[0].uuid
+      if ((!dirUUID && dirUUID !== '') || !driveUUID) {
         this.props.openSnackBar(i18n.__('No Drag File Warning'))
       } else {
-        this.props.ipcRenderer.send('DRAG_FILE', { files, dirUUID, driveUUID })
+        this.props.ipcRenderer.send('DRAG_FILE', { files, dirUUID, driveUUID, domain: isPhy ? 'phy' : 'drive' })
       }
     }
 
