@@ -176,6 +176,7 @@ class NavViews extends React.Component {
     this.jumpTo = (nav) => {
       if (nav === 'changeDevice') this.showBoundList()
       else if (nav === 'settings') this.navGroup('settings')
+      else if (nav === 'home') this.navGroup('file')
     }
 
     this.openTasks = () => {

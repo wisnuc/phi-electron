@@ -13,7 +13,7 @@
     <div style="height: 100%; width: 100%; border: solid 1px #808080; background-color: #ffffff; box-sizing: border-box">
       <div style="height: 100px; margin: 20px 20px 0 20px;">
         <div style="height: 20px; display: flex; align-items: center;">
-          <span style="font-size: 16px; color: #525a60" id="deviceName"></span>
+          <span style="font-size: 16px; color: #525a60; cursor: pointer" id="deviceName" onclick="openHome()"></span>
           <div style="flex-grow: 1"> </div>
           <div
             class="flexCenter"
@@ -84,6 +84,7 @@
       const openChangeDevice = () => ipcRenderer.send('OPEN_CHANGE_DEVICE')
       const openSettings = () => ipcRenderer.send('OPEN_SETTINGS')
       const openAbout = () => ipcRenderer.send('OPEN_ABOUT')
+      const openHome = () => ipcRenderer.send('OPEN_HOME')
       const exit = () => ipcRenderer.send('POWEROFF')
       ipcRenderer.on('TRAY_DATA', (event, data) => {
         console.log('data', data)
