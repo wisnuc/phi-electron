@@ -1,10 +1,7 @@
 import i18n from 'i18n'
 import React from 'react'
-import { shell } from 'electron'
 import { Divider } from 'material-ui'
 import { RRButton, Checkbox } from '../common/Buttons'
-
-const ptUrl = 'http://www.phicomm.com/cn/index.php/Products/newbai.html'
 
 class ConfirmPT extends React.Component {
   constructor (props) {
@@ -60,15 +57,6 @@ class ConfirmPT extends React.Component {
           <div style={{ color: '#505259', fontSize: 13, marginLeft: -10 }} >
             { i18n.__('Join PT') }
           </div>
-        </div>
-
-        <div className="flexCenter" style={{ height: 30, width: '100%' }}>
-          <a
-            style={{ color: '#31a0f5', cursor: 'pointer', marginLeft: 5, textDecoration: 'underline', fontSize: 13 }}
-            onClick={() => shell.openExternal(ptUrl)}
-          >
-            { i18n.__('PT Agreement of Usage') }
-          </a>
         </div>
 
         <div style={{ height: 20 }} />

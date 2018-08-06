@@ -1,11 +1,8 @@
 import i18n from 'i18n'
 import React from 'react'
-import { shell } from 'electron'
 
 import { RRButton, Toggle } from '../common/Buttons'
 import CircularLoading from '../common/CircularLoading'
-
-const ptUrl = 'http://www.phicomm.com/cn/index.php/Products/newbai.html'
 
 class PT extends React.Component {
   constructor (props) {
@@ -91,12 +88,6 @@ class PT extends React.Component {
 
           <div style={{ width: 320, color: '#888a8c', paddingLeft: 160, height: 46, paddingTop: 14 }} >
             { i18n.__('PT Description') }
-            <a
-              style={{ color: '#31a0f5', cursor: 'pointer', marginLeft: 5, textDecoration: 'underline' }}
-              onClick={() => shell.openExternal(ptUrl)}
-            >
-              { i18n.__('PT Agreement of Usage') }
-            </a>
           </div>
 
           <div style={{ height: 40 }} />
