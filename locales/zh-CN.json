@@ -757,7 +757,7 @@
   "Samba Description": "Samba设置",
   "Samba": "Samba",
   "Samba Encrypt": "Samba加密",
-  "Samba Password Hint": "设置Samba密码",
+  "Samba Password Hint": "默认本地密码",
   "Sambe Description": "开启后支持Samba协议的设备可访问N2上当前用户的存储资源",
 
   "==== view/DLNA.jsx ====": "",
