@@ -314,7 +314,7 @@ class RenderListByRow extends React.Component {
                     ref={ref => (this.ListRef = ref)}
                     height={height}
                     width={width - 20}
-                    allHeight={this.props.entries.length * 40}
+                    allHeight={Math.min(this.props.entries.length * 40, 1500000)}
                     rowCount={this.props.entries.length}
                     onScroll={this.onScroll}
                     rowHeight={40}

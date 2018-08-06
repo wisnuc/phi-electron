@@ -229,8 +229,8 @@ class GridView extends React.Component {
     )
   }
 
-  render () {
-    const calcGridInfo = (height, width, entries) => {
+  calcGridInfo (height, width, entries) {
+    if (height !== this.preHeight || width !== this.preWidth || entries !== this.preEntries || !this.preData) { // singleton
       const MAX = Math.floor((width - 0) / 144) - 1
       let MaxItem = 0
       let lineIndex = 0
@@ -271,8 +271,16 @@ class GridView extends React.Component {
       })
 
       this.maxScrollTop = this.rowHeightSum - height
+      if (this.rowHeightSum > 1500000) {
+        const r = this.rowHeightSum / 1500000
+        this.indexHeightSum = this.indexHeightSum.map(h => h / r)
+        this.maxScrollTop = 1500000 - height
+      }
 
-      return {
+      this.preHeight = height
+      this.preWidth = width
+      this.preEntries = entries
+      this.preData = {
         mapData: this.mapData,
         allHeight: this.allHeight,
         rowHeightSum: this.rowHeightSum,
@@ -281,7 +289,12 @@ class GridView extends React.Component {
       }
     }
 
+    return this.preData
+  }
+
+  render () {
     if (!this.props.entries || this.props.entries.length === 0) return (<div />)
+    console.time('calcGridInfo')
     return (
       <div
         style={{ width: '100%', height: '100%' }}
@@ -291,8 +304,7 @@ class GridView extends React.Component {
       >
         <AutoSizer key={this.props.entries && this.props.entries[0] && this.props.entries[0].uuid}>
           {({ height, width }) => {
-            const gridInfo = calcGridInfo(height, width, this.props.entries)
-            // const { mapData, allHeight, rowHeightSum, indexHeightSum, maxScrollTop } = gridInfo
+            const gridInfo = this.calcGridInfo(height, width, this.props.entries)
             const { mapData, allHeight, rowHeightSum } = gridInfo
 
             /* To get row index of scrollToRow */
