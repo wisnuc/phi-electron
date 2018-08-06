@@ -26,6 +26,79 @@ class Row extends React.Component {
 
   render () {
     const { select, list, isScrolling, rowSum, inPublicRoot } = this.props
+    if (isScrolling) {
+      return (
+        <div style={{ height: '100%', width: '100%', marginLeft: 10 }} >
+          <div style={{ display: 'flex', height: 144 }} >
+            {
+              list.entries.map((item) => {
+                const { index, entry } = item
+                const backgroundColor = '#FFF'
+                const borderColor = 'transparent'
+                if (entry.type === 'addDrive') {
+                  return (
+                    <AddDrive
+                      {...this.props}
+                      item={item}
+                      key={index}
+                      onClick={this.props.openNewDrive}
+                    />
+                  )
+                }
+                return (
+                  <div
+                    style={{
+                      position: 'relative',
+                      width: 140,
+                      height: 140,
+                      marginRight: 4,
+                      marginBottom: 10,
+                      backgroundColor,
+                      boxSizing: 'border-box',
+                      border: `1px solid ${borderColor}`
+                    }}
+                    role="presentation"
+                    key={index}
+                  >
+                    {/* preview or icon */}
+                    <div
+                      draggable={false}
+                      className="flexCenter"
+                      style={{
+                        height: 80,
+                        width: 108,
+                        margin: borderColor ? '15px auto 0 auto' : '16px auto 0 auto',
+                        overflow: 'hidden',
+                        backgroundColor: '#f0f0f0'
+                      }}
+
+                    />
+
+                    {/* file name */}
+                    <div
+                      className="flexCenter"
+                      style={{ height: 40, width: 130, color: 'var(--dark-text)', marginLeft: 5, paddingBottom: 4, position: 'relative' }}
+                    >
+                      <div
+                        style={{
+                          overflow: 'hidden',
+                          whiteSpace: 'nowrap',
+                          textOverflow: 'ellipsis',
+                          color: '#525a60',
+                          letterSpacing: 1.4
+                        }}
+                      >
+                        { entry.name }
+                      </div>
+                    </div>
+                  </div>
+                )
+              })
+            }
+          </div>
+        </div>
+      )
+    }
 
     return (
       <div style={{ height: '100%', width: '100%', marginLeft: 10 }} >
@@ -294,7 +367,6 @@ class GridView extends React.Component {
 
   render () {
     if (!this.props.entries || this.props.entries.length === 0) return (<div />)
-    console.time('calcGridInfo')
     return (
       <div
         style={{ width: '100%', height: '100%' }}
