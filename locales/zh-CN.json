@@ -780,7 +780,7 @@
   "ResetDevice Description": "可选保存数据",
   "ResetDevice Text": "解除斐讯云账号与设备的绑定关系后，设备将还原出厂设置，管理员及用户将不能再访问和管理设备，请慎重操作",
   "Check Text of Unbind": "格式化磁盘，清除所有数据",
-  "Confirm Unbind Text": "如需后续导入磁盘数据，请勿勾选格式化磁盘选项",
+  "Confirm Unbind Text": "如需后续导入磁盘数据，需为同一管理员，不勾选格式化磁盘选项",
   "Confirm Unbind Title": "解绑及恢复出厂",
   "Reset Device Busy Text": "解绑及恢复出厂中...",
   "Reset Device Success Text": "解绑及恢复出厂成功",
