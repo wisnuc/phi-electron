@@ -42,7 +42,7 @@ class Device extends RequestManager {
   request (name, args, next) {
     let r
 
-    const resTime = process.env.CONN_MODE === 'remote' ? 5 : 5000
+    const resTime = process.env.CONN_MODE !== 'local' ? 5 : 5000
     switch (name) {
       case 'info':
         r = request

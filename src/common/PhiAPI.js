@@ -77,7 +77,7 @@ class PhiAPI extends RequestManager {
 
       case 'token':
         r = request
-          .post(`${phiCloudAddress}/v1/login`)
+          .post(`https://accountsym.phicomm.com/v1/login`)
           .timeout({
             response: 30000, // Wait 30 seconds for the server to start sending,
             deadline: 60000 // but allow 1 minute for the file to finish loading.
