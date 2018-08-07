@@ -230,6 +230,7 @@
   "Account Settings": "个人设置",
   "Users Management": "用户管理",
   "Account Offline": "本地模式",
+  "Account Offline With Phone Number %s": "[本地]%s",
 
   "==== control/ResetPassword.jsx ====": "",
   "Authentication Success Text": "微信认证成功",

@@ -1,3 +1,4 @@
+import i18n from 'i18n'
 import React from 'react'
 import { ipcRenderer } from 'electron'
 import { Snackbar } from 'material-ui'
@@ -78,6 +79,7 @@ class Fruitmix extends React.Component {
     this.setState({
       view: 'login',
       selectedDevice: null,
+      account: this.state.account && this.state.account.lan ? { lan: true, name: i18n.__('Account Offline') } : this.state.account,
       jump: { status: 'deviceSelect', type: this.state.account && this.state.account.lan ? 'LANTOLOGIN' : 'BOUNDLIST' }
     })
   }
@@ -96,7 +98,12 @@ class Fruitmix extends React.Component {
   }
 
   jumpToLANLogin (dev) {
-    this.setState({ view: 'login', selectedDevice: null, jump: { selectedDevice: dev, status: 'LANLogin' } })
+    this.setState({
+      view: 'login',
+      selectedDevice: null,
+      jump: { selectedDevice: dev, status: 'LANLogin' },
+      account: { lan: true, name: i18n.__('Account Offline') }
+    })
   }
 
   jumpToSetLANPwd (dev) {

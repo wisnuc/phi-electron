@@ -54,6 +54,11 @@ class LANLogin extends React.Component {
         } else {
           Object.assign(this.props.dev, { token: { isFulfilled: () => true, ctx: user, data } })
           const { selectedDevice } = this.props
+          this.props.phiLogin({
+            lan: true,
+            name: i18n.__('Account Offline With Phone Number %s', user.phoneNumber),
+            phoneNumber: user.phoneNumber
+          })
           this.props.deviceLogin({ dev: this.props.dev, user, selectedDevice })
         }
         this.setState({ loading: false })
