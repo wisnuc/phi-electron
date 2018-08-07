@@ -175,7 +175,7 @@ class Disk extends React.PureComponent {
     ]
 
     const { audio, document, image, video } = stats
-    const other = { totalSize: 0 }
+    const other = stats.other || { totalSize: 0 }
     const usage = phyDrives.find(d => d.isFruitFS).usage
     if (!audio || !document || !image || !video || !usage) return (<div />)
     console.log('size', stats, usage)
