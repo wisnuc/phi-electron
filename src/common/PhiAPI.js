@@ -68,6 +68,7 @@ class PhiAPI extends RequestManager {
 
   req (name, args, next) {
     let r
+    const resTime = process.env.CONN_MODE === 'local' ? 3 : 30000
     switch (name) {
       case 'authorizationcode':
         r = request
@@ -79,7 +80,7 @@ class PhiAPI extends RequestManager {
         r = request
           .post(`${phiCloudAddress}/v1/login`)
           .timeout({
-            response: 30000, // Wait 30 seconds for the server to start sending,
+            response: resTime, // Wait 30 seconds for the server to start sending,
             deadline: 60000 // but allow 1 minute for the file to finish loading.
           })
           .query({
@@ -98,7 +99,7 @@ class PhiAPI extends RequestManager {
       case 'stationList':
         r = this.aget('StationManager/station')
           .timeout({
-            response: 30000, // Wait 30 seconds for the server to start sending,
+            response: resTime, // Wait 30 seconds for the server to start sending,
             deadline: 60000 // but allow 1 minute for the file to finish loading.
           })
         break
