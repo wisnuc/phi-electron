@@ -1,4 +1,5 @@
 import i18n from 'i18n'
+import UUID from 'uuid'
 import React from 'react'
 import Promise from 'bluebird'
 import { TweenMax } from 'gsap'
@@ -102,10 +103,12 @@ class Home extends Base {
         entriesByDir.forEach((arr) => {
           const driveUUID = arr[0].pdrv
           const dirUUID = arr[0].pdir
-          ipcRenderer.send('DOWNLOAD', { entries: arr, dirUUID, driveUUID })
+          ipcRenderer.send('DOWNLOAD', { entries: arr, dirUUID, driveUUID, downloadDir: downloadPath })
         })
       } else {
-        ipcRenderer.send('DOWNLOAD', { entries, dirUUID: path[path.length - 1].uuid, driveUUID: path[0].uuid })
+        const dirUUID = path[path.length - 1].uuid
+        const driveUUID = path[0].uuid
+        ipcRenderer.send('DOWNLOAD', { entries, dirUUID, driveUUID, downloadDir: downloadPath })
       }
       this.setState({ onDownload: null })
     }
@@ -575,11 +578,26 @@ class Home extends Base {
       }, shouldFire || dropHeader ? 0 : 225)
     }
 
+    this.sendDrag = () => {
+      const selected = this.state.select.selected
+      const entries = selected.map(index => this.state.entries[index])
+      const path = this.state.path
+      const session = UUID.v4()
+      ipcRenderer.send('DRAG_START', { session })
+      ipcRenderer.once('DOWNLOAD_DIR', (e, data) => {
+        if (!data || data.session !== session) return
+        this.downloadFire({ selected, entries, path, downloadPath: data.dir })
+      })
+    }
+
     this.rowDragStart = (event, index) => {
       /* only left click */
       if (event.nativeEvent.button !== 0) return
       /* not public */
       if (this.state.entries[index].type === 'public') return
+      this.sendDrag()
+
+      return
       this.RDSI = index // rowDragStartIndex
       const selected = this.state.select.selected
       this.state.select.toggleDrag(selected.includes(this.RDSI) ? selected : [this.RDSI])
@@ -623,6 +641,7 @@ class Home extends Base {
 
       this.RDSI = index // rowDragStartIndex
       const selected = this.state.select.selected
+
       this.state.select.toggleDrag(selected.includes(this.RDSI) ? selected : [this.RDSI])
 
       /* show drag item */
