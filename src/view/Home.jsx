@@ -1066,6 +1066,7 @@ class Home extends Base {
             showDetail &&
             <FileDetail
               {...this.ctx.props}
+              isUSB={this.isUSB}
               path={this.state.path}
               entries={this.state.entries}
               isSearch={!!this.state.showSearch}

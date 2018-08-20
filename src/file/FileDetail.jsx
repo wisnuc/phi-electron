@@ -139,7 +139,7 @@ class FileDetail extends React.PureComponent {
   }
 
   render () {
-    const { selected, entries, path, isSearch } = this.props
+    const { selected, entries, path, isSearch, isUSB } = this.props
     const entry = entries[selected[0]]
     if (!entry) return <div />
 
@@ -165,8 +165,8 @@ class FileDetail extends React.PureComponent {
     const Values = [
       isMultiple ? i18n.__('Multiple Items') : getType(entry),
       !isSearch ? getPath(path) : !isMultiple ? getSearchPath(path, entry) : '',
-      isFile ? prettysize(entry.size, false, true, 2) : this.getSize(),
-      !isFile ? this.getContent() : '',
+      isUSB ? '' : isFile ? prettysize(entry.size, false, true, 2) : this.getSize(),
+      isUSB ? '' : !isFile ? this.getContent() : '',
       !isMultiple ? phaseDate(entry.mtime) : ''
     ]
 
