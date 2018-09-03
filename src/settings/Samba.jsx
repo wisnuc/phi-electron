@@ -46,8 +46,14 @@ class Samba extends React.Component {
 
     this.saveAsync = async (open, encrypted, pwd) => {
       const isAdmin = this.props.apis.account && this.props.apis.account.data && this.props.apis.account.data.isFirstUser
-      if (isAdmin) await this.props.apis.pureRequestAsync('sambaStatus', { op: open ? 'start' : 'stop' })
-      await this.props.apis.requestAsync('samba')
+      const currentStatus = await this.props.apis.requestAsync('samba')
+      if (isAdmin && currentStatus && currentStatus.state && currentStatus.state === 'Started' && !open) {
+        await this.props.apis.pureRequestAsync('sambaStatus', { op: 'stop' })
+        await this.props.apis.requestAsync('samba')
+      } else if (isAdmin && currentStatus && currentStatus.state && currentStatus.state !== 'Started' && open) {
+        await this.props.apis.pureRequestAsync('sambaStatus', { op: 'start' })
+        await this.props.apis.requestAsync('samba')
+      }
       const driveUUID = this.drive && this.drive.uuid
       if (open) await this.props.apis.pureRequestAsync('sambaEncrypted', { encrypted, driveUUID })
       if (open && encrypted && pwd) await this.props.apis.pureRequestAsync('sambaPwd', { pwd })
