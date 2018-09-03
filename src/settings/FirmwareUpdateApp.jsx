@@ -35,7 +35,7 @@ class Update extends React.Component {
     }
 
     this.openWeb = () => {
-      shell.openExternal('https://sohon2test.phicomm.com/v1/ui/index')
+      shell.openExternal('http://www.phicomm.com/cn/support.php/Lian/software_support.html')
     }
   }
 

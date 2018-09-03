@@ -8,7 +8,8 @@ import { isPhoneNumber } from '../common/validate'
 import { EyeOpenIcon, EyeOffIcon, DelPwdIcon } from '../common/Svg'
 import { RRButton, FLButton, RSButton, TFButton, Checkbox, TextField } from '../common/Buttons'
 
-const phicommUrl = 'https://sohon2test.phicomm.com/v1'
+const phiSignupUrl = 'https://mall.phicomm.com/passport-signup.html'
+const phiResetPwdUrl = 'https://mall.phicomm.com/passport-reset_password.html'
 let firstLogin = true
 
 class PhiLogin extends React.Component {
@@ -251,14 +252,14 @@ class PhiLogin extends React.Component {
           <div style={{ width: '50%', textAlign: 'right' }}>
             <FLButton
               label={i18n.__('Sign Up')}
-              onClick={() => shell.openExternal(phicommUrl)}
+              onClick={() => shell.openExternal(phiSignupUrl)}
             />
           </div>
           <div style={{ width: 1, height: 10, backgroundColor: 'rgba(0,0,0,.38)' }} />
           <div style={{ width: '50%', textAlign: 'left' }}>
             <FLButton
               label={i18n.__('Forget Password')}
-              onClick={() => shell.openExternal(phicommUrl)}
+              onClick={() => shell.openExternal(phiResetPwdUrl)}
             />
           </div>
         </div>

@@ -11,7 +11,7 @@ import { CloseIcon, BackIcon } from '../common/Svg'
 import CircularLoading from '../common/CircularLoading'
 import { RSButton, LIButton, Checkbox, TextField } from '../common/Buttons'
 
-const clientUrl = 'http://www.phicomm.com'
+const clientUrl = 'http://www.phicomm.com/cn/support.php/Lian/software_support.html'
 
 class AdminUsersApp extends React.Component {
   constructor (props) {

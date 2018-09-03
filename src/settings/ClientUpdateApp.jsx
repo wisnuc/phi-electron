@@ -51,8 +51,8 @@ class Update extends React.Component {
     }
 
     this.openWeb = () => {
-      let url = 'https://sohon2test.phicomm.com/v1/ui/index'
-      if (this.state.latest && this.state.latest.skip_url) url = this.state.latest.skip_url
+      const url = 'http://www.phicomm.com/cn/support.php/Lian/software_support.html'
+      // if (this.state.latest && this.state.latest.skip_url) url = this.state.latest.skip_url
       shell.openExternal(url)
     }
   }
