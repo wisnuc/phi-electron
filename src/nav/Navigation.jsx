@@ -1,5 +1,6 @@
 import i18n from 'i18n'
 import React from 'react'
+import Promise from 'bluebird'
 import { ipcRenderer } from 'electron'
 import { FlatButton } from 'material-ui'
 

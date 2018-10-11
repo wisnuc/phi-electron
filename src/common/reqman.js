@@ -1,5 +1,5 @@
-const EventEmitter = require('events')
-const Request = require('./Request')
+import EventEmitter from 'events'
+import Request from './Request'
 
 class RequestManager extends EventEmitter {
   abort () {
@@ -43,4 +43,4 @@ class RequestManager extends EventEmitter {
   }
 }
 
-module.exports = RequestManager
+export default RequestManager

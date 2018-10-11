@@ -171,15 +171,17 @@ class ContainerOverlayInline extends React.Component {
 */
 
 class ContainerOverlay extends React.Component {
-  renderLayer = () => (
-    <ReactTransitionGroup>
-      { this.props.open && <ContainerOverlayInline {...this.props} /> }
-    </ReactTransitionGroup>
-  )
+  renderLayer () {
+    return (
+      <ReactTransitionGroup>
+        { this.props.open && <ContainerOverlayInline {...this.props} /> }
+      </ReactTransitionGroup>
+    )
+  }
 
   render () {
     return (
-      <RenderToLayer render={this.renderLayer} open useLayerForClickAway={false} />
+      <RenderToLayer render={() => this.renderLayer()} open useLayerForClickAway={false} />
     )
   }
 }

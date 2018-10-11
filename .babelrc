@@ -1,9 +1,6 @@
 {
-  "presets": ["env", "react", "bluebird", "stage-2"],
+  "presets": ["env", "react"],
   "plugins": [
-    "transform-decorators-legacy",
-    "transform-async-to-bluebird", 
-    "transform-promise-to-bluebird",
     "transform-runtime"
   ]
 }

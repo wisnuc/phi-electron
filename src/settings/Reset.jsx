@@ -53,13 +53,11 @@ class ResetDevice extends React.Component {
       this.setState({ confirm: false })
       setTimeout(() => {
         this.setState({ status: 'busy' })
-        this.resetAsync(check).asCallback((err) => {
-          if (err) {
-            console.error('unbindStation error', err)
-            this.setState({ status: 'error', error: err })
-          } else {
-            this.setState({ status: 'success' })
-          }
+        this.resetAsync(check).then(() => {
+          this.setState({ status: 'success' })
+        }).catch((err) => {
+          console.error('unbindStation error', err)
+          this.setState({ status: 'error', error: err })
         })
       }, 500)
     }

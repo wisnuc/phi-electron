@@ -22,13 +22,12 @@ class Dlna extends React.Component {
 
     this.save = () => {
       this.setState({ loading: true })
-      this.saveAsync(this.state.open).asCallback((err) => {
-        if (err) {
-          console.error('dlna error', err)
-          this.props.openSnackBar(i18n.__('Operation Failed'))
-        } else {
-          this.props.openSnackBar(i18n.__('Operation Success'))
-        }
+      this.saveAsync(this.state.open).then(() => {
+        this.props.openSnackBar(i18n.__('Operation Success'))
+        this.setState({ loading: false })
+      }).catch((err) => {
+        console.error('dlna error', err)
+        this.props.openSnackBar(i18n.__('Operation Failed'))
         this.setState({ loading: false })
       })
     }

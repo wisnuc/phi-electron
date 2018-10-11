@@ -1,3 +1,4 @@
+import Promise from 'bluebird'
 import request from 'superagent'
 import EventEmitter from 'eventemitter3'
 import querystring from 'querystring'
@@ -509,12 +510,11 @@ class Fruitmix extends EventEmitter {
     this.request('users')
     this.request('phyDrives')
     this.request('device')
-    this.requestAsync('drives').asCallback((err, drives) => {
-      if (err || !drives) console.error('requestAsync drives error', err)
-      else {
-        const drive = drives.find(d => d.tag === 'home')
-        this.request('listNavDir', { driveUUID: drive.uuid, dirUUID: drive.uuid })
-      }
+    this.requestAsync('drives').then((drives) => {
+      const drive = drives.find(d => d.tag === 'home')
+      this.request('listNavDir', { driveUUID: drive.uuid, dirUUID: drive.uuid })
+    }).catch((err) => {
+      console.error('requestAsync drives error', err)
     })
   }
 }

@@ -1,3 +1,4 @@
+import Promise from 'bluebird'
 import request from 'superagent'
 import RequestManager from './reqman'
 

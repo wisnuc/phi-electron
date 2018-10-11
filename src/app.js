@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDom from 'react-dom'
 import { ipcRenderer, remote } from 'electron'
-import injectTapEventPlugin from 'react-tap-event-plugin'
 import i18n from 'i18n'
 
 import Phi from './Phi'
@@ -15,9 +14,6 @@ i18n.configure({
   defaultLocale: 'zh-CN'
   // defaultLocale: /zh/.test(lang) ? 'zh-CN' : 'en-US'
 })
-
-/* required by Material UI */
-injectTapEventPlugin()
 
 /* render method */
 const render = () => {

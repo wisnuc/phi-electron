@@ -65,13 +65,12 @@ class Samba extends React.Component {
         this.setState({ pwdError: i18n.__('Password Too Short Error') })
       } else {
         this.setState({ loading: true })
-        this.saveAsync(this.state.open, this.state.encrypted, this.state.pwd).asCallback((err) => {
-          if (err) {
-            console.error('samba error', err, this.props)
-            this.props.openSnackBar(i18n.__('Operation Failed'))
-          } else {
-            this.props.openSnackBar(i18n.__('Operation Success'))
-          }
+        this.saveAsync(this.state.open, this.state.encrypted, this.state.pwd).then(() => {
+          this.props.openSnackBar(i18n.__('Operation Success'))
+          this.setState({ loading: false })
+        }).catch((err) => {
+          console.error('samba error', err, this.props)
+          this.props.openSnackBar(i18n.__('Operation Failed'))
           this.setState({ loading: false })
         })
       }

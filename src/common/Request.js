@@ -81,4 +81,4 @@ class Request extends EventEmitter {
   isFinished () { return this.state.isFinished() }
 }
 
-module.exports = Request
+export default Request
