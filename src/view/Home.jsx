@@ -1,7 +1,6 @@
 import i18n from 'i18n'
 import React from 'react'
 import Promise from 'bluebird'
-import { TweenMax } from 'gsap'
 import { ipcRenderer } from 'electron'
 import { Divider } from 'material-ui'
 
@@ -443,22 +442,6 @@ class Home extends Base {
         // contextMenuX: -1,
         // contextMenuY: -1,
       })
-    }
-
-    /* NavigationMenu animation */
-    this.setAnimation = (component, status) => {
-      if (component === 'NavigationMenu') {
-        /* add animation to NavigationMenu */
-        const transformItem = this.refNavigationMenu
-        const time = 0.4
-        const ease = global.Power4.easeOut
-        if (status === 'In') {
-          TweenMax.to(transformItem, time, { rotation: 180, opacity: 1, ease })
-        }
-        if (status === 'Out') {
-          TweenMax.to(transformItem, time, { rotation: -180, opacity: 0, ease })
-        }
-      }
     }
 
     this.shouldFire = () => {
@@ -1265,7 +1248,6 @@ class Home extends Base {
           clearFakeOpen={this.clearFakeOpen}
           listNavBySelect={this.listNavBySelect}
           showContextMenu={this.showContextMenu}
-          setAnimation={this.setAnimation}
           ipcRenderer={ipcRenderer}
           download={this.download}
           primaryColor={this.groupPrimaryColor()}

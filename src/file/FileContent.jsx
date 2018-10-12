@@ -419,7 +419,6 @@ class FileContent extends React.Component {
               items={this.props.entries}
               seqIndex={this.state.seqIndex}
               ipcRenderer={this.props.ipcRenderer}
-              setAnimation={this.props.setAnimation}
               memoize={this.props.memoize}
               download={this.download}
               path={this.props.path}
@@ -438,7 +437,6 @@ class FileContent extends React.Component {
               items={this.props.entries}
               seqIndex={this.state.seqIndex}
               ipcRenderer={this.props.ipcRenderer}
-              setAnimation={this.props.setAnimation}
               memoize={this.props.memoize}
               download={this.download}
               path={this.props.path}

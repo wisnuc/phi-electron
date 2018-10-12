@@ -172,7 +172,6 @@ class Public extends Home {
           clearFakeOpen={this.clearFakeOpen}
           listNavBySelect={this.listNavBySelect}
           showContextMenu={this.showContextMenu}
-          setAnimation={this.setAnimation}
           ipcRenderer={ipcRenderer}
           download={this.download}
           changeSortType={this.changeSortType}

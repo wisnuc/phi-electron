@@ -8,18 +8,6 @@ import { Paper } from 'material-ui'
 import ReactTransitionGroup from 'react-transition-group/TransitionGroup'
 
 class TransitionItem extends React.Component {
-  /*
-  static propTypes = {
-    modal: PropTypes.bool,
-    onRequestClose: PropTypes.func
-  }
-
-  static defaultProps = {
-    modal: false,
-    onRequestClose: null
-  }
-  */
-
   constructor (props) {
     super(props)
 

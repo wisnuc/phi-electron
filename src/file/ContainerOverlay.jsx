@@ -157,13 +157,11 @@ class ContainerOverlayInline extends React.Component {
   }
 
   componentWillAppear (callback) {
-    // this.props.setAnimation('NavigationMenu', 'Out')
     this.animation('In')
     this.enterTimeout = setTimeout(callback, 200) // matches transition duration
   }
 
   componentWillLeave (callback) {
-    // this.props.setAnimation('NavigationMenu', 'In')
     this.animation('Out')
     this.leaveTimeout = setTimeout(callback, 200) // matches transition duration
   }
